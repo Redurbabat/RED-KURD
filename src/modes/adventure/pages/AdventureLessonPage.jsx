@@ -18,6 +18,7 @@ import {
   gibEdelsteine,
   setzeSterne,
 } from '../../../core/progress/progressStore.js'
+import { statistik } from '../../../core/progress/progressSelectors.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
@@ -45,11 +46,18 @@ function Sterne({ anzahl }) {
   )
 }
 
+/** ?schritt=pruefung springt direkt zur Abschlussprüfung. */
+function startSchritt() {
+  if (typeof window === 'undefined') return 'lernen'
+  const wunsch = new URLSearchParams(window.location.search).get('schritt')
+  return SCHRITTE.includes(wunsch) ? wunsch : 'lernen'
+}
+
 export default function AdventureLessonPage({ unitId }) {
   useLernstand()
 
   const [phase, setPhase] = useState('intro')
-  const [lektionId, setLektionId] = useState('lernen')
+  const [lektionId, setLektionId] = useState(startSchritt)
   const [lauf, setLauf] = useState(null)
   const [ergebnis, setErgebnis] = useState(null)
   const [sterne, setSterne] = useState(null)
@@ -62,7 +70,7 @@ export default function AdventureLessonPage({ unitId }) {
   // Neue Einheit in der Adresse -> alles auf Anfang.
   useEffect(() => {
     setPhase('intro')
-    setLektionId('lernen')
+    setLektionId(startSchritt())
     setLauf(null)
     setErgebnis(null)
     setSterne(null)
@@ -70,15 +78,36 @@ export default function AdventureLessonPage({ unitId }) {
   }, [unitId])
 
   // Nur die Mini-Prüfung zählt für den Lernstand — und das genau einmal je Durchgang.
+  // Edelsteine gibt es ausschliesslich für eine BESTANDENE Prüfung und nur einmal
+  // je Einheit; sonst liessen sie sich durch Wiederholen beliebig oft abholen.
+  const [belohnung, setBelohnung] = useState(null)
+
   useEffect(() => {
     if (phase !== 'ergebnis' || !ergebnis || !einheit) return
     if (lektionId !== 'pruefung') return
     if (lauf && lauf.fehlerlauf) return
     if (gewertet.current) return
     gewertet.current = true
+
+    const vorherBestanden = einheitProzent(unitId) >= BESTANDEN_AB
+    const bestanden = ergebnis.prozent >= BESTANDEN_AB
+    const vorherSerie = statistik().serie
+
     einheitAbgeschlossen(unitId, ergebnis.prozent)
     setSterne(setzeSterne(unitId, ergebnis.prozent))
-    gibEdelsteine(EDELSTEINE_JE_PRUEFUNG)
+
+    let edelsteine = 0
+    if (bestanden && !vorherBestanden) {
+      gibEdelsteine(EDELSTEINE_JE_PRUEFUNG)
+      edelsteine = EDELSTEINE_JE_PRUEFUNG
+    }
+    setBelohnung({
+      xp: ergebnis.richtig * 10,
+      edelsteine,
+      // Der Serienpunkt kommt aus gibXp() in der Übung — hier nur melden, wenn
+      // die Serie dadurch tatsächlich gewachsen ist.
+      serie: statistik().serie > vorherSerie ? 1 : 0,
+    })
   }, [phase, ergebnis, lektionId, lauf, unitId, einheit])
 
   if (!einheit) {
@@ -279,6 +308,7 @@ export default function AdventureLessonPage({ unitId }) {
 
     return (
       <ExercisePlayer
+        speichern={false}
         key={lauf.schluessel + '#' + lauf.nr}
         stil="abenteuer"
         mitLeben
@@ -321,11 +351,9 @@ export default function AdventureLessonPage({ unitId }) {
         titel={ergebnisTitel}
         ergebnis={ergebnis}
         sterne={istPruefung && !fehlerlauf ? sterne : null}
-        belohnung={{
-          xp: ergebnis.richtig * XP_JE_AUFGABE,
-          edelsteine: istPruefung && !fehlerlauf ? EDELSTEINE_JE_PRUEFUNG : 0,
-          serie: 1,
-        }}
+        belohnung={
+          belohnung || { xp: ergebnis.richtig * XP_JE_AUFGABE, edelsteine: 0, serie: 0 }
+        }
         weiter={weiter}
         wiederholen={() => starte(lektionId)}
         fehlerUeben={fehlerUeben}

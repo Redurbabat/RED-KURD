@@ -7,6 +7,16 @@
  *          aendern:(id:string)=>void}} props
  */
 export default function SegmentedControl({ name, label, wert, optionen, aendern, className = '' }) {
+  /** Auswahl UND Fokus wechseln — sonst haengt der Fokus auf der alten Option. */
+  function waehleUndFokussiere(id) {
+    aendern(id)
+    if (typeof document === 'undefined') return
+    requestAnimationFrame(() => {
+      const ziel = document.getElementById(`${name}-${id}`)
+      if (ziel) ziel.focus()
+    })
+  }
+
   return (
     <div className={`rk-segment ${className}`} role="radiogroup" aria-label={label}>
       {optionen.map((o) => {
@@ -23,11 +33,19 @@ export default function SegmentedControl({ name, label, wert, optionen, aendern,
               const i = optionen.findIndex((x) => x.id === wert)
               if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                 e.preventDefault()
-                aendern(optionen[(i + 1) % optionen.length].id)
+                waehleUndFokussiere(optionen[(i + 1) % optionen.length].id)
               }
               if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                 e.preventDefault()
-                aendern(optionen[(i - 1 + optionen.length) % optionen.length].id)
+                waehleUndFokussiere(optionen[(i - 1 + optionen.length) % optionen.length].id)
+              }
+              if (e.key === 'Home') {
+                e.preventDefault()
+                waehleUndFokussiere(optionen[0].id)
+              }
+              if (e.key === 'End') {
+                e.preventDefault()
+                waehleUndFokussiere(optionen[optionen.length - 1].id)
               }
             }}
             tabIndex={aktiv ? 0 : -1}

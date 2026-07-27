@@ -2,7 +2,7 @@
 // Modern-Modus und Abenteuer-Modus schreiben und lesen genau hier — es gibt
 // bewusst KEINEN zweiten Fortschritt fuer das Abenteuer.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { melden, beiFremdaenderung } from '../store.js'
 import { heute, gestern, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.js'
 
 const LEER = {
@@ -12,12 +12,14 @@ const LEER = {
   letzterTag: null,
   einheiten: {}, // { einheitId: besteProzent }
   sterne: {}, // { einheitId: 0..3 }
+  bestanden: {}, // { einheitId: Anzahl bestandener Pruefungen }
   karten: {}, // { "de|ku|skill": { stufe, faellig, gesehen, richtig } }
   tage: {}, // { "2026-07-27": { aufgaben, richtig, sekunden } }
   edelsteine: 0,
   schluessel: 0,
   zielBelohnt: null,
   truhe: null,
+  weltTruhen: {}, // { weltId: 'JJJJ-MM-TT' }
   lernzeit: 0, // Sekunden insgesamt
 }
 
@@ -26,8 +28,16 @@ let cache = null
 function laden() {
   if (cache) return cache
   const d = lies(KEYS.fortschritt) || {}
-  cache = { ...LEER, ...d, einheiten: { ...(d.einheiten || {}) }, sterne: { ...(d.sterne || {}) },
-    karten: { ...(d.karten || {}) }, tage: { ...(d.tage || {}) } }
+  cache = {
+    ...LEER,
+    ...d,
+    einheiten: { ...(d.einheiten || {}) },
+    sterne: { ...(d.sterne || {}) },
+    bestanden: { ...(d.bestanden || {}) },
+    karten: { ...(d.karten || {}) },
+    tage: { ...(d.tage || {}) },
+    weltTruhen: { ...(d.weltTruhen || {}) },
+  }
   return cache
 }
 
@@ -109,15 +119,25 @@ export function einheitAbgeschlossen(id, prozent) {
  * Sterne einer Einheit. Der dritte Stern wird erst bei einer spaeteren
  * erfolgreichen Wiederholung vergeben — beim ersten Durchgang gibt es hoechstens zwei.
  */
+export const BESTEHENSGRENZE = 80
+
 export function setzeSterne(id, prozent) {
   const d = { ...laden() }
   d.sterne = { ...d.sterne }
-  const bisher = d.sterne[id] || 0
+  d.bestanden = { ...(d.bestanden || {}) }
+
+  // Nur bestandene Durchgaenge zaehlen. Sonst wuerde ein Versuch mit 50 %
+  // bereits als "erster Durchgang" gelten und der dritte Stern kaeme zu frueh.
+  if (prozent >= BESTEHENSGRENZE) d.bestanden[id] = (d.bestanden[id] || 0) + 1
+  const bestandeneLaeufe = d.bestanden[id] || 0
+
   let neu = 0
-  if (prozent >= 100) neu = bisher >= 1 ? 3 : 2
-  else if (prozent >= 80) neu = bisher >= 1 ? Math.min(3, bisher + 1) : 2
-  else if (prozent >= 50) neu = 1
-  d.sterne[id] = Math.max(bisher, neu)
+  if (prozent >= 50) neu = 1
+  if (prozent >= BESTEHENSGRENZE) neu = 2
+  // Der dritte Stern erst bei einer spaeteren erfolgreichen Wiederholung.
+  if (prozent >= BESTEHENSGRENZE && bestandeneLaeufe >= 2) neu = 3
+
+  d.sterne[id] = Math.max(d.sterne[id] || 0, neu)
   sichern(d)
   return d.sterne[id]
 }
@@ -229,6 +249,25 @@ export function truheBereit() {
   return laden().truhe !== heute()
 }
 
+// ===== Truhe je Welt =====
+// Liegt bewusst im Lernstand und nicht in einem eigenen Schluessel, damit
+// Export und Import sie mitnehmen.
+
+export function weltTruheDatum(weltId) {
+  return (laden().weltTruhen || {})[weltId] || null
+}
+
+/** @returns {number|null} gutgeschriebene Edelsteine oder null, wenn schon offen */
+export function oeffneWeltTruhe(weltId, edelsteine = 5) {
+  const d = { ...laden() }
+  d.weltTruhen = { ...(d.weltTruhen || {}) }
+  if (d.weltTruhen[weltId]) return null
+  d.weltTruhen[weltId] = heute()
+  d.edelsteine = (d.edelsteine || 0) + edelsteine
+  sichern(d)
+  return edelsteine
+}
+
 export function truheOeffnen() {
   const d = { ...laden() }
   if (d.truhe === heute()) return null
@@ -271,3 +310,9 @@ export function ankiZeilen() {
 }
 
 export { SICHER_AB }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.fortschritt) cache = null
+})

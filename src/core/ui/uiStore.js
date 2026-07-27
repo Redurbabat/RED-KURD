@@ -1,7 +1,7 @@
 // Oberflaechen-Einstellungen: Modus (modern/abenteuer), Design, Ton, Animationen.
 // WICHTIG: Hier liegt nur die Darstellung. Der Lernstand ist davon voellig getrennt.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { melden, beiFremdaenderung } from '../store.js'
 
 const STANDARD = {
   version: 1,
@@ -61,3 +61,9 @@ export function anwenden() {
   const farbe = document.querySelector('meta[name="theme-color"]')
   if (farbe) farbe.setAttribute('content', theme === 'dark' ? '#0d1720' : '#0ea5a8')
 }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.ui) cache = null
+})

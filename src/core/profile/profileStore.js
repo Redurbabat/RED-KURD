@@ -1,6 +1,6 @@
 // Lernprofil: Name, Ziel, Vorkenntnisse, Tagesziel, Sprachvariante.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { melden, beiFremdaenderung } from '../store.js'
 
 export const ZIELE = [
   { id: 'familie', name: 'Familie & Wurzeln', icon: 'familie' },
@@ -82,3 +82,9 @@ export function standardDauer() {
   if (p.minuten === '20') return 'intensiv'
   return 'standard'
 }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.profil) cache = null
+})

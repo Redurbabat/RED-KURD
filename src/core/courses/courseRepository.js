@@ -141,18 +141,39 @@ export const EINHEITEN = sortiereEinheiten().map((k, i) => ({
 
 export const ALLE_WOERTER = EINHEITEN.flatMap((e) => e.woerter)
 
+// Manche Wörter kommen mehrfach vor: „roj" heisst Tag UND Sonne. Eine einfache
+// Map würde die erste Bedeutung überschreiben und im Untertitel die falsche
+// zeigen — deshalb sammeln wir alle und nennen sie gemeinsam.
+function sammle(schluessel, wert) {
+  const map = new Map()
+  for (const w of ALLE_WOERTER) {
+    const k = w[schluessel]
+    const v = w[wert]
+    if (!k || !v) continue
+    const bisher = map.get(k)
+    if (!bisher) map.set(k, [v])
+    else if (!bisher.includes(v)) bisher.push(v)
+  }
+  return map
+}
+
 const BILD_VON_KU = new Map(ALLE_WOERTER.filter((w) => w.bild).map((w) => [w.ku, w.bild]))
-const DE_VON_KU = new Map(ALLE_WOERTER.map((w) => [w.ku, w.de]))
-const KU_VON_DE = new Map(ALLE_WOERTER.map((w) => [w.de, w.ku]))
+const DE_VON_KU = sammle('ku', 'de')
+const KU_VON_DE = sammle('de', 'ku')
 
 export function bildVon(ku) {
   return BILD_VON_KU.get(ku)
 }
+
+/** Alle deutschen Bedeutungen eines Kurmancî-Worts, z. B. „Tag / Sonne". */
 export function deutschVon(ku) {
-  return DE_VON_KU.get(ku)
+  const treffer = DE_VON_KU.get(ku)
+  return treffer ? treffer.join(' / ') : undefined
 }
+
 export function kurmanciVon(de) {
-  return KU_VON_DE.get(de)
+  const treffer = KU_VON_DE.get(de)
+  return treffer ? treffer.join(' / ') : undefined
 }
 
 export function holeEinheit(id) {
@@ -239,13 +260,20 @@ export function weltFortschritt(weltId) {
   }
 }
 
-/** Eine Welt ist offen, sobald die vorige zur Haelfte geschafft ist. */
+/**
+ * Eine Welt ist offen, sobald die vorige zur Hälfte geschafft ist — aber nur,
+ * wenn wenigstens eine ihrer Einheiten wirklich erreichbar ist. Sonst stünde
+ * „Aktuell" über einer Welt, deren Stationen alle ein Schloss tragen.
+ */
 export function weltStatus(weltId) {
   const index = WELTEN.findIndex((w) => w.id === weltId)
-  if (index <= 0) return weltFortschritt(weltId).offen ? 'aktuell' : 'fertig'
-  const vorher = weltFortschritt(WELTEN[index - 1].id)
   const eigen = weltFortschritt(weltId)
   if (!eigen.offen) return 'fertig'
-  if (eigen.fertig > 0) return 'aktuell'
-  return vorher.fertig >= Math.ceil(vorher.gesamt / 2) ? 'aktuell' : 'gesperrt'
+
+  const hatOffeneStation = einheitenDerWelt(weltId).some((e) => einheitStatus(e.id) !== 'gesperrt')
+  if (index <= 0) return 'aktuell'
+  if (eigen.fertig > 0 || hatOffeneStation) return 'aktuell'
+
+  const vorher = weltFortschritt(WELTEN[index - 1].id)
+  return vorher.fertig >= Math.ceil(vorher.gesamt / 2) && hatOffeneStation ? 'aktuell' : 'gesperrt'
 }

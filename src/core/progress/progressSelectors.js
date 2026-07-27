@@ -1,7 +1,7 @@
 // Auswertungen des Lernstands: faellige Karten, Fertigkeiten, Wochenaktivitaet.
 // Reine Lesefunktionen — sie aendern nichts.
 import { holeFortschritt, level } from './progressStore.js'
-import { heute, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.js'
+import { heute, tagVon, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.js'
 
 /** Alle heute faelligen Karten. */
 export function faelligeKarten() {
@@ -91,7 +91,7 @@ export function wochenAktivitaet() {
   for (let i = 6; i >= 0; i--) {
     const t = new Date()
     t.setDate(t.getDate() - i)
-    const key = t.toISOString().slice(0, 10)
+    const key = tagVon(t)
     const e = (d.tage || {})[key] || { aufgaben: 0, richtig: 0, sekunden: 0 }
     aus.push({
       tag: WOCHENTAGE[t.getDay()],
@@ -113,7 +113,7 @@ export function tagesStatistik(datum = heute()) {
 export function gesternStatistik() {
   const t = new Date()
   t.setDate(t.getDate() - 1)
-  return tagesStatistik(t.toISOString().slice(0, 10))
+  return tagesStatistik(tagVon(t))
 }
 
 /** Wieviele Aufgaben wurden diese Woche geloest? (fuer Wochenaufgaben) */

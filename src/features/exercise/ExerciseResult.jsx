@@ -30,10 +30,13 @@ export default function ExerciseResult({
       </p>
 
       {sterne !== null && (
-        <p className="rk-sterne" aria-label={`${sterne} von 3 Sternen`}>
-          {[1, 2, 3].map((i) => (
-            <Icon key={i} name="stern" groesse={34} className={i <= sterne ? 'stern-voll' : 'stern-leer'} />
-          ))}
+        <p className="rk-sterne">
+          <span aria-hidden="true">
+            {[1, 2, 3].map((i) => (
+              <Icon key={i} name="stern" groesse={34} className={i <= sterne ? 'stern-voll' : 'stern-leer'} />
+            ))}
+          </span>
+          <span className="nur-sr">{sterne} von 3 Sternen</span>
         </p>
       )}
 

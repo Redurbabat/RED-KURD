@@ -23,7 +23,7 @@ import {
 import { kursFortschritt } from '../../../core/courses/courseRepository.js'
 import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.js'
 import { holeUi, setzeUi } from '../../../core/ui/uiStore.js'
-import { holeShop } from '../../../core/shop/shopStore.js'
+import { holeShop, setzeShop } from '../../../core/shop/shopStore.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'
@@ -375,6 +375,9 @@ function Datenverwaltung() {
         setzeFortschritt(daten.fortschritt)
         if (daten.profil) setzeProfil(daten.profil)
         if (daten.ui) setzeUi(daten.ui)
+        // Der Export enthält den Shop — beim Import muss er auch zurückkommen,
+        // sonst sind gekaufte Artikel nach dem Geräte-Wechsel weg.
+        if (daten.shop) setzeShop(daten.shop)
         window.location.reload()
       } catch {
         setLaden(false)

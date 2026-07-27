@@ -1,8 +1,9 @@
 // Auszeichnungen. Sie werden aus dem Lernstand berechnet — gesperrte
 // Auszeichnungen bleiben sichtbar, damit klar ist, was als Naechstes kommt.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { melden, beiFremdaenderung } from '../store.js'
 import { statistik } from '../progress/progressSelectors.js'
+import { heute } from '../progress/scheduler.js'
 import { kursFortschritt, WELTEN, weltFortschritt } from '../courses/courseRepository.js'
 
 export const AUSZEICHNUNGEN = [
@@ -104,7 +105,7 @@ export function holeAuszeichnungen() {
   const liste = AUSZEICHNUNGEN.map((a) => {
     const frei = !!a.pruefe(s, { ...k, weltenFertig })
     if (frei && !erhalten[a.id]) {
-      erhalten[a.id] = new Date().toISOString().slice(0, 10)
+      erhalten[a.id] = heute()
       geaendert = true
     }
     return { ...a, frei, seit: erhalten[a.id] || null }
@@ -127,3 +128,9 @@ export function zuruecksetzen() {
   schreibe(KEYS.auszeichnungen, cache)
   melden()
 }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.auszeichnungen) cache = null
+})

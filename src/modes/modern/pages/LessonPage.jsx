@@ -120,6 +120,7 @@ export default function LessonPage({ unitId, lessonId }) {
   if (!ergebnis) {
     return (
       <ExercisePlayer
+        speichern={false}
         key={lauf.schluessel + '#' + lauf.nr}
         stil="modern"
         uebungen={lauf.uebungen}

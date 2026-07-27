@@ -971,8 +971,14 @@
 }
 .rk-leben {
   display: inline-flex;
-  gap: 2px;
+  align-items: center;
+  gap: 4px;
   color: var(--rk-red);
+}
+.rk-leben-zahl {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-text-muted);
 }
 .rk-leben .leer {
   opacity: 0.28;
@@ -1164,8 +1170,11 @@
 .rk-sterne {
   display: flex;
   justify-content: center;
-  gap: var(--space-2);
   margin-bottom: var(--space-4);
+}
+.rk-sterne > span[aria-hidden] {
+  display: flex;
+  gap: var(--space-2);
 }
 .stern-voll {
   color: var(--rk-yellow);
