@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { woerter as startWoerter } from './data/woerter.js'
 import Lernen from './Lernen.jsx'
+import { sucheStatisch, beispieleStatisch, statischeAnzahl } from './statisch.js'
 import { statistik } from './fortschritt.js'
 
 const SPRACHEN = { deu: 'Deutsch', kur: 'Kurdisch', kmr: 'Kurmancî', ckb: 'Soranî', eng: 'Englisch', tur: 'Türkisch' }
@@ -23,14 +24,19 @@ function Woerterbuch() {
       const d = await r.json()
       setErgebnis(d); setOffline(false)
     } catch {
-      setOffline(true)
-      const s = q.toLowerCase()
-      setErgebnis({
-        woerter: startWoerter
-          .filter(w => w.de.toLowerCase().includes(s) || w.ku.toLowerCase().includes(s))
-          .map(w => ({ lang: 'deu', wort: w.de, ziel_lang: 'kur', uebersetzung: w.ku, quelle: 'start' })),
-        wiki: [],
-      })
+      try {
+        setErgebnis(await sucheStatisch(q))
+        setOffline(false)
+      } catch {
+        setOffline(true)
+        const s = q.toLowerCase()
+        setErgebnis({
+          woerter: startWoerter
+            .filter(w => w.de.toLowerCase().includes(s) || w.ku.toLowerCase().includes(s))
+            .map(w => ({ lang: 'deu', wort: w.de, ziel_lang: 'kur', uebersetzung: w.ku, quelle: 'start' })),
+          wiki: [], formen: [],
+        })
+      }
     }
     setLaden(false)
   }
@@ -43,7 +49,9 @@ function Woerterbuch() {
       const r = await fetch(`/api/beispiele?q=${encodeURIComponent(wort)}&lang=${quellLang}&ziel=${zielLang}`)
       const d = await r.json()
       setBeispiele({ wort, saetze: d.saetze || [] })
-    } catch { /* Server aus */ }
+    } catch {
+      try { setBeispiele({ wort, saetze: await beispieleStatisch(wort) }) } catch { /* keine Daten */ }
+    }
   }
 
   return (
@@ -136,7 +144,9 @@ export default function App() {
   const [status, setStatus] = useState(null)
 
   useEffect(() => {
-    fetch('/api/status').then(r => r.json()).then(setStatus).catch(() => setStatus(false))
+    fetch('/api/status').then(r => r.json()).then(setStatus).catch(() =>
+      statischeAnzahl().then(a => setStatus({ saetze: a.beispiele, woerter: a.woerter, online: true })).catch(() => setStatus(false))
+    )
   }, [])
 
   return (
@@ -158,6 +168,9 @@ export default function App() {
             {status && status.saetze ? (
               <p>✅ Datenbank verbunden: <strong>{status.saetze.toLocaleString('de')}</strong> Sätze
                  und <strong>{status.woerter.toLocaleString('de')}</strong> Wortpaare bereit.</p>
+            ) : status && status.online ? (
+              <p>🌐 Online-Version: <strong>{status.woerter.toLocaleString('de')}</strong> Wortpaare
+                 und <strong>{status.saetze.toLocaleString('de')}</strong> kurdische Beispielsätze geladen.</p>
             ) : status === false ? (
               <p>⚠ Datenbank-Server läuft nicht. Starte die App mit <strong>START-LOKAL.bat</strong>,
                  dann stehen 13,5 Millionen Sätze bereit. (Ohne Server funktioniert der Grundwortschatz.)</p>
