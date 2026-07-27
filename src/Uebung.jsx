@@ -1,11 +1,10 @@
-// Gemeinsame Uebungs-Engine: alle Aufgabentypen, Skill-Bewertung, Fortsetzen
+// Gemeinsame Uebungs-Engine im RED-KURD-Design: A/B/C/D-Karten, Herzen, Helo-Feedback
 import { useEffect, useState } from 'react'
 import { kurse } from './data/kurse.js'
-import { gibXp, karteBewertenSkill, sessionSpeichern, sessionLoeschen } from './fortschritt.js'
+import { gibXp, karteBewertenSkill, sessionSpeichern, sessionLoeschen, zaehleAufgabe, istRichtigGetippt } from './fortschritt.js'
 import { sprich } from './schrift.js'
 import { spieleWort } from './audio.js'
 
-// Fisher-Yates statt sort(random) – fair gemischt
 export function mische(arr) {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -16,13 +15,15 @@ export function mische(arr) {
 }
 
 export const alleKursWoerter = kurse.flatMap(k => k.woerter)
+const DE_VON_KU = new Map(alleKursWoerter.map(w => [w.ku, w.de]))
+const KU_VON_DE = new Map(alleKursWoerter.map(w => [w.de, w.ku]))
+const BUCHSTABEN = ['A', 'B', 'C', 'D']
 
 const SKILL_JE_ART = {
   'wahl-de': 'erkennen', 'bild': 'erkennen',
   'wahl-ku': 'abrufen', 'tippen': 'schreiben', 'hoeren': 'hoeren',
 }
 
-// Baut Uebungen aus Woertern. arten: welche Aufgabentypen erlaubt sind
 export function baueUebungen(woerter, arten) {
   const erlaubt = arten || ['wahl-ku', 'wahl-de', 'tippen', 'bild', 'hoeren']
   const alle = alleKursWoerter
@@ -31,7 +32,6 @@ export function baueUebungen(woerter, arten) {
   for (const w of mische(woerter)) {
     let auswahl = [...erlaubt]
     if (!w.bild) auswahl = auswahl.filter(x => x !== 'bild')
-    // Nicht mehr als 3 gleiche Aufgaben hintereinander
     if (gleicheFolge >= 2 && auswahl.length > 1) auswahl = auswahl.filter(x => x !== letzteArt)
     const art = mische(auswahl)[0]
     gleicheFolge = art === letzteArt ? gleicheFolge + 1 : 0
@@ -48,11 +48,7 @@ export function baueUebungen(woerter, arten) {
       if (falsche.length < 3) continue
       uebungen.push({ art, frage: w.ku, antwort: w.bild,
         optionen: mische([w, ...falsche]).map(x => ({ bild: x.bild, ku: x.ku })), w })
-    } else if (art === 'hoeren') {
-      const falsche = mische(alle.filter(x => x.de !== w.de)).slice(0, 3)
-      uebungen.push({ art, frage: w.ku, antwort: w.de,
-        optionen: mische([w.de, ...falsche.map(x => x.de)]), w })
-    } else if (art === 'wahl-de') {
+    } else if (art === 'hoeren' || art === 'wahl-de') {
       const falsche = mische(alle.filter(x => x.de !== w.de)).slice(0, 3)
       uebungen.push({ art, frage: w.ku, antwort: w.de,
         optionen: mische([w.de, ...falsche.map(x => x.de)]), w })
@@ -67,19 +63,12 @@ export function baueUebungen(woerter, arten) {
   return uebungen
 }
 
-function istRichtigGetippt(eingabe, richtig) {
-  const norm = (s) => s.toLowerCase().trim()
-    .replace(/ê/g, 'e').replace(/î/g, 'i').replace(/û/g, 'u')
-    .replace(/ş/g, 's').replace(/ç/g, 'c')
-    .replace(/[.,!?']/g, '').replace(/\s+/g, ' ')
-  return norm(eingabe) === norm(richtig)
-}
-
 export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte }) {
   const [index, setIndex] = useState(startIndex || 0)
   const [punkte, setPunkte] = useState(startPunkte || 0)
   const [antwort, setAntwort] = useState(null)
   const [eingabe, setEingabe] = useState('')
+  const [leben, setLeben] = useState(3)
 
   const u = uebungen[index]
   const fertig = index >= uebungen.length
@@ -100,8 +89,8 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
 
   if (fertig) {
     return (
-      <div className="ergebnis">
-        <span className="maskottchen-gross">🦅</span>
+      <div className="feedback gut ergebnis-feld">
+        <img src="/bilder/helo-daumen.png" alt="" className="helo-mini" />
         <div>
           <strong>Hêlo ist stolz auf dich!</strong><br />
           {punkte} von {uebungen.length} richtig · +{punkte * 10} XP
@@ -110,9 +99,13 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
     )
   }
 
+  const richtigGewaehlt = antwort !== null && antwort === u.antwort
+
   function bewerten(richtig) {
     if (richtig) { setPunkte(p => p + 1); gibXp(10) }
+    else setLeben(l => Math.max(0, l - 1))
     karteBewertenSkill(u.w.de, u.w.ku, SKILL_JE_ART[u.art] || 'erkennen', richtig)
+    zaehleAufgabe(richtig)
   }
 
   function waehle(opt) {
@@ -131,15 +124,22 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
 
   function weiter() { setAntwort(null); setEingabe(''); setIndex(i => i + 1) }
 
+  function untertitel(opt) {
+    return DE_VON_KU.get(opt) || KU_VON_DE.get(opt) || ''
+  }
+
   return (
     <div>
-      <div className="balken"><div className="balken-voll" style={{ width: `${(index / uebungen.length) * 100}%` }} /></div>
-      <p className="hinweis">{titel} · Aufgabe {index + 1} von {uebungen.length} · {punkte} richtig</p>
+      <div className="uebung-kopf">
+        <div className="balken"><div className="balken-voll" style={{ width: `${(index / uebungen.length) * 100}%` }} /></div>
+        <span className="herzen">{'❤️'.repeat(leben)}{'🤍'.repeat(3 - leben)}</span>
+      </div>
+      <p className="hinweis">{titel} · Aufgabe {index + 1} von {uebungen.length}</p>
 
       {u.art === 'bild' && (
         <>
-          <div className="frage">Welches Bild passt zu <strong>„{u.frage}"</strong>?
-            {' '}<span className="kat">({u.w.de})</span></div>
+          <div className="frage">Welches Bild passt zu <strong>„{u.frage}"</strong>?</div>
+          <button className="hoer-pille" onClick={() => spieleWort(u.frage)}>▶ Aussprache anhören</button>
           <div className="optionen bild-optionen">
             {u.optionen.map(opt => {
               let cls = 'option bild-option'
@@ -157,23 +157,46 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
         </>
       )}
 
-      {u.art === 'hoeren' && (
+      {(u.art === 'hoeren' || u.art === 'wahl-de' || u.art === 'wahl-ku') && (
         <>
-          <div className="frage">
-            <button className="hoer-knopf" onClick={() => spieleWort(u.frage)}>🔊</button>
-            {' '}Was hörst du? Wähle die Bedeutung:
-          </div>
-          <div className="optionen">
-            {u.optionen.map(opt => {
-              let cls = 'option'
+          {u.art === 'hoeren' ? (
+            <>
+              <div className="frage">Was hörst du?</div>
+              <button className="hoer-pille" onClick={() => spieleWort(u.frage)}>▶ Aussprache anhören</button>
+            </>
+          ) : (
+            <>
+              <div className="frage">
+                {u.w.bild && <span className="frage-bild">{u.w.bild}</span>}
+                Wie sagt man <strong>„{u.frage}"</strong>?
+              </div>
+              {u.art === 'wahl-de' && (
+                <button className="hoer-pille" onClick={() => spieleWort(u.w.ku)}>▶ Aussprache anhören</button>
+              )}
+            </>
+          )}
+          <div className="optionen liste">
+            {u.optionen.map((opt, i) => {
+              let cls = 'option antwort-karte'
               if (antwort !== null) {
                 if (opt === u.antwort) cls += ' richtig'
                 else if (opt === antwort) cls += ' falsch'
               }
-              return <button key={opt} className={cls} onClick={() => waehle(opt)}>{opt}</button>
+              return (
+                <button key={opt} className={cls} onClick={() => waehle(opt)}>
+                  <span className="buchstabe">{BUCHSTABEN[i]}</span>
+                  <span className="antwort-text">
+                    <strong>{opt}</strong>
+                    {untertitel(opt) && <small>{untertitel(opt)}</small>}
+                  </span>
+                  {antwort !== null && opt === u.antwort && <span className="haken-klein">✓</span>}
+                </button>
+              )
             })}
           </div>
-          {antwort !== null && <div className="hinweis">Das Wort war: <strong>{u.frage}</strong></div>}
+          {u.art === 'hoeren' && antwort !== null && (
+            <p className="hinweis">Das Wort war: <strong>{u.frage}</strong></p>
+          )}
         </>
       )}
 
@@ -193,34 +216,29 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
               <button key={z} type="button" className="taste" onClick={() => setEingabe(eingabe + z)}>{z}</button>
             ))}
           </div>
-          {antwort !== null && (
-            <div className={antwort === u.antwort ? 'richtig-text' : 'falsch-text'}>
-              {antwort === u.antwort ? '✓ Richtig!' : `✗ Richtig wäre: ${u.antwort}`}
-            </div>
+        </>
+      )}
+
+      {antwort !== null && (
+        <div className={'feedback ' + (richtigGewaehlt ? 'gut' : 'schlecht')}>
+          {richtigGewaehlt ? (
+            <>
+              <img src="/bilder/helo-daumen.png" alt="" className="helo-mini" />
+              <div><strong>Super!</strong> Das ist richtig.</div>
+            </>
+          ) : (
+            <div><strong>Fast!</strong> Richtig wäre: <strong>{u.antwort}</strong>
+              {u.art === 'tippen' ? '' : ` (${untertitel(u.antwort)})`}</div>
           )}
-        </>
+        </div>
       )}
 
-      {(u.art === 'wahl-ku' || u.art === 'wahl-de') && (
-        <>
-          <div className="frage">
-            {u.w.bild && <span className="frage-bild">{u.w.bild}</span>}
-            Was heißt <strong>„{u.frage}"</strong> auf {u.art === 'wahl-de' ? 'Deutsch' : 'Kurmancî'}?
-          </div>
-          <div className="optionen">
-            {u.optionen.map(opt => {
-              let cls = 'option'
-              if (antwort !== null) {
-                if (opt === u.antwort) cls += ' richtig'
-                else if (opt === antwort) cls += ' falsch'
-              }
-              return <button key={opt} className={cls} onClick={() => waehle(opt)}>{opt}</button>
-            })}
-          </div>
-        </>
+      {antwort !== null && (
+        <button className="weiter breit" onClick={weiter}>Weiter zur nächsten Aufgabe ›</button>
       )}
 
-      {antwort !== null && <button className="weiter" onClick={weiter}>Weiter →</button>}
+      <p className="tipp-zeile">💡 <strong>Tipp:</strong> Höre dir die Aussprache an und sprich mit!{' '}
+        <button className="ton" onClick={() => spieleWort(u.w.ku)}>🔊</button></p>
     </div>
   )
 }

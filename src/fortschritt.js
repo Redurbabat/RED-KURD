@@ -1,4 +1,4 @@
-// Lernstand im Browser speichern: XP, Tagesserie, Wiederholsystem (SM-2 vereinfacht)
+// Lernstand im Browser: XP, Serie, Wiederholsystem, Fertigkeiten, Profil, Aktivitaet
 const SCHLUESSEL = 'red-kurd-fortschritt-v1'
 
 function lade() {
@@ -7,7 +7,6 @@ function lade() {
 function speichere(d) {
   try { localStorage.setItem(SCHLUESSEL, JSON.stringify(d)) } catch {}
 }
-
 function heute() { return new Date().toISOString().slice(0, 10) }
 function gestern() {
   const d = new Date(); d.setDate(d.getDate() - 1)
@@ -20,8 +19,8 @@ export function holeStand() {
     xp: d.xp || 0,
     serie: d.serie || 0,
     letzterTag: d.letzterTag || null,
-    lektionen: d.lektionen || {},   // { lektionsId: bestesErgebnis 0..100 }
-    karten: d.karten || {},         // { 'de|ku': {stufe, faellig} }
+    lektionen: d.lektionen || {},
+    karten: d.karten || {},
   }
 }
 
@@ -43,12 +42,9 @@ export function lektionAbgeschlossen(id, prozent) {
   speichere(d)
 }
 
-// Wiederholsystem: Stufe 0=neu, dann 1,2,3... Abstand 1,3,7,16,35 Tage
 const ABSTAENDE = [1, 3, 7, 16, 35, 70]
-export function karteBewerten(de, ku, richtig) {
-  const d = lade()
-  d.karten = d.karten || {}
-  const k = d.karten[de + '|' + ku] || { stufe: 0, faellig: heute() }
+function bewerteKarte(d, key, richtig) {
+  const k = d.karten[key] || { stufe: 0, faellig: heute() }
   if (richtig) {
     k.stufe = Math.min(k.stufe + 1, ABSTAENDE.length)
     const t = new Date(); t.setDate(t.getDate() + ABSTAENDE[Math.min(k.stufe - 1, ABSTAENDE.length - 1)])
@@ -57,41 +53,19 @@ export function karteBewerten(de, ku, richtig) {
     k.stufe = 0
     k.faellig = heute()
   }
-  d.karten[de + '|' + ku] = k
+  d.karten[key] = k
+}
+
+export function karteBewerten(de, ku, richtig) {
+  const d = lade(); d.karten = d.karten || {}
+  bewerteKarte(d, de + '|' + ku, richtig)
   speichere(d)
 }
 
-export function faelligeKarten() {
-  const d = lade()
-  const h = heute()
-  return Object.entries(d.karten || {})
-    .filter(([, k]) => k.faellig <= h)
-    .map(([schluessel, k]) => {
-      const [de, ku] = schluessel.split('|')
-      return { de, ku, stufe: k.stufe }
-    })
-}
-
-export function statistik() {
-  const d = lade()
-  const karten = Object.values(d.karten || {})
-  return {
-    xp: d.xp || 0,
-    serie: d.serie || 0,
-    gelernt: karten.length,
-    sicher: karten.filter(k => k.stufe >= 3).length,
-    faellig: faelligeKarten().length,
-    lektionen: d.lektionen || {},
-  }
-}
-
-// Tolerantes Vergleichen fuer Tipp-Uebungen (Gross/klein, Sonderzeichen)
-export function istRichtigGetippt(eingabe, richtig) {
-  const norm = (s) => s.toLowerCase().trim()
-    .replace(/ê/g, 'e').replace(/î/g, 'i').replace(/û/g, 'u')
-    .replace(/ş/g, 's').replace(/ç/g, 'c')
-    .replace(/[.,!?']/g, '').replace(/\s+/g, ' ')
-  return norm(eingabe) === norm(richtig)
+export function karteBewertenSkill(de, ku, skill, richtig) {
+  const d = lade(); d.karten = d.karten || {}
+  bewerteKarte(d, de + '|' + ku + '|' + skill, richtig)
+  speichere(d)
 }
 
 export function merkeWort(de, ku) {
@@ -103,31 +77,8 @@ export function merkeWort(de, ku) {
   }
 }
 
-export function ankiExport() {
-  const d = lade()
-  const zeilen = Object.keys(d.karten || {}).map(schluessel => {
-    const [de, ku] = schluessel.split('|')
-    return de + '\t' + ku
-  })
-  return zeilen.join('\n')
-}
-
-// ===== V2: Lernzustand pro Fertigkeit (erkennen/abrufen/schreiben/hoeren) =====
-export function karteBewertenSkill(de, ku, skill, richtig) {
-  const d = lade()
-  d.karten = d.karten || {}
-  const key = de + '|' + ku + '|' + skill
-  const k = d.karten[key] || { stufe: 0, faellig: heute() }
-  if (richtig) {
-    k.stufe = Math.min(k.stufe + 1, ABSTAENDE.length)
-    const t = new Date(); t.setDate(t.getDate() + ABSTAENDE[Math.min(k.stufe - 1, ABSTAENDE.length - 1)])
-    k.faellig = t.toISOString().slice(0, 10)
-  } else {
-    k.stufe = 0
-    k.faellig = heute()
-  }
-  d.karten[key] = k
-  speichere(d)
+export function faelligeKarten() {
+  return faelligeKartenAlle()
 }
 
 export function faelligeKartenAlle() {
@@ -158,6 +109,27 @@ export function fertigkeiten() {
   return aus
 }
 
+export function statistik() {
+  const d = lade()
+  const karten = Object.values(d.karten || {})
+  return {
+    xp: d.xp || 0,
+    serie: d.serie || 0,
+    gelernt: karten.length,
+    sicher: karten.filter(k => k.stufe >= 3).length,
+    faellig: faelligeKartenAlle().length,
+    lektionen: d.lektionen || {},
+  }
+}
+
+export function istRichtigGetippt(eingabe, richtig) {
+  const norm = (s) => s.toLowerCase().trim()
+    .replace(/ê/g, 'e').replace(/î/g, 'i').replace(/û/g, 'u')
+    .replace(/ş/g, 's').replace(/ç/g, 'c')
+    .replace(/[.,!?']/g, '').replace(/\s+/g, ' ')
+  return norm(eingabe) === norm(richtig)
+}
+
 // ===== Session-Fortsetzung =====
 const SESSION_KEY = 'red-kurd-session-v1'
 export function sessionSpeichern(daten) {
@@ -179,7 +151,7 @@ export function profilLaden() {
   try { return JSON.parse(localStorage.getItem(PROFIL_KEY)) } catch { return null }
 }
 
-// ===== Geraete-Sync per Datei (ohne Konto, local-first) =====
+// ===== Geraete-Sync per Datei =====
 export function exportiereAlles() {
   return JSON.stringify({
     version: 1,
@@ -188,11 +160,49 @@ export function exportiereAlles() {
     profil: profilLaden(),
   }, null, 2)
 }
-
 export function importiereAlles(text) {
   const daten = JSON.parse(text)
   if (!daten || daten.version !== 1) throw new Error('Unbekanntes Format')
   if (daten.fortschritt) speichere(daten.fortschritt)
   if (daten.profil) profilSpeichern(daten.profil)
   return true
+}
+
+export function ankiExport() {
+  const d = lade()
+  const zeilen = Object.keys(d.karten || {}).map(schluessel => {
+    const [de, ku] = schluessel.split('|')
+    return de + '\t' + ku
+  })
+  return [...new Set(zeilen)].join('\n')
+}
+
+// ===== Tages-Aktivitaet (Rueckblick + Wochen-Chart) =====
+export function zaehleAufgabe(richtig) {
+  const d = lade()
+  const t = heute()
+  d.tage = d.tage || {}
+  const e = d.tage[t] || { aufgaben: 0, richtig: 0 }
+  e.aufgaben++; if (richtig) e.richtig++
+  d.tage[t] = e
+  const alle = Object.keys(d.tage).sort()
+  while (alle.length > 30) { delete d.tage[alle.shift()] }
+  speichere(d)
+}
+
+export function gesternStatistik() {
+  const d = lade()
+  return (d.tage && d.tage[gestern()]) || null
+}
+
+export function wochenAktivitaet() {
+  const d = lade()
+  const namen = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+  const aus = []
+  for (let i = 6; i >= 0; i--) {
+    const t = new Date(); t.setDate(t.getDate() - i)
+    const key = t.toISOString().slice(0, 10)
+    aus.push({ tag: namen[t.getDay()], anzahl: (d.tage && d.tage[key]) ? d.tage[key].aufgaben : 0 })
+  }
+  return aus
 }

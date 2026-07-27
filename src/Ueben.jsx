@@ -1,49 +1,57 @@
-// Ueben: gezieltes Training einzelner Fertigkeiten
+// Ueben im RED-KURD-Design: farbige Kacheln, Empfehlung, schwierige Woerter
 import { useState } from 'react'
-import { faelligeKartenAlle } from './fortschritt.js'
+import { faelligeKartenAlle, fertigkeiten } from './fortschritt.js'
 import { Uebung, baueUebungen, mische, alleKursWoerter } from './Uebung.jsx'
+import { spieleWort } from './audio.js'
 import Satzbau from './Satzbau.jsx'
 import Aussprache from './Aussprache.jsx'
 
 const MODI = [
-  { id: 'wdh', symbol: '🔁', name: 'Wiederholen', text: 'Fällige Wörter aus deinem Wiederholsystem' },
-  { id: 'bilder', symbol: '🖼️', name: 'Bilder', text: 'Bild-Zuordnung wie bei Duolingo' },
-  { id: 'hoeren', symbol: '👂', name: 'Hören', text: 'Wort anhören, Bedeutung wählen' },
-  { id: 'schreiben', symbol: '✍️', name: 'Schreiben', text: 'Wörter aktiv eintippen' },
-  { id: 'satzbau', symbol: '🧩', name: 'Satzbau', text: 'Echte Sätze aus Blöcken bauen' },
-  { id: 'aussprache', symbol: '🎙️', name: 'Aussprache', text: 'Anhören, nachsprechen, aufnehmen' },
+  { id: 'wdh', symbol: '📇', farbe: 'gruen', name: 'Karteikarten', text: 'Wiederholen & merken' },
+  { id: 'hoeren', symbol: '🎧', farbe: 'lila', name: 'Hören', text: 'Wörter und Sätze verstehen' },
+  { id: 'aussprache', symbol: '🎙️', farbe: 'orange', name: 'Sprechen', text: 'Nachsprechen & aufnehmen' },
+  { id: 'schreiben', symbol: '✍️', farbe: 'teal', name: 'Schreiben', text: 'Tippen und Diktat' },
+  { id: 'bilder', symbol: '🖼️', farbe: 'gruen', name: 'Bilder', text: 'Foto-Vokabeln' },
+  { id: 'satzbau', symbol: '🧩', farbe: 'orange', name: 'Satzbau', text: 'Sätze aus Blöcken bauen' },
 ]
 
 export default function Ueben() {
   const [aktiv, setAktiv] = useState(null)
   const faellig = faelligeKartenAlle()
+  const f = fertigkeiten()
+  const schwaechste = ['hoeren', 'schreiben', 'abrufen', 'erkennen']
+    .filter(s => f[s + 'Anzahl'] > 0)
+    .sort((a, b) => f[a] - f[b])[0]
+  const schwierige = mische(faellig.filter(k => k.stufe === 0)).slice(0, 3)
+
+  function findeBild(ku) {
+    const w = alleKursWoerter.find(x => x.ku === ku)
+    return w ? w.bild : undefined
+  }
 
   if (aktiv === 'aussprache') {
     return (
       <section>
-        <h2>🎙️ Aussprache</h2>
+        <h1>🎙️ Sprechen</h1>
         <Aussprache />
         <button className="weiter zweitrangig" onClick={() => setAktiv(null)}>← Zum Üben</button>
       </section>
     )
   }
-
   if (aktiv === 'satzbau') {
     return (
       <section>
-        <h2>🧩 Satzbau</h2>
+        <h1>🧩 Satzbau</h1>
         <Satzbau />
         <button className="weiter zweitrangig" onClick={() => setAktiv(null)}>← Zum Üben</button>
       </section>
     )
   }
-
   if (aktiv) {
     const modus = MODI.find(m => m.id === aktiv)
     let woerter, arten
     if (aktiv === 'wdh') {
-      woerter = mische(faellig).slice(0, 15).map(k => ({ de: k.de, ku: k.ku,
-        bild: (alleKursWoerter.find(x => x.ku === k.ku) || {}).bild }))
+      woerter = mische(faellig).slice(0, 15).map(k => ({ de: k.de, ku: k.ku, bild: findeBild(k.ku) }))
       arten = undefined
     } else {
       woerter = mische(alleKursWoerter).slice(0, 12)
@@ -52,7 +60,7 @@ export default function Ueben() {
     const uebungen = baueUebungen(woerter, arten)
     return (
       <section>
-        <h2>{modus.symbol} {modus.name}</h2>
+        <h1>{modus.symbol} {modus.name}</h1>
         {uebungen.length === 0 ? (
           <p>Nichts zu üben — super! {aktiv === 'wdh' ? 'Keine Wiederholungen fällig.' : ''}</p>
         ) : (
@@ -65,18 +73,53 @@ export default function Ueben() {
 
   return (
     <section>
-      <h2>Üben</h2>
-      <p className="hinweis">Trainiere gezielt einzelne Fertigkeiten. {faellig.length > 0 ? `🔁 ${faellig.length} Wörter warten auf Wiederholung.` : ''}</p>
+      <div className="seiten-kopf">
+        <div>
+          <h1>Üben</h1>
+          <p className="untertitel-neu">Trainiere gezielt deine Fähigkeiten</p>
+        </div>
+        <img src="/bilder/helo-avatar.png" alt="Hêlo" className="kopf-avatar" />
+      </div>
+
       <div className="ueben-kacheln">
         {MODI.map(m => (
           <button key={m.id} className="ueben-kachel" onClick={() => setAktiv(m.id)}>
-            <span className="ueben-symbol">{m.symbol}</span>
+            <span className={'icon-chip ' + m.farbe}>{m.symbol}</span>
             <strong>{m.name}</strong>
             <span className="hinweis">{m.text}</span>
             {m.id === 'wdh' && faellig.length > 0 && <span className="abzeichen">{faellig.length}</span>}
+            <span className="pfeil">›</span>
           </button>
         ))}
       </div>
+
+      {schwaechste && (
+        <div className="karte warm">
+          <div className="karte-titel orange-text">⭐ Empfohlen für dich</div>
+          <div className="kurs-zeile-heute">
+            <div style={{ flex: 1 }}>
+              <strong>{schwaechste === 'hoeren' ? 'Hören' : schwaechste === 'schreiben' ? 'Schreiben' : schwaechste === 'abrufen' ? 'Karteikarten' : 'Karteikarten'}</strong>
+              <div className="hinweis">Deine schwächste Fertigkeit ({f[schwaechste]} %) — eine kurze Übung stärkt sie.</div>
+            </div>
+            <button className="mini orange" onClick={() =>
+              setAktiv(schwaechste === 'hoeren' ? 'hoeren' : schwaechste === 'schreiben' ? 'schreiben' : 'wdh')
+            }>Jetzt starten</button>
+          </div>
+        </div>
+      )}
+
+      {schwierige.length > 0 && (
+        <div className="karte">
+          <div className="karte-titel">🧠 Schwierige Wörter</div>
+          <div className="tastatur">
+            {schwierige.map(k => (
+              <button key={k.ku} className="taste wort-chip" onClick={() => spieleWort(k.ku)}>
+                {k.ku} 🔊
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

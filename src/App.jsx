@@ -4,14 +4,14 @@ import Kurs from './Kurs.jsx'
 import Ueben from './Ueben.jsx'
 import Entdecken from './Entdecken.jsx'
 import Fortschritt from './Fortschritt.jsx'
-import { statistik, profilLaden } from './fortschritt.js'
 import Onboarding from './Onboarding.jsx'
+import { statistik, profilLaden } from './fortschritt.js'
 import { statischeAnzahl } from './statisch.js'
 import './styles.css'
 
 const NAV = [
-  ['heute', '🦅', 'Heute'],
-  ['kurs', '🎓', 'Kurs'],
+  ['heute', '🏠', 'Heute'],
+  ['kurs', '📗', 'Kurs'],
   ['ueben', '🏋️', 'Üben'],
   ['entdecken', '🧭', 'Entdecken'],
   ['fortschritt', '📊', 'Fortschritt'],
@@ -20,6 +20,7 @@ const NAV = [
 export default function App() {
   const [seite, setSeite] = useState('heute')
   const [status, setStatus] = useState(null)
+  const [eingerichtet, setEingerichtet] = useState(!!profilLaden())
 
   useEffect(() => {
     fetch('/api/status').then(r => r.json()).then(setStatus).catch(() =>
@@ -27,7 +28,6 @@ export default function App() {
     )
   }, [])
 
-  const [eingerichtet, setEingerichtet] = useState(!!profilLaden())
   const s = statistik()
 
   if (!eingerichtet) {
@@ -38,8 +38,8 @@ export default function App() {
     <div className="app">
       <aside className="leiste">
         <div className="marke">
-          <img src="/icon-192.png" className="logo" alt="" />
-          <span>RED-KURD</span>
+          <img src="/bilder/logo.png" className="logo" alt="" />
+          <span>RED-KURD<small>Lerne Kurmancî</small></span>
         </div>
         {NAV.map(([id, icon, name]) => (
           <button key={id} className={'leiste-knopf' + (seite === id ? ' aktiv' : '')}
@@ -53,9 +53,10 @@ export default function App() {
       </aside>
       <div className="inhalt">
         <div className="topbar">
-          <span className="top-stat feuer">🔥 {s.serie}</span>
-          <span className="top-stat stern">⭐ {s.xp} XP</span>
-          <span className="top-stat buch">📚 {s.gelernt}</span>
+          <img src="/bilder/logo.png" className="top-logo" alt="RED-KURD" />
+          <span className="top-lücke" />
+          <span className="stat-chip klein">🔥 <strong>{s.serie}</strong> <small>Tage</small></span>
+          <span className="stat-chip klein gelb">⭐ <strong>{s.xp}</strong> <small>XP</small></span>
         </div>
         <main>
           {seite === 'heute' && <Heute status={status} />}
