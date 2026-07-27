@@ -111,3 +111,61 @@ export function ankiExport() {
   })
   return zeilen.join('\n')
 }
+
+// ===== V2: Lernzustand pro Fertigkeit (erkennen/abrufen/schreiben/hoeren) =====
+export function karteBewertenSkill(de, ku, skill, richtig) {
+  const d = lade()
+  d.karten = d.karten || {}
+  const key = de + '|' + ku + '|' + skill
+  const k = d.karten[key] || { stufe: 0, faellig: heute() }
+  if (richtig) {
+    k.stufe = Math.min(k.stufe + 1, ABSTAENDE.length)
+    const t = new Date(); t.setDate(t.getDate() + ABSTAENDE[Math.min(k.stufe - 1, ABSTAENDE.length - 1)])
+    k.faellig = t.toISOString().slice(0, 10)
+  } else {
+    k.stufe = 0
+    k.faellig = heute()
+  }
+  d.karten[key] = k
+  speichere(d)
+}
+
+export function faelligeKartenAlle() {
+  const d = lade()
+  const h = heute()
+  return Object.entries(d.karten || {})
+    .filter(([, k]) => k.faellig <= h)
+    .map(([key, k]) => {
+      const teile = key.split('|')
+      return { de: teile[0], ku: teile[1], skill: teile[2] || 'gemischt', stufe: k.stufe }
+    })
+}
+
+export function fertigkeiten() {
+  const d = lade()
+  const map = { erkennen: [0, 0], abrufen: [0, 0], schreiben: [0, 0], hoeren: [0, 0] }
+  for (const [key, k] of Object.entries(d.karten || {})) {
+    const skill = key.split('|')[2] || 'erkennen'
+    if (!map[skill]) continue
+    map[skill][1]++
+    if (k.stufe >= 3) map[skill][0]++
+  }
+  const aus = {}
+  for (const [skill, [gut, gesamt]] of Object.entries(map)) {
+    aus[skill] = gesamt ? Math.round((gut / gesamt) * 100) : 0
+    aus[skill + 'Anzahl'] = gesamt
+  }
+  return aus
+}
+
+// ===== Session-Fortsetzung =====
+const SESSION_KEY = 'red-kurd-session-v1'
+export function sessionSpeichern(daten) {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify(daten)) } catch {}
+}
+export function sessionLaden() {
+  try { return JSON.parse(localStorage.getItem(SESSION_KEY)) } catch { return null }
+}
+export function sessionLoeschen() {
+  try { localStorage.removeItem(SESSION_KEY) } catch {}
+}

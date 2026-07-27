@@ -284,3 +284,81 @@ footer { display: none; }
   .bild-optionen { grid-template-columns: repeat(2, 1fr); }
   .optionen { grid-template-columns: 1fr; }
 }
+
+/* ===== Heute + Maskottchen Hêlo ===== */
+.heute-kopf { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.maskottchen {
+  font-size: 3.4rem; display: inline-block;
+  animation: schweben 3s ease-in-out infinite;
+}
+.maskottchen-gross { font-size: 3rem; }
+@keyframes schweben {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+.heute-start {
+  display: block; width: 100%; padding: 1.1rem; margin: .6rem 0;
+  font-family: inherit; font-size: 1.15rem; font-weight: 900;
+  text-transform: uppercase; letter-spacing: .06em;
+  color: #fff; background: var(--gruen);
+  border: none; border-bottom: 5px solid var(--gruen-dunkel);
+  border-radius: 18px; cursor: pointer;
+}
+.heute-start:hover { filter: brightness(1.06); }
+.heute-start:active { border-bottom-width: 2px; transform: translateY(3px); }
+.heute-start.fortsetzen { background: var(--blau); border-bottom-color: var(--blau-dunkel); }
+.heute-plan {
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+  font-size: .9rem; color: var(--text-hell); margin: .5rem 0 1rem;
+}
+.rueckstand {
+  background: #fff4e5; border: 2px solid #ffd28a; border-radius: 14px;
+  padding: .8rem 1rem; font-size: .9rem; color: #a05a00; margin-bottom: .8rem;
+}
+.heute-karten { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin-top: 1rem; }
+.heute-karte {
+  border: 2px solid var(--rand); border-bottom-width: 4px;
+  border-radius: 16px; padding: 1rem;
+}
+.heute-karte h3 { font-size: .8rem; text-transform: uppercase; color: var(--text-hell); letter-spacing: .06em; }
+.heute-karte .balken { margin: .5rem 0 .2rem; }
+
+/* ===== Ueben-Kacheln ===== */
+.ueben-kacheln { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.ueben-kachel {
+  position: relative; display: flex; flex-direction: column; gap: .2rem;
+  align-items: flex-start; text-align: left;
+  padding: 1rem 1.1rem; font-family: inherit;
+  border: 2px solid var(--rand); border-bottom-width: 4px;
+  border-radius: 16px; background: #fff; cursor: pointer;
+  transition: transform .1s ease;
+}
+.ueben-kachel:hover { transform: translateY(-2px); }
+.ueben-kachel:active { border-bottom-width: 2px; transform: translateY(2px); }
+.ueben-symbol { font-size: 2rem; }
+.ueben-kachel strong { font-weight: 900; }
+.ueben-kachel .hinweis { margin: 0; font-size: .8rem; }
+.abzeichen {
+  position: absolute; top: .7rem; right: .7rem;
+  background: var(--rot); color: #fff; font-weight: 900;
+  border-radius: 999px; padding: .1rem .55rem; font-size: .8rem;
+}
+
+/* ===== Fertigkeiten ===== */
+.skill-liste { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .5rem; }
+.skill-zeile { display: flex; align-items: center; gap: .8rem; }
+.skill-name { width: 130px; font-weight: 800; font-size: .9rem; }
+.skill-balken { flex: 1; margin: 0; }
+.skill-wert { width: 46px; text-align: right; font-weight: 900; color: var(--text-hell); font-size: .85rem; }
+
+.hoer-knopf {
+  font-size: 1.6rem; padding: .5rem .9rem; cursor: pointer;
+  background: var(--blau); border: none; border-bottom: 4px solid var(--blau-dunkel);
+  border-radius: 14px;
+}
+.hoer-knopf:active { border-bottom-width: 2px; transform: translateY(2px); }
+.weiter.zweitrangig { background: #fff; color: var(--text-hell); border: 2px solid var(--rand); border-bottom-width: 4px; }
+
+@media (max-width: 560px) {
+  .heute-karten, .ueben-kacheln { grid-template-columns: 1fr; }
+}
