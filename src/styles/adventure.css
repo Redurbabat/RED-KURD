@@ -22,16 +22,16 @@
   --rk-text-light: #7f939c;
   --rk-primary: var(--adv-teal);
   --rk-primary-dark: #2ad3ba;
-  --rk-primary-soft: rgba(20, 200, 176, 0.16);
+  --rk-primary-soft: rgba(0, 174, 179, 0.16);
   --rk-blue: var(--adv-blue);
   --rk-blue-dark: #5fc9f8;
-  --rk-blue-soft: rgba(39, 181, 245, 0.16);
+  --rk-blue-soft: rgba(0, 174, 179, 0.16);
   --rk-green-dark: var(--adv-green-dark);
-  --rk-green-soft: rgba(66, 209, 0, 0.14);
-  --rk-yellow-soft: rgba(255, 202, 40, 0.14);
-  --rk-orange-soft: rgba(255, 157, 46, 0.14);
-  --rk-red-soft: rgba(255, 75, 75, 0.14);
-  --rk-purple-soft: rgba(200, 107, 247, 0.16);
+  --rk-green-soft: rgba(37, 139, 87, 0.14);
+  --rk-yellow-soft: rgba(232, 184, 62, 0.14);
+  --rk-orange-soft: rgba(217, 130, 43, 0.14);
+  --rk-red-soft: rgba(183, 45, 50, 0.14);
+  --rk-purple-soft: rgba(158, 34, 51, 0.16);
   --shadow-card: var(--adv-shadow-card);
 }
 
@@ -193,7 +193,7 @@
 }
 .rk-shell-abenteuer .rk-untennav-knopf.aktiv {
   color: var(--adv-teal);
-  background: rgba(20, 200, 176, 0.12);
+  background: rgba(0, 174, 179, 0.12);
 }
 .rk-shell-abenteuer .rk-untennav-knopf.aktiv .rk-untennav-icon {
   background: var(--adv-teal);
@@ -205,7 +205,7 @@
   border-right-color: var(--adv-border);
 }
 .rk-shell-abenteuer .rk-seitennav-knopf.aktiv {
-  background: rgba(20, 200, 176, 0.14);
+  background: rgba(0, 174, 179, 0.14);
   color: var(--adv-teal);
 }
 
@@ -250,12 +250,43 @@
 }
 
 /* ---------- Abschnittskarte über dem Pfad ---------- */
+/* Weltbanner. Der Ton kommt aus der Welt selbst — über data-welt, damit die
+   Zuordnung im Stylesheet steht und keine Inline-Farbe nötig ist. Darüber
+   liegt eine feine Kelim-Schraffur statt eines glatten Verlaufs. */
 .adv-abschnitt {
-  background: linear-gradient(135deg, var(--adv-purple), #9b45d4);
+  --welt-ton: var(--adv-earth);
+  --welt-ton-dunkel: var(--adv-earth-dark);
+
+  background:
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.07) 0 5px, transparent 5px 10px),
+    linear-gradient(135deg, var(--welt-ton), var(--welt-ton-dunkel));
+  border: 2px solid var(--adv-gold-dark);
   border-radius: var(--radius-large);
   padding: var(--space-5);
   margin-bottom: var(--space-5);
-  color: #fff;
+  color: var(--rk-cream);
+}
+.adv-abschnitt[data-welt='dorf'],
+.adv-abschnitt[data-welt='berge'] {
+  --welt-ton: var(--rk-kurd-green);
+  --welt-ton-dunkel: var(--adv-green-dark);
+}
+.adv-abschnitt[data-welt='familienhaus'],
+.adv-abschnitt[data-welt='kela'] {
+  --welt-ton: var(--rk-earth);
+  --welt-ton-dunkel: var(--adv-earth-dark);
+}
+.adv-abschnitt[data-welt='basar'] {
+  --welt-ton: var(--adv-gold-dark);
+  --welt-ton-dunkel: #8a6712;
+}
+.adv-abschnitt[data-welt='bruecke'] {
+  --welt-ton: var(--adv-teal-dark);
+  --welt-ton-dunkel: #005b5f;
+}
+.adv-abschnitt[data-welt='newroz'] {
+  --welt-ton: var(--rk-kelim-red);
+  --welt-ton-dunkel: var(--adv-red-dark);
 }
 .adv-abschnitt-marke {
   display: block;
@@ -440,6 +471,7 @@
   background: var(--adv-parchment);
   border: 1px solid var(--adv-parchment-edge);
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
+  min-width: 136px;
   max-width: 190px;
 }
 .adv-station-name {
@@ -447,6 +479,10 @@
   font-weight: 800;
   color: var(--adv-ink);
   text-align: center;
+  /* Lange Wörter wie „Redewendungen" dürfen die Tafel breiter machen,
+     statt mitten im Wort umzubrechen. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .adv-station.gesperrt .adv-station-beschriftung {
   opacity: 0.7;
@@ -471,13 +507,21 @@
 }
 
 /* Hêlo steht neben dem Pfad */
+/* Hêlo steht neben der aktuellen Station — und zwar immer auf der Seite, die
+   im Zickzack noch Platz hat. Am Rand der versetzten Zeile wuerde er sonst
+   von .wd-pfadflaeche abgeschnitten. */
 .adv-helo-position {
   position: absolute;
-  right: 4%;
+  left: calc(50% + 68px);
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
   z-index: 1;
+}
+.adv-pfad > li:nth-child(4n + 1) .adv-helo-position,
+.adv-pfad > li:nth-child(4n + 3) .adv-helo-position {
+  left: auto;
+  right: calc(50% + 68px);
 }
 
 /* ---------- Weltkarten ---------- */
@@ -600,7 +644,7 @@
   gap: var(--space-4);
   padding: var(--space-4);
   border-radius: var(--radius-large);
-  background: rgba(255, 202, 40, 0.1);
+  background: rgba(232, 184, 62, 0.1);
   border: 1px solid var(--adv-gold-dark);
   color: var(--adv-text);
   margin-bottom: var(--space-4);
@@ -656,7 +700,7 @@
   align-self: flex-start;
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill);
-  background: rgba(39, 181, 245, 0.16);
+  background: rgba(0, 174, 179, 0.16);
   color: var(--adv-blue);
   font-weight: 900;
   font-size: var(--text-sm);
@@ -669,6 +713,7 @@
   gap: var(--space-3);
   list-style: none;
 }
+/* Auch die Auszeichnungen tragen Text — also stehen sie auf Pergament. */
 .adv-abzeichen {
   display: flex;
   flex-direction: column;
@@ -676,8 +721,9 @@
   gap: var(--space-2);
   padding: var(--space-4) var(--space-2);
   border-radius: var(--radius-medium);
-  background: var(--adv-surface);
-  border: 1px solid var(--adv-border);
+  background: var(--adv-parchment);
+  border: 1px solid var(--adv-parchment-edge);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
   text-align: center;
 }
 .adv-abzeichen.gesperrt {
@@ -699,11 +745,14 @@
 }
 .adv-abzeichen strong {
   font-size: var(--text-xs);
-  color: var(--adv-text);
+  color: var(--adv-ink);
+  /* Lange Namen wie „Weltenbummler" am Wortende trennen, nicht mittendrin. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .adv-abzeichen small {
   font-size: 0.68rem;
-  color: var(--adv-text-muted);
+  color: var(--adv-ink-muted);
 }
 
 /* ---------- Übung im Abenteuer-Stil ---------- */
@@ -728,7 +777,7 @@
   color: var(--adv-text-muted);
 }
 .rk-uebung-abenteuer .rk-option.richtig {
-  background: rgba(66, 209, 0, 0.16);
+  background: rgba(37, 139, 87, 0.16);
   border-color: var(--adv-green);
 }
 .rk-uebung-abenteuer .rk-option.richtig .rk-option-buchstabe {
@@ -736,7 +785,7 @@
   color: #07300a;
 }
 .rk-uebung-abenteuer .rk-option.falsch {
-  background: rgba(255, 75, 75, 0.16);
+  background: rgba(183, 45, 50, 0.16);
   border-color: var(--adv-red);
 }
 .rk-uebung-abenteuer .rk-option.falsch .rk-option-buchstabe {
@@ -744,7 +793,7 @@
   color: #3d0000;
 }
 .rk-uebung-abenteuer .rk-hoerknopf {
-  background: rgba(39, 181, 245, 0.16);
+  background: rgba(0, 174, 179, 0.16);
   border-color: var(--adv-blue);
   color: var(--adv-blue);
 }
@@ -761,12 +810,12 @@
 
 /* Rückmeldung: grosse Fläche, klare Farbe, immer mit Text */
 .rk-uebung-abenteuer .rk-rueckmeldung.gut {
-  background: rgba(66, 209, 0, 0.14);
+  background: rgba(37, 139, 87, 0.14);
   border: 1px solid var(--adv-green);
   color: #b7f79a;
 }
 .rk-uebung-abenteuer .rk-rueckmeldung.schlecht {
-  background: rgba(255, 75, 75, 0.14);
+  background: rgba(183, 45, 50, 0.14);
   border: 1px solid var(--adv-red);
   color: #ffb3b3;
 }

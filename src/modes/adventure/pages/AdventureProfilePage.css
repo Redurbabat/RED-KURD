@@ -32,7 +32,7 @@
 /* Goldener Ring — nur, wenn der Profilrahmen aus dem Shop angelegt ist. */
 .ap-plakette-rahmen {
   border: 3px solid var(--adv-gold);
-  box-shadow: 0 0 0 5px rgba(255, 202, 40, 0.26);
+  box-shadow: 0 0 0 5px rgba(232, 184, 62, 0.26);
 }
 .ap-kopf-text {
   flex: 1;
@@ -122,7 +122,8 @@
   list-style: none;
 }
 .ap-abzeichen strong {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .ap-seite .ap-abzeichen-icon {
   width: 52px;
@@ -135,10 +136,11 @@
   line-height: 1;
 }
 .ap-abzeichen-status {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  color: var(--adv-ink-muted);
 }
 .ap-abzeichen-status.frei {
-  color: var(--adv-green);
+  color: var(--adv-green-dark);
 }
 
 /* Gesperrte Abzeichen bleiben lesbar: Schloss-Icon und das Wort „Gesperrt"
@@ -146,14 +148,15 @@
 .ap-seite .ap-abzeichen.gesperrt {
   opacity: 1;
   border-style: dashed;
-  background: var(--adv-bg-deep);
+  border-color: var(--adv-earth);
+  background: var(--adv-parchment-dark);
 }
 .ap-seite .ap-abzeichen.gesperrt .ap-abzeichen-icon {
-  background: var(--adv-surface-soft);
-  color: var(--adv-text-muted);
+  background: var(--adv-parchment-edge);
+  color: var(--adv-ink-muted);
 }
 .ap-seite .ap-abzeichen.gesperrt strong {
-  color: var(--adv-text-muted);
+  color: var(--adv-ink-muted);
 }
 
 /* Farbe je Auszeichnung — die Namen kommen aus achievementsStore.js. */

@@ -74,11 +74,14 @@
   --adv-red-dark: #8d1f24;
   --adv-earth: var(--rk-earth);
   --adv-earth-dark: #633d23;
-  --adv-blue: #3f9fc4;
-  --adv-blue-dark: #2b7896;
+  /* Die Farbwelt kennt kein Blau, Violett oder Rosa. Diese drei Rollen
+     (kuehler Akzent, Level/Energie, Hervorhebung) zeigen deshalb auf Toene
+     aus der Farbwelt — so ziehen alle vorhandenen Verwendungen mit. */
+  --adv-blue: var(--rk-turquoise);
+  --adv-blue-dark: #007f83;
   --adv-orange: #d9822b;
-  --adv-purple: #7b5ea8;
-  --adv-pink: #c46a86;
+  --adv-purple: var(--adv-granat);
+  --adv-pink: var(--adv-granat);
 
   /* Helle Flächen für Text im dunklen Modus */
   --adv-parchment: var(--rk-parchment);

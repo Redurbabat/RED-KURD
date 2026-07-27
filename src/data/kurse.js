@@ -245,7 +245,9 @@ export const kurse = [
     { de: 'Krankenhaus', ku: 'nexweşxane', bild: '🏥' }, { de: 'Apotheke', ku: 'dermanxane', bild: '💊' },
     { de: 'Restaurant', ku: 'xwaringeh', bild: '🍽️' }, { de: 'Teehaus', ku: 'çayxane', bild: '☕' },
     { de: 'Bank', ku: 'banke', bild: '🏦' }, { de: 'Post', ku: 'postexane', bild: '✉️' },
-    { de: 'Moschee', ku: 'mizgeft', bild: '🕌' }, { de: 'Quelle / Brunnen', ku: 'kanî', bild: '⛲' },
+    // Das Wort bleibt — das Emoji ist eine Kuppel-und-Minarett-Silhouette und
+    // damit genau das Motiv, das in RED-KURD nicht vorkommen soll.
+    { de: 'Moschee', ku: 'mizgeft' }, { de: 'Quelle / Brunnen', ku: 'kanî', bild: '⛲' },
   ]},
   { id: 'verkehr', ziel: 'Du kannst über Verkehr und Fortbewegung sprechen.', name: 'Verkehr', symbol: '🚦', woerter: [
     { de: 'Fahrrad', ku: 'bisiklêt', bild: '🚲' }, { de: 'Motorrad', ku: 'motorsîklêt', bild: '🏍️' },

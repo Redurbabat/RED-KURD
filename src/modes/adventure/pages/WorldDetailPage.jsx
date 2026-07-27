@@ -148,7 +148,11 @@ export default function WorldDetailPage({ worldId }) {
         <span>Zu den Welten</span>
       </button>
 
-      <section className="adv-abschnitt wd-abschnitt" aria-labelledby="wd-welttitel">
+      <section
+        className="adv-abschnitt wd-abschnitt"
+        data-welt={welt.landschaft}
+        aria-labelledby="wd-welttitel"
+      >
         <span className="adv-abschnitt-marke">
           Welt {welt.nr} · <span lang="ku">{welt.untertitel}</span>
         </span>
@@ -196,9 +200,12 @@ export default function WorldDetailPage({ worldId }) {
                     )}
                   </span>
 
-                  <span className="adv-station-name">{knoten.name}</span>
-                  <span className="adv-station-status">{statusText}</span>
-                  {zeigtSterne && <Sterne anzahl={sterne} />}
+                  {/* Beschriftung steht auf Pergament, nie frei auf der Nacht. */}
+                  <span className="adv-station-beschriftung">
+                    <span className="adv-station-name">{knoten.name}</span>
+                    <span className="adv-station-status">{statusText}</span>
+                    {zeigtSterne && <Sterne anzahl={sterne} />}
+                  </span>
                 </button>
 
                 {jetzt?.id === knoten.id && (

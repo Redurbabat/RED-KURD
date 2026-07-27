@@ -51,7 +51,7 @@
   margin-bottom: var(--space-5);
   border: 2px solid var(--adv-teal);
   border-radius: var(--radius-large);
-  background: rgba(20, 200, 176, 0.08);
+  background: rgba(0, 174, 179, 0.08);
 }
 .al-lernziel-kopf {
   display: flex;
@@ -157,7 +157,7 @@
 /* Der aktuelle Schritt trägt zusätzlich das Etikett „Jetzt dran“ — nie nur Farbe. */
 .al-schritt.aktiv {
   border-color: var(--adv-teal);
-  background: rgba(20, 200, 176, 0.12);
+  background: rgba(0, 174, 179, 0.12);
 }
 .al-schritt .rk-badge {
   border-color: var(--adv-teal);

@@ -115,7 +115,7 @@
   color: #3d0000;
 }
 .sh-seite .sh-ton-rot .sh-preis {
-  background: rgba(255, 75, 75, 0.16);
+  background: rgba(183, 45, 50, 0.16);
   color: #ff8a80;
 }
 .sh-seite .sh-ton-gruen .sh-artikel-icon {
@@ -123,7 +123,7 @@
   color: #0d2b00;
 }
 .sh-seite .sh-ton-gruen .sh-preis {
-  background: rgba(66, 209, 0, 0.16);
+  background: rgba(37, 139, 87, 0.16);
   color: var(--adv-green);
 }
 .sh-seite .sh-ton-blau .sh-artikel-icon {
@@ -131,7 +131,7 @@
   color: #002b3d;
 }
 .sh-seite .sh-ton-blau .sh-preis {
-  background: rgba(39, 181, 245, 0.16);
+  background: rgba(0, 174, 179, 0.16);
   color: var(--adv-blue);
 }
 .sh-seite .sh-ton-teal .sh-artikel-icon {
@@ -139,7 +139,7 @@
   color: #04241f;
 }
 .sh-seite .sh-ton-teal .sh-preis {
-  background: rgba(20, 200, 176, 0.16);
+  background: rgba(0, 174, 179, 0.16);
   color: var(--adv-teal);
 }
 .sh-seite .sh-ton-lila .sh-artikel-icon {
@@ -147,7 +147,7 @@
   color: #2c0846;
 }
 .sh-seite .sh-ton-lila .sh-preis {
-  background: rgba(200, 107, 247, 0.18);
+  background: rgba(158, 34, 51, 0.18);
   color: var(--adv-purple);
 }
 .sh-seite .sh-ton-gold .sh-artikel-icon {
@@ -155,7 +155,7 @@
   color: #4a3200;
 }
 .sh-seite .sh-ton-gold .sh-preis {
-  background: rgba(255, 202, 40, 0.18);
+  background: rgba(232, 184, 62, 0.18);
   color: var(--adv-gold);
 }
 
@@ -233,7 +233,7 @@
   margin-top: var(--space-5);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-medium);
-  background: rgba(255, 202, 40, 0.12);
+  background: rgba(232, 184, 62, 0.12);
   border: 1px solid var(--adv-gold-dark);
   color: var(--adv-text);
   font-size: var(--text-sm);

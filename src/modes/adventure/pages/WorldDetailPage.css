@@ -21,7 +21,7 @@
   margin: 0 0 var(--space-2);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-medium);
-  background: rgba(255, 202, 40, 0.1);
+  background: rgba(232, 184, 62, 0.1);
   border: 1px solid var(--adv-gold-dark);
   color: var(--adv-text);
   font-size: var(--text-sm);
