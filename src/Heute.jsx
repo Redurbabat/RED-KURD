@@ -1,7 +1,7 @@
 // "Heute": automatisch geplante Tagessitzung – das Herz der App
 import { useState } from 'react'
 import { kurse } from './data/kurse.js'
-import { holeStand, faelligeKartenAlle, statistik, sessionLaden, sessionLoeschen } from './fortschritt.js'
+import { holeStand, faelligeKartenAlle, statistik, sessionLaden, sessionLoeschen, profilLaden } from './fortschritt.js'
 import { Uebung, baueUebungen, mische, alleKursWoerter } from './Uebung.jsx'
 
 const MODI = [
@@ -39,7 +39,10 @@ function planeSitzung(anzahl) {
 
 export default function Heute({ status }) {
   const [sitzung, setSitzung] = useState(null)
-  const [modus, setModus] = useState('standard')
+  const [modus, setModus] = useState(() => {
+    const p = profilLaden()
+    return p && p.minuten === '5' ? 'kurz' : p && p.minuten === '20' ? 'intensiv' : 'standard'
+  })
   const [, neuZeichnen] = useState(0)
 
   const stat = statistik()

@@ -362,3 +362,27 @@ footer { display: none; }
 @media (max-width: 560px) {
   .heute-karten, .ueben-kacheln { grid-template-columns: 1fr; }
 }
+
+/* ===== Onboarding + Einheiten + Lesetexte ===== */
+.onboarding {
+  max-width: 480px; margin: 8vh auto; padding: 1.5rem; text-align: center;
+}
+.onboarding .frage { font-size: 1.25rem; font-weight: 900; margin: 1rem 0; }
+.onboarding-optionen { display: flex; flex-direction: column; gap: .7rem; }
+.onboarding-option { text-align: center; font-size: 1.05rem; }
+.plan-karte {
+  border: 2px solid var(--rand); border-bottom-width: 4px; border-radius: 16px;
+  padding: 1.1rem; margin: 1rem 0; text-align: left;
+}
+.plan-karte.bestanden { border-color: #a5ed6e; background: #f2ffe8; text-align: center; }
+.aufnahme-laeuft { color: #fff; background: var(--rot); border-color: var(--rot-dunkel); animation: blinken 1s infinite; }
+@keyframes blinken { 50% { opacity: .6; } }
+.niveau {
+  font-size: .7rem; font-weight: 900; text-transform: uppercase; letter-spacing: .06em;
+  padding: .15rem .5rem; border-radius: 999px;
+}
+.niveau-Anfänger { background: #d7ffb8; color: #58a700; }
+.niveau-Leicht { background: #ddf4ff; color: var(--blau-dunkel); }
+.niveau-Mittel { background: #fff4e5; color: #a05a00; }
+.lesetext .satzkarte { border: none; padding: 0; }
+.lesetext .satz-ku { font-size: 1.25rem; line-height: 2.1; }

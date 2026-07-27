@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { faelligeKartenAlle } from './fortschritt.js'
 import { Uebung, baueUebungen, mische, alleKursWoerter } from './Uebung.jsx'
 import Satzbau from './Satzbau.jsx'
+import Aussprache from './Aussprache.jsx'
 
 const MODI = [
   { id: 'wdh', symbol: '🔁', name: 'Wiederholen', text: 'Fällige Wörter aus deinem Wiederholsystem' },
@@ -10,11 +11,22 @@ const MODI = [
   { id: 'hoeren', symbol: '👂', name: 'Hören', text: 'Wort anhören, Bedeutung wählen' },
   { id: 'schreiben', symbol: '✍️', name: 'Schreiben', text: 'Wörter aktiv eintippen' },
   { id: 'satzbau', symbol: '🧩', name: 'Satzbau', text: 'Echte Sätze aus Blöcken bauen' },
+  { id: 'aussprache', symbol: '🎙️', name: 'Aussprache', text: 'Anhören, nachsprechen, aufnehmen' },
 ]
 
 export default function Ueben() {
   const [aktiv, setAktiv] = useState(null)
   const faellig = faelligeKartenAlle()
+
+  if (aktiv === 'aussprache') {
+    return (
+      <section>
+        <h2>🎙️ Aussprache</h2>
+        <Aussprache />
+        <button className="weiter zweitrangig" onClick={() => setAktiv(null)}>← Zum Üben</button>
+      </section>
+    )
+  }
 
   if (aktiv === 'satzbau') {
     return (

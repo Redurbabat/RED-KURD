@@ -1,139 +1,139 @@
 // Kursbaum: 10 Themen-Lektionen Deutsch–Kurmancî mit Bildern
 export const kurse = [
-  { id: 'begruessung', name: 'Begrüßung', symbol: '👋', woerter: [
+  { id: 'begruessung', ziel: 'Du kannst Menschen begrüßen, dich bedanken und verabschieden.', name: 'Begrüßung', symbol: '👋', woerter: [
     { de: 'Hallo', ku: 'Silav', bild: '👋' }, { de: 'Danke', ku: 'Spas', bild: '🙏' },
     { de: 'Ja', ku: 'Erê', bild: '✅' }, { de: 'Nein', ku: 'Na', bild: '❌' },
     { de: 'Wie geht es dir?', ku: 'Tu çawa yî?', bild: '❓' }, { de: 'Gut', ku: 'Baş', bild: '👍' },
     { de: 'Auf Wiedersehen', ku: 'Bi xatirê te', bild: '🫡' }, { de: 'Bitte schön', ku: 'Kerem bike', bild: '🤲' },
     { de: 'Entschuldigung', ku: 'Bibore', bild: '😔' }, { de: 'Willkommen', ku: 'Bi xêr hatî', bild: '🤗' },
   ]},
-  { id: 'familie', name: 'Familie', symbol: '👨‍👩‍👧', woerter: [
+  { id: 'familie', ziel: 'Du kannst deine Familie vorstellen und über Menschen sprechen.', name: 'Familie', symbol: '👨‍👩‍👧', woerter: [
     { de: 'Mutter', ku: 'dayik', bild: '👩' }, { de: 'Vater', ku: 'bav', bild: '👨' },
     { de: 'Bruder', ku: 'bira', bild: '👦' }, { de: 'Schwester', ku: 'xwişk', bild: '👧' },
     { de: 'Kind', ku: 'zarok', bild: '🧒' }, { de: 'Sohn / Junge', ku: 'kur', bild: '🧑‍🦱' },
     { de: 'Tochter / Mädchen', ku: 'keç', bild: '👱‍♀️' }, { de: 'Frau', ku: 'jin', bild: '👩‍🦰' },
     { de: 'Mann', ku: 'mêr', bild: '🧔' }, { de: 'Freund', ku: 'heval', bild: '🤝' },
   ]},
-  { id: 'zahlen', name: 'Zahlen', symbol: '🔢', woerter: [
+  { id: 'zahlen', ziel: 'Du kannst bis zehn zählen und Mengen benennen.', name: 'Zahlen', symbol: '🔢', woerter: [
     { de: 'eins', ku: 'yek', bild: '1️⃣' }, { de: 'zwei', ku: 'du', bild: '2️⃣' },
     { de: 'drei', ku: 'sê', bild: '3️⃣' }, { de: 'vier', ku: 'çar', bild: '4️⃣' },
     { de: 'fünf', ku: 'pênc', bild: '5️⃣' }, { de: 'sechs', ku: 'şeş', bild: '6️⃣' },
     { de: 'sieben', ku: 'heft', bild: '7️⃣' }, { de: 'acht', ku: 'heşt', bild: '8️⃣' },
     { de: 'neun', ku: 'neh', bild: '9️⃣' }, { de: 'zehn', ku: 'deh', bild: '🔟' },
   ]},
-  { id: 'essen', name: 'Essen & Trinken', symbol: '🍞', woerter: [
+  { id: 'essen', ziel: 'Du kannst Essen und Getränke benennen und bestellen.', name: 'Essen & Trinken', symbol: '🍞', woerter: [
     { de: 'Wasser', ku: 'av', bild: '💧' }, { de: 'Brot', ku: 'nan', bild: '🍞' },
     { de: 'Tee', ku: 'çay', bild: '🍵' }, { de: 'Milch', ku: 'şîr', bild: '🥛' },
     { de: 'Käse', ku: 'penîr', bild: '🧀' }, { de: 'Fleisch', ku: 'goşt', bild: '🥩' },
     { de: 'Apfel', ku: 'sêv', bild: '🍎' }, { de: 'Reis', ku: 'birinc', bild: '🍚' },
     { de: 'Essen', ku: 'xwarin', bild: '🍽️' }, { de: 'Obst', ku: 'fêkî', bild: '🍇' },
   ]},
-  { id: 'koerper', name: 'Körper', symbol: '🫀', woerter: [
+  { id: 'koerper', ziel: 'Du kannst Körperteile benennen, z.B. beim Arzt.', name: 'Körper', symbol: '🫀', woerter: [
     { de: 'Kopf', ku: 'ser', bild: '👤' }, { de: 'Auge', ku: 'çav', bild: '👁️' },
     { de: 'Hand', ku: 'dest', bild: '✋' }, { de: 'Herz', ku: 'dil', bild: '❤️' },
     { de: 'Mund', ku: 'dev', bild: '👄' }, { de: 'Ohr', ku: 'guh', bild: '👂' },
     { de: 'Nase', ku: 'poz', bild: '👃' }, { de: 'Haar', ku: 'por', bild: '💇' },
     { de: 'Zahn', ku: 'diran', bild: '🦷' }, { de: 'Fuß', ku: 'pê', bild: '🦶' },
   ]},
-  { id: 'natur', name: 'Natur', symbol: '🌿', woerter: [
+  { id: 'natur', ziel: 'Du kannst Wetter und Natur beschreiben.', name: 'Natur', symbol: '🌿', woerter: [
     { de: 'Sonne', ku: 'roj', bild: '☀️' }, { de: 'Mond', ku: 'heyv', bild: '🌙' },
     { de: 'Stern', ku: 'stêrk', bild: '⭐' }, { de: 'Berg', ku: 'çiya', bild: '⛰️' },
     { de: 'Baum', ku: 'dar', bild: '🌳' }, { de: 'Blume', ku: 'gul', bild: '🌹' },
     { de: 'Regen', ku: 'baran', bild: '🌧️' }, { de: 'Schnee', ku: 'berf', bild: '❄️' },
     { de: 'Wind', ku: 'ba', bild: '💨' }, { de: 'Feuer', ku: 'agir', bild: '🔥' },
   ]},
-  { id: 'zuhause', name: 'Zuhause & Stadt', symbol: '🏠', woerter: [
+  { id: 'zuhause', ziel: 'Du kannst über dein Zuhause und deine Stadt sprechen.', name: 'Zuhause & Stadt', symbol: '🏠', woerter: [
     { de: 'Haus / Zuhause', ku: 'mal', bild: '🏠' }, { de: 'Tür', ku: 'derî', bild: '🚪' },
     { de: 'Fenster', ku: 'pencere', bild: '🪟' }, { de: 'Stadt', ku: 'bajar', bild: '🏙️' },
     { de: 'Dorf', ku: 'gund', bild: '🏘️' }, { de: 'Straße', ku: 'kolan', bild: '🛣️' },
     { de: 'Schule', ku: 'dibistan', bild: '🏫' }, { de: 'Markt', ku: 'bazar', bild: '🛒' },
     { de: 'Zimmer', ku: 'ode', bild: '🛋️' }, { de: 'Buch', ku: 'pirtûk', bild: '📖' },
   ]},
-  { id: 'farben', name: 'Farben & Eigenschaften', symbol: '🎨', woerter: [
+  { id: 'farben', ziel: 'Du kannst Dinge mit Farben und Eigenschaften beschreiben.', name: 'Farben & Eigenschaften', symbol: '🎨', woerter: [
     { de: 'rot', ku: 'sor', bild: '🔴' }, { de: 'weiß', ku: 'spî', bild: '⚪' },
     { de: 'schwarz', ku: 'reş', bild: '⚫' }, { de: 'grün', ku: 'kesk', bild: '🟢' },
     { de: 'gelb', ku: 'zer', bild: '🟡' }, { de: 'blau', ku: 'şîn', bild: '🔵' },
     { de: 'groß', ku: 'mezin', bild: '🐘' }, { de: 'klein', ku: 'biçûk', bild: '🐜' },
     { de: 'gut', ku: 'baş', bild: '👍' }, { de: 'neu', ku: 'nû', bild: '✨' },
   ]},
-  { id: 'zeit', name: 'Zeit', symbol: '🕐', woerter: [
+  { id: 'zeit', ziel: 'Du kannst über Tage, Zeiten und Termine sprechen.', name: 'Zeit', symbol: '🕐', woerter: [
     { de: 'Tag', ku: 'roj', bild: '🌅' }, { de: 'Nacht', ku: 'şev', bild: '🌃' },
     { de: 'Morgen', ku: 'sibe', bild: '🌄' }, { de: 'Abend', ku: 'êvar', bild: '🌆' },
     { de: 'Jahr', ku: 'sal', bild: '🎆' }, { de: 'Monat', ku: 'meh', bild: '📆' },
     { de: 'Woche', ku: 'hefte', bild: '📅' }, { de: 'heute', ku: 'îro', bild: '⏰' },
     { de: 'morgen', ku: 'sibê', bild: '⏭️' }, { de: 'gestern', ku: 'duh', bild: '⏮️' },
   ]},
-  { id: 'verben', name: 'Wichtige Verben', symbol: '⚡', woerter: [
+  { id: 'verben', ziel: 'Du kannst die wichtigsten Tätigkeiten ausdrücken.', name: 'Wichtige Verben', symbol: '⚡', woerter: [
     { de: 'gehen', ku: 'çûn', bild: '🚶' }, { de: 'kommen', ku: 'hatin', bild: '🏃' },
     { de: 'essen', ku: 'xwarin', bild: '🍴' }, { de: 'trinken', ku: 'vexwarin', bild: '🥤' },
     { de: 'sehen', ku: 'dîtin', bild: '👀' }, { de: 'wissen', ku: 'zanîn', bild: '🧠' },
     { de: 'lesen', ku: 'xwendin', bild: '📚' }, { de: 'schreiben', ku: 'nivîsandin', bild: '✍️' },
     { de: 'sprechen', ku: 'axaftin', bild: '💬' }, { de: 'machen', ku: 'kirin', bild: '🔨' },
   ]},
-  { id: 'tiere', name: 'Tiere', symbol: '🐑', woerter: [
+  { id: 'tiere', ziel: 'Du kannst Tiere benennen — wichtig auf dem Land!', name: 'Tiere', symbol: '🐑', woerter: [
     { de: 'Schaf', ku: 'mî', bild: '🐑' }, { de: 'Ziege', ku: 'bizin', bild: '🐐' },
     { de: 'Hund', ku: 'kûçik', bild: '🐕' }, { de: 'Katze', ku: 'pisîk', bild: '🐈' },
     { de: 'Pferd', ku: 'hesp', bild: '🐎' }, { de: 'Vogel', ku: 'çûk', bild: '🐦' },
     { de: 'Fisch', ku: 'masî', bild: '🐟' }, { de: 'Kuh', ku: 'çêlek', bild: '🐄' },
     { de: 'Löwe', ku: 'şêr', bild: '🦁' }, { de: 'Wolf', ku: 'gur', bild: '🐺' },
   ]},
-  { id: 'kleidung', name: 'Kleidung', symbol: '👕', woerter: [
+  { id: 'kleidung', ziel: 'Du kannst Kleidung benennen und einkaufen.', name: 'Kleidung', symbol: '👕', woerter: [
     { de: 'Hemd', ku: 'kiras', bild: '👕' }, { de: 'Hose', ku: 'şalwar', bild: '👖' },
     { de: 'Schuh', ku: 'sol', bild: '👞' }, { de: 'Mantel', ku: 'çakêt', bild: '🧥' },
     { de: 'Mütze', ku: 'kum', bild: '🧢' }, { de: 'Kleid', ku: 'fîstan', bild: '👗' },
     { de: 'Socke', ku: 'gore', bild: '🧦' }, { de: 'Gürtel', ku: 'qayîş', bild: '🥋' },
     { de: 'Tasche', ku: 'çente', bild: '👜' }, { de: 'Ring', ku: 'gustîl', bild: '💍' },
   ]},
-  { id: 'gefuehle', name: 'Gefühle', symbol: '😊', woerter: [
+  { id: 'gefuehle', ziel: 'Du kannst sagen, wie du dich fühlst.', name: 'Gefühle', symbol: '😊', woerter: [
     { de: 'glücklich', ku: 'kêfxweş', bild: '😊' }, { de: 'traurig', ku: 'xemgîn', bild: '😢' },
     { de: 'müde', ku: 'westiyayî', bild: '😴' }, { de: 'wütend', ku: 'hêrsbûyî', bild: '😠' },
     { de: 'Liebe', ku: 'evîn', bild: '💕' }, { de: 'Angst', ku: 'tirs', bild: '😱' },
     { de: 'Hoffnung', ku: 'hêvî', bild: '🌈' }, { de: 'Freude', ku: 'şahî', bild: '🎉' },
     { de: 'hungrig', ku: 'birçî', bild: '🍽️' }, { de: 'durstig', ku: 'tî', bild: '🥵' },
   ]},
-  { id: 'arbeit', name: 'Arbeit & Berufe', symbol: '🛠️', woerter: [
+  { id: 'arbeit', ziel: 'Du kannst über Beruf und Arbeit sprechen.', name: 'Arbeit & Berufe', symbol: '🛠️', woerter: [
     { de: 'Arbeit', ku: 'kar', bild: '💼' }, { de: 'Lehrer', ku: 'mamoste', bild: '🧑‍🏫' },
     { de: 'Arzt', ku: 'bijîşk', bild: '🧑‍⚕️' }, { de: 'Bauer', ku: 'cotkar', bild: '🧑‍🌾' },
     { de: 'Schüler / Student', ku: 'xwendekar', bild: '🧑‍🎓' }, { de: 'Geld', ku: 'pere', bild: '💰' },
     { de: 'Ingenieur', ku: 'endezyar', bild: '🧑‍🔧' }, { de: 'Koch', ku: 'aşpêj', bild: '🧑‍🍳' },
     { de: 'Hirte', ku: 'şivan', bild: '🐑' }, { de: 'Schriftsteller', ku: 'nivîskar', bild: '✍️' },
   ]},
-  { id: 'reisen', name: 'Reisen', symbol: '🚗', woerter: [
+  { id: 'reisen', ziel: 'Du kannst dich unterwegs zurechtfinden.', name: 'Reisen', symbol: '🚗', woerter: [
     { de: 'Auto', ku: 'erebe', bild: '🚗' }, { de: 'Bus', ku: 'otobus', bild: '🚌' },
     { de: 'Flugzeug', ku: 'balafir', bild: '✈️' }, { de: 'Zug', ku: 'trên', bild: '🚆' },
     { de: 'Weg', ku: 'rê', bild: '🛤️' }, { de: 'Brücke', ku: 'pir', bild: '🌉' },
     { de: 'Land', ku: 'welat', bild: '🗺️' }, { de: 'Grenze', ku: 'sînor', bild: '🚧' },
     { de: 'Koffer', ku: 'walîz', bild: '🧳' }, { de: 'Fahrkarte', ku: 'bilêt', bild: '🎫' },
   ]},
-  { id: 'tiere', name: 'Tiere', symbol: '🐑', woerter: [
+  { id: 'tiere', ziel: 'Du kannst Tiere benennen — wichtig auf dem Land!', name: 'Tiere', symbol: '🐑', woerter: [
     { de: 'Schaf', ku: 'mî', bild: '🐑' }, { de: 'Ziege', ku: 'bizin', bild: '🐐' },
     { de: 'Hund', ku: 'kûçik', bild: '🐕' }, { de: 'Katze', ku: 'pisîk', bild: '🐈' },
     { de: 'Pferd', ku: 'hesp', bild: '🐎' }, { de: 'Vogel', ku: 'çûk', bild: '🐦' },
     { de: 'Fisch', ku: 'masî', bild: '🐟' }, { de: 'Kuh', ku: 'çêlek', bild: '🐄' },
     { de: 'Löwe', ku: 'şêr', bild: '🦁' }, { de: 'Wolf', ku: 'gur', bild: '🐺' },
   ]},
-  { id: 'kleidung', name: 'Kleidung', symbol: '👕', woerter: [
+  { id: 'kleidung', ziel: 'Du kannst Kleidung benennen und einkaufen.', name: 'Kleidung', symbol: '👕', woerter: [
     { de: 'Hemd', ku: 'kiras', bild: '👕' }, { de: 'Hose', ku: 'şalwar', bild: '👖' },
     { de: 'Schuh', ku: 'sol', bild: '👞' }, { de: 'Mantel', ku: 'çakêt', bild: '🧥' },
     { de: 'Mütze', ku: 'kum', bild: '🧢' }, { de: 'Kleid', ku: 'fîstan', bild: '👗' },
     { de: 'Socke', ku: 'gore', bild: '🧦' }, { de: 'Gürtel', ku: 'qayîş', bild: '🥋' },
     { de: 'Tasche', ku: 'çente', bild: '👜' }, { de: 'Ring', ku: 'gustîl', bild: '💍' },
   ]},
-  { id: 'gefuehle', name: 'Gefühle', symbol: '😊', woerter: [
+  { id: 'gefuehle', ziel: 'Du kannst sagen, wie du dich fühlst.', name: 'Gefühle', symbol: '😊', woerter: [
     { de: 'glücklich', ku: 'kêfxweş', bild: '😊' }, { de: 'traurig', ku: 'xemgîn', bild: '😢' },
     { de: 'müde', ku: 'westiyayî', bild: '😴' }, { de: 'wütend', ku: 'hêrsbûyî', bild: '😠' },
     { de: 'Liebe', ku: 'evîn', bild: '💕' }, { de: 'Angst', ku: 'tirs', bild: '😱' },
     { de: 'Hoffnung', ku: 'hêvî', bild: '🌈' }, { de: 'Freude', ku: 'şahî', bild: '🎉' },
     { de: 'hungrig', ku: 'birçî', bild: '🍽️' }, { de: 'durstig', ku: 'tî', bild: '🥵' },
   ]},
-  { id: 'arbeit', name: 'Arbeit & Berufe', symbol: '🛠️', woerter: [
+  { id: 'arbeit', ziel: 'Du kannst über Beruf und Arbeit sprechen.', name: 'Arbeit & Berufe', symbol: '🛠️', woerter: [
     { de: 'Arbeit', ku: 'kar', bild: '💼' }, { de: 'Lehrer', ku: 'mamoste', bild: '🧑‍🏫' },
     { de: 'Arzt', ku: 'bijîşk', bild: '🧑‍⚕️' }, { de: 'Bauer', ku: 'cotkar', bild: '🧑‍🌾' },
     { de: 'Schüler / Student', ku: 'xwendekar', bild: '🧑‍🎓' }, { de: 'Geld', ku: 'pere', bild: '💰' },
     { de: 'Ingenieur', ku: 'endezyar', bild: '🧑‍🔧' }, { de: 'Koch', ku: 'aşpêj', bild: '🧑‍🍳' },
     { de: 'Hirte', ku: 'şivan', bild: '🐑' }, { de: 'Schriftsteller', ku: 'nivîskar', bild: '✍️' },
   ]},
-  { id: 'reisen', name: 'Reisen', symbol: '🚗', woerter: [
+  { id: 'reisen', ziel: 'Du kannst dich unterwegs zurechtfinden.', name: 'Reisen', symbol: '🚗', woerter: [
     { de: 'Auto', ku: 'erebe', bild: '🚗' }, { de: 'Bus', ku: 'otobus', bild: '🚌' },
     { de: 'Flugzeug', ku: 'balafir', bild: '✈️' }, { de: 'Zug', ku: 'trên', bild: '🚆' },
     { de: 'Weg', ku: 'rê', bild: '🛤️' }, { de: 'Brücke', ku: 'pir', bild: '🌉' },

@@ -169,3 +169,12 @@ export function sessionLaden() {
 export function sessionLoeschen() {
   try { localStorage.removeItem(SESSION_KEY) } catch {}
 }
+
+// ===== Lernprofil (Onboarding) =====
+const PROFIL_KEY = 'red-kurd-profil-v1'
+export function profilSpeichern(p) {
+  try { localStorage.setItem(PROFIL_KEY, JSON.stringify(p)) } catch {}
+}
+export function profilLaden() {
+  try { return JSON.parse(localStorage.getItem(PROFIL_KEY)) } catch { return null }
+}

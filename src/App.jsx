@@ -4,7 +4,8 @@ import Kurs from './Kurs.jsx'
 import Ueben from './Ueben.jsx'
 import Entdecken from './Entdecken.jsx'
 import Fortschritt from './Fortschritt.jsx'
-import { statistik } from './fortschritt.js'
+import { statistik, profilLaden } from './fortschritt.js'
+import Onboarding from './Onboarding.jsx'
 import { statischeAnzahl } from './statisch.js'
 import './styles.css'
 
@@ -26,7 +27,12 @@ export default function App() {
     )
   }, [])
 
+  const [eingerichtet, setEingerichtet] = useState(!!profilLaden())
   const s = statistik()
+
+  if (!eingerichtet) {
+    return <Onboarding fertig={() => setEingerichtet(true)} />
+  }
 
   return (
     <div className="app">
