@@ -194,28 +194,32 @@ export default function ProgressPage() {
             ))}
           </div>
 
-          <table className="nur-sr">
-            <caption>Gelöste Aufgaben der letzten sieben Tage</caption>
-            <thead>
-              <tr>
-                <th scope="col">Tag</th>
-                <th scope="col">Aufgaben</th>
-                <th scope="col">davon richtig</th>
-              </tr>
-            </thead>
-            <tbody>
-              {woche.map((tag) => (
-                <tr key={tag.datum}>
-                  <th scope="row">
-                    {LANGE_TAGE[tag.tag] || tag.tag}
-                    {tag.heute ? ' (heute)' : ''}
-                  </th>
-                  <td>{tag.anzahl}</td>
-                  <td>{tag.richtig}</td>
+          {/* Die Tabelle steckt in einem Wrapper: eine Tabelle allein laesst sich
+              nicht auf 1 px klemmen und wuerde die Seite breiter machen. */}
+          <div className="nur-sr">
+            <table>
+              <caption>Gelöste Aufgaben der letzten sieben Tage</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Tag</th>
+                  <th scope="col">Aufgaben</th>
+                  <th scope="col">davon richtig</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {woche.map((tag) => (
+                  <tr key={tag.datum}>
+                    <th scope="row">
+                      {LANGE_TAGE[tag.tag] || tag.tag}
+                      {tag.heute ? ' (heute)' : ''}
+                    </th>
+                    <td>{tag.anzahl}</td>
+                    <td>{tag.richtig}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <ul className="fp-zeiten">
             <li>

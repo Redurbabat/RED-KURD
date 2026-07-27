@@ -1117,6 +1117,65 @@
   margin-top: var(--space-4);
 }
 
+/* ---------- Zusatzspalte ---------- */
+.rk-zusatz {
+  position: sticky;
+  top: var(--space-5);
+  display: flex;
+  flex-direction: column;
+}
+.rk-zusatz .rk-karte {
+  margin-bottom: var(--space-3);
+}
+.rk-zusatz-zahl {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+  line-height: 1.1;
+  margin-bottom: var(--space-2);
+}
+.rk-zusatz-zahl span {
+  font-size: var(--text-base);
+  color: var(--rk-text-muted);
+}
+.rk-zusatz-woche {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-1);
+  height: 78px;
+  list-style: none;
+  margin-bottom: var(--space-3);
+}
+.rk-zusatz-woche li {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  height: 100%;
+}
+.rk-zusatz-woche small {
+  font-size: 0.68rem;
+  color: var(--rk-text-muted);
+}
+.rk-zusatz-saeule {
+  width: 100%;
+  max-width: 20px;
+  border-radius: var(--radius-small) var(--radius-small) 2px 2px;
+  background: var(--rk-primary);
+  transition: height var(--motion-slow) ease;
+}
+.rk-zusatz-woche li.heute .rk-zusatz-saeule {
+  background: var(--rk-yellow);
+}
+.rk-zusatz-woche li.heute small {
+  color: var(--rk-text);
+  font-weight: 800;
+}
+.rk-zusatz .helo-nachricht {
+  margin-bottom: 0;
+}
+
 /* ---------- Tabellen ---------- */
 .rk-tabelle {
   width: 100%;
