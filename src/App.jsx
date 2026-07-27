@@ -211,21 +211,40 @@ export default function App() {
     )
   }, [])
 
+  const s = statistik()
+  const NAV = [
+    ['start', '🏠', 'Start'],
+    ['lernen', '🎓', 'Lernen'],
+    ['woerterbuch', '📕', 'Wörterbuch'],
+    ['lesen', '📖', 'Lesen'],
+    ['werkzeuge', '🔤', 'Schrift'],
+    ['statistik', '📊', 'Statistik'],
+  ]
+
   return (
     <div className="app">
-      <header>
-        <h1><img src="/icon-192.png" alt="" className="logo" /> RED-KURD</h1>
-        <p className="untertitel">Kurdisch lernen – frei und offen</p>
-        <nav>
-          <button className={seite === 'start' ? 'aktiv' : ''} onClick={() => setSeite('start')}>🏠 Start</button>
-          <button className={seite === 'woerterbuch' ? 'aktiv' : ''} onClick={() => setSeite('woerterbuch')}>📕 Wörterbuch</button>
-          <button className={seite === 'lernen' ? 'aktiv' : ''} onClick={() => setSeite('lernen')}>🎓 Lernen</button>
-          <button className={seite === 'lesen' ? 'aktiv' : ''} onClick={() => setSeite('lesen')}>📖 Lesen</button>
-          <button className={seite === 'werkzeuge' ? 'aktiv' : ''} onClick={() => setSeite('werkzeuge')}>🔤 Schrift</button>
-          <button className={seite === 'statistik' ? 'aktiv' : ''} onClick={() => setSeite('statistik')}>📊 Statistik</button>
-        </nav>
-      </header>
-      <main>
+      <aside className="leiste">
+        <div className="marke">
+          <img src="/icon-192.png" className="logo" alt="" />
+          <span>RED-KURD</span>
+        </div>
+        {NAV.map(([id, icon, name]) => (
+          <button key={id} className={'leiste-knopf' + (seite === id ? ' aktiv' : '')}
+            onClick={() => setSeite(id)}>
+            <span className="leiste-icon">{icon}</span>
+            <span className="leiste-text">{name}</span>
+          </button>
+        ))}
+        <a className="leiste-github" href="https://github.com/Redurbabat/RED-KURD"
+          target="_blank" rel="noreferrer">Open Source · GitHub</a>
+      </aside>
+      <div className="inhalt">
+        <div className="topbar">
+          <span className="top-stat feuer">🔥 {s.serie}</span>
+          <span className="top-stat stern">⭐ {s.xp} XP</span>
+          <span className="top-stat buch">📚 {s.gelernt}</span>
+        </div>
+        <main>
         {seite === 'start' && (
           <section>
             <h2>Silav! 👋</h2>
@@ -254,10 +273,7 @@ export default function App() {
         {seite === 'werkzeuge' && <Werkzeuge />}
         {seite === 'statistik' && <Statistik />}
       </main>
-      <footer>
-        RED-KURD · Open Source (MIT) · Daten: Tatoeba (CC BY), FreeDict, Wiktionary ·{' '}
-        <a href="https://github.com/Redurbabat/RED-KURD" target="_blank" rel="noreferrer">GitHub</a>
-      </footer>
+      </div>
     </div>
   )
 }

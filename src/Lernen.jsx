@@ -304,18 +304,27 @@ export default function Lernen() {
       <button className="wdh-knopf satzbau-knopf" onClick={() => setAktiv('satzbau')}>
         🧩 Satzbau-Training — baue echte Sätze aus Wortblöcken!
       </button>
-      <div className="kursbaum">
-        {kurse.map(k => {
+      <div className="pfad">
+        {kurse.map((k, i) => {
           const best = stand.lektionen[k.id]
+          const cls = best >= 80 ? ' fertig' : best ? ' teil' : ''
+          const naechste = !best && kurse.slice(0, i).every(v => stand.lektionen[v.id] >= 80)
           return (
-            <button key={k.id} className={'kurs' + (best >= 80 ? ' geschafft' : best ? ' begonnen' : '')}
-              onClick={() => setAktiv(k.id)}>
-              <span className="kurs-symbol">{k.symbol}</span>
-              <span className="kurs-name">{k.name}</span>
-              <span className="kurs-stand">{best ? `${best}%` : 'Neu'}</span>
-            </button>
+            <div key={k.id} className={'knoten-halter versatz-' + (i % 4)}>
+              {naechste && <div className="start-blase">START</div>}
+              <button className={'knoten' + cls + (naechste ? ' naechste' : '')}
+                onClick={() => setAktiv(k.id)}>
+                <span className="knoten-bild">{k.symbol}</span>
+                {best >= 80 && <span className="haken">✓</span>}
+              </button>
+              <div className="knoten-name">{k.name}{best ? ` · ${best}%` : ''}</div>
+            </div>
           )
         })}
+        <div className="knoten-halter versatz-0">
+          <div className="pokal">🏆</div>
+          <div className="knoten-name">Alles geschafft!</div>
+        </div>
       </div>
       <p className="hinweis">Übungsarten wechseln automatisch: Auswählen (beide Richtungen) und Eintippen.
         Richtige Wörter kommen in dein Wiederholsystem — falsche fragt die App bald wieder ab.</p>
