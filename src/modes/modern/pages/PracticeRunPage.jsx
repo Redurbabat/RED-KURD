@@ -179,7 +179,9 @@ export default function PracticeRunPage({ trainingId }) {
       uebungen={runde.uebungen}
       titel={runde.titel}
       stil="modern"
-      speichern={trainingId === 'mix'}
+      /* Trainings sind eigenstaendig — die Tagessitzung unter /session
+         darf dabei nie ueberschrieben werden. */
+      speichern={false}
       abbrechen={() => navigiere('/practice')}
       fertig={(erg) => setErgebnis(erg)}
     />

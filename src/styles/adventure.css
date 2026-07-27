@@ -9,16 +9,36 @@
   background: linear-gradient(180deg, #123244 0%, #0f2634 30%, var(--rk-bg) 70%);
 }
 
-/* --- Pergamentkarte --- */
+/* --- Pergamentkarte ---
+   Warmes Papier mit Faserstruktur, doppelter Rahmen wie bei einer alten
+   Landkarte, und eine Kelim-Bordüre als Fuss. */
 .adv-pergament {
   position: relative;
-  background: var(--adv-parchment);
-  border: 2px solid var(--adv-parchment-dark);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.55), transparent 42%),
+    radial-gradient(circle at 82% 78%, rgba(160, 120, 60, 0.12), transparent 46%),
+    linear-gradient(160deg, #fcf4e0 0%, var(--adv-parchment) 48%, #f2e2bd 100%);
+  border: 2px solid var(--adv-parchment-edge);
   border-radius: var(--radius-large);
   padding: var(--space-5);
   margin-bottom: var(--space-4);
-  color: #4a3418;
-  box-shadow: var(--shadow-card);
+  color: var(--adv-ink);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    inset 0 0 24px rgba(160, 120, 60, 0.14),
+    var(--shadow-card);
+}
+/* Innenlinie wie bei einer gezeichneten Karte */
+.adv-pergament::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(122, 75, 40, 0.28);
+  border-radius: calc(var(--radius-large) - 6px);
+  pointer-events: none;
+}
+.adv-pergament > * {
+  position: relative;
 }
 .adv-pergament h2,
 .adv-pergament h3 {
@@ -32,6 +52,73 @@
 :root[data-theme='dark'] .adv-pergament h2,
 :root[data-theme='dark'] .adv-pergament h3 {
   color: #f4e6c8;
+}
+
+/* --- Gold-Knopf: die Hauptaktion im Abenteuer-Modus ---
+   Geprägter Rand, warme Verlaufsfläche, fühlbare Unterkante. */
+.rk-knopf-gold {
+  background: linear-gradient(180deg, #ffd777 0%, var(--adv-gold) 52%, #e8a824 100%);
+  color: #4a3200;
+  border: 2px solid var(--adv-gold-dark);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 5px 0 var(--adv-gold-deep),
+    0 8px 14px rgba(160, 111, 16, 0.32);
+  letter-spacing: 0.02em;
+}
+.rk-knopf-gold:hover:not(:disabled) {
+  filter: brightness(1.04);
+}
+.rk-knopf-gold:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 0 var(--adv-gold-deep);
+}
+
+/* --- Holzschild: Beschriftungen im Gelände --- */
+.adv-holz {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      92deg,
+      rgba(91, 54, 25, 0.1) 0 3px,
+      transparent 3px 9px
+    ),
+    linear-gradient(170deg, #a9762f 0%, var(--adv-brown) 60%, #61391a 100%);
+  border: 2px solid var(--adv-brown-dark);
+  border-radius: var(--radius-medium);
+  padding: var(--space-4);
+  color: #fdf3dd;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    var(--shadow-card);
+}
+.adv-holz h2,
+.adv-holz h3,
+.adv-holz strong {
+  color: #fff8e6;
+}
+
+/* --- Steinplatte: Rahmen für Aufgaben und Listen --- */
+.adv-stein {
+  position: relative;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.5), transparent 40%),
+    linear-gradient(165deg, #cfc6ae 0%, var(--adv-stone-warm) 55%, #a29a86 100%);
+  border: 2px solid var(--adv-stone-dark);
+  border-radius: var(--radius-large);
+  padding: var(--space-4);
+  color: var(--adv-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    var(--shadow-card);
+}
+:root[data-theme='dark'] .adv-stein {
+  background: linear-gradient(165deg, #3a3e46 0%, #2c3038 60%, #23262c 100%);
+  border-color: #4a505b;
+  color: #eaf1f6;
 }
 
 /* --- Dunkle, halbtransparente Textfläche über Landschaften --- */
@@ -70,11 +157,14 @@
   width: 100%;
 }
 
-/* --- Held-Karte „Dein Abenteuer" --- */
+/* --- Held-Karte „Dein Abenteuer" ---
+   Auf schmalen Geräten stapeln sich Maskottchen/Text und Knopf, damit weder
+   der Fortschrittsbalken noch die Beschriftung gequetscht wird. */
 .adv-held {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3) var(--space-4);
   padding: var(--space-5);
   border-radius: var(--radius-large);
   background: linear-gradient(125deg, var(--adv-teal), #0a5f69);
@@ -83,8 +173,33 @@
   box-shadow: var(--shadow-floating);
 }
 .adv-held-text {
-  flex: 1;
   min-width: 0;
+}
+.adv-held-text h3 {
+  color: #fff;
+  font-size: var(--text-lg);
+  overflow-wrap: anywhere;
+}
+/* Der Knopf sitzt in einer eigenen Zeile über die volle Breite. */
+.adv-held > .rk-knopf {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.adv-start-held-stand {
+  font-size: var(--text-sm);
+  opacity: 0.92;
+  margin-top: var(--space-1);
+}
+
+@media (min-width: 620px) {
+  .adv-held {
+    grid-template-columns: auto 1fr auto;
+  }
+  .adv-held > .rk-knopf {
+    grid-column: auto;
+    width: auto;
+    white-space: nowrap;
+  }
 }
 .adv-held-text h2 {
   color: #fff;
@@ -100,19 +215,43 @@
   margin-bottom: var(--space-1);
 }
 
-/* --- Weltkarte --- */
+/* --- Weltkarte ---
+   Die Landschaft trägt die Karte; ein Kelim-Rahmen fasst sie ein wie einen
+   gewebten Teppich. */
 .adv-karte {
   position: relative;
   border-radius: var(--radius-large);
   overflow: hidden;
-  padding: var(--space-5) var(--space-4);
+  padding: var(--space-6) var(--space-4) var(--space-5);
   margin-bottom: var(--space-5);
+  border: 3px solid var(--adv-brown);
+  box-shadow:
+    inset 0 0 0 2px rgba(249, 237, 207, 0.55),
+    var(--shadow-floating);
 }
 .adv-karte-hintergrund {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+/* Kelim-Bordüre oben und unten */
+.adv-karte .kelim-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+.adv-karte .kelim-oben {
+  top: 0;
+}
+.adv-karte .kelim-unten {
+  bottom: 0;
+  transform: scaleY(-1);
+}
+.adv-karte > .adv-pfad {
+  z-index: 2;
 }
 .adv-pfad {
   position: relative;
@@ -127,58 +266,102 @@
 .adv-pfad > li {
   position: relative;
 }
+/* Station: grosses Medaillon auf dem Weg, Beschriftung als kleine Karte
+   daneben — wie auf einer gezeichneten Landkarte. */
 .adv-station {
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: 0;
   width: 100%;
   text-align: left;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-large);
-  background: rgba(255, 255, 255, 0.92);
-  border: 2px solid transparent;
-  min-height: 80px;
+  padding: 0;
+  background: none;
+  border: none;
+  min-height: 76px;
   transition: transform var(--motion-fast) ease;
-}
-:root[data-theme='dark'] .adv-station {
-  background: rgba(20, 34, 48, 0.92);
 }
 .adv-station:hover {
   transform: translateY(-2px);
 }
-.adv-station.aktuell {
+.adv-station-text {
+  flex: 1;
+  min-width: 0;
+  margin-left: -18px;
+  padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-5) + 4px);
+  border-radius: var(--radius-medium);
+  background: rgba(255, 253, 247, 0.95);
+  box-shadow: 0 3px 10px rgba(20, 60, 80, 0.22);
+  border: 2px solid transparent;
+}
+/* Die Beschriftung endet früher, damit die Landschaft sichtbar bleibt. */
+.adv-station-text {
+  flex: 0 1 auto;
+  max-width: 74%;
+}
+:root[data-theme='dark'] .adv-station-text {
+  background: rgba(20, 34, 48, 0.94);
+}
+.adv-station.aktuell .adv-station-text {
   border-color: var(--adv-gold);
-  box-shadow: 0 0 0 4px rgba(244, 185, 66, 0.35);
 }
-.adv-station.fertig {
-  border-color: var(--adv-green);
+.adv-station.fertig .adv-station-text {
+  border-color: rgba(85, 184, 90, 0.7);
 }
-.adv-station.gesperrt {
-  background: rgba(255, 255, 255, 0.7);
+.adv-station.gesperrt .adv-station-text {
+  background: rgba(255, 255, 255, 0.72);
   color: var(--rk-text-light);
 }
+
+/* Medaillon mit doppeltem Ring — liegt über der Beschriftung */
 .adv-knoten {
   position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
   background: var(--adv-parchment);
-  border: 3px solid var(--adv-brown);
-  font-size: 1.6rem;
+  border: 4px solid #ffffff;
+  box-shadow:
+    0 0 0 3px var(--adv-stone),
+    0 6px 14px rgba(20, 60, 80, 0.28);
+  font-size: 1.75rem;
   flex-shrink: 0;
 }
 .adv-station.fertig .adv-knoten {
-  background: var(--adv-green);
-  border-color: #3f8c43;
+  background: linear-gradient(160deg, #6ecb6f, var(--adv-green));
+  box-shadow:
+    0 0 0 3px #3f8c43,
+    0 6px 14px rgba(20, 60, 80, 0.28);
+  color: #fff;
 }
 .adv-station.aktuell .adv-knoten {
-  background: var(--adv-gold);
-  border-color: #c8901f;
+  background: linear-gradient(160deg, #ffd777, var(--adv-gold));
+  box-shadow:
+    0 0 0 3px var(--adv-gold-dark),
+    0 6px 16px rgba(200, 144, 31, 0.5);
   animation: adv-puls 2.4s ease-in-out infinite;
+}
+.adv-station.gesperrt .adv-knoten {
+  background: var(--adv-stone-warm);
+  box-shadow:
+    0 0 0 3px var(--adv-stone-dark),
+    0 4px 10px rgba(20, 60, 80, 0.2);
+  color: #5f5749;
+}
+/* Marker-Spitze über der aktuellen Station */
+.adv-station.aktuell .adv-knoten::after {
+  content: '';
+  position: absolute;
+  top: -14px;
+  width: 0;
+  height: 0;
+  border: 7px solid transparent;
+  border-top-color: var(--adv-gold-dark);
+  transform: rotate(180deg);
 }
 @keyframes adv-puls {
   0%,
@@ -206,6 +389,7 @@
 .adv-station-sterne {
   display: flex;
   gap: 2px;
+  margin-top: 2px;
   color: var(--adv-gold);
 }
 /* Hêlo steht neben der aktuellen Station, nie halb hinter einer Karte. */
@@ -226,23 +410,53 @@
   }
 }
 
-/* Verbindungslinie zwischen den Stationen */
+/* Der Weg zwischen den Stationen: heller Steinpfad mit gestrichelter Mitte */
 .adv-station::before {
   content: '';
   position: absolute;
-  left: 45px;
-  top: -26px;
-  width: 6px;
-  height: 26px;
-  background: repeating-linear-gradient(
-    180deg,
-    var(--adv-brown) 0 6px,
-    transparent 6px 12px
-  );
-  opacity: 0.55;
+  left: 28px;
+  top: -32px;
+  width: 12px;
+  height: 34px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(249, 237, 207, 0.95), rgba(216, 191, 138, 0.95));
+  box-shadow: 0 0 0 1.5px rgba(122, 75, 40, 0.35);
 }
-.adv-pfad > li:first-child .adv-station::before {
+.adv-station::after {
+  content: '';
+  position: absolute;
+  left: 32.5px;
+  top: -28px;
+  width: 3px;
+  height: 26px;
+  background: repeating-linear-gradient(180deg, rgba(122, 75, 40, 0.45) 0 5px, transparent 5px 10px);
+}
+.adv-pfad > li:first-child .adv-station::before,
+.adv-pfad > li:first-child .adv-station::after {
   display: none;
+}
+
+/* Der Weg schlängelt sich: jede zweite Station rückt ein */
+.adv-pfad > li:nth-child(even) .adv-station {
+  margin-left: var(--space-5);
+}
+.adv-pfad > li:nth-child(even) .adv-station::before,
+.adv-pfad > li:nth-child(even) .adv-station::after {
+  transform: rotate(16deg);
+  transform-origin: bottom center;
+}
+.adv-pfad > li:nth-child(odd) .adv-station::before,
+.adv-pfad > li:nth-child(odd) .adv-station::after {
+  transform: rotate(-14deg);
+  transform-origin: bottom center;
+}
+@media (min-width: 520px) {
+  .adv-pfad > li:nth-child(even) .adv-station {
+    margin-left: var(--space-7);
+  }
+  .adv-pfad > li:nth-child(3n) .adv-station {
+    margin-left: var(--space-4);
+  }
 }
 
 /* --- Weltkacheln --- */
@@ -283,6 +497,61 @@
   font-size: var(--text-sm);
   color: var(--rk-text-muted);
   margin-bottom: var(--space-3);
+}
+
+/* --- Im Abenteuer sind alle Karten aus Pergament ---
+   Der Modern-Modus bleibt davon unberührt. */
+.rk-shell-abenteuer .rk-karte {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.55), transparent 44%),
+    linear-gradient(160deg, #fdf7e8 0%, #f8eed6 55%, #f1e3c2 100%);
+  border-color: var(--adv-parchment-edge);
+  color: var(--adv-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    var(--shadow-card);
+}
+.rk-shell-abenteuer .rk-karte-titel {
+  color: #8a5a15;
+}
+.rk-shell-abenteuer .rk-karte .gedaempft,
+.rk-shell-abenteuer .rk-karte small {
+  color: #7a6440;
+}
+.rk-shell-abenteuer .rk-kachel {
+  background: rgba(255, 255, 255, 0.6);
+  border-color: var(--adv-parchment-edge);
+  color: #7a6440;
+}
+.rk-shell-abenteuer .rk-kachel strong {
+  color: var(--adv-ink);
+}
+.rk-shell-abenteuer .rk-werteleiste {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(216, 191, 138, 0.9);
+}
+.rk-shell-abenteuer .rk-untennav {
+  background: linear-gradient(180deg, #fdf7e8, #f2e5c8);
+  border-top: 2px solid var(--adv-parchment-edge);
+}
+.rk-shell-abenteuer .rk-untennav-knopf.aktiv {
+  color: #8a5a15;
+}
+.rk-shell-abenteuer .rk-untennav-knopf.aktiv .rk-untennav-icon {
+  background: rgba(244, 185, 66, 0.35);
+}
+
+:root[data-theme='dark'] .rk-shell-abenteuer .rk-karte {
+  background: linear-gradient(160deg, #2f2718 0%, #291f13 100%);
+  border-color: #4a3d22;
+  color: #f4e6c8;
+}
+:root[data-theme='dark'] .rk-shell-abenteuer .rk-karte-titel {
+  color: var(--adv-gold);
+}
+:root[data-theme='dark'] .rk-shell-abenteuer .rk-untennav {
+  background: linear-gradient(180deg, #241d11, #1b160d);
+  border-top-color: #4a3d22;
 }
 
 /* --- Aufgaben --- */

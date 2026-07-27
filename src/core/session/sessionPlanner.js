@@ -14,8 +14,25 @@ export function dauerVon(id) {
   return DAUERN.find((d) => d.id === id) || DAUERN[1]
 }
 
+/**
+ * Eine fällige Karte in ein Übungswort übersetzen.
+ * Die Fertigkeit muss mitgehen: Eine Karte „Silav|erkennen" wird sonst als
+ * Tippaufgabe gestellt, bewertet dann die Karte „…|schreiben" und bleibt
+ * selbst für immer fällig.
+ */
 function alsWort(karte) {
-  return { de: karte.de, ku: karte.ku, bild: bildVon(karte.ku) }
+  return { de: karte.de, ku: karte.ku, bild: bildVon(karte.ku), skill: karte.skill }
+}
+
+/** Karten, die dasselbe Wortpaar in mehreren Fertigkeiten haben, nur einmal nehmen. */
+function ohneDoppelte(karten) {
+  const gesehen = new Set()
+  return karten.filter((k) => {
+    const key = `${k.de}|${k.ku}|${k.skill || ''}`
+    if (gesehen.has(key)) return false
+    gesehen.add(key)
+    return true
+  })
 }
 
 /**
@@ -33,7 +50,7 @@ export function planeSitzung(dauerId = 'standard') {
   const anteil = rueckstand ? 0.8 : 0.6
   const nWdh = Math.min(faellig.length, Math.ceil(anzahl * anteil))
 
-  const wdhWoerter = mische(faellig).slice(0, nWdh).map(alsWort)
+  const wdhWoerter = ohneDoppelte(mische(faellig).slice(0, nWdh).map(alsWort))
   const nNeu = Math.max(anzahl - wdhWoerter.length, rueckstand ? 2 : 3)
   const neueWoerter = mische(einheit.woerter).slice(0, nNeu)
 
@@ -58,13 +75,13 @@ export function planeSitzung(dauerId = 'standard') {
 
 /** Sitzung nur aus faelligen Karten. */
 export function planeWiederholung(anzahl = 15) {
-  const woerter = mische(faelligeKarten()).slice(0, anzahl).map(alsWort)
+  const woerter = ohneDoppelte(mische(faelligeKarten()).map(alsWort)).slice(0, anzahl)
   return { uebungen: baueUebungen(woerter), titel: 'Wiederholen', anzahl: woerter.length }
 }
 
 /** Sitzung aus den Wörtern, die immer wieder schwerfallen. */
 export function planeSchwierige(anzahl = 10) {
-  const woerter = schwierigeKarten(anzahl).map(alsWort)
+  const woerter = ohneDoppelte(schwierigeKarten(anzahl * 2).map(alsWort)).slice(0, anzahl)
   return { uebungen: baueUebungen(woerter), titel: 'Schwierige Wörter', anzahl: woerter.length }
 }
 

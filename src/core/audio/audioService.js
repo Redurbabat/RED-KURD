@@ -37,6 +37,20 @@ export async function loescheAufnahme(wort) {
   db.transaction('aufnahmen', 'readwrite').objectStore('aufnahmen').delete(wort)
 }
 
+/**
+ * Einen Blob abspielen und die Object-URL danach wieder freigeben —
+ * sonst haelt jede abgespielte Aufnahme Speicher fest, bis die Seite neu laedt.
+ */
+export function spieleBlob(blob) {
+  const adresse = URL.createObjectURL(blob)
+  const ton = new Audio(adresse)
+  const aufraeumen = () => URL.revokeObjectURL(adresse)
+  ton.addEventListener('ended', aufraeumen, { once: true })
+  ton.addEventListener('error', aufraeumen, { once: true })
+  ton.play().catch(aufraeumen)
+  return ton
+}
+
 // Verzeichnis echter Muttersprachler-Aufnahmen (Lingua Libre, CC BY-SA)
 let audioIndex = null
 async function ladeAudioIndex() {
@@ -52,7 +66,7 @@ export async function spieleWort(wort) {
   if (!tonAn()) return 'aus'
   const b = await holeAufnahme(wort)
   if (b) {
-    new Audio(URL.createObjectURL(b)).play()
+    spieleBlob(b)
     return 'aufnahme'
   }
   const idx = await ladeAudioIndex()

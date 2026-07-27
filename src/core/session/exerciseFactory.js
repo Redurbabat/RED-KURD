@@ -33,6 +33,33 @@ function ergaenzeBild(w) {
   return w.bild ? w : { ...w, bild: bildVon(w.ku) }
 }
 
+/** Welche Aufgabenarten trainieren eine bestimmte Fertigkeit? */
+const ARTEN_JE_SKILL = {
+  erkennen: ['wahl-de', 'bild'],
+  abrufen: ['wahl-ku'],
+  schreiben: ['tippen'],
+  hoeren: ['hoeren'],
+}
+
+/**
+ * Baut die falschen Antwortmöglichkeiten.
+ * Wichtig: Wörter, deren Text mit der richtigen Antwort übereinstimmt, fliegen
+ * raus — sonst steht die richtige Antwort zweimal da und ein Treffer auf die
+ * zweite zählt als Fehler. (Beispiel: „roj" heisst Tag UND Sonne.)
+ */
+function falscheOptionen(alle, richtig, feld, anzahl = 3) {
+  const gesehen = new Set([richtig])
+  const aus = []
+  for (const x of mische(alle)) {
+    const wert = x[feld]
+    if (!wert || gesehen.has(wert)) continue
+    gesehen.add(wert)
+    aus.push(wert)
+    if (aus.length === anzahl) break
+  }
+  return aus
+}
+
 /**
  * @param {Array<{de:string, ku:string, bild?:string}>} woerter
  * @param {string[]} [arten] erlaubte Aufgabenarten
@@ -48,6 +75,12 @@ export function baueUebungen(woerter, arten) {
   for (const roh of mische(woerter)) {
     const w = ergaenzeBild(roh)
     let auswahl = erlaubt.filter((a) => ARTEN.includes(a))
+    // Kommt das Wort aus einer fälligen Karte, wird genau deren Fertigkeit
+    // trainiert — sonst bleibt die Karte für immer fällig.
+    if (w.skill && ARTEN_JE_SKILL[w.skill]) {
+      const passend = auswahl.filter((a) => ARTEN_JE_SKILL[w.skill].includes(a))
+      if (passend.length) auswahl = passend
+    }
     if (!w.bild) auswahl = auswahl.filter((a) => a !== 'bild')
     if (!auswahl.length) auswahl = ['wahl-ku']
     if (gleicheFolge >= 2 && auswahl.length > 1) auswahl = auswahl.filter((a) => a !== letzteArt)
@@ -74,25 +107,25 @@ export function baueUebungen(woerter, arten) {
         w,
       })
     } else if (art === 'hoeren' || art === 'wahl-de') {
-      const falsche = mische(alle.filter((x) => x.de !== w.de)).slice(0, 3)
+      const falsche = falscheOptionen(alle, w.de, 'de')
       if (falsche.length < 3) continue
       uebungen.push({
         art,
         frage: w.ku,
         antwort: w.de,
-        optionen: mische([w.de, ...falsche.map((x) => x.de)]),
+        optionen: mische([w.de, ...falsche]),
         w,
       })
     } else if (art === 'tippen') {
       uebungen.push({ art, frage: w.de, antwort: w.ku, w })
     } else {
-      const falsche = mische(alle.filter((x) => x.ku !== w.ku)).slice(0, 3)
+      const falsche = falscheOptionen(alle, w.ku, 'ku')
       if (falsche.length < 3) continue
       uebungen.push({
         art,
         frage: w.de,
         antwort: w.ku,
-        optionen: mische([w.ku, ...falsche.map((x) => x.ku)]),
+        optionen: mische([w.ku, ...falsche]),
         w,
       })
     }

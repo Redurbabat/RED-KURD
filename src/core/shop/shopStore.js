@@ -1,6 +1,6 @@
 // Shop: nur Aussehen und Komfort. Lerninhalte sind hier niemals gesperrt.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { melden, beiFremdaenderung } from '../store.js'
 import { zahleEdelsteine, zahleSchluessel, holeFortschritt } from '../progress/progressStore.js'
 
 export const KATEGORIEN = [
@@ -91,6 +91,16 @@ function sichern(d) {
   return d
 }
 
+/** Ganzen Shop-Stand ersetzen — nur fuer den Import. */
+export function setzeShop(ganz) {
+  return sichern({
+    ...STANDARD,
+    ...(ganz || {}),
+    gekauft: (ganz && ganz.gekauft) || [],
+    aktiv: (ganz && ganz.aktiv) || {},
+  })
+}
+
 export function istGekauft(id) {
   return holeShop().gekauft.includes(id)
 }
@@ -139,3 +149,9 @@ export function aktiverArtikel(art) {
   const id = holeShop().aktiv[art]
   return id ? ARTIKEL.find((a) => a.id === id) || null : null
 }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.shop) cache = null
+})

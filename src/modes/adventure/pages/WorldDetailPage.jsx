@@ -12,7 +12,7 @@ import {
   holeWelt,
   weltFortschritt,
 } from '../../../core/courses/courseRepository.js'
-import { gibEdelsteine } from '../../../core/progress/progressStore.js'
+import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.js'
 import Landscape from '../../../components/adventure/Landscape.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
@@ -21,9 +21,9 @@ import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import EmptyState from '../../../components/common/EmptyState.jsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import { KelimBand } from '../../../components/adventure/KelimBorder.jsx'
 import './WorldDetailPage.css'
 
-const TRUHEN_SCHLUESSEL = 'red-kurd-welt-truhe'
 const TRUHEN_EDELSTEINE = 5
 
 const KLASSE_JE_STATUS = {
@@ -38,34 +38,6 @@ const STATUS_TEXT = {
   aktuell: T.abenteuer.aktuell,
   begonnen: 'Begonnen',
   gesperrt: T.abenteuer.gesperrt,
-}
-
-// ===== Welt-Truhen (eigener kleiner Speicher, eine Truhe je Welt) =====
-
-/** @returns {Object} { weltId: 'JJJJ-MM-TT' } */
-function leseWeltTruhen() {
-  if (typeof window === 'undefined') return {}
-  try {
-    const roh = window.localStorage.getItem(TRUHEN_SCHLUESSEL)
-    const daten = roh ? JSON.parse(roh) : null
-    return daten && typeof daten === 'object' ? daten : {}
-  } catch {
-    return {}
-  }
-}
-
-function truheGeoeffnetAm(weltId) {
-  return leseWeltTruhen()[weltId] || null
-}
-
-function merkeWeltTruhe(weltId) {
-  const daten = { ...leseWeltTruhen(), [weltId]: new Date().toISOString().slice(0, 10) }
-  try {
-    window.localStorage.setItem(TRUHEN_SCHLUESSEL, JSON.stringify(daten))
-  } catch {
-    // Privater Modus: die Edelsteine sind trotzdem gutgeschrieben.
-  }
-  return daten
 }
 
 function datumText(iso) {
@@ -114,13 +86,13 @@ export default function WorldDetailPage({ worldId }) {
   const letzte = einheiten[einheiten.length - 1] || null
   const alleFertig = stand.gesamt > 0 && stand.fertig >= stand.gesamt
   const offeneEinheiten = Math.max(0, stand.gesamt - stand.fertig)
-  const truheDatum = truheGeoeffnetAm(welt.id)
+  const truheDatum = weltTruheDatum(welt.id)
 
-  function oeffneWeltTruhe() {
+  function truheOeffnen() {
     if (truheDatum || !alleFertig) return
-    merkeWeltTruhe(welt.id)
-    setGewinnWelt(welt.id)
-    gibEdelsteine(TRUHEN_EDELSTEINE) // meldet den neuen Stand an die ganze App
+    // Bucht die Edelsteine und merkt sich die Truhe im gemeinsamen Lernstand,
+    // damit ein Import sie nicht erneut oeffnen laesst.
+    if (oeffneWeltTruhe(welt.id, TRUHEN_EDELSTEINE) !== null) setGewinnWelt(welt.id)
   }
 
   return (
@@ -170,8 +142,11 @@ export default function WorldDetailPage({ worldId }) {
           art={welt.landschaft}
           farbe={welt.farbe}
           himmel={welt.himmel}
+          format="karte"
           className="adv-karte-hintergrund"
         />
+        <KelimBand hoehe={14} className="kelim-oben" />
+        <KelimBand hoehe={14} className="kelim-unten" />
 
         <ol className="adv-pfad">
           {einheiten.map((einheit) => {
@@ -208,8 +183,8 @@ export default function WorldDetailPage({ worldId }) {
                     <small>
                       {statusText} · {prozent} %
                     </small>
+                    <Sterne anzahl={sterne} />
                   </span>
-                  <Sterne anzahl={sterne} />
                 </button>
               </li>
             )
@@ -284,7 +259,7 @@ export default function WorldDetailPage({ worldId }) {
             icon="truhe"
             className="wd-knopf"
             disabled={!alleFertig}
-            onClick={oeffneWeltTruhe}
+            onClick={truheOeffnen}
           >
             Truhe öffnen (+{TRUHEN_EDELSTEINE} Edelsteine)
           </PrimaryButton>

@@ -1,8 +1,8 @@
 // Tages- und Wochenaufgaben. Der Fortschritt wird direkt aus dem Lernstand
 // abgeleitet — es gibt keine zweite Zaehlung, die auseinanderlaufen koennte.
 import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
-import { heute } from '../progress/scheduler.js'
+import { melden, beiFremdaenderung } from '../store.js'
+import { heute, tagVon } from '../progress/scheduler.js'
 import { gibXp, gibEdelsteine, gibSchluessel, holeFortschritt } from '../progress/progressStore.js'
 import { tagesStatistik, wochenSumme, wochenMinuten } from '../progress/progressSelectors.js'
 import { kursFortschritt } from '../courses/courseRepository.js'
@@ -15,7 +15,7 @@ function wochenStart() {
   const d = new Date()
   const tag = (d.getDay() + 6) % 7 // Montag = 0
   d.setDate(d.getDate() - tag)
-  return d.toISOString().slice(0, 10)
+  return tagVon(d)
 }
 
 function laden() {
@@ -26,10 +26,12 @@ function laden() {
   return cache
 }
 
-function sichern(d) {
+function sichern(d, still = false) {
   cache = d
   schreibe(KEYS.aufgaben, d)
-  melden()
+  // holeAufgaben() laeuft waehrend des Renderns. Ein melden() daraus wuerde
+  // React mitten im Zeichnen zum Neuzeichnen zwingen — deshalb still speichern.
+  if (!still) melden()
   return d
 }
 
@@ -53,7 +55,7 @@ function pruefeTag(d) {
       .forEach((k) => delete neu.abgeholt[k])
     neu.basis = { ...neu.basis, wocheEinheiten: kursFortschritt().fertig }
   }
-  if (neu !== d) sichern(neu)
+  if (neu !== d) sichern(neu, true)
   return neu
 }
 
@@ -161,3 +163,9 @@ export function offeneBelohnungen() {
 }
 
 export { holeFortschritt }
+
+// Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim
+// naechsten Zugriff frisch gelesen.
+beiFremdaenderung((key) => {
+  if (key === KEYS.aufgaben) cache = null
+})

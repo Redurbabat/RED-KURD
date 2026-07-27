@@ -38,6 +38,8 @@ export default function PronunciationStudio() {
   const stuecke = useRef([])
   const timer = useRef(null)
   const lebt = useRef(true)
+  /** Der aktive Mikrofon-Strom — nur so laesst er sich zuverlaessig schliessen. */
+  const strom = useRef(null)
 
   const einheit = EINHEITEN.find((e) => e.id === einheitId) || EINHEITEN[0]
 
@@ -48,6 +50,10 @@ export default function PronunciationStudio() {
       lebt.current = false
       if (timer.current) clearTimeout(timer.current)
       if (rekorder.current && rekorder.current.state === 'recording') rekorder.current.stop()
+      if (strom.current) {
+        strom.current.getTracks().forEach((t) => t.stop())
+        strom.current = null
+      }
     }
   }, [])
 
@@ -72,8 +78,26 @@ export default function PronunciationStudio() {
     }
   }, [einheitId])
 
+  /** Mikrofon wirklich freigeben — sonst bleibt die Aufnahmeanzeige an. */
+  function schliesseMikrofon() {
+    if (rekorder.current && rekorder.current.state === 'recording') {
+      try {
+        rekorder.current.stop()
+      } catch {
+        /* Recorder war schon beendet. */
+      }
+    }
+    if (strom.current) {
+      strom.current.getTracks().forEach((t) => t.stop())
+      strom.current = null
+    }
+  }
+
   async function starteAufnahme(wort) {
     setFehler(null)
+    // Eine noch laufende Aufnahme zuerst sauber beenden — sonst bleibt ihr
+    // Mikrofon-Zugriff für immer offen.
+    schliesseMikrofon()
     if (
       typeof MediaRecorder === 'undefined' ||
       !navigator.mediaDevices ||
@@ -84,6 +108,7 @@ export default function PronunciationStudio() {
     }
     try {
       const spur = await navigator.mediaDevices.getUserMedia({ audio: true })
+      strom.current = spur
       const r = new MediaRecorder(spur)
       stuecke.current = []
       r.ondataavailable = (e) => {
@@ -91,6 +116,7 @@ export default function PronunciationStudio() {
       }
       r.onstop = async () => {
         spur.getTracks().forEach((t) => t.stop())
+        if (strom.current === spur) strom.current = null
         const blob = new Blob(stuecke.current, { type: r.mimeType || 'audio/webm' })
         try {
           await speichereAufnahme(wort, blob)

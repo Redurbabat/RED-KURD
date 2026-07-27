@@ -6,14 +6,27 @@ export const ABSTAENDE = [1, 3, 7, 16, 35, 70]
 /** Fertigkeiten, die eine Karte trainieren kann. */
 export const SKILLS = ['erkennen', 'abrufen', 'schreiben', 'hoeren']
 
+/**
+ * Kalendertag in der Zeitzone des Geräts.
+ * toISOString() würde den UTC-Tag liefern — westlich von UTC wechselt der Tag
+ * dadurch mitten am Nachmittag und die Tagesserie reisst grundlos ab.
+ */
+export function tagVon(datum) {
+  const d = datum instanceof Date ? datum : new Date(datum)
+  const jahr = d.getFullYear()
+  const monat = String(d.getMonth() + 1).padStart(2, '0')
+  const tag = String(d.getDate()).padStart(2, '0')
+  return `${jahr}-${monat}-${tag}`
+}
+
 export function heute() {
-  return new Date().toISOString().slice(0, 10)
+  return tagVon(new Date())
 }
 
 export function tagPlus(n) {
   const d = new Date()
   d.setDate(d.getDate() + n)
-  return d.toISOString().slice(0, 10)
+  return tagVon(d)
 }
 
 export function gestern() {

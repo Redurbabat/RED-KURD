@@ -16,8 +16,15 @@ import { T } from '../../core/texts.js'
 const BUCHSTABEN = ['A', 'B', 'C', 'D']
 const XP_JE_AUFGABE = 10
 
-function untertitel(option) {
-  return deutschVon(option) || kurmanciVon(option) || ''
+/**
+ * Hilfstext unter einer Antwortmöglichkeit.
+ * Die Richtung muss mitgegeben werden: „du" ist auf Deutsch ein Pronomen und
+ * auf Kurmancî die Zwei — ohne Richtung stünde unter dem deutschen „du" die
+ * Übersetzung „zwei".
+ */
+function untertitel(option, optionenSindKurmanci) {
+  const treffer = optionenSindKurmanci ? deutschVon(option) : kurmanciVon(option)
+  return treffer && treffer !== option ? treffer : ''
 }
 
 /** Nur die Daten sichern, die zum Fortsetzen nötig sind. */
@@ -55,18 +62,31 @@ export default function ExercisePlayer({
   const [leben, setLeben] = useState(3)
   const [fehler, setFehler] = useState([])
   const feldRef = useRef(null)
+  const weiterRef = useRef(null)
   const startZeit = useRef(Date.now())
   const gemeldet = useRef(false)
 
   const u = uebungen[index]
   const amEnde = index >= uebungen.length
 
-  // Sitzung nach jeder Aufgabe sichern, damit ein Reload nichts verliert.
+  // Sitzung sichern, damit ein Reload nichts verliert.
+  // Sobald eine Aufgabe beantwortet ist, wird sie als erledigt gesichert —
+  // sonst wird sie nach einem Neuladen erneut gestellt UND erneut gewertet
+  // (doppelte XP und doppelter Eintrag im Wiederholsystem).
   useEffect(() => {
     if (!speichern) return
-    if (amEnde) sitzungLoeschen()
-    else sitzungSpeichern({ titel, index, punkte, uebungen: schlank(uebungen) })
-  }, [index, amEnde, speichern, titel])
+    if (amEnde) {
+      sitzungLoeschen()
+      return
+    }
+    const erledigt = antwort !== null
+    sitzungSpeichern({
+      titel,
+      index: erledigt ? index + 1 : index,
+      punkte: erledigt && antwort === u.antwort ? punkte + 1 : punkte,
+      uebungen: schlank(uebungen),
+    })
+  }, [index, antwort, amEnde, speichern, titel])
 
   // Ergebnis genau einmal melden.
   useEffect(() => {
@@ -89,6 +109,13 @@ export default function ExercisePlayer({
     if (u && u.art === 'tippen' && antwort === null) feldRef.current?.focus()
   }, [index, u, antwort])
 
+  // Nach dem Antworten wandert der Fokus auf „Weiter" — sonst landet er beim
+  // Klick auf einen deaktivierten Knopf am Seitenanfang und die Tastatur-
+  // Bedienung bricht ab.
+  useEffect(() => {
+    if (antwort !== null) weiterRef.current?.focus()
+  }, [antwort])
+
   if (amEnde || !u) {
     return (
       <div className="rk-uebung-ende" role="status" aria-live="polite">
@@ -100,6 +127,8 @@ export default function ExercisePlayer({
 
   const richtigGewaehlt = antwort !== null && antwort === u.antwort
   const skill = SKILL_JE_ART[u.art] || 'erkennen'
+  // Nur bei 'wahl-ku' stehen Kurmancî-Wörter zur Auswahl, sonst deutsche.
+  const optionenKu = u.art === 'wahl-ku'
 
   function bewerten(richtig) {
     const sekunden = Math.min(120, Math.round((Date.now() - startZeit.current) / 1000))
@@ -154,10 +183,16 @@ export default function ExercisePlayer({
           {punkte * XP_JE_AUFGABE} XP
         </span>
         {mitLeben && (
-          <span className="rk-leben" aria-label={`${leben} von 3 Leben übrig`}>
-            {[0, 1, 2].map((i) => (
-              <Icon key={i} name="herz" groesse={18} className={i < leben ? 'voll' : 'leer'} />
-            ))}
+          <span className="rk-leben">
+            <span aria-hidden="true">
+              {[0, 1, 2].map((i) => (
+                <Icon key={i} name="herz" groesse={18} className={i < leben ? 'voll' : 'leer'} />
+              ))}
+            </span>
+            <small className="rk-leben-zahl">{leben}/3</small>
+            <span className="nur-sr" role="status">
+              {leben} von 3 Leben übrig
+            </span>
           </span>
         )}
       </div>
@@ -228,7 +263,7 @@ export default function ExercisePlayer({
                 </span>
                 <span className="rk-option-text">
                   <strong lang={u.art === 'wahl-ku' ? 'ku' : 'de'}>{opt}</strong>
-                  {untertitel(opt) && <small>{untertitel(opt)}</small>}
+                  {untertitel(opt, optionenKu) && <small>{untertitel(opt, optionenKu)}</small>}
                 </span>
                 {antwort !== null && opt === u.antwort && <Icon name="haken" groesse={20} className="rk-option-haken" />}
                 {antwort !== null && opt === antwort && opt !== u.antwort && (
@@ -297,7 +332,9 @@ export default function ExercisePlayer({
                 <>
                   <strong>{T.uebung.falsch}</strong> {T.uebung.falschText}:{' '}
                   <strong lang={u.art === 'tippen' || u.art === 'wahl-ku' ? 'ku' : 'de'}>{u.antwort}</strong>
-                  {u.art !== 'tippen' && untertitel(u.antwort) && <div className="gedaempft">{untertitel(u.antwort)}</div>}
+                  {u.art !== 'tippen' && untertitel(u.antwort, optionenKu) && (
+                    <div className="gedaempft">{untertitel(u.antwort, optionenKu)}</div>
+                  )}
                 </>
               )}
             </div>
@@ -306,7 +343,13 @@ export default function ExercisePlayer({
       </div>
 
       {antwort !== null && (
-        <PrimaryButton breit groesse="gross" art={richtigGewaehlt ? 'gruen' : 'primaer'} onClick={weiter} autoFocus>
+        <PrimaryButton
+          ref={weiterRef}
+          breit
+          groesse="gross"
+          art={richtigGewaehlt ? 'gruen' : 'primaer'}
+          onClick={weiter}
+        >
           {T.uebung.weiter}
         </PrimaryButton>
       )}

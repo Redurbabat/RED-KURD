@@ -46,13 +46,25 @@
   /* --- Abenteuerfarben --- */
   --adv-sky: #90d7f8;
   --adv-teal: #087f8c;
+  --adv-teal-dark: #05616b;
   --adv-gold: #f4b942;
+  --adv-gold-dark: #c8901f;
+  --adv-gold-deep: #a06f10;
   --adv-parchment: #f9edcf;
   --adv-parchment-dark: #ecd9a8;
+  --adv-parchment-edge: #d8bf8a;
   --adv-brown: #7a4b28;
+  --adv-brown-dark: #5b3619;
+  --adv-brown-light: #a9762f;
   --adv-green: #55b85a;
   --adv-stone: #9aa3ad;
+  --adv-stone-warm: #b9ae95;
+  --adv-stone-dark: #7d7360;
   --adv-night: #09212d;
+  /* Kurdische Akzente: Mohnrot, Kelim-Rot, Bergsteinbeige */
+  --adv-poppy: #dd4436;
+  --adv-kelim: #b8473a;
+  --adv-ink: #4a3418;
 
   /* --- Abstaende --- */
   --space-1: 4px;

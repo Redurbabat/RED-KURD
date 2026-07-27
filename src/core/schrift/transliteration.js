@@ -51,17 +51,34 @@ export function arabischNachLatein(text) {
   return aus
 }
 
-// Aussprache: beste verfuegbare Stimme finden (Kurdisch selten, sonst Tuerkisch als Naeherung)
+// Aussprache: nur kurdische Stimmen werden gezielt gewaehlt. Gibt es keine,
+// nimmt der Browser seine Standardstimme — eine Fremdsprache wird nicht
+// untergeschoben. Echte Muttersprachler-Aufnahmen haben ohnehin Vorrang
+// (siehe core/audio/audioService.js).
+const KURDISCH = ['ku', 'kmr', 'ckb', 'kur', 'sdh']
+
 export function sprich(text) {
   if (!('speechSynthesis' in window)) return false
   const stimmen = window.speechSynthesis.getVoices()
-  const stimme = stimmen.find(v => v.lang.toLowerCase().startsWith('ku'))
-    || stimmen.find(v => v.lang.toLowerCase().startsWith('tr'))
-    || null
+  const stimme =
+    stimmen.find((v) => KURDISCH.some((k) => v.lang.toLowerCase().startsWith(k))) || null
   const u = new SpeechSynthesisUtterance(text)
-  if (stimme) u.voice = stimme
+  if (stimme) {
+    u.voice = stimme
+    u.lang = stimme.lang
+  } else {
+    u.lang = 'ku'
+  }
   u.rate = 0.85
   window.speechSynthesis.cancel()
   window.speechSynthesis.speak(u)
   return true
+}
+
+/** Gibt es auf diesem Geraet ueberhaupt eine kurdische Stimme? */
+export function hatKurdischeStimme() {
+  if (!('speechSynthesis' in window)) return false
+  return window.speechSynthesis
+    .getVoices()
+    .some((v) => KURDISCH.some((k) => v.lang.toLowerCase().startsWith(k)))
 }
