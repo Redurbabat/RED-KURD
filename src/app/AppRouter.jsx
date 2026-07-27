@@ -47,9 +47,11 @@ const ROUTEN = [
   ['/settings', () => <SettingsPage />],
 
   ['/adventure', () => <AdventureHomePage />],
+  ['/adventure/worlds', () => <WorldMapPage />],
   ['/adventure/world', () => <WorldMapPage />],
   ['/adventure/world/:worldId', (p) => <WorldDetailPage worldId={p.worldId} />],
   ['/adventure/lesson/:lessonId', (p) => <AdventureLessonPage unitId={p.lessonId} />],
+  ['/adventure/quests', () => <DailyTasksPage />],
   ['/adventure/tasks', () => <DailyTasksPage />],
   ['/adventure/shop', () => <ShopPage />],
   ['/adventure/profile', () => <AdventureProfilePage />],

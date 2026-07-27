@@ -1,573 +1,441 @@
-/* ===== Abenteuer-Modus: Landschaft, Pergament, Gold =====
-   Text steht nie direkt auf einer unruhigen Fläche, sondern immer auf einer
-   Pergament- oder weißen Karte. */
+/* ===== Abenteuer-Modus =====
+   Eigenständige dunkle Oberfläche nach dem Designpaket. Kurdische Landschaften
+   und Kelim-Ornamente bleiben — sie stehen jetzt auf dunklem Grund.
+   Der Modern-Modus wird von dieser Datei nicht berührt: alles hängt an
+   .rk-shell-abenteuer. */
 
 .rk-shell-abenteuer {
-  background: linear-gradient(180deg, var(--adv-sky) 0%, #d9f0f7 24%, var(--rk-bg) 60%);
-}
-:root[data-theme='dark'] .rk-shell-abenteuer {
-  background: linear-gradient(180deg, #123244 0%, #0f2634 30%, var(--rk-bg) 70%);
+  background: var(--adv-bg);
+  color: var(--adv-text);
 }
 
-/* --- Pergamentkarte ---
-   Warmes Papier mit Faserstruktur, doppelter Rahmen wie bei einer alten
-   Landkarte, und eine Kelim-Bordüre als Fuss. */
-.adv-pergament {
-  position: relative;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.55), transparent 42%),
-    radial-gradient(circle at 82% 78%, rgba(160, 120, 60, 0.12), transparent 46%),
-    linear-gradient(160deg, #fcf4e0 0%, var(--adv-parchment) 48%, #f2e2bd 100%);
-  border: 2px solid var(--adv-parchment-edge);
+/* Der ganze Modus dreht die Grundfarben — dadurch greifen auch die
+   gemeinsamen Bausteine (Karten, Knöpfe, Felder) ohne Sonderfälle. */
+.rk-shell-abenteuer {
+  --rk-bg: var(--adv-bg);
+  --rk-surface: var(--adv-surface);
+  --rk-surface-soft: var(--adv-surface-soft);
+  --rk-border: var(--adv-border);
+  --rk-border-strong: #46626e;
+  --rk-text: var(--adv-text);
+  --rk-text-muted: var(--adv-text-muted);
+  --rk-text-light: #7f939c;
+  --rk-primary: var(--adv-teal);
+  --rk-primary-dark: #2ad3ba;
+  --rk-primary-soft: rgba(20, 200, 176, 0.16);
+  --rk-blue: var(--adv-blue);
+  --rk-blue-dark: #5fc9f8;
+  --rk-blue-soft: rgba(39, 181, 245, 0.16);
+  --rk-green-dark: var(--adv-green-dark);
+  --rk-green-soft: rgba(66, 209, 0, 0.14);
+  --rk-yellow-soft: rgba(255, 202, 40, 0.14);
+  --rk-orange-soft: rgba(255, 157, 46, 0.14);
+  --rk-red-soft: rgba(255, 75, 75, 0.14);
+  --rk-purple-soft: rgba(200, 107, 247, 0.16);
+  --shadow-card: var(--adv-shadow-card);
+}
+
+/* ---------- Kopfstatistik ---------- */
+.rk-shell-abenteuer .rk-kopfleiste {
+  background: var(--adv-bg);
+}
+.rk-shell-abenteuer .rk-marke-wort strong {
+  color: var(--adv-text);
+}
+.rk-shell-abenteuer .rk-marke-rot {
+  color: #ff7d6e;
+}
+
+.rk-shell-abenteuer .rk-werteleiste {
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
   border-radius: var(--radius-large);
-  padding: var(--space-5);
-  margin-bottom: var(--space-4);
-  color: var(--adv-ink);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
-    inset 0 0 24px rgba(160, 120, 60, 0.14),
-    var(--shadow-card);
+  box-shadow: none;
+  padding: var(--space-3) var(--space-1);
 }
-/* Innenlinie wie bei einer gezeichneten Karte */
-.adv-pergament::before {
-  content: '';
-  position: absolute;
-  inset: 6px;
-  border: 1px solid rgba(122, 75, 40, 0.28);
-  border-radius: calc(var(--radius-large) - 6px);
-  pointer-events: none;
+.rk-shell-abenteuer .rk-wert + .rk-wert {
+  border-left: 1px solid var(--adv-border);
 }
-.adv-pergament > * {
-  position: relative;
+.rk-shell-abenteuer .rk-wert-text strong {
+  font-size: 1.4rem;
 }
-.adv-pergament h2,
-.adv-pergament h3 {
-  color: #4a3418;
-}
-:root[data-theme='dark'] .adv-pergament {
-  background: #2c2415;
-  border-color: #4a3d22;
-  color: #f4e6c8;
-}
-:root[data-theme='dark'] .adv-pergament h2,
-:root[data-theme='dark'] .adv-pergament h3 {
-  color: #f4e6c8;
+.rk-shell-abenteuer .rk-wert-text small {
+  color: var(--adv-text-muted);
 }
 
-/* --- Gold-Knopf: die Hauptaktion im Abenteuer-Modus ---
-   Geprägter Rand, warme Verlaufsfläche, fühlbare Unterkante. */
-.rk-knopf-gold {
-  background: linear-gradient(180deg, #ffd777 0%, var(--adv-gold) 52%, #e8a824 100%);
+/* Runde, farbige Icon-Plakette je Kennzahl */
+.rk-shell-abenteuer .rk-wert-icon {
+  width: 34px;
+  height: 34px;
+  padding: 7px;
+  border-radius: 50%;
+  color: var(--adv-text-dark);
+}
+.rk-shell-abenteuer .ton-flamme {
+  color: var(--adv-orange);
+}
+.rk-shell-abenteuer .rk-wert-icon.ton-flamme {
+  background: var(--adv-orange);
+  color: #4a2600;
+}
+.rk-shell-abenteuer .ton-gold {
+  color: var(--adv-gold);
+}
+.rk-shell-abenteuer .rk-wert-icon.ton-gold {
+  background: var(--adv-gold);
   color: #4a3200;
-  border: 2px solid var(--adv-gold-dark);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 5px 0 var(--adv-gold-deep),
-    0 8px 14px rgba(160, 111, 16, 0.32);
-  letter-spacing: 0.02em;
 }
-.rk-knopf-gold:hover:not(:disabled) {
-  filter: brightness(1.04);
+.rk-shell-abenteuer .ton-edelstein {
+  color: var(--adv-blue);
 }
-.rk-knopf-gold:active:not(:disabled) {
-  transform: translateY(4px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 1px 0 var(--adv-gold-deep);
+.rk-shell-abenteuer .rk-wert-icon.ton-edelstein {
+  background: var(--adv-blue);
+  color: #002b3d;
+}
+.rk-shell-abenteuer .ton-level,
+.rk-shell-abenteuer .ton-energie {
+  color: var(--adv-pink);
+}
+.rk-shell-abenteuer .rk-wert-icon.ton-level,
+.rk-shell-abenteuer .rk-wert-icon.ton-energie {
+  background: var(--adv-pink);
+  color: #4a0027;
 }
 
-/* --- Holzschild: Beschriftungen im Gelände --- */
-.adv-holz {
-  position: relative;
-  background:
-    repeating-linear-gradient(
-      92deg,
-      rgba(91, 54, 25, 0.1) 0 3px,
-      transparent 3px 9px
-    ),
-    linear-gradient(170deg, #a9762f 0%, var(--adv-brown) 60%, #61391a 100%);
-  border: 2px solid var(--adv-brown-dark);
+/* ---------- Navigation ---------- */
+.rk-shell-abenteuer .rk-untennav {
+  background: rgba(7, 17, 23, 0.96);
+  border-top: 1px solid var(--adv-border);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+}
+.rk-shell-abenteuer .rk-untennav-knopf {
+  color: var(--adv-text-muted);
   border-radius: var(--radius-medium);
-  padding: var(--space-4);
-  color: #fdf3dd;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    var(--shadow-card);
 }
-.adv-holz h2,
-.adv-holz h3,
-.adv-holz strong {
-  color: #fff8e6;
+.rk-shell-abenteuer .rk-untennav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--adv-surface-soft);
+  color: var(--adv-text-muted);
 }
-
-/* --- Steinplatte: Rahmen für Aufgaben und Listen --- */
-.adv-stein {
-  position: relative;
-  background:
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.5), transparent 40%),
-    linear-gradient(165deg, #cfc6ae 0%, var(--adv-stone-warm) 55%, #a29a86 100%);
-  border: 2px solid var(--adv-stone-dark);
-  border-radius: var(--radius-large);
-  padding: var(--space-4);
-  color: var(--adv-ink);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    var(--shadow-card);
+.rk-shell-abenteuer .rk-untennav-knopf.aktiv {
+  color: var(--adv-teal);
+  background: rgba(20, 200, 176, 0.12);
 }
-:root[data-theme='dark'] .adv-stein {
-  background: linear-gradient(165deg, #3a3e46 0%, #2c3038 60%, #23262c 100%);
-  border-color: #4a505b;
-  color: #eaf1f6;
+.rk-shell-abenteuer .rk-untennav-knopf.aktiv .rk-untennav-icon {
+  background: var(--adv-teal);
+  color: #04241f;
 }
 
-/* --- Dunkle, halbtransparente Textfläche über Landschaften --- */
-.adv-dunkelkarte {
-  background: rgba(9, 33, 45, 0.78);
-  color: #eaf4f8;
+.rk-shell-abenteuer .rk-seitenleiste {
+  background: var(--adv-bg-deep);
+  border-right-color: var(--adv-border);
+}
+.rk-shell-abenteuer .rk-seitennav-knopf.aktiv {
+  background: rgba(20, 200, 176, 0.14);
+  color: var(--adv-teal);
+}
+
+/* ---------- Knöpfe im 3D-Stil ---------- */
+.rk-shell-abenteuer .rk-knopf {
+  border-radius: var(--radius-md, 18px);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: var(--text-base);
+}
+.rk-shell-abenteuer .rk-knopf-primaer {
+  background: var(--adv-green);
+  color: #07300a;
+  box-shadow: 0 6px 0 var(--adv-green-dark);
+}
+.rk-shell-abenteuer .rk-knopf-gruen {
+  background: var(--adv-green);
+  color: #07300a;
+  box-shadow: 0 6px 0 var(--adv-green-dark);
+}
+.rk-shell-abenteuer .rk-knopf-blau {
+  background: var(--adv-blue);
+  color: #002b3d;
+  box-shadow: 0 6px 0 var(--adv-blue-dark);
+}
+.rk-shell-abenteuer .rk-knopf-gold {
+  background: var(--adv-gold);
+  color: #4a3200;
+  border: none;
+  box-shadow: 0 6px 0 var(--adv-gold-dark);
+  text-shadow: none;
+}
+.rk-shell-abenteuer .rk-knopf-still {
+  background: var(--adv-surface-soft);
+  color: var(--adv-text);
+  border: 1px solid var(--adv-border);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.28);
+}
+.rk-shell-abenteuer .rk-knopf:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- Abschnittskarte über dem Pfad ---------- */
+.adv-abschnitt {
+  background: linear-gradient(135deg, var(--adv-purple), #9b45d4);
   border-radius: var(--radius-large);
   padding: var(--space-5);
-  backdrop-filter: blur(2px);
-}
-.adv-dunkelkarte h2,
-.adv-dunkelkarte h3 {
+  margin-bottom: var(--space-5);
   color: #fff;
 }
-
-/* --- Landschaftsband --- */
-.adv-landschaft {
-  position: relative;
-  border-radius: var(--radius-large);
-  overflow: hidden;
-  margin-bottom: var(--space-4);
-  background: linear-gradient(180deg, var(--adv-sky), #cdeedd);
-  min-height: 190px;
-  display: flex;
-  align-items: flex-end;
-  padding: var(--space-4);
+.adv-abschnitt-marke {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: var(--space-1);
 }
-.adv-landschaft-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.adv-landschaft-inhalt {
-  position: relative;
-  width: 100%;
-}
-
-/* --- Held-Karte „Dein Abenteuer" ---
-   Auf schmalen Geräten stapeln sich Maskottchen/Text und Knopf, damit weder
-   der Fortschrittsbalken noch die Beschriftung gequetscht wird. */
-.adv-held {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: var(--space-3) var(--space-4);
-  padding: var(--space-5);
-  border-radius: var(--radius-large);
-  background: linear-gradient(125deg, var(--adv-teal), #0a5f69);
+.adv-abschnitt h2 {
   color: #fff;
-  margin-bottom: var(--space-4);
-  box-shadow: var(--shadow-floating);
+  font-size: var(--text-2xl);
+  line-height: 1.15;
 }
-.adv-held-text {
-  min-width: 0;
-}
-.adv-held-text h3 {
-  color: #fff;
-  font-size: var(--text-lg);
-  overflow-wrap: anywhere;
-}
-/* Der Knopf sitzt in einer eigenen Zeile über die volle Breite. */
-.adv-held > .rk-knopf {
-  grid-column: 1 / -1;
-  width: 100%;
-}
-.adv-start-held-stand {
+.adv-abschnitt p {
+  color: rgba(255, 255, 255, 0.88);
   font-size: var(--text-sm);
-  opacity: 0.92;
   margin-top: var(--space-1);
 }
 
-@media (min-width: 620px) {
-  .adv-held {
-    grid-template-columns: auto 1fr auto;
-  }
-  .adv-held > .rk-knopf {
-    grid-column: auto;
-    width: auto;
-    white-space: nowrap;
-  }
-}
-.adv-held-text h2 {
-  color: #fff;
-  font-size: var(--text-xl);
-}
-.adv-held-etikett {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--adv-gold);
-  margin-bottom: var(--space-1);
-}
-
-/* --- Weltkarte ---
-   Die Landschaft trägt die Karte; ein Kelim-Rahmen fasst sie ein wie einen
-   gewebten Teppich. */
-.adv-karte {
-  position: relative;
-  border-radius: var(--radius-large);
-  overflow: hidden;
-  padding: var(--space-6) var(--space-4) var(--space-5);
-  margin-bottom: var(--space-5);
-  border: 3px solid var(--adv-brown);
-  box-shadow:
-    inset 0 0 0 2px rgba(249, 237, 207, 0.55),
-    var(--shadow-floating);
-}
-.adv-karte-hintergrund {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* Kelim-Bordüre oben und unten */
-.adv-karte .kelim-band {
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: 1;
-}
-.adv-karte .kelim-oben {
-  top: 0;
-}
-.adv-karte .kelim-unten {
-  bottom: 0;
-  transform: scaleY(-1);
-}
-.adv-karte > .adv-pfad {
-  z-index: 2;
-}
+/* ---------- Lernpfad ---------- */
 .adv-pfad {
   position: relative;
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  /* Der Weg bleibt schmal — sonst zerfaellt die Karten-Metapher am Desktop. */
-  max-width: 640px;
+  padding: var(--space-5) 0 var(--space-7);
   margin: 0 auto;
+  max-width: 520px;
 }
+/* Die Stationen versetzen sich abwechselnd — daraus entsteht der Zickzack. */
 .adv-pfad > li {
   position: relative;
-}
-/* Station: grosses Medaillon auf dem Weg, Beschriftung als kleine Karte
-   daneben — wie auf einer gezeichneten Landkarte. */
-.adv-station {
-  position: relative;
   display: flex;
-  align-items: center;
-  gap: 0;
-  width: 100%;
-  text-align: left;
-  padding: 0;
-  background: none;
-  border: none;
-  min-height: 76px;
-  transition: transform var(--motion-fast) ease;
+  justify-content: center;
+  padding: var(--space-4) 0;
 }
-.adv-station:hover {
-  transform: translateY(-2px);
+.adv-pfad > li:nth-child(4n + 1) {
+  transform: translateX(14%);
 }
-.adv-station-text {
-  flex: 1;
-  min-width: 0;
-  margin-left: -18px;
-  padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-5) + 4px);
-  border-radius: var(--radius-medium);
-  background: rgba(255, 253, 247, 0.95);
-  box-shadow: 0 3px 10px rgba(20, 60, 80, 0.22);
-  border: 2px solid transparent;
+.adv-pfad > li:nth-child(4n + 2) {
+  transform: translateX(-16%);
 }
-/* Die Beschriftung endet früher, damit die Landschaft sichtbar bleibt. */
-.adv-station-text {
-  flex: 0 1 auto;
-  max-width: 74%;
+.adv-pfad > li:nth-child(4n + 3) {
+  transform: translateX(6%);
 }
-:root[data-theme='dark'] .adv-station-text {
-  background: rgba(20, 34, 48, 0.94);
-}
-.adv-station.aktuell .adv-station-text {
-  border-color: var(--adv-gold);
-}
-.adv-station.fertig .adv-station-text {
-  border-color: rgba(85, 184, 90, 0.7);
-}
-.adv-station.gesperrt .adv-station-text {
-  background: rgba(255, 255, 255, 0.72);
-  color: var(--rk-text-light);
+.adv-pfad > li:nth-child(4n + 4) {
+  transform: translateX(-8%);
 }
 
-/* Medaillon mit doppeltem Ring — liegt über der Beschriftung */
+/* Verbindungslinie zur vorigen Station */
+.adv-pfad > li::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 10px;
+  height: var(--space-6);
+  transform: translateX(-50%);
+  background: var(--adv-border);
+  border-radius: var(--radius-pill);
+}
+.adv-pfad > li:first-child::before {
+  display: none;
+}
+
+.adv-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 120px;
+}
+
+/* Der Knoten: grosse runde Plakette mit fühlbarer Unterkante */
 .adv-knoten {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
+  width: 88px;
+  height: 88px;
   border-radius: 50%;
-  background: var(--adv-parchment);
-  border: 4px solid #ffffff;
-  box-shadow:
-    0 0 0 3px var(--adv-stone),
-    0 6px 14px rgba(20, 60, 80, 0.28);
-  font-size: 1.75rem;
-  flex-shrink: 0;
+  background: #3b505a;
+  color: var(--adv-text);
+  box-shadow: 0 9px 0 #22323a, var(--adv-shadow-card);
+  transition: transform var(--motion-fast) ease;
 }
-.adv-station.fertig .adv-knoten {
-  background: linear-gradient(160deg, #6ecb6f, var(--adv-green));
-  box-shadow:
-    0 0 0 3px #3f8c43,
-    0 6px 14px rgba(20, 60, 80, 0.28);
-  color: #fff;
+.adv-station:hover .adv-knoten {
+  transform: translateY(-2px);
+}
+.adv-station:active .adv-knoten {
+  transform: translateY(6px);
+  box-shadow: 0 3px 0 #22323a;
 }
 .adv-station.aktuell .adv-knoten {
-  background: linear-gradient(160deg, #ffd777, var(--adv-gold));
-  box-shadow:
-    0 0 0 3px var(--adv-gold-dark),
-    0 6px 16px rgba(200, 144, 31, 0.5);
-  animation: adv-puls 2.4s ease-in-out infinite;
+  background: linear-gradient(180deg, #20e0a4, #02b987);
+  color: #04241f;
+  box-shadow: 0 9px 0 #078461, 0 0 0 10px rgba(32, 224, 164, 0.13);
+}
+.adv-station.fertig .adv-knoten {
+  background: linear-gradient(180deg, var(--adv-gold), #f4a900);
+  color: #4a3200;
+  box-shadow: 0 9px 0 #bc7c00;
 }
 .adv-station.gesperrt .adv-knoten {
-  background: var(--adv-stone-warm);
-  box-shadow:
-    0 0 0 3px var(--adv-stone-dark),
-    0 4px 10px rgba(20, 60, 80, 0.2);
-  color: #5f5749;
+  opacity: 0.4;
+  box-shadow: 0 6px 0 #22323a;
 }
-/* Marker-Spitze über der aktuellen Station */
-.adv-station.aktuell .adv-knoten::after {
-  content: '';
-  position: absolute;
-  top: -14px;
-  width: 0;
-  height: 0;
-  border: 7px solid transparent;
-  border-top-color: var(--adv-gold-dark);
-  transform: rotate(180deg);
+.adv-station.gesperrt {
+  cursor: default;
 }
-@keyframes adv-puls {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(244, 185, 66, 0.55);
-  }
-  50% {
-    box-shadow: 0 0 0 12px rgba(244, 185, 66, 0);
-  }
-}
-.adv-station-text {
-  flex: 1;
-  min-width: 0;
-}
-.adv-station-text strong {
-  display: block;
+
+/* Truhe und Bonusspiel sind eckig — sie sind keine Lektionen */
+.adv-knoten-truhe {
+  width: 108px;
+  height: 76px;
+  border-radius: var(--radius-sm, 12px);
+  background: #5a4413;
+  border: 2px solid var(--adv-gold);
+  color: var(--adv-gold);
   font-family: var(--font-head);
-  font-size: var(--text-base);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 7px 0 #3b2c0a;
 }
-.adv-station-text small {
-  display: block;
+
+.adv-station-name {
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--adv-text);
+  text-align: center;
+}
+.adv-station.gesperrt .adv-station-name {
+  color: var(--adv-text-muted);
+}
+.adv-station-status {
   font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+  color: var(--adv-text-muted);
+  text-align: center;
 }
 .adv-station-sterne {
   display: flex;
   gap: 2px;
-  margin-top: 2px;
   color: var(--adv-gold);
 }
-/* Hêlo steht neben der aktuellen Station, nie halb hinter einer Karte. */
+.adv-stern-leer {
+  color: #46626e;
+}
+
+/* Hêlo steht neben dem Pfad */
 .adv-helo-position {
   position: absolute;
-  right: calc(-1 * var(--space-2));
-  bottom: calc(100% - var(--space-2));
-  z-index: 3;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%);
   pointer-events: none;
-  filter: drop-shadow(0 4px 8px rgba(20, 60, 80, 0.25));
-}
-@media (min-width: 720px) {
-  .adv-helo-position {
-    right: calc(-1 * var(--space-6));
-    bottom: auto;
-    top: 50%;
-    transform: translateY(-50%);
-  }
+  z-index: 1;
 }
 
-/* Der Weg zwischen den Stationen: heller Steinpfad mit gestrichelter Mitte */
-.adv-station::before {
-  content: '';
-  position: absolute;
-  left: 28px;
-  top: -32px;
-  width: 12px;
-  height: 34px;
-  border-radius: 6px;
-  background: linear-gradient(180deg, rgba(249, 237, 207, 0.95), rgba(216, 191, 138, 0.95));
-  box-shadow: 0 0 0 1.5px rgba(122, 75, 40, 0.35);
-}
-.adv-station::after {
-  content: '';
-  position: absolute;
-  left: 32.5px;
-  top: -28px;
-  width: 3px;
-  height: 26px;
-  background: repeating-linear-gradient(180deg, rgba(122, 75, 40, 0.45) 0 5px, transparent 5px 10px);
-}
-.adv-pfad > li:first-child .adv-station::before,
-.adv-pfad > li:first-child .adv-station::after {
-  display: none;
-}
-
-/* Der Weg schlängelt sich: jede zweite Station rückt ein */
-.adv-pfad > li:nth-child(even) .adv-station {
-  margin-left: var(--space-5);
-}
-.adv-pfad > li:nth-child(even) .adv-station::before,
-.adv-pfad > li:nth-child(even) .adv-station::after {
-  transform: rotate(16deg);
-  transform-origin: bottom center;
-}
-.adv-pfad > li:nth-child(odd) .adv-station::before,
-.adv-pfad > li:nth-child(odd) .adv-station::after {
-  transform: rotate(-14deg);
-  transform-origin: bottom center;
-}
-@media (min-width: 520px) {
-  .adv-pfad > li:nth-child(even) .adv-station {
-    margin-left: var(--space-7);
-  }
-  .adv-pfad > li:nth-child(3n) .adv-station {
-    margin-left: var(--space-4);
-  }
-}
-
-/* --- Weltkacheln --- */
+/* ---------- Weltkarten ---------- */
 .adv-weltraster {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-4);
+  list-style: none;
 }
 .adv-weltkachel {
-  position: relative;
-  display: block;
+  display: flex;
+  gap: var(--space-4);
   width: 100%;
   text-align: left;
+  padding: var(--space-3);
   border-radius: var(--radius-large);
-  overflow: hidden;
-  border: 2px solid var(--rk-border);
-  background: var(--rk-surface);
-  transition: transform var(--motion-fast) ease;
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 .adv-weltkachel:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+  border-color: var(--adv-teal);
 }
 .adv-weltkachel.gesperrt {
-  opacity: 0.72;
+  opacity: 0.62;
 }
 .adv-weltkachel-bild {
-  height: 108px;
   position: relative;
+  width: 96px;
+  height: 78px;
+  flex-shrink: 0;
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+}
+.adv-weltkachel-bild .landschaft {
+  width: 100%;
+  height: 100%;
 }
 .adv-weltkachel-inhalt {
-  padding: var(--space-4);
+  flex: 1;
+  min-width: 0;
+}
+.adv-weltkachel-nr {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--adv-gold);
 }
 .adv-weltkachel-inhalt h3 {
+  color: var(--adv-text);
   font-size: var(--text-lg);
 }
 .adv-weltkachel-inhalt p {
-  font-size: var(--text-sm);
-  color: var(--rk-text-muted);
-  margin-bottom: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--adv-text-muted);
+  margin-bottom: var(--space-2);
+}
+.adv-weltkachel-fuss {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--adv-text-muted);
 }
 
-/* --- Im Abenteuer sind alle Karten aus Pergament ---
-   Der Modern-Modus bleibt davon unberührt. */
-.rk-shell-abenteuer .rk-karte {
-  background:
-    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.55), transparent 44%),
-    linear-gradient(160deg, #fdf7e8 0%, #f8eed6 55%, #f1e3c2 100%);
-  border-color: var(--adv-parchment-edge);
-  color: var(--adv-ink);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    var(--shadow-card);
-}
-.rk-shell-abenteuer .rk-karte-titel {
-  color: #8a5a15;
-}
-.rk-shell-abenteuer .rk-karte .gedaempft,
-.rk-shell-abenteuer .rk-karte small {
-  color: #7a6440;
-}
-.rk-shell-abenteuer .rk-kachel {
-  background: rgba(255, 255, 255, 0.6);
-  border-color: var(--adv-parchment-edge);
-  color: #7a6440;
-}
-.rk-shell-abenteuer .rk-kachel strong {
-  color: var(--adv-ink);
-}
-.rk-shell-abenteuer .rk-werteleiste {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(216, 191, 138, 0.9);
-}
-.rk-shell-abenteuer .rk-untennav {
-  background: linear-gradient(180deg, #fdf7e8, #f2e5c8);
-  border-top: 2px solid var(--adv-parchment-edge);
-}
-.rk-shell-abenteuer .rk-untennav-knopf.aktiv {
-  color: #8a5a15;
-}
-.rk-shell-abenteuer .rk-untennav-knopf.aktiv .rk-untennav-icon {
-  background: rgba(244, 185, 66, 0.35);
-}
-
-:root[data-theme='dark'] .rk-shell-abenteuer .rk-karte {
-  background: linear-gradient(160deg, #2f2718 0%, #291f13 100%);
-  border-color: #4a3d22;
-  color: #f4e6c8;
-}
-:root[data-theme='dark'] .rk-shell-abenteuer .rk-karte-titel {
-  color: var(--adv-gold);
-}
-:root[data-theme='dark'] .rk-shell-abenteuer .rk-untennav {
-  background: linear-gradient(180deg, #241d11, #1b160d);
-  border-top-color: #4a3d22;
-}
-
-/* --- Aufgaben --- */
+/* ---------- Aufgaben ---------- */
 .adv-aufgabe {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
   border-radius: var(--radius-medium);
-  background: var(--rk-surface);
-  border: 1px solid var(--rk-border);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
   margin-bottom: var(--space-3);
 }
 .adv-aufgabe.geschafft {
   border-color: var(--adv-green);
-  background: var(--rk-green-soft);
+}
+.adv-aufgabe-marke {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: var(--adv-text-dark);
 }
 .adv-aufgabe-text {
   flex: 1;
@@ -576,10 +444,12 @@
 .adv-aufgabe-text strong {
   display: block;
   font-size: var(--text-sm);
+  color: var(--adv-text);
 }
 .adv-aufgabe-stand {
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--adv-text-muted);
   white-space: nowrap;
 }
 .adv-belohnungszeile {
@@ -589,15 +459,16 @@
   margin-top: var(--space-2);
 }
 
-/* --- Truhe --- */
+/* ---------- Truhe ---------- */
 .adv-truhe {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-4);
   border-radius: var(--radius-large);
-  background: linear-gradient(120deg, var(--adv-gold), #e09b1c);
-  color: #4a3200;
+  background: rgba(255, 202, 40, 0.1);
+  border: 1px solid var(--adv-gold-dark);
+  color: var(--adv-text);
   margin-bottom: var(--space-4);
 }
 .adv-truhe-text {
@@ -607,13 +478,15 @@
   display: block;
   font-family: var(--font-head);
   font-size: var(--text-lg);
+  color: var(--adv-gold);
 }
 
-/* --- Shop --- */
+/* ---------- Shop ---------- */
 .adv-shopraster {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
+  list-style: none;
 }
 .adv-artikel {
   display: flex;
@@ -621,8 +494,8 @@
   gap: var(--space-2);
   padding: var(--space-4);
   border-radius: var(--radius-medium);
-  background: var(--rk-surface);
-  border: 1px solid var(--rk-border);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
 }
 .adv-artikel.gekauft {
   border-color: var(--adv-green);
@@ -636,26 +509,31 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-small);
-  background: var(--rk-yellow-soft);
-  color: #8a5f04;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   flex-shrink: 0;
+  color: var(--adv-text-dark);
 }
 .adv-artikel-preis {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  align-self: flex-start;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgba(39, 181, 245, 0.16);
+  color: var(--adv-blue);
   font-weight: 900;
-  color: var(--rk-primary-dark);
+  font-size: var(--text-sm);
 }
 
-/* --- Auszeichnungen --- */
+/* ---------- Auszeichnungen ---------- */
 .adv-abzeichenraster {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
+  list-style: none;
 }
 .adv-abzeichen {
   display: flex;
@@ -664,75 +542,267 @@
   gap: var(--space-2);
   padding: var(--space-4) var(--space-2);
   border-radius: var(--radius-medium);
-  background: var(--rk-surface);
-  border: 1px solid var(--rk-border);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
   text-align: center;
 }
 .adv-abzeichen.gesperrt {
-  opacity: 0.55;
-  filter: grayscale(1);
+  opacity: 0.5;
 }
 .adv-abzeichen-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: var(--rk-yellow-soft);
-  color: #8a5f04;
+  background: var(--adv-surface-soft);
+  color: var(--adv-text-muted);
+}
+.adv-abzeichen:not(.gesperrt) .adv-abzeichen-icon {
+  background: var(--adv-teal);
+  color: #04241f;
 }
 .adv-abzeichen strong {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
+  color: var(--adv-text);
 }
 .adv-abzeichen small {
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+  font-size: 0.68rem;
+  color: var(--adv-text-muted);
 }
 
-/* --- Übung im Abenteuer-Stil --- */
+/* ---------- Übung im Abenteuer-Stil ---------- */
 .rk-uebung-abenteuer .rk-frage {
-  color: #4a3418;
+  color: var(--adv-text);
+  font-size: var(--text-2xl);
 }
 .rk-uebung-abenteuer .rk-option {
-  border-color: var(--adv-parchment-dark);
-  background: var(--adv-parchment);
-  color: #4a3418;
+  background: var(--adv-surface);
+  border: 2px solid var(--adv-border);
+  color: var(--adv-text);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.25);
+}
+.rk-uebung-abenteuer .rk-option:hover:not(:disabled) {
+  border-color: var(--adv-teal);
 }
 .rk-uebung-abenteuer .rk-option-buchstabe {
-  background: var(--adv-gold);
-  color: #4a3200;
+  background: var(--adv-blue);
+  color: #002b3d;
+}
+.rk-uebung-abenteuer .rk-option-text small {
+  color: var(--adv-text-muted);
 }
 .rk-uebung-abenteuer .rk-option.richtig {
-  background: #dff3d8;
+  background: rgba(66, 209, 0, 0.16);
   border-color: var(--adv-green);
 }
+.rk-uebung-abenteuer .rk-option.richtig .rk-option-buchstabe {
+  background: var(--adv-green);
+  color: #07300a;
+}
 .rk-uebung-abenteuer .rk-option.falsch {
-  background: #f8dcd9;
-  border-color: var(--rk-red);
+  background: rgba(255, 75, 75, 0.16);
+  border-color: var(--adv-red);
 }
-:root[data-theme='dark'] .rk-uebung-abenteuer .rk-frage,
-:root[data-theme='dark'] .rk-uebung-abenteuer .rk-option {
-  color: #f4e6c8;
+.rk-uebung-abenteuer .rk-option.falsch .rk-option-buchstabe {
+  background: var(--adv-red);
+  color: #3d0000;
 }
-:root[data-theme='dark'] .rk-uebung-abenteuer .rk-option {
-  background: #2c2415;
-  border-color: #4a3d22;
+.rk-uebung-abenteuer .rk-hoerknopf {
+  background: rgba(39, 181, 245, 0.16);
+  border-color: var(--adv-blue);
+  color: var(--adv-blue);
+}
+.rk-uebung-abenteuer .rk-tipp {
+  background: var(--adv-surface);
+  border-color: var(--adv-border);
+  color: var(--adv-text-muted);
+}
+.rk-uebung-abenteuer .rk-feld {
+  background: var(--adv-surface);
+  border-color: var(--adv-border);
+  color: var(--adv-text);
 }
 
+/* Rückmeldung: grosse Fläche, klare Farbe, immer mit Text */
+.rk-uebung-abenteuer .rk-rueckmeldung.gut {
+  background: rgba(66, 209, 0, 0.14);
+  border: 1px solid var(--adv-green);
+  color: #b7f79a;
+}
+.rk-uebung-abenteuer .rk-rueckmeldung.schlecht {
+  background: rgba(255, 75, 75, 0.14);
+  border: 1px solid var(--adv-red);
+  color: #ffb3b3;
+}
+
+/* ---------- Ergebnis ---------- */
+.rk-ergebnis-abenteuer h2 {
+  color: var(--adv-text);
+}
+.rk-ergebnis-abenteuer .rk-ergebnis-zahl {
+  color: var(--adv-text-muted);
+}
+.rk-ergebnis-abenteuer .stern-voll {
+  color: var(--adv-gold);
+  fill: var(--adv-gold);
+}
+.rk-ergebnis-abenteuer .stern-leer {
+  color: #46626e;
+}
+.rk-ergebnis-abenteuer .rk-belohnungen li {
+  background: var(--adv-surface);
+  border-color: var(--adv-border);
+  color: var(--adv-text);
+}
+
+/* ---------- Pergament und Landschaft (bleiben als Akzent) ---------- */
+.adv-pergament {
+  position: relative;
+  background: linear-gradient(160deg, #24323a 0%, var(--adv-surface) 60%, #14242d 100%);
+  border: 1px solid var(--adv-border);
+  border-radius: var(--radius-large);
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  color: var(--adv-text);
+  box-shadow: var(--adv-shadow-card);
+}
+.adv-pergament h2,
+.adv-pergament h3 {
+  color: var(--adv-text);
+}
+
+.adv-landschaft {
+  position: relative;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  margin-bottom: var(--space-4);
+  min-height: 160px;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-4);
+  border: 1px solid var(--adv-border);
+}
+.adv-landschaft-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.adv-landschaft-inhalt {
+  position: relative;
+  width: 100%;
+}
+.adv-dunkelkarte {
+  background: rgba(8, 21, 28, 0.82);
+  color: var(--adv-text);
+  border-radius: var(--radius-large);
+  padding: var(--space-5);
+  backdrop-filter: blur(2px);
+}
+.adv-dunkelkarte h2,
+.adv-dunkelkarte h3 {
+  color: #fff;
+}
+
+/* Held-Karte „Dein Abenteuer" */
+.adv-held {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-large);
+  background: linear-gradient(135deg, #12484f, #0c3138);
+  border: 1px solid var(--adv-border);
+  color: var(--adv-text);
+  margin-bottom: var(--space-4);
+}
+.adv-held-text {
+  min-width: 0;
+}
+.adv-held-text h2,
+.adv-held-text h3 {
+  color: #fff;
+  font-size: var(--text-xl);
+  overflow-wrap: anywhere;
+}
+.adv-held-etikett {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--adv-gold);
+  margin-bottom: var(--space-1);
+}
+.adv-held > .rk-knopf {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.adv-start-held-stand {
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
+  margin-top: var(--space-1);
+}
+
+/* ---------- Weltkarte mit Kelim-Rahmen ---------- */
+.adv-karte {
+  position: relative;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  margin-bottom: var(--space-5);
+  border: 2px solid var(--adv-border);
+  background: var(--adv-bg-deep);
+}
+.adv-karte-hintergrund {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.35;
+}
+.adv-karte .kelim-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  opacity: 0.8;
+}
+.adv-karte .kelim-oben {
+  top: 0;
+}
+.adv-karte .kelim-unten {
+  bottom: 0;
+  transform: scaleY(-1);
+}
+.adv-karte > .adv-pfad {
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 620px) {
+  .adv-held {
+    grid-template-columns: auto 1fr auto;
+  }
+  .adv-held > .rk-knopf {
+    grid-column: auto;
+    width: auto;
+    white-space: nowrap;
+  }
+}
 @media (min-width: 640px) {
   .adv-weltraster {
     grid-template-columns: 1fr 1fr;
   }
-  .adv-shopraster {
-    grid-template-columns: 1fr 1fr;
-  }
   .adv-abzeichenraster {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 @media (min-width: 1024px) {
   .adv-abzeichenraster {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
   }
 }

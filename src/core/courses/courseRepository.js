@@ -261,6 +261,90 @@ export function weltFortschritt(weltId) {
 }
 
 /**
+ * Knotentypen des Lernpfads (Designpaket, Bild 3).
+ * Nur `lektion` und `pruefung` sind echte Lerninhalte; Truhe und Bonusspiel
+ * sind Beiwerk und sperren nie etwas.
+ */
+export const KNOTEN_ARTEN = {
+  lektion: { name: 'Lektion', icon: 'stern' },
+  wiederholen: { name: 'Wiederholen', icon: 'wiederholen' },
+  hoeren: { name: 'Hören', icon: 'kopfhoerer' },
+  truhe: { name: 'Schatz', icon: 'truhe' },
+  spiel: { name: 'Bonusspiel', icon: 'puzzle' },
+  pruefung: { name: 'Prüfung', icon: 'schild' },
+  abschluss: { name: 'Abschluss', icon: 'krone' },
+}
+
+/**
+ * Baut den Lernpfad einer Welt: die Einheiten als Stationen, dazwischen
+ * eine Truhe und ein Bonusspiel, am Ende Prüfung und Abschluss.
+ * @returns {Array<{id, art, name, untertitel, einheitId, status, prozent, sterne, icon, symbol}>}
+ */
+export function weltPfad(weltId) {
+  const einheiten = einheitenDerWelt(weltId)
+  if (!einheiten.length) return []
+
+  const stand = holeFortschritt()
+  const knoten = []
+
+  einheiten.forEach((e, i) => {
+    const letzte = i === einheiten.length - 1
+    const status = einheitStatus(e.id)
+    knoten.push({
+      id: `${weltId}-${e.id}`,
+      art: letzte ? 'pruefung' : 'lektion',
+      name: e.name,
+      untertitel: letzte ? 'Prüfung dieser Welt' : `Einheit ${e.nr}`,
+      einheitId: e.id,
+      status,
+      prozent: stand.einheiten[e.id] || 0,
+      sterne: stand.sterne[e.id] || 0,
+      symbol: e.symbol,
+      icon: letzte ? KNOTEN_ARTEN.pruefung.icon : KNOTEN_ARTEN.lektion.icon,
+    })
+
+    // Nach jeder zweiten Einheit eine Truhe, dazwischen ein Bonusspiel.
+    if (!letzte && i % 2 === 1) {
+      knoten.push({
+        id: `${weltId}-truhe-${i}`,
+        art: 'truhe',
+        name: KNOTEN_ARTEN.truhe.name,
+        untertitel: 'Belohnung unterwegs',
+        status: status === 'fertig' ? 'aktuell' : 'gesperrt',
+        icon: KNOTEN_ARTEN.truhe.icon,
+      })
+    } else if (!letzte && i % 2 === 0 && i > 0) {
+      knoten.push({
+        id: `${weltId}-spiel-${i}`,
+        art: 'spiel',
+        name: KNOTEN_ARTEN.spiel.name,
+        untertitel: 'Satzbau zum Aufwärmen',
+        status: status === 'gesperrt' ? 'gesperrt' : 'aktuell',
+        icon: KNOTEN_ARTEN.spiel.icon,
+      })
+    }
+  })
+
+  const alleFertig = einheiten.every((e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB)
+  knoten.push({
+    id: `${weltId}-abschluss`,
+    art: 'abschluss',
+    name: KNOTEN_ARTEN.abschluss.name,
+    untertitel: alleFertig ? 'Welt geschafft' : 'Schliesse alle Stationen ab',
+    status: alleFertig ? 'fertig' : 'gesperrt',
+    icon: KNOTEN_ARTEN.abschluss.icon,
+  })
+
+  return knoten
+}
+
+/** Die Station, an der Hêlo gerade steht. */
+export function aktuellerKnoten(weltId) {
+  const pfad = weltPfad(weltId)
+  return pfad.find((k) => k.status === 'aktuell') || pfad.find((k) => k.status !== 'fertig') || null
+}
+
+/**
  * Eine Welt ist offen, sobald die vorige zur Hälfte geschafft ist — aber nur,
  * wenn wenigstens eine ihrer Einheiten wirklich erreichbar ist. Sonst stünde
  * „Aktuell" über einer Welt, deren Stationen alle ein Schloss tragen.

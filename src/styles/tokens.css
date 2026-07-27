@@ -43,28 +43,54 @@
   --rk-warning: #f59e0b;
   --rk-error: #e64b4b;
 
-  /* --- Abenteuerfarben --- */
+  /* ===== Abenteuer-Modus =====
+     Eigenständige dunkle Palette nach dem Designpaket. Der Modern-Modus
+     bleibt davon unberührt — er ist und bleibt hell. */
+  --adv-bg: #0f2029;
+  --adv-bg-deep: #08151c;
+  --adv-surface: #172a34;
+  --adv-surface-soft: #203943;
+  --adv-border: #344b55;
+
+  --adv-blue: #27b5f5;
+  --adv-blue-dark: #118ac0;
+  --adv-green: #42d100;
+  --adv-green-dark: #2ea200;
+  --adv-gold: #ffca28;
+  --adv-gold-dark: #d69d00;
+  --adv-purple: #c86bf7;
+  --adv-pink: #ff74b8;
+  --adv-red: #ff4b4b;
+  --adv-teal: #14c8b0;
+  --adv-teal-dark: #0a9a86;
+  --adv-orange: #ff9d2e;
+
+  --adv-text: #f7fbfd;
+  --adv-text-muted: #9fb0b8;
+  --adv-text-dark: #1f2933;
+
+  --adv-shadow-3d: 0 6px 0 rgba(0, 0, 0, 0.28);
+  --adv-shadow-card: 0 12px 30px rgba(0, 0, 0, 0.22);
+
+  /* Kurdische Akzente für Landschaften und Ornamente */
   --adv-sky: #90d7f8;
-  --adv-teal: #087f8c;
-  --adv-teal-dark: #05616b;
-  --adv-gold: #f4b942;
-  --adv-gold-dark: #c8901f;
-  --adv-gold-deep: #a06f10;
   --adv-parchment: #f9edcf;
   --adv-parchment-dark: #ecd9a8;
   --adv-parchment-edge: #d8bf8a;
   --adv-brown: #7a4b28;
   --adv-brown-dark: #5b3619;
   --adv-brown-light: #a9762f;
-  --adv-green: #55b85a;
   --adv-stone: #9aa3ad;
   --adv-stone-warm: #b9ae95;
   --adv-stone-dark: #7d7360;
   --adv-night: #09212d;
-  /* Kurdische Akzente: Mohnrot, Kelim-Rot, Bergsteinbeige */
   --adv-poppy: #dd4436;
   --adv-kelim: #b8473a;
   --adv-ink: #4a3418;
+
+  /* Referenzformat der Mockups */
+  --screen-width: 390px;
+  --screen-height: 844px;
 
   /* --- Abstaende --- */
   --space-1: 4px;

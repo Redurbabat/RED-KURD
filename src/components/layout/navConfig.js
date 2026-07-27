@@ -10,7 +10,7 @@ export const MODERN_NAV = [
 ]
 
 export const ABENTEUER_NAV = [
-  { id: 'welt', pfad: '/adventure/world', name: T.nav.welt, icon: 'welt' },
+  { id: 'welt', pfad: '/adventure', name: T.nav.welt, icon: 'welt' },
   { id: 'aufgaben', pfad: '/adventure/tasks', name: T.nav.aufgaben, icon: 'aufgaben' },
   { id: 'shop', pfad: '/adventure/shop', name: T.nav.shop, icon: 'shop' },
   { id: 'profil', pfad: '/adventure/profile', name: T.nav.profil, icon: 'profil' },
@@ -18,8 +18,12 @@ export const ABENTEUER_NAV = [
 
 /** Welcher Navigationspunkt ist beim aktuellen Pfad aktiv? */
 export function istAktiv(eintrag, pfad) {
-  if (eintrag.pfad === '/adventure/world') {
-    return pfad === '/adventure' || pfad.startsWith('/adventure/world') || pfad.startsWith('/adventure/lesson')
+  if (eintrag.pfad === '/adventure') {
+    return (
+      pfad === '/adventure' ||
+      pfad.startsWith('/adventure/world') ||
+      pfad.startsWith('/adventure/lesson')
+    )
   }
   if (eintrag.pfad === '/today') return pfad === '/today' || pfad === '/'
   return pfad === eintrag.pfad || pfad.startsWith(eintrag.pfad + '/')
