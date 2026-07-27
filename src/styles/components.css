@@ -1,0 +1,1144 @@
+/* ===== RED-KURD Bausteine: Hülle, Navigation, Karten, Knöpfe, Übungen ===== */
+
+/* ---------- Hülle ---------- */
+.rk-shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--rk-bg);
+}
+
+.rk-hauptbereich {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.rk-spalten {
+  flex: 1;
+  width: 100%;
+  max-width: var(--shell-content);
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-5);
+  padding: 0 var(--space-4);
+}
+
+.rk-inhalt {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 0px) + var(--space-6));
+}
+.rk-inhalt:focus {
+  outline: none;
+}
+
+.rk-zusatzspalte {
+  display: none;
+  width: var(--shell-aside);
+  flex-shrink: 0;
+  padding-bottom: var(--space-6);
+}
+
+/* ---------- Kopfleiste ---------- */
+.rk-kopfleiste {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+  background: var(--rk-bg);
+  border-bottom: 1px solid transparent;
+}
+.rk-kopfleiste.abenteuer {
+  background: linear-gradient(180deg, var(--adv-sky) 0%, var(--rk-bg) 100%);
+}
+
+.rk-kopf-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+  border-radius: var(--radius-small);
+  min-height: var(--touch-min);
+}
+.rk-kopf-name {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-base);
+  color: var(--rk-text);
+  display: none;
+}
+
+.rk-kopf-werte {
+  flex: 1;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: flex-end;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.rk-kopf-werte::-webkit-scrollbar {
+  display: none;
+}
+
+.rk-kopf-profil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  flex-shrink: 0;
+}
+.rk-kopf-zahnrad {
+  display: none;
+}
+
+/* ---------- Chips ---------- */
+.rk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-height: 32px;
+}
+.rk-chip strong {
+  color: var(--rk-text);
+  font-size: var(--text-sm);
+}
+.rk-chip small {
+  font-size: var(--text-xs);
+}
+.rk-chip-orange {
+  color: var(--rk-orange-dark);
+}
+.rk-chip-gold {
+  color: #9a6b04;
+}
+.rk-chip-teal {
+  color: var(--rk-primary-dark);
+}
+.rk-chip-blau {
+  color: var(--rk-blue-dark);
+}
+
+.rk-kachel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-2);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  text-align: center;
+  color: var(--rk-text-muted);
+}
+.rk-kachel strong {
+  font-size: var(--text-xl);
+  font-family: var(--font-head);
+  color: var(--rk-text);
+}
+.rk-kachel span {
+  font-size: var(--text-xs);
+}
+
+/* ---------- Seitenleiste (Desktop) ---------- */
+.rk-seitenleiste {
+  display: none;
+  width: var(--shell-sidebar);
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-3);
+  background: var(--rk-surface);
+  border-right: 1px solid var(--rk-border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+.rk-marke {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-5);
+  text-align: left;
+}
+.rk-marke-text strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.rk-marke-text small {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--rk-primary-dark);
+  font-weight: 700;
+}
+
+.rk-seitennav ul,
+.rk-untennav ul {
+  list-style: none;
+}
+.rk-seitennav {
+  flex: 1;
+}
+.rk-seitennav-knopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3);
+  min-height: var(--touch-min);
+  border-radius: var(--radius-small);
+  font-weight: 800;
+  font-size: var(--text-base);
+  color: var(--rk-text-muted);
+  text-align: left;
+  transition: background var(--motion-fast) ease, color var(--motion-fast) ease;
+}
+.rk-seitennav-knopf:hover {
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
+}
+.rk-seitennav-knopf.aktiv {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.rk-seitennav-marke {
+  margin-left: auto;
+  background: var(--rk-red);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  padding: 0 var(--space-2);
+  font-size: var(--text-xs);
+}
+.rk-seitenleiste-fuss {
+  border-top: 1px solid var(--rk-border);
+  padding-top: var(--space-2);
+}
+.rk-seitenleiste-link {
+  display: block;
+  padding: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--rk-text-light);
+  text-decoration: none;
+}
+
+/* ---------- Bottom-Navigation ---------- */
+.rk-untennav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--rk-surface);
+  border-top: 1px solid var(--rk-border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -4px 16px rgba(32, 48, 60, 0.06);
+}
+.rk-untennav ul {
+  display: flex;
+  justify-content: space-around;
+}
+.rk-untennav li {
+  flex: 1;
+}
+.rk-untennav-knopf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  min-height: var(--nav-height);
+  padding: var(--space-2) var(--space-1);
+  color: var(--rk-text-light);
+  font-weight: 700;
+}
+.rk-untennav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 46px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  transition: background var(--motion-fast) ease;
+}
+.rk-untennav-knopf.aktiv {
+  color: var(--rk-primary-dark);
+}
+.rk-untennav-knopf.aktiv .rk-untennav-icon {
+  background: var(--rk-primary-soft);
+}
+.rk-untennav-text {
+  font-size: 0.68rem;
+  line-height: 1.1;
+}
+.rk-untennav-marke {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  background: var(--rk-red);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 900;
+  border-radius: var(--radius-pill);
+  padding: 0 5px;
+  min-width: 17px;
+  text-align: center;
+}
+
+/* ---------- Seitenkopf ---------- */
+.rk-seitenkopf {
+  padding: var(--space-4) 0 var(--space-2);
+}
+.rk-seitenkopf-reihe {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.rk-seitenkopf-text {
+  min-width: 0;
+}
+.rk-seitenkopf-unter {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+}
+.rk-zurueck {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  color: var(--rk-text-muted);
+  font-weight: 800;
+  font-size: var(--text-sm);
+}
+.rk-zurueck:hover {
+  color: var(--rk-primary-dark);
+}
+
+/* ---------- Karten ---------- */
+.rk-karte {
+  display: block;
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.rk-karte-warm {
+  background: var(--rk-yellow-soft);
+  border-color: #f0dcb0;
+}
+.rk-karte-kuehl {
+  background: var(--rk-blue-soft);
+  border-color: #c7e0fb;
+}
+.rk-karte-lila {
+  background: var(--rk-purple-soft);
+  border-color: #ded0fb;
+}
+.rk-karte-gruen {
+  background: var(--rk-green-soft);
+  border-color: #c9ecc4;
+}
+.rk-karte-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.rk-karte-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  color: var(--rk-primary-dark);
+}
+.rk-karte-klick {
+  width: 100%;
+  text-align: left;
+  position: relative;
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+.rk-karte-klick:hover {
+  border-color: var(--rk-primary);
+  transform: translateY(-2px);
+}
+.rk-karte-pfeil {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  color: var(--rk-text-light);
+}
+
+/* ---------- Knöpfe ---------- */
+.rk-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-medium);
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-base);
+  color: #fff;
+  background: var(--rk-primary);
+  /* Fuehlbare Unterkante — der Knopf wirkt wie eine echte Taste. */
+  box-shadow: var(--shadow-button);
+  transition: filter var(--motion-fast) ease, transform var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease;
+}
+.rk-knopf:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+.rk-knopf:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+.rk-knopf:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.rk-knopf-breit {
+  width: 100%;
+}
+.rk-knopf-gross {
+  font-size: var(--text-lg);
+  padding: var(--space-4) var(--space-5);
+  min-height: 56px;
+}
+.rk-knopf-klein {
+  font-size: var(--text-sm);
+  padding: var(--space-2) var(--space-3);
+  min-height: 38px;
+  border-radius: var(--radius-small);
+}
+.rk-knopf-gruen {
+  background: var(--rk-green-dark);
+}
+.rk-knopf-blau {
+  background: var(--rk-blue);
+}
+.rk-knopf-gold {
+  background: var(--adv-gold);
+  color: #4a3200;
+}
+.rk-knopf-gefahr {
+  background: var(--rk-error);
+}
+.rk-knopf-still {
+  background: var(--rk-surface);
+  color: var(--rk-primary-dark);
+  border: 1.5px solid var(--rk-border-strong);
+}
+.rk-knopf-still:hover:not(:disabled) {
+  background: var(--rk-primary-soft);
+}
+
+.rk-icon-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  border-radius: var(--radius-pill);
+  color: var(--rk-text-muted);
+}
+.rk-icon-knopf:hover {
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
+}
+
+/* ---------- Fortschritt ---------- */
+.rk-balken-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+}
+.rk-balken {
+  flex: 1;
+  height: 12px;
+  border-radius: var(--radius-pill);
+  background: var(--rk-border);
+  overflow: hidden;
+}
+.rk-balken-klein {
+  height: 8px;
+}
+.rk-balken-voll {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--rk-primary);
+  transition: width var(--motion-slow) ease;
+}
+.rk-balken-green {
+  background: var(--rk-green-dark);
+}
+.rk-balken-blue {
+  background: var(--rk-blue);
+}
+.rk-balken-gold {
+  background: var(--adv-gold);
+}
+.rk-balken-orange {
+  background: var(--rk-orange);
+}
+.rk-balken-purple {
+  background: var(--rk-purple);
+}
+.rk-balken-wert {
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+  min-width: 44px;
+  text-align: right;
+}
+
+.rk-ring {
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.rk-ring::before {
+  content: '';
+  position: absolute;
+  inset: 9px;
+  background: var(--rk-surface);
+  border-radius: 50%;
+}
+.rk-ring-text {
+  position: relative;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-base);
+  color: var(--rk-primary-dark);
+}
+
+/* ---------- Segmentierter Schalter ---------- */
+.rk-segment {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1);
+}
+.rk-segment-knopf {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-height: 42px;
+  padding: var(--space-2);
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  transition: background var(--motion-fast) ease;
+}
+.rk-segment-knopf.aktiv {
+  background: var(--rk-surface);
+  color: var(--rk-primary-dark);
+  box-shadow: 0 2px 6px rgba(32, 48, 60, 0.08);
+}
+.rk-segment-zusatz {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--rk-text-light);
+}
+
+/* ---------- Badges ---------- */
+.rk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+  border: 1px solid var(--rk-border);
+}
+.rk-badge-gruen {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+  border-color: #c9ecc4;
+}
+.rk-badge-blau {
+  background: var(--rk-blue-soft);
+  color: var(--rk-blue-dark);
+  border-color: #c7e0fb;
+}
+.rk-badge-gold {
+  background: var(--rk-yellow-soft);
+  color: #8a5f04;
+  border-color: #f0dcb0;
+}
+.rk-badge-rot {
+  background: var(--rk-red-soft);
+  color: var(--rk-red-dark);
+  border-color: #f7c9c8;
+}
+.rk-badge-lila {
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+  border-color: #ded0fb;
+}
+.rk-badge-teal {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+  border-color: #bfe6e7;
+}
+.rk-zaehler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--rk-red);
+  color: #fff;
+  font-size: var(--text-xs);
+  font-weight: 900;
+}
+
+/* ---------- Hêlo ---------- */
+.rk-seitenkopf .helo,
+.rk-helo-klein {
+  flex-shrink: 0;
+}
+.helo-nachricht {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.helo-links {
+  flex-direction: row-reverse;
+}
+.helo-blase {
+  flex: 1;
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  padding: var(--space-3) var(--space-4);
+  position: relative;
+}
+.helo-blase-titel {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-primary-dark);
+}
+.helo-blase-text {
+  font-size: var(--text-sm);
+  color: var(--rk-text);
+}
+
+/* ---------- Leer / Laden / Fehler ---------- */
+.rk-leer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  background: var(--rk-surface);
+  border: 1px dashed var(--rk-border-strong);
+  border-radius: var(--radius-medium);
+}
+.rk-laden {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  color: var(--rk-text-muted);
+  justify-content: center;
+}
+.rk-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid var(--rk-border);
+  border-top-color: var(--rk-primary);
+  animation: rk-dreh 0.9s linear infinite;
+}
+@keyframes rk-dreh {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.rk-fehler {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--rk-red-soft);
+  border: 1px solid #f7c9c8;
+  border-radius: var(--radius-medium);
+  color: var(--rk-red-dark);
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- Modal ---------- */
+.rk-modal-hintergrund {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(12, 24, 32, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+.rk-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--rk-surface);
+  border-radius: var(--radius-large) var(--radius-large) 0 0;
+  padding: var(--space-5) var(--space-4);
+  padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
+  box-shadow: var(--shadow-floating);
+}
+.rk-modal-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.rk-modal-fuss {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  margin-top: var(--space-5);
+  flex-wrap: wrap;
+}
+
+/* ---------- Sonderzeichen ---------- */
+.rk-zeichen {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-3) 0;
+}
+.rk-zeichen-taste {
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  border-radius: var(--radius-small);
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--rk-text);
+}
+.rk-zeichen-taste:hover {
+  background: var(--rk-primary-soft);
+  border-color: var(--rk-primary);
+}
+
+/* ---------- Eingabefelder ---------- */
+.rk-feld {
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+.rk-feld:focus {
+  outline: none;
+  border-color: var(--rk-primary);
+  box-shadow: 0 0 0 3px var(--rk-primary-soft);
+}
+.rk-feld-gross {
+  font-size: var(--text-lg);
+  min-height: 120px;
+  line-height: 1.7;
+}
+.rk-feld-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-2);
+}
+.rk-suchzeile {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ---------- Übung ---------- */
+.rk-uebung {
+  max-width: 660px;
+  margin: 0 auto;
+  padding-top: var(--space-3);
+}
+.rk-uebung-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.rk-uebung-schliessen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  color: var(--rk-text-light);
+  flex-shrink: 0;
+}
+.rk-uebung-xp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-yellow);
+  white-space: nowrap;
+}
+.rk-leben {
+  display: inline-flex;
+  gap: 2px;
+  color: var(--rk-red);
+}
+.rk-leben .leer {
+  opacity: 0.28;
+}
+.rk-uebung-zeile {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-3);
+}
+.rk-frage {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+  line-height: 1.35;
+  margin-bottom: var(--space-3);
+}
+.rk-frage-bild {
+  font-size: 1.8rem;
+  margin-right: var(--space-2);
+  vertical-align: middle;
+}
+.rk-hoerknopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--rk-blue);
+  color: var(--rk-blue-dark);
+  background: var(--rk-blue-soft);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+.rk-hoerknopf.gross {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-base);
+}
+.rk-optionen {
+  display: grid;
+  gap: var(--space-3);
+}
+.rk-optionen-liste {
+  grid-template-columns: 1fr;
+}
+.rk-optionen-bild {
+  grid-template-columns: 1fr 1fr;
+}
+.rk-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 60px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  text-align: left;
+  font-size: var(--text-base);
+  transition: border-color var(--motion-fast) ease, background var(--motion-fast) ease;
+}
+.rk-option:hover:not(:disabled) {
+  border-color: var(--rk-primary);
+}
+.rk-option-buchstabe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--rk-blue-soft);
+  color: var(--rk-blue-dark);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+.rk-option-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.rk-option-text small {
+  color: var(--rk-text-light);
+  font-size: var(--text-xs);
+}
+.rk-option-haken {
+  margin-left: auto;
+  color: var(--rk-success);
+}
+.rk-option-kreuz {
+  margin-left: auto;
+  color: var(--rk-error);
+}
+.rk-option.richtig {
+  border-color: var(--rk-success);
+  background: var(--rk-green-soft);
+}
+.rk-option.richtig .rk-option-buchstabe {
+  background: var(--rk-success);
+  color: #fff;
+}
+.rk-option.falsch {
+  border-color: var(--rk-error);
+  background: var(--rk-red-soft);
+}
+.rk-option.falsch .rk-option-buchstabe {
+  background: var(--rk-error);
+  color: #fff;
+}
+.rk-option.blass {
+  opacity: 0.55;
+}
+.rk-option-bild {
+  justify-content: center;
+  min-height: 108px;
+}
+.rk-option-emoji {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.rk-tippzeile {
+  display: flex;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+.rk-rueckmeldung-bereich {
+  min-height: 4px;
+}
+.rk-rueckmeldung {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  margin: var(--space-4) 0;
+}
+.rk-rueckmeldung.gut {
+  background: var(--rk-green-soft);
+  border: 1px solid #bfe8d2;
+  color: #1c6b41;
+}
+.rk-rueckmeldung.schlecht {
+  background: var(--rk-red-soft);
+  border: 1px solid #f5c6c8;
+  color: var(--rk-red-dark);
+}
+.rk-rueckmeldung-xp {
+  font-weight: 800;
+}
+.rk-tipp {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+.rk-tonknopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  border-radius: var(--radius-pill);
+  color: var(--rk-primary-dark);
+}
+.rk-uebung-ende {
+  text-align: center;
+  padding: var(--space-6);
+}
+
+/* ---------- Ergebnis ---------- */
+.rk-ergebnis {
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--space-5) var(--space-4);
+}
+.rk-ergebnis-zahl {
+  font-size: var(--text-lg);
+  color: var(--rk-text-muted);
+  margin: var(--space-2) 0 var(--space-4);
+}
+.rk-sterne {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.stern-voll {
+  color: var(--rk-yellow);
+  fill: var(--rk-yellow);
+}
+.stern-leer {
+  color: var(--rk-border-strong);
+}
+.rk-belohnungen {
+  list-style: none;
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+.rk-belohnungen li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border);
+  font-weight: 800;
+  font-size: var(--text-sm);
+}
+.rk-ergebnis-knoepfe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+/* ---------- Tabellen ---------- */
+.rk-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rk-tabelle th,
+.rk-tabelle td {
+  text-align: left;
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--rk-border);
+  font-size: var(--text-sm);
+}
+.rk-tabelle th {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rk-text-light);
+}
+
+/* ================= Responsive ================= */
+
+/* --- Tablet ab 640 px --- */
+@media (min-width: 640px) {
+  .rk-kopf-name {
+    display: inline;
+  }
+  .rk-optionen-bild {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .rk-ergebnis-knoepfe {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .rk-modal-hintergrund {
+    align-items: center;
+    padding: var(--space-5);
+  }
+  .rk-modal {
+    border-radius: var(--radius-large);
+  }
+}
+
+/* --- Desktop ab 1024 px: Seitenleiste statt Bottom-Navigation --- */
+@media (min-width: 1024px) {
+  .rk-seitenleiste {
+    display: flex;
+  }
+  .rk-untennav {
+    display: none;
+  }
+  .rk-inhalt {
+    padding-bottom: var(--space-7);
+  }
+  .rk-kopf-logo {
+    display: none;
+  }
+  .rk-kopf-zahnrad {
+    display: inline-flex;
+  }
+  .rk-kopfleiste {
+    padding: var(--space-3) var(--space-5);
+    justify-content: flex-end;
+  }
+  .rk-spalten {
+    padding: 0 var(--space-5);
+  }
+}
+
+/* --- Breiter Desktop: Zusatzspalte rechts --- */
+@media (min-width: 1280px) {
+  .rk-zusatzspalte {
+    display: block;
+  }
+}

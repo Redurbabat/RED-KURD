@@ -1,0 +1,127 @@
+/* ===== RED-KURD Design-Tokens =====
+   Eine einzige Quelle fuer Farben, Abstaende, Radien, Schatten und Schrift.
+   Modern- und Abenteuer-Modus nutzen dieselben Tokens. */
+
+:root {
+  /* --- Primaerfarben --- */
+  --rk-primary: #0ea5a8;
+  --rk-primary-dark: #087f83;
+  --rk-primary-soft: #e3f5f6;
+  --rk-blue: #2596f3;
+  --rk-blue-dark: #1273c6;
+  --rk-blue-soft: #e6f2fe;
+  --rk-green: #57c84d;
+  --rk-green-dark: #3d9c36;
+  --rk-green-soft: #eaf8e8;
+  --rk-yellow: #f5b82e;
+  --rk-yellow-soft: #fdf4e0;
+  --rk-orange: #f28c28;
+  --rk-orange-dark: #b8620f;
+  --rk-orange-soft: #fdf0e3;
+  --rk-red: #ef5350;
+  --rk-red-dark: #c0322f;
+  --rk-red-soft: #fdeceb;
+  --rk-purple: #8b5cf6;
+  --rk-purple-dark: #6b3fd4;
+  --rk-purple-soft: #f2ecfe;
+
+  /* --- Flaechen --- */
+  --rk-bg: #f7fafc;
+  --rk-surface: #ffffff;
+  --rk-surface-soft: #f1f7f8;
+  --rk-border: #dfe7ea;
+  --rk-border-strong: #c3d0d5;
+
+  /* --- Text --- */
+  --rk-text: #30343a;
+  --rk-text-muted: #5f666f;
+  --rk-text-light: #7b828b;
+  --rk-text-on-dark: #ffffff;
+
+  /* --- Signalfarben --- */
+  --rk-success: #33b565;
+  --rk-warning: #f59e0b;
+  --rk-error: #e64b4b;
+
+  /* --- Abenteuerfarben --- */
+  --adv-sky: #90d7f8;
+  --adv-teal: #087f8c;
+  --adv-gold: #f4b942;
+  --adv-parchment: #f9edcf;
+  --adv-parchment-dark: #ecd9a8;
+  --adv-brown: #7a4b28;
+  --adv-green: #55b85a;
+  --adv-stone: #9aa3ad;
+  --adv-night: #09212d;
+
+  /* --- Abstaende --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* --- Radien --- */
+  --radius-small: 12px;
+  --radius-medium: 18px;
+  --radius-large: 26px;
+  --radius-pill: 999px;
+
+  /* --- Schatten --- */
+  --shadow-card: 0 8px 24px rgba(32, 48, 60, 0.08);
+  --shadow-button: 0 5px 0 rgba(0, 0, 0, 0.12);
+  --shadow-floating: 0 12px 30px rgba(20, 60, 80, 0.16);
+
+  /* --- Schrift --- */
+  --font-body: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-head: 'Baloo 2', 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-arab: 'Noto Naskh Arabic', 'Scheherazade New', 'Segoe UI', serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-base: 0.95rem;
+  --text-lg: 1.1rem;
+  --text-xl: 1.35rem;
+  --text-2xl: 1.7rem;
+  --text-3xl: 2.1rem;
+
+  /* --- Layout --- */
+  --shell-sidebar: 248px;
+  --shell-content: 1160px;
+  --shell-aside: 300px;
+  --nav-height: 64px;
+  --touch-min: 44px;
+
+  /* --- Bewegung --- */
+  --motion-fast: 120ms;
+  --motion-base: 220ms;
+  --motion-slow: 420ms;
+}
+
+/* Dunkles Design – nur Flaechen und Text drehen sich, die Marke bleibt. */
+:root[data-theme='dark'] {
+  --rk-bg: #0d1720;
+  --rk-surface: #142230;
+  --rk-surface-soft: #1b2c3c;
+  --rk-border: #263a4c;
+  --rk-border-strong: #385166;
+
+  --rk-text: #eaf1f6;
+  --rk-text-muted: #adbdca;
+  --rk-text-light: #93a5b4;
+
+  --rk-primary: #2cc3c6;
+  --rk-primary-dark: #16a5a8;
+  --rk-primary-soft: #10333a;
+  --rk-blue-soft: #10283d;
+  --rk-green-soft: #113322;
+  --rk-yellow-soft: #33290f;
+  --rk-orange-soft: #35240f;
+  --rk-red-soft: #3a1c1c;
+  --rk-purple-soft: #241a3f;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-floating: 0 12px 30px rgba(0, 0, 0, 0.5);
+}

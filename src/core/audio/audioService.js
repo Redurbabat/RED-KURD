@@ -1,5 +1,6 @@
 // Audio: eigene/Muttersprachler-Aufnahmen (IndexedDB) mit TTS als Ersatz
-import { sprich } from './schrift.js'
+import { sprich } from '../schrift/transliteration.js'
+import { tonAn } from '../ui/uiStore.js'
 
 function oeffne() {
   return new Promise((res, rej) => {
@@ -48,6 +49,7 @@ async function ladeAudioIndex() {
 
 // Prioritaet: 1. eigene Aufnahme, 2. echte Muttersprachler-Datei, 3. Computerstimme
 export async function spieleWort(wort) {
+  if (!tonAn()) return 'aus'
   const b = await holeAufnahme(wort)
   if (b) {
     new Audio(URL.createObjectURL(b)).play()
