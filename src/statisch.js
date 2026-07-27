@@ -79,3 +79,12 @@ export async function sucheKurdishTech(q) {
   }
   return ergebnisse
 }
+
+export async function zufallsPaare(anzahl) {
+  const d = await ladeStatisch()
+  const deu = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'deu')
+  const eng = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'eng')
+  const quelle = deu.length >= anzahl ? deu : deu.concat(eng)
+  const gemischt = [...quelle].sort(() => Math.random() - 0.5).slice(0, anzahl)
+  return gemischt.map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
+}

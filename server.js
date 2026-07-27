@@ -79,6 +79,26 @@ const server = http.createServer((req, res) => {
       return json(res, { vokabeln });
     }
 
+    if (url.pathname === "/api/satzpaare") {
+      const anzahl = Math.min(parseInt(url.searchParams.get("anzahl") || "15"), 50);
+      let paare = db.prepare(
+        `SELECT s.text AS satz, t.text AS uebersetzung
+         FROM saetze s JOIN satz_links l ON l.satz_id = s.id
+         JOIN saetze t ON t.id = l.uebersetzung_id
+         WHERE s.lang = 'kmr' AND t.lang = 'deu' AND length(s.text) < 90
+         ORDER BY RANDOM() LIMIT ?`).all(anzahl);
+      if (paare.length < anzahl) {
+        const mehr = db.prepare(
+          `SELECT s.text AS satz, t.text AS uebersetzung
+           FROM saetze s JOIN satz_links l ON l.satz_id = s.id
+           JOIN saetze t ON t.id = l.uebersetzung_id
+           WHERE s.lang = 'kmr' AND t.lang = 'eng' AND length(s.text) < 90
+           ORDER BY RANDOM() LIMIT ?`).all(anzahl - paare.length);
+        paare = paare.concat(mehr);
+      }
+      return json(res, { paare });
+    }
+
     if (url.pathname === "/api/status") {
       const s = db.prepare("SELECT COUNT(*) AS n FROM saetze").get();
       const w = db.prepare("SELECT COUNT(*) AS n FROM woerter").get();

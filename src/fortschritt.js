@@ -93,3 +93,12 @@ export function istRichtigGetippt(eingabe, richtig) {
     .replace(/[.,!?']/g, '').replace(/\s+/g, ' ')
   return norm(eingabe) === norm(richtig)
 }
+
+export function merkeWort(de, ku) {
+  const d = lade()
+  d.karten = d.karten || {}
+  if (!d.karten[de + '|' + ku]) {
+    d.karten[de + '|' + ku] = { stufe: 0, faellig: heute() }
+    speichere(d)
+  }
+}

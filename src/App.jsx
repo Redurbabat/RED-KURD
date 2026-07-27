@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { woerter as startWoerter } from './data/woerter.js'
 import Lernen from './Lernen.jsx'
+import Lesen from './Lesen.jsx'
+import Werkzeuge from './Werkzeuge.jsx'
 import { sucheStatisch, beispieleStatisch, statischeAnzahl } from './statisch.js'
 import { statistik } from './fortschritt.js'
 
@@ -158,6 +160,8 @@ export default function App() {
           <button className={seite === 'start' ? 'aktiv' : ''} onClick={() => setSeite('start')}>Start</button>
           <button className={seite === 'woerterbuch' ? 'aktiv' : ''} onClick={() => setSeite('woerterbuch')}>Wörterbuch</button>
           <button className={seite === 'lernen' ? 'aktiv' : ''} onClick={() => setSeite('lernen')}>Lernen</button>
+          <button className={seite === 'lesen' ? 'aktiv' : ''} onClick={() => setSeite('lesen')}>Lesen</button>
+          <button className={seite === 'werkzeuge' ? 'aktiv' : ''} onClick={() => setSeite('werkzeuge')}>Schrift</button>
           <button className={seite === 'statistik' ? 'aktiv' : ''} onClick={() => setSeite('statistik')}>Statistik</button>
         </nav>
       </header>
@@ -186,6 +190,8 @@ export default function App() {
         )}
         {seite === 'woerterbuch' && <Woerterbuch />}
         {seite === 'lernen' && <Lernen />}
+        {seite === 'lesen' && <Lesen />}
+        {seite === 'werkzeuge' && <Werkzeuge />}
         {seite === 'statistik' && <Statistik />}
       </main>
       <footer>
