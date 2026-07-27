@@ -24,10 +24,16 @@ const SPRACHNAMEN = {
   ckb: 'Soranî',
   zza: 'Zazakî',
   eng: 'Englisch',
-  tur: 'Türkisch',
 }
 const KURDISCH = new Set(['kur', 'kmr', 'ckb', 'zza'])
 const SCHRITT = 20
+
+/** Diese Sprachen zeigt RED-KURD bewusst nicht an. */
+const AUSGESCHLOSSEN = new Set(['tur', 'tr', 'ota', 'azj'])
+
+function ohneFremdsprache(w) {
+  return !AUSGESCHLOSSEN.has(w.lang) && !AUSGESCHLOSSEN.has(w.ziel_lang)
+}
 
 function spracheName(code) {
   return SPRACHNAMEN[code] || code || 'unbekannt'
@@ -37,14 +43,13 @@ function spracheName(code) {
 function htmlLang(code) {
   if (code === 'deu') return 'de'
   if (code === 'eng') return 'en'
-  if (code === 'tur') return 'tr'
   return 'ku'
 }
 
 /**
  * Aus einem Treffer das Paar Deutsch/Kurmancî fuer das Wiederholsystem bilden.
- * Gemerkt wird nur, wenn wirklich Deutsch auf Kurdisch trifft — englische oder
- * türkische Paare gehoeren nicht in den Kurs.
+ * Gemerkt wird nur, wenn wirklich Deutsch auf Kurdisch trifft — Paare aus
+ * anderen Sprachen gehoeren nicht in den Kurs.
  */
 function paarVon(w) {
   const kurdischLinks = KURDISCH.has(w.lang)
@@ -146,7 +151,10 @@ export default function DictionaryView() {
       return
     }
 
-    const sauber = { woerter: daten.woerter || [], wiki: daten.wiki || [] }
+    const sauber = {
+      woerter: (daten.woerter || []).filter(ohneFremdsprache),
+      wiki: (daten.wiki || []).filter(ohneFremdsprache),
+    }
     setErgebnis(sauber)
 
     if (sauber.woerter.length === 0 && sauber.wiki.length === 0) {

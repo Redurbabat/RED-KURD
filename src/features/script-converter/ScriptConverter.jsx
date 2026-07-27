@@ -76,8 +76,8 @@ export default function ScriptConverter() {
       <Card>
         <p className="sc-erklaerung">
           Kurmancî wird in zwei Schriften geschrieben: in der lateinischen Hawar-Schrift
-          (Türkei, Syrien, Europa) und in der arabischen Schrift (Irak, Iran). Hier wandelst du
-          Texte zwischen beiden um.
+          (Bakur, Rojava und die Diaspora) und in der arabischen Schrift (Başûr und
+          Rojhilat). Hier wandelst du Texte zwischen beiden um.
         </p>
 
         <p className="rk-hinweisstreifen sc-hinweis">

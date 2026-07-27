@@ -21,6 +21,7 @@ import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import EmptyState from '../../../components/common/EmptyState.jsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import { KelimBand } from '../../../components/adventure/KelimBorder.jsx'
 import './WorldDetailPage.css'
 
 const TRUHEN_SCHLUESSEL = 'red-kurd-welt-truhe'
@@ -170,8 +171,11 @@ export default function WorldDetailPage({ worldId }) {
           art={welt.landschaft}
           farbe={welt.farbe}
           himmel={welt.himmel}
+          format="karte"
           className="adv-karte-hintergrund"
         />
+        <KelimBand hoehe={14} className="kelim-oben" />
+        <KelimBand hoehe={14} className="kelim-unten" />
 
         <ol className="adv-pfad">
           {einheiten.map((einheit) => {
@@ -208,8 +212,8 @@ export default function WorldDetailPage({ worldId }) {
                     <small>
                       {statusText} · {prozent} %
                     </small>
+                    <Sterne anzahl={sterne} />
                   </span>
-                  <Sterne anzahl={sterne} />
                 </button>
               </li>
             )

@@ -72,7 +72,7 @@ Fortschrittsbalken.
 1. ✅ Zwei Modi, gemeinsame Lern-Engine, responsives Design
 2. ⬜ Grosse Wörterbuch-Datenbank direkt anbinden (455.000+ Einträge)
 3. ⬜ Mehr Lesetexte und Hörmaterial mit Muttersprachler-Aufnahmen
-4. ⬜ Weitere Sprachen (Englisch, Türkisch, Soranî, …)
+4. ⬜ Weitere kurdische Varianten (Soranî, Zazakî) und Englisch
 
 ## Datenquellen & Lizenzen
 
