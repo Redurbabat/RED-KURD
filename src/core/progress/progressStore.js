@@ -1,0 +1,273 @@
+// Der eine Lernstand fuer die ganze App.
+// Modern-Modus und Abenteuer-Modus schreiben und lesen genau hier — es gibt
+// bewusst KEINEN zweiten Fortschritt fuer das Abenteuer.
+import { KEYS, lies, schreibe } from '../storage.js'
+import { melden } from '../store.js'
+import { heute, gestern, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.js'
+
+const LEER = {
+  version: 2,
+  xp: 0,
+  serie: 0,
+  letzterTag: null,
+  einheiten: {}, // { einheitId: besteProzent }
+  sterne: {}, // { einheitId: 0..3 }
+  karten: {}, // { "de|ku|skill": { stufe, faellig, gesehen, richtig } }
+  tage: {}, // { "2026-07-27": { aufgaben, richtig, sekunden } }
+  edelsteine: 0,
+  schluessel: 0,
+  zielBelohnt: null,
+  truhe: null,
+  lernzeit: 0, // Sekunden insgesamt
+}
+
+let cache = null
+
+function laden() {
+  if (cache) return cache
+  const d = lies(KEYS.fortschritt) || {}
+  cache = { ...LEER, ...d, einheiten: { ...(d.einheiten || {}) }, sterne: { ...(d.sterne || {}) },
+    karten: { ...(d.karten || {}) }, tage: { ...(d.tage || {}) } }
+  return cache
+}
+
+function sichern(d) {
+  cache = d
+  schreibe(KEYS.fortschritt, d)
+  melden()
+  return d
+}
+
+/** Rohdaten lesen (nur lesend verwenden!). */
+export function holeFortschritt() {
+  return laden()
+}
+
+/** Ganzen Lernstand ersetzen — nur fuer Import und Tests. */
+export function setzeFortschritt(neu) {
+  return sichern({ ...LEER, ...neu })
+}
+
+// ===== XP und Tagesserie =====
+
+export function gibXp(punkte) {
+  const d = { ...laden() }
+  d.xp = (d.xp || 0) + punkte
+  if (d.letzterTag !== heute()) {
+    d.serie = d.letzterTag === gestern() ? (d.serie || 0) + 1 : 1
+    d.letzterTag = heute()
+  }
+  return sichern(d)
+}
+
+export function level() {
+  const xp = laden().xp || 0
+  return { stufe: Math.floor(xp / 100) + 1, fortschritt: xp % 100, bisNaechstes: 100 - (xp % 100) }
+}
+
+// ===== Edelsteine und Schluessel (Abenteuer-Waehrung, gemeinsamer Speicher) =====
+
+export function gibEdelsteine(n) {
+  const d = { ...laden() }
+  d.edelsteine = Math.max(0, (d.edelsteine || 0) + n)
+  return sichern(d)
+}
+
+export function gibSchluessel(n) {
+  const d = { ...laden() }
+  d.schluessel = Math.max(0, (d.schluessel || 0) + n)
+  return sichern(d)
+}
+
+/** Gibt true zurueck, wenn genug Edelsteine da waren und abgebucht wurde. */
+export function zahleEdelsteine(preis) {
+  const d = { ...laden() }
+  if ((d.edelsteine || 0) < preis) return false
+  d.edelsteine -= preis
+  sichern(d)
+  return true
+}
+
+export function zahleSchluessel(anzahl) {
+  const d = { ...laden() }
+  if ((d.schluessel || 0) < anzahl) return false
+  d.schluessel -= anzahl
+  sichern(d)
+  return true
+}
+
+// ===== Einheiten =====
+
+export function einheitAbgeschlossen(id, prozent) {
+  const d = { ...laden() }
+  d.einheiten = { ...d.einheiten }
+  if (!d.einheiten[id] || prozent > d.einheiten[id]) d.einheiten[id] = prozent
+  return sichern(d)
+}
+
+/**
+ * Sterne einer Einheit. Der dritte Stern wird erst bei einer spaeteren
+ * erfolgreichen Wiederholung vergeben — beim ersten Durchgang gibt es hoechstens zwei.
+ */
+export function setzeSterne(id, prozent) {
+  const d = { ...laden() }
+  d.sterne = { ...d.sterne }
+  const bisher = d.sterne[id] || 0
+  let neu = 0
+  if (prozent >= 100) neu = bisher >= 1 ? 3 : 2
+  else if (prozent >= 80) neu = bisher >= 1 ? Math.min(3, bisher + 1) : 2
+  else if (prozent >= 50) neu = 1
+  d.sterne[id] = Math.max(bisher, neu)
+  sichern(d)
+  return d.sterne[id]
+}
+
+export function sterneVon(id) {
+  return laden().sterne[id] || 0
+}
+
+// ===== Karten (Wiederholsystem) =====
+
+export function karteBewerten(de, ku, skill, richtig) {
+  const d = { ...laden() }
+  d.karten = { ...d.karten }
+  const key = kartenSchluessel(de, ku, skill)
+  d.karten[key] = naechsteKarte(d.karten[key], richtig)
+  return sichern(d)
+}
+
+/** Wort ins Wiederholsystem aufnehmen (aus Woerterbuch oder Lesetext). */
+export function merkeWort(de, ku, skill = 'erkennen') {
+  const d = { ...laden() }
+  const key = kartenSchluessel(de, ku, skill)
+  if (d.karten[key]) return false
+  d.karten = { ...d.karten, [key]: { stufe: 0, faellig: heute(), gesehen: 0, richtig: 0 } }
+  sichern(d)
+  return true
+}
+
+export function vergissWort(de, ku, skill = 'erkennen') {
+  const d = { ...laden() }
+  const key = kartenSchluessel(de, ku, skill)
+  if (!d.karten[key]) return false
+  d.karten = { ...d.karten }
+  delete d.karten[key]
+  sichern(d)
+  return true
+}
+
+export function kennstWort(de, ku, skill = 'erkennen') {
+  return !!laden().karten[kartenSchluessel(de, ku, skill)]
+}
+
+// ===== Tagesaktivitaet =====
+
+const LEERER_TAG = { aufgaben: 0, richtig: 0, sekunden: 0, skills: {}, folge: 0, maxFolge: 0 }
+
+export function zaehleAufgabe(richtig, sekunden = 0, skill = null) {
+  const d = { ...laden() }
+  const t = heute()
+  d.tage = { ...d.tage }
+  const e = { ...LEERER_TAG, ...(d.tage[t] || {}) }
+  e.skills = { ...e.skills }
+  e.aufgaben += 1
+  if (richtig) {
+    e.richtig += 1
+    e.folge += 1
+    e.maxFolge = Math.max(e.maxFolge, e.folge)
+  } else {
+    e.folge = 0
+  }
+  if (skill) e.skills[skill] = (e.skills[skill] || 0) + 1
+  e.sekunden += sekunden
+  d.tage[t] = e
+  d.lernzeit = (d.lernzeit || 0) + sekunden
+  // Nur die letzten 60 Tage aufheben
+  const alle = Object.keys(d.tage).sort()
+  while (alle.length > 60) delete d.tage[alle.shift()]
+  return sichern(d)
+}
+
+export function zaehleLernzeit(sekunden) {
+  if (!sekunden) return
+  const d = { ...laden() }
+  const t = heute()
+  d.tage = { ...d.tage }
+  const e = { ...LEERER_TAG, ...(d.tage[t] || {}) }
+  e.sekunden += sekunden
+  d.tage[t] = e
+  d.lernzeit = (d.lernzeit || 0) + sekunden
+  return sichern(d)
+}
+
+// ===== Tagesziel und Truhe =====
+
+export function tagesZiel(ziel = 20) {
+  const d = laden()
+  const e = d.tage[heute()] || { aufgaben: 0 }
+  return {
+    erledigt: Math.min(e.aufgaben, ziel),
+    roh: e.aufgaben,
+    ziel,
+    geschafft: e.aufgaben >= ziel,
+    belohnt: d.zielBelohnt === heute(),
+  }
+}
+
+export function holeTageszielBelohnung(ziel = 20) {
+  const d = { ...laden() }
+  const e = d.tage[heute()] || { aufgaben: 0 }
+  if (e.aufgaben < ziel || d.zielBelohnt === heute()) return null
+  d.zielBelohnt = heute()
+  d.xp = (d.xp || 0) + 20
+  d.edelsteine = (d.edelsteine || 0) + 1
+  sichern(d)
+  return { xp: 20, edelsteine: 1 }
+}
+
+export function truheBereit() {
+  return laden().truhe !== heute()
+}
+
+export function truheOeffnen() {
+  const d = { ...laden() }
+  if (d.truhe === heute()) return null
+  d.truhe = heute()
+  // Feste Reihe statt Zufall: gleiche Belohnung bei gleichem Serientag, gut planbar.
+  const stufe = (d.serie || 0) % 5
+  const xp = [10, 15, 20, 25, 30][stufe]
+  const edelsteine = stufe >= 3 ? 2 : 1
+  d.xp = (d.xp || 0) + xp
+  d.edelsteine = (d.edelsteine || 0) + edelsteine
+  if (stufe === 4) d.schluessel = (d.schluessel || 0) + 1
+  sichern(d)
+  return { xp, edelsteine, schluessel: stufe === 4 ? 1 : 0 }
+}
+
+// ===== Export / Import =====
+
+export function exportiereAlles(extra = {}) {
+  return JSON.stringify(
+    {
+      version: 2,
+      app: 'RED-KURD',
+      exportiert: new Date().toISOString(),
+      fortschritt: laden(),
+      ...extra,
+    },
+    null,
+    2
+  )
+}
+
+export function ankiZeilen() {
+  const d = laden()
+  const paare = new Set()
+  for (const key of Object.keys(d.karten || {})) {
+    const [de, ku] = key.split('|')
+    if (de && ku) paare.add(`${de}\t${ku}`)
+  }
+  return [...paare].join('\n')
+}
+
+export { SICHER_AB }

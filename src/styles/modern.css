@@ -1,0 +1,472 @@
+/* ===== Modern-Modus: helle, ruhige Lernoberfläche ===== */
+
+.rk-abschnitt {
+  margin-bottom: var(--space-5);
+}
+.rk-abschnitt-titel {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-3);
+}
+
+/* Große Startkarte („Sitzung fortsetzen", „Weiterlernen") */
+.rk-startkarte {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-large);
+  color: #fff;
+  background: var(--rk-blue);
+  box-shadow: var(--shadow-button);
+  transition: transform var(--motion-fast) ease, filter var(--motion-fast) ease;
+  min-height: 78px;
+}
+.rk-startkarte:hover {
+  filter: brightness(1.05);
+}
+.rk-startkarte:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+.rk-startkarte-gruen {
+  background: var(--rk-green-dark);
+}
+.rk-startkarte-teal {
+  background: var(--rk-primary);
+}
+.rk-startkarte-text {
+  flex: 1;
+  min-width: 0;
+}
+.rk-startkarte-text strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+}
+.rk-startkarte-text small {
+  display: block;
+  font-size: var(--text-sm);
+  opacity: 0.9;
+}
+.rk-startkarte-wert {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  padding: var(--space-1) var(--space-3);
+  font-weight: 900;
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+}
+
+/* Drei-Spalten-Plan */
+.rk-plan {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  list-style: none;
+}
+.rk-plan-feld {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  min-width: 0;
+}
+/* Ohne min-width: 0 wachsen Rasterspalten mit ihrem Inhalt — dann laeuft
+   der Plan auf schmalen Handys ueber den Bildschirmrand hinaus. */
+.rk-plan-feld > span {
+  min-width: 0;
+}
+.rk-plan-feld strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+}
+.rk-plan-feld small {
+  display: block;
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* Kachelraster (Üben, Entdecken) */
+.rk-kachelraster {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+.rk-trainingskachel {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+.rk-trainingskachel:hover {
+  transform: translateY(-2px);
+  border-color: var(--rk-primary);
+  box-shadow: var(--shadow-card);
+}
+.rk-trainingskachel-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-small);
+  flex-shrink: 0;
+}
+.rk-ton-teal {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.rk-ton-gruen {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.rk-ton-blau {
+  background: var(--rk-blue-soft);
+  color: var(--rk-blue-dark);
+}
+.rk-ton-lila {
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+}
+.rk-ton-orange {
+  background: var(--rk-orange-soft);
+  color: var(--rk-orange-dark);
+}
+.rk-ton-gold {
+  background: var(--rk-yellow-soft);
+  color: #8a5f04;
+}
+.rk-trainingskachel-text {
+  flex: 1;
+  min-width: 0;
+}
+.rk-trainingskachel-text strong {
+  display: block;
+  font-family: var(--font-head);
+}
+.rk-trainingskachel-text p {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-2);
+}
+.rk-trainingskachel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Einheitenliste */
+.rk-einheitenliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+.rk-einheit {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  min-height: 68px;
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+.rk-einheit:hover {
+  transform: translateY(-1px);
+  border-color: var(--rk-primary);
+}
+.rk-einheit.aktuell {
+  border-color: var(--rk-primary);
+  box-shadow: 0 0 0 2px var(--rk-primary-soft);
+}
+.rk-einheit.fertig .rk-einheit-nr {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.rk-einheit.gesperrt {
+  opacity: 0.75;
+}
+.rk-einheit-nr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+  font-family: var(--font-head);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.rk-einheit.aktuell .rk-einheit-nr {
+  background: var(--rk-primary);
+  color: #fff;
+}
+.rk-einheit-symbol {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.rk-einheit-text {
+  flex: 1;
+  min-width: 0;
+}
+.rk-einheit-text strong {
+  display: block;
+  font-family: var(--font-head);
+}
+.rk-einheit-text small {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+.rk-einheit-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Hervorgehobene Hero-Karte */
+.rk-hero {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-large);
+  background: linear-gradient(120deg, var(--rk-primary), var(--rk-primary-dark));
+  color: #fff;
+  margin-bottom: var(--space-4);
+}
+.rk-hero-blau {
+  background: linear-gradient(120deg, var(--rk-blue), var(--rk-blue-dark));
+}
+.rk-hero-text {
+  flex: 1;
+  min-width: 0;
+}
+.rk-hero-etikett {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-pill);
+  padding: 2px var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.rk-hero-text h2 {
+  color: #fff;
+  font-size: var(--text-xl);
+}
+.rk-hero-text p {
+  font-size: var(--text-sm);
+  opacity: 0.9;
+}
+.rk-hero .rk-ring::before {
+  background: var(--rk-primary-dark);
+}
+.rk-hero .rk-ring-text {
+  color: #fff;
+}
+
+/* Fertigkeiten */
+.rk-skill {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  grid-template-areas: 'icon name' 'icon balken';
+  column-gap: var(--space-3);
+  row-gap: 2px;
+  align-items: center;
+  padding: var(--space-2) 0;
+}
+.rk-skill-icon {
+  grid-area: icon;
+}
+.rk-skill-name {
+  grid-area: name;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-weight: 800;
+  font-size: var(--text-sm);
+}
+.rk-skill-stufe {
+  color: var(--rk-text-muted);
+  font-weight: 700;
+}
+.rk-skill-balken {
+  grid-area: balken;
+}
+
+/* Wochenchart */
+.rk-woche {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  height: 130px;
+  padding-top: var(--space-4);
+}
+.rk-woche-saeule {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  height: 100%;
+}
+.rk-woche-balken {
+  width: 100%;
+  max-width: 34px;
+  background: var(--rk-primary);
+  border-radius: var(--radius-small) var(--radius-small) 2px 2px;
+  min-height: 4px;
+  transition: height var(--motion-slow) ease;
+}
+.rk-woche-saeule.heute .rk-woche-balken {
+  background: var(--rk-yellow);
+}
+.rk-woche-saeule small {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+.rk-woche-zahl {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+}
+
+/* Tabs */
+.rk-tabs {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  scrollbar-width: none;
+}
+.rk-tabs::-webkit-scrollbar {
+  display: none;
+}
+.rk-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.rk-tab[aria-selected='true'] {
+  background: var(--rk-primary);
+  border-color: var(--rk-primary);
+  color: #fff;
+}
+
+/* Ziel-Karte */
+.rk-zielkarte {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--rk-green-soft);
+  border: 1px solid #c9ecc4;
+  margin-bottom: var(--space-4);
+}
+.rk-zielkarte.geschafft {
+  background: var(--rk-yellow-soft);
+  border-color: #f0dcb0;
+}
+.rk-zielkarte-text {
+  flex: 1;
+  min-width: 0;
+}
+.rk-zielkarte-stand {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  white-space: nowrap;
+}
+
+/* Hinweisstreifen */
+.rk-hinweisstreifen {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--rk-orange-soft);
+  border: 1px solid #f0d3ac;
+  color: #8a5100;
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+/* Im dunklen Design bleiben die festen Brauntoene sonst unlesbar. */
+:root[data-theme='dark'] .rk-hinweisstreifen {
+  border-color: #6b4c1c;
+  color: #ffd58a;
+}
+:root[data-theme='dark'] .rk-zielkarte {
+  border-color: #1f5c40;
+}
+:root[data-theme='dark'] .rk-zielkarte.geschafft {
+  border-color: #6b4c1c;
+}
+
+/* Wortliste */
+.rk-wortliste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+.rk-wortchip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+  font-weight: 800;
+  color: var(--rk-primary-dark);
+}
+.rk-wortchip:hover {
+  background: var(--rk-primary-soft);
+}
+
+@media (min-width: 640px) {
+  .rk-kachelraster {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rk-plan {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

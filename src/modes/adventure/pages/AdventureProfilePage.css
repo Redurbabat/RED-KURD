@@ -1,0 +1,211 @@
+/* Profil des Abenteuer-Modus. Held-Karte und Abzeichenraster kommen aus
+   adventure.css — hier steht nur, was diese Seite zusätzlich braucht.
+   Seiten-CSS wird vor den Basisdateien geladen, deshalb sind Regeln, die einer
+   Basisregel widersprechen, mit .ap-seite verstärkt. */
+
+.ap-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+/* --- Kopf mit Hêlo im Profilrahmen --- */
+.ap-kopf {
+  flex-wrap: wrap;
+}
+.ap-rahmen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  flex-shrink: 0;
+}
+/* Goldener Rahmen — nur sichtbar, wenn der Shop-Artikel angelegt ist. */
+.ap-rahmen-gold {
+  border: 3px solid var(--adv-gold);
+  box-shadow: 0 0 0 5px rgba(244, 185, 66, 0.28);
+}
+.ap-level {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-2);
+}
+.ap-rahmen-hinweis {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-text-on-dark);
+}
+
+/* --- Zahlen --- */
+.ap-zahlen {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  list-style: none;
+}
+.ap-zahlen > li {
+  display: flex;
+}
+.ap-zahlen .rk-kachel {
+  flex: 1;
+  overflow-wrap: break-word;
+}
+
+/* --- Welten --- */
+.ap-welten {
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+.ap-welt-kopf {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+.ap-welt-kopf strong {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  overflow-wrap: break-word;
+}
+.ap-welt-sterne {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+  white-space: nowrap;
+}
+.ap-welt-unter,
+.ap-welt-stand {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+.ap-welt-unter {
+  margin-bottom: var(--space-2);
+}
+.ap-welt-stand {
+  margin-top: var(--space-1);
+}
+
+/* --- Auszeichnungen ---
+   Gesperrte Abzeichen bleiben lesbar: sie tragen Schloss-Icon und Text,
+   die Information hängt also nicht an der Farbe. */
+.ap-seite .adv-abzeichenraster {
+  list-style: none;
+}
+.ap-seite .adv-abzeichen.gesperrt {
+  opacity: 1;
+  filter: none;
+  background: var(--rk-surface-soft);
+  border-style: dashed;
+}
+.ap-seite .adv-abzeichen.gesperrt .adv-abzeichen-icon {
+  background: var(--rk-border);
+  color: var(--rk-text-muted);
+}
+.ap-abzeichen-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+
+/* Farbe je Auszeichnung — die Namen kommen aus achievementsStore.js. */
+.ap-seite .ap-ton-green {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.ap-seite .ap-ton-orange {
+  background: var(--rk-orange-soft);
+  color: var(--rk-orange-dark);
+}
+.ap-seite .ap-ton-blue {
+  background: var(--rk-blue-soft);
+  color: var(--rk-blue-dark);
+}
+.ap-seite .ap-ton-purple {
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+}
+.ap-seite .ap-ton-teal {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.ap-seite .ap-ton-gold {
+  background: var(--rk-yellow-soft);
+  color: #8a5f04;
+}
+/* Im dunklen Design sind die dunklen Varianten zu schwach — hier die hellen. */
+:root[data-theme='dark'] .ap-seite .ap-ton-green {
+  color: var(--rk-green);
+}
+:root[data-theme='dark'] .ap-seite .ap-ton-orange {
+  color: var(--rk-orange);
+}
+:root[data-theme='dark'] .ap-seite .ap-ton-blue {
+  color: var(--rk-blue);
+}
+:root[data-theme='dark'] .ap-seite .ap-ton-purple {
+  color: var(--rk-purple);
+}
+:root[data-theme='dark'] .ap-seite .ap-ton-teal {
+  color: var(--rk-primary);
+}
+:root[data-theme='dark'] .ap-seite .ap-ton-gold {
+  color: var(--adv-gold);
+}
+
+/* --- Aussehen --- */
+.ap-aussehen {
+  list-style: none;
+  display: grid;
+  gap: var(--space-3);
+}
+.ap-aussehen > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.ap-aussehen-text {
+  flex: 1;
+  min-width: 0;
+}
+.ap-aussehen-text strong {
+  display: block;
+  font-size: var(--text-sm);
+  overflow-wrap: break-word;
+}
+.ap-aussehen-text small {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+.ap-shoplink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--touch-min);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-primary-dark);
+  text-decoration: none;
+}
+.ap-fussnote {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+
+@media (min-width: 640px) {
+  .ap-zahlen {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

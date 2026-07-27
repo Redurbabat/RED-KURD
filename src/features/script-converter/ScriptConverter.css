@@ -1,0 +1,66 @@
+/* ===== Schrift-Umwandlung ===== */
+
+.sc-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.sc-erklaerung {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.sc-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.sc-hinweis .rk-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sc-richtung {
+  margin-bottom: var(--space-4);
+}
+
+.sc-knoepfe {
+  margin-top: var(--space-3);
+}
+
+.sc-ergebnis-titel {
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+  font-size: var(--text-base);
+  color: var(--rk-text-muted);
+}
+
+.sc-ergebnis {
+  min-height: 72px;
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-lg);
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+.sc-leer {
+  color: var(--rk-text-light);
+  font-size: var(--text-base);
+}
+
+/* Arabische Schrift etwas groesser — sonst sind die Zeichen schwer zu lesen. */
+.sc-arabisch {
+  font-family: var(--font-arab);
+  font-size: var(--text-2xl);
+  line-height: 2;
+  text-align: right;
+}
+
+.sc-meldung {
+  margin-top: var(--space-2);
+}

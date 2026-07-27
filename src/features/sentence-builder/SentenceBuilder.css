@@ -1,0 +1,117 @@
+/* ===== Satzbau ===== */
+
+.sb-zeile {
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+/* Die deutsche Vorgabe */
+.sb-vorgabe {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-4);
+}
+
+.sb-titel {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+/* Ziel-Zeile: hier entsteht der Satz */
+.sb-ziel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  min-height: 56px;
+  padding: var(--space-2);
+  margin-bottom: var(--space-4);
+  border: 2px dashed var(--rk-border-strong);
+  border-radius: var(--radius-medium);
+  background: var(--rk-surface-soft);
+}
+.sb-leerhinweis {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 2px dashed var(--rk-border-strong);
+  border-radius: var(--radius-medium);
+  background: var(--rk-surface-soft);
+}
+
+/* Pool der gemischten Blöcke */
+.sb-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin-bottom: var(--space-4);
+}
+
+.sb-block {
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-small);
+  border: 1.5px solid var(--rk-border-strong);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-weight: 800;
+  transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+.sb-block:hover:not(:disabled) {
+  border-color: var(--rk-primary);
+  transform: translateY(-1px);
+}
+.sb-block:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.sb-block-gewaehlt {
+  background: var(--rk-primary-soft);
+  border-color: var(--rk-primary);
+  color: var(--rk-primary-dark);
+}
+.sb-block-gewaehlt:disabled {
+  opacity: 0.75;
+}
+
+/* Rückmeldung */
+.sb-rueckmeldung {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-medium);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+}
+.sb-rueckmeldung .rk-icon {
+  flex-shrink: 0;
+}
+.sb-gut {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.sb-schlecht {
+  background: var(--rk-red-soft);
+  color: var(--rk-red-dark);
+}
+
+/* Auswertung am Ende */
+.sb-ende {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-large);
+}
+.sb-ende-zahl {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+}

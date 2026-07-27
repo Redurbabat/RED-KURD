@@ -1,0 +1,52 @@
+/* ===== Üben-Übersicht (Modern) ===== */
+
+.pr-kachelraster {
+  list-style: none;
+}
+
+/* Beschreibung in der Trainingskachel — steht in einem Knopf, darum ein span. */
+.pr-kachel-text {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.pr-kachel-pfeil {
+  align-self: center;
+  flex-shrink: 0;
+  color: var(--rk-text-light);
+}
+
+/* Empfehlung nach Fertigkeit */
+.pr-empfehlung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.pr-empfehlung-text {
+  flex: 1;
+  min-width: 12rem;
+}
+.pr-empfehlung-name {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-1);
+}
+.pr-empfehlung-text .gedaempft {
+  margin-top: var(--space-2);
+}
+
+/* Schwierige Wörter */
+.pr-schwierig-text {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-3);
+}
+.pr-wortliste {
+  margin-bottom: var(--space-4);
+}
+.pr-wortchip-de {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}

@@ -1,0 +1,165 @@
+/* ===== Lesen ===== */
+
+.les-tabs {
+  margin-top: var(--space-2);
+}
+/* Blau statt Teal — so sind die inneren Tabs von den Entdecken-Tabs zu unterscheiden. */
+.les-tabs .rk-tab[aria-selected='true'] {
+  background: var(--rk-blue);
+  border-color: var(--rk-blue);
+}
+
+.les-lesehilfe {
+  margin-bottom: var(--space-3);
+}
+
+/* Textauswahl */
+.les-kacheln {
+  list-style: none;
+}
+.les-kachel {
+  height: 100%;
+}
+.les-kachel-thema {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.les-kachel-pfeil {
+  color: var(--rk-text-light);
+  flex-shrink: 0;
+  align-self: center;
+}
+
+/* Der Lesetext selbst */
+.les-textkarte {
+  padding-bottom: var(--space-5);
+}
+.les-titel {
+  font-size: var(--text-xl);
+}
+.les-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+.les-text {
+  font-size: var(--text-lg);
+  line-height: 2.3;
+  margin-bottom: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.les-satz {
+  margin-bottom: 0;
+}
+
+/* Anklickbares Wort im Text */
+.rk-lesewort {
+  position: relative;
+  display: inline-block;
+  padding: var(--space-1) 3px;
+  border-radius: var(--radius-small);
+  border-bottom: 2px dotted var(--rk-border-strong);
+  font: inherit;
+  color: inherit;
+  transition: background var(--motion-fast) ease;
+}
+.rk-lesewort:hover {
+  background: var(--rk-primary-soft);
+  border-bottom-color: var(--rk-primary);
+}
+.rk-lesewort.gemerkt {
+  background: var(--rk-green-soft);
+  border-bottom: 2px solid var(--rk-green-dark);
+  padding-right: 12px;
+}
+/* Zusätzliches Zeichen — die Farbe allein traegt keine Information. */
+.rk-lesewort-punkt {
+  position: absolute;
+  top: 4px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rk-green-dark);
+}
+
+/* Panel nach dem Antippen eines Wortes */
+.les-panel {
+  margin: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rk-primary);
+  border-radius: var(--radius-medium);
+  background: var(--rk-surface-soft);
+}
+.les-panel-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.les-panel-wort {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  overflow-wrap: anywhere;
+}
+.les-treffer {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-base);
+}
+.les-erklaerung {
+  margin-top: var(--space-2);
+}
+.les-panel-merken {
+  margin-top: var(--space-3);
+}
+
+.les-knoepfe {
+  margin-top: var(--space-4);
+}
+/* Bleibt immer im Baum, damit Screenreader die Meldung vorlesen. */
+.les-meldung {
+  margin-top: var(--space-2);
+}
+
+.les-uebersetzung {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-base);
+}
+
+/* Verständnisfragen */
+.les-fragen {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.les-frage-text {
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+}
+.les-rueckmeldung {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+/* Tatoeba-Sätze */
+.les-satzliste {
+  list-style: none;
+}
+.les-satzkarte {
+  margin-bottom: var(--space-3);
+}

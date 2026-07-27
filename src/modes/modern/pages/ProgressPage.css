@@ -1,0 +1,105 @@
+/* Feinheiten der Fortschrittsseite. Das Grundgerüst kommt aus modern.css.
+   Seiten-CSS wird vor den Basisdateien geladen, deshalb sind Regeln, die einer
+   Basisregel widersprechen, mit .fp-seite verstärkt. */
+
+/* Icons in Flex-Zeilen dürfen nie zusammengedrückt werden. */
+.fp-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+/* Der Ring erbt seine Restfarbe aus --rk-border. Auf der farbigen Hero-Karte
+   ist der helle Standardwert zu schwach, deshalb hier ein dunkler Ersatz. */
+.fp-hero {
+  --rk-border: rgba(0, 0, 0, 0.32);
+}
+.fp-hero-zahl {
+  color: var(--rk-text-on-dark);
+  font-size: var(--text-xl);
+}
+
+/* Fertigkeiten und Kennzahlen sind Listen — ohne Aufzählungspunkte. */
+.fp-skills,
+.fp-zahlen,
+.fp-zeiten {
+  list-style: none;
+}
+
+.fp-zahlen {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+.fp-zahlen > li {
+  display: flex;
+}
+.fp-zahlen .rk-kachel {
+  flex: 1;
+  overflow-wrap: break-word;
+}
+
+/* Wochendiagramm: der heutige Tag wird nicht nur über die Farbe markiert. */
+.fp-woche .rk-woche-saeule.heute small {
+  font-weight: 900;
+  color: var(--rk-text);
+  text-decoration: underline;
+}
+
+.fp-zeiten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.fp-zeiten > li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.fp-rat {
+  margin-bottom: var(--space-4);
+}
+
+.fp-fussnote {
+  margin-top: var(--space-3);
+}
+
+.fp-seite .fp-hinweis {
+  margin-top: var(--space-3);
+  color: var(--rk-primary-dark);
+}
+
+/* Datenverwaltung: drei gleich breite Aktionen untereinander. */
+.fp-datenknoepfe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Der Dateiwähler ist ein <label> um ein unsichtbares, aber fokussierbares
+   <input type="file"> — deshalb liegt der Fokusrahmen auf dem Label. */
+.fp-dateiknopf {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+.fp-dateiknopf:focus-within {
+  outline: 3px solid var(--rk-blue);
+  outline-offset: 2px;
+}
+
+/* Sehr schmale Handys: die Hero-Karte darf innen enger werden. */
+@media (max-width: 400px) {
+  .fp-seite .fp-hero {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+}
+
+@media (min-width: 480px) {
+  .fp-zahlen {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,0 +1,84 @@
+/* ===== Aussprache-Studio ===== */
+
+.ps-schritte {
+  margin: 0 0 var(--space-3) var(--space-5);
+  font-size: var(--text-sm);
+}
+.ps-datenschutz {
+  margin-top: var(--space-2);
+}
+
+/* Einheiten-Chips: waagerecht scrollbar */
+.ps-chips {
+  list-style: none;
+}
+.ps-chips > li {
+  flex-shrink: 0;
+  display: flex;
+}
+.ps-chips .rk-tab[aria-pressed='true'] {
+  background: var(--rk-primary);
+  border-color: var(--rk-primary);
+  color: #fff;
+}
+
+/* Wortliste */
+.ps-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+.ps-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+}
+.ps-bild {
+  font-size: 1.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.ps-text {
+  flex: 1;
+  min-width: 8rem;
+}
+.ps-ku {
+  display: block;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+}
+.ps-de {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.ps-marken {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.ps-marken:empty {
+  display: none;
+}
+.ps-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+/* Vier Knöpfe nebeneinander bleiben trotzdem gut treffbar. */
+.ps-knoepfe .rk-knopf {
+  min-height: var(--touch-min);
+}
+
+@media (min-width: 640px) {
+  .ps-knoepfe {
+    justify-content: flex-end;
+  }
+}

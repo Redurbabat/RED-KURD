@@ -1,0 +1,327 @@
+/* Feinheiten der Einstellungsseite. Das Grundgerüst kommt aus components.css
+   und modern.css. Seiten-CSS wird vor den Basisdateien geladen, deshalb sind
+   Regeln, die einer Basisregel widersprechen, mit .set-seite verstärkt. */
+
+/* Icons in Flex-Zeilen dürfen nie zusammengedrückt werden. */
+.set-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+.set-feldblock {
+  margin-bottom: var(--space-5);
+}
+
+.set-fussnote {
+  margin-top: var(--space-2);
+}
+
+.set-seite .set-hinweis {
+  margin-top: var(--space-3);
+  color: var(--rk-primary-dark);
+}
+
+/* ---------- Auswahl (Radiogruppen) ---------- */
+
+.set-gruppe {
+  border: 0;
+  padding: 0;
+  min-width: 0;
+  margin-top: var(--space-4);
+}
+
+.set-legende {
+  display: block;
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+}
+
+.set-wahlliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+.set-wahl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 54px;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  cursor: pointer;
+  transition: border-color var(--motion-fast) ease, background var(--motion-fast) ease;
+}
+.set-wahl:hover {
+  border-color: var(--rk-primary);
+}
+.set-wahl.aktiv {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+.set-wahl:focus-within {
+  border-color: var(--rk-blue);
+}
+/* Der Fokusring gehoert um die ganze Zeile, nicht nur um den kleinen Radioknopf. */
+.set-wahl:has(:focus-visible) {
+  outline: 3px solid var(--rk-blue);
+  outline-offset: 2px;
+}
+
+.set-wahl-radio {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--rk-primary);
+}
+
+.set-wahl-icon {
+  color: var(--rk-primary-dark);
+}
+
+.set-wahl-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.set-wahl-text strong {
+  font-weight: 800;
+  overflow-wrap: break-word;
+}
+.set-wahl-text small {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+  overflow-wrap: break-word;
+}
+
+.set-wahl-haken {
+  margin-left: auto;
+  color: var(--rk-primary-dark);
+}
+
+/* ---------- Schalter (Häkchen mit Beschriftung) ---------- */
+
+.set-schalter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.set-schalter-box {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  accent-color: var(--rk-primary);
+}
+
+.set-schalter-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-height: var(--touch-min);
+  min-width: 0;
+  cursor: pointer;
+}
+.set-schalter-text strong {
+  font-weight: 800;
+}
+.set-schalter-text small {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+
+/* ---------- Sprache ---------- */
+
+.set-sprachpaar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  font-weight: 800;
+}
+.set-sprachpaar .rk-icon {
+  color: var(--rk-primary-dark);
+}
+
+.set-stand {
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- App-Modus ---------- */
+
+.set-modusliste {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.set-moduskarte {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  padding: var(--space-3);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+  background: var(--rk-surface);
+  transition: border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+}
+.set-moduskarte:hover {
+  border-color: var(--rk-primary);
+  transform: translateY(-2px);
+}
+.set-moduskarte.aktiv {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+
+.set-moduskarte-name {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.set-moduskarte-text {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.set-moduskarte-stand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: auto;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+}
+.set-moduskarte.aktiv .set-moduskarte-stand {
+  background: var(--rk-primary);
+  border-color: var(--rk-primary);
+  color: var(--rk-text-on-dark);
+}
+
+/* Kleine gezeichnete Vorschau der beiden Oberflächen. */
+.set-mini-rahmen {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-small);
+}
+.set-mini {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.set-mini-grund {
+  fill: var(--rk-bg);
+}
+.set-mini-balken {
+  fill: var(--rk-primary);
+}
+.set-mini-karte {
+  fill: var(--rk-surface);
+  stroke: var(--rk-border);
+  stroke-width: 1;
+}
+.set-mini-akzent {
+  fill: var(--rk-primary);
+}
+.set-mini-linie {
+  fill: var(--rk-border-strong);
+}
+
+.set-mini-himmel {
+  fill: var(--adv-sky);
+}
+.set-mini-sonne {
+  fill: var(--adv-gold);
+}
+.set-mini-berg {
+  fill: var(--adv-teal);
+}
+.set-mini-boden {
+  fill: var(--adv-green);
+}
+.set-mini-pfad {
+  fill: none;
+  stroke: var(--adv-parchment);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.set-mini-knoten {
+  fill: var(--adv-parchment);
+  stroke: var(--adv-brown);
+  stroke-width: 2;
+}
+.set-mini-knoten-gold {
+  fill: var(--adv-gold);
+}
+
+/* Der Satz zum Moduswechsel muss auffallen — er beantwortet die häufigste Sorge. */
+.set-modushinweis {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1.5px solid var(--rk-primary);
+  border-radius: var(--radius-medium);
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+  font-weight: 800;
+}
+
+/* ---------- Datenschutz ---------- */
+
+.set-punkte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+.set-punkte > li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.set-punkte .rk-icon {
+  margin-top: 2px;
+  color: var(--rk-green-dark);
+}
+.set-punkte strong {
+  color: var(--rk-text);
+}
+
+/* ---------- Daten verwalten ---------- */
+
+.set-datenknoepfe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Ab Tablet passen die beiden Modus-Vorschauen nebeneinander. */
+@media (min-width: 520px) {
+  .set-modusliste {
+    grid-template-columns: 1fr 1fr;
+  }
+}

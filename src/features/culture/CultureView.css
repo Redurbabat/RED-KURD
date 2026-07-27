@@ -1,0 +1,46 @@
+/* ===== Redewendungen & Kultur ===== */
+
+.kult-einleitung {
+  margin-bottom: var(--space-3);
+}
+
+.kult-liste {
+  list-style: none;
+}
+
+.kult-karte {
+  margin-bottom: var(--space-3);
+}
+
+.kult-ku {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  color: var(--rk-primary-dark);
+  overflow-wrap: anywhere;
+}
+.kult-de {
+  margin-top: var(--space-1);
+  font-weight: 800;
+}
+.kult-sinn {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.kult-knoepfe {
+  margin-top: var(--space-3);
+}
+
+.kult-titel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.kult-symbol {
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+.kult-text {
+  font-size: var(--text-base);
+}

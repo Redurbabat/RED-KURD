@@ -1,0 +1,81 @@
+/* Feinheiten der Startseite „Heute". Das Grundgerüst kommt aus modern.css. */
+
+/* Icons in Flex-Zeilen dürfen nie zusammengedrückt werden. */
+.tp-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+.tp-gruss {
+  margin-bottom: var(--space-5);
+}
+.tp-gruss h1 {
+  margin-bottom: var(--space-3);
+}
+
+/* Der Tagesplan ist eine Liste — ohne Aufzählungspunkte im Raster. */
+.tp-planliste {
+  list-style: none;
+}
+
+.tp-dauer {
+  margin-top: var(--space-4);
+}
+
+/* Hinweisstreifen mit Icon davor */
+.tp-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* Zwei Karten nebeneinander: kein doppelter Abstand innerhalb des Rasters */
+.tp-raster {
+  margin-bottom: var(--space-4);
+}
+.tp-raster > .rk-karte {
+  margin-bottom: 0;
+}
+
+/* Kurskarte: Text links, Ring rechts */
+.tp-kurs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+.tp-kurs-text {
+  flex: 1;
+  min-width: 0;
+}
+.tp-kurs-einheit {
+  font-size: var(--text-base);
+}
+
+/* Drei Kennzahlen nebeneinander, auch auf schmalen Handys */
+.tp-standraster {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  list-style: none;
+}
+.tp-standraster > li {
+  display: flex;
+}
+.tp-standraster .rk-kachel {
+  flex: 1;
+  overflow-wrap: break-word;
+}
+
+.tp-wortliste {
+  margin: var(--space-3) 0;
+}
+
+.tp-belohnung {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-weight: 800;
+  color: var(--rk-primary-dark);
+}

@@ -1,0 +1,86 @@
+/* ===== Einheitendetail (Modern) ===== */
+
+.unit-sterne {
+  display: inline-flex;
+  gap: 2px;
+}
+
+/* Wortliste: Kurmancî-Chip zum Anhören, deutsche Bedeutung daneben */
+.unit-wortzeile {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  max-width: 100%;
+}
+.unit-wort-de {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.unit-wort-hinweis {
+  margin-top: var(--space-3);
+}
+
+/* Die drei Lernschritte */
+.unit-schritte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+.unit-schritt {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--rk-surface);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+}
+.unit-schritt-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-small);
+  flex-shrink: 0;
+}
+.unit-schritt-text {
+  flex: 1;
+  min-width: 0;
+}
+.unit-schritt-name {
+  font-size: var(--text-base);
+}
+.unit-schritt-beschreibung {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.unit-schritt-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) 0 var(--space-3);
+}
+
+/* Einheit merken */
+.unit-merken {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.unit-gemerkt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--rk-green-dark);
+}
+.unit-gemerkt .rk-icon {
+  flex-shrink: 0;
+}
