@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react'
 import { RouterProvider, useRoute, navigiere } from './router.jsx'
 import AppRouter, { istAbenteuerPfad } from './AppRouter.jsx'
 import AppShell from '../components/layout/AppShell.jsx'
+import SideColumn from '../components/layout/SideColumn.jsx'
+import Modal from '../components/common/Modal.jsx'
+import PrimaryButton from '../components/common/PrimaryButton.jsx'
 import Onboarding from '../modes/modern/pages/Onboarding.jsx'
+import { T } from '../core/texts.js'
 import { MODERN_NAV, ABENTEUER_NAV } from '../components/layout/navConfig.js'
 import { migriere } from '../core/storage.js'
 import { useLernstand } from '../core/store.js'
@@ -25,6 +29,7 @@ anwenden()
 function Rahmen() {
   useLernstand()
   const { pfad } = useRoute()
+  const [frage, setFrage] = useState(null)
   const modus = istAbenteuerPfad(pfad) ? 'abenteuer' : appModus()
   const s = statistik()
 
@@ -34,8 +39,16 @@ function Rahmen() {
       ? { aufgaben: offeneBelohnungen() }
       : { ueben: s.faellig }
 
+  // Auch der kurze Weg über die Seitenleiste fragt nach — der Wechsel soll nie
+  // versehentlich passieren.
   function modusWechsel() {
-    const neu = modus === 'abenteuer' ? 'modern' : 'abenteuer'
+    setFrage(modus === 'abenteuer' ? 'modern' : 'abenteuer')
+  }
+
+  function wechselBestaetigen() {
+    const neu = frage
+    setFrage(null)
+    if (!neu) return
     setzeAppModus(neu)
     navigiere(neu === 'abenteuer' ? '/adventure' : '/today')
   }
@@ -47,9 +60,44 @@ function Rahmen() {
     /^\/adventure\/lesson\//.test(pfad) ||
     /^\/practice\/[^/]+$/.test(pfad)
 
+  // Die Zusatzspalte ergänzt die Übersichtsseiten — nicht die Übungen und
+  // nicht die Seiten, die den Platz selbst brauchen (Einstellungen, Weltkarte).
+  const MIT_ZUSATZ = ['/today', '/course', '/practice', '/explore', '/progress', '/adventure']
+  const mitZusatz = !ohneNav && MIT_ZUSATZ.some((p) => pfad === p || pfad.startsWith(p + '/'))
+  const nichtZusatz = pfad.startsWith('/settings') || pfad.startsWith('/adventure/world')
+
   return (
-    <AppShell modus={modus} nav={nav} pfad={pfad} marken={marken} modusWechsel={modusWechsel} ohneNav={ohneNav}>
+    <AppShell
+      modus={modus}
+      nav={nav}
+      pfad={pfad}
+      marken={marken}
+      modusWechsel={modusWechsel}
+      ohneNav={ohneNav}
+      aside={mitZusatz && !nichtZusatz ? <SideColumn modus={modus} /> : null}
+    >
       <AppRouter />
+
+      <Modal
+        offen={frage !== null}
+        titel={frage === 'abenteuer' ? T.einstellungen.zuAbenteuer : T.einstellungen.zuModern}
+        schliessen={() => setFrage(null)}
+        fussleiste={
+          <>
+            <PrimaryButton art="still" onClick={() => setFrage(null)}>
+              {T.allgemein.abbrechen}
+            </PrimaryButton>
+            <PrimaryButton icon="haken" onClick={wechselBestaetigen}>
+              Wechseln
+            </PrimaryButton>
+          </>
+        }
+      >
+        <p>{T.einstellungen.modusHinweis}</p>
+        <p className="gedaempft">
+          XP, Serie, Wörter, Einheiten und deine Sterne zählen in beiden Modi gemeinsam.
+        </p>
+      </Modal>
     </AppShell>
   )
 }

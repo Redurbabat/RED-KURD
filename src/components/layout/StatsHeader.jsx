@@ -26,15 +26,39 @@ export default function StatsHeader({ modus = 'modern' }) {
       </button>
 
       <div className="rk-kopf-werte scroll-x">
-        <StatChip icon="flamme" wert={s.serie} label={T.stats.serie} ton="orange" />
+        <StatChip
+          icon="flamme"
+          wert={s.serie}
+          label={T.stats.serie}
+          kurzLabel={T.stats.serieKurz}
+          ton="orange"
+        />
         <StatChip icon="stern" wert={s.xp} label={T.stats.xp} ton="gold" />
         {modus === 'abenteuer' ? (
           <>
-            <StatChip icon="edelstein" wert={s.edelsteine} label={T.stats.edelsteine} ton="teal" />
-            <StatChip icon="schild" wert={s.level} label={T.stats.level} ton="blau" />
+            <StatChip
+              icon="edelstein"
+              wert={s.edelsteine}
+              label={T.stats.edelsteine}
+              kurzLabel={T.stats.edelsteineKurz}
+              ton="teal"
+            />
+            <StatChip
+              icon="schild"
+              wert={s.level}
+              label={T.stats.level}
+              kurzLabel={T.stats.levelKurz}
+              ton="blau"
+            />
           </>
         ) : (
-          <StatChip icon="buch" wert={s.gelernt} label={T.stats.woerter} ton="teal" />
+          <StatChip
+            icon="buch"
+            wert={s.gelernt}
+            label={T.stats.woerter}
+            kurzLabel={T.stats.woerterKurz}
+            ton="teal"
+          />
         )}
       </div>
 

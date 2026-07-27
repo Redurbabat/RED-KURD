@@ -68,6 +68,11 @@
 .set-wahl:focus-within {
   border-color: var(--rk-blue);
 }
+/* Der Fokusring gehoert um die ganze Zeile, nicht nur um den kleinen Radioknopf. */
+.set-wahl:has(:focus-visible) {
+  outline: 3px solid var(--rk-blue);
+  outline-offset: 2px;
+}
 
 .set-wahl-radio {
   width: 20px;

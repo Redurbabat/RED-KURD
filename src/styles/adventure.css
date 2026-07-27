@@ -120,6 +120,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+  /* Der Weg bleibt schmal — sonst zerfaellt die Karten-Metapher am Desktop. */
+  max-width: 640px;
+  margin: 0 auto;
+}
+.adv-pfad > li {
+  position: relative;
 }
 .adv-station {
   position: relative;
@@ -202,11 +208,22 @@
   gap: 2px;
   color: var(--adv-gold);
 }
+/* Hêlo steht neben der aktuellen Station, nie halb hinter einer Karte. */
 .adv-helo-position {
   position: absolute;
-  right: var(--space-3);
-  top: -34px;
+  right: calc(-1 * var(--space-2));
+  bottom: calc(100% - var(--space-2));
+  z-index: 3;
   pointer-events: none;
+  filter: drop-shadow(0 4px 8px rgba(20, 60, 80, 0.25));
+}
+@media (min-width: 720px) {
+  .adv-helo-position {
+    right: calc(-1 * var(--space-6));
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 /* Verbindungslinie zwischen den Stationen */

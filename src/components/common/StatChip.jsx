@@ -2,14 +2,35 @@
 import Icon from '../icons/Icon.jsx'
 
 /**
- * @param {{icon:string, wert:string|number, label:string, ton?:string, kurz?:boolean}} props
+ * Auf schmalen Geraeten wird die kurze Beschriftung gezeigt (CSS-Umschaltung),
+ * damit im Kopfbereich alle Werte nebeneinander passen.
+ * @param {{icon:string, wert:string|number, label:string, kurzLabel?:string,
+ *          ton?:string, kurz?:boolean}} props
  */
-export default function StatChip({ icon, wert, label, ton = 'neutral', kurz = false, className = '' }) {
+export default function StatChip({
+  icon,
+  wert,
+  label,
+  kurzLabel,
+  ton = 'neutral',
+  kurz = false,
+  className = '',
+}) {
   return (
     <span className={`rk-chip rk-chip-${ton} ${className}`}>
       <Icon name={icon} groesse={16} />
       <strong>{wert}</strong>
-      {kurz ? <span className="nur-sr">{label}</span> : <small>{label}</small>}
+      {kurz ? (
+        <span className="nur-sr">{label}</span>
+      ) : (
+        <>
+          <small className="rk-chip-lang">{label}</small>
+          <small className="rk-chip-kurz" aria-hidden="true">
+            {kurzLabel || label}
+          </small>
+          {kurzLabel && <span className="nur-sr">{label}</span>}
+        </>
+      )}
     </span>
   )
 }

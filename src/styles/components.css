@@ -124,6 +124,22 @@
 .rk-chip small {
   font-size: var(--text-xs);
 }
+/* Auf breiten Geraeten die ausgeschriebene, auf schmalen die kurze Beschriftung */
+.rk-chip-kurz {
+  display: none;
+}
+@media (max-width: 620px) {
+  .rk-chip {
+    padding: var(--space-1) var(--space-2);
+    gap: 3px;
+  }
+  .rk-chip-lang {
+    display: none;
+  }
+  .rk-chip-kurz {
+    display: inline;
+  }
+}
 .rk-chip-orange {
   color: var(--rk-orange-dark);
 }
@@ -148,6 +164,34 @@
   border-radius: var(--radius-medium);
   text-align: center;
   color: var(--rk-text-muted);
+}
+.rk-kachel-teal {
+  background: var(--rk-primary-soft);
+  border-color: #bfe6e7;
+}
+.rk-kachel-gruen {
+  background: var(--rk-green-soft);
+  border-color: #c9ecc4;
+}
+.rk-kachel-blau {
+  background: var(--rk-blue-soft);
+  border-color: #c7e0fb;
+}
+.rk-kachel-gold {
+  background: var(--rk-yellow-soft);
+  border-color: #f0dcb0;
+}
+.rk-kachel-lila {
+  background: var(--rk-purple-soft);
+  border-color: #ded0fb;
+}
+.rk-kachel-orange {
+  background: var(--rk-orange-soft);
+  border-color: #f0d3ac;
+}
+.rk-kachel-rot {
+  background: var(--rk-red-soft);
+  border-color: #f7c9c8;
 }
 .rk-kachel strong {
   font-size: var(--text-xl);
@@ -436,8 +480,9 @@
 }
 .rk-knopf-klein {
   font-size: var(--text-sm);
-  padding: var(--space-2) var(--space-3);
-  min-height: 38px;
+  padding: var(--space-2) var(--space-4);
+  /* Auch der kleine Knopf bleibt eine sichere Touchflaeche (WCAG 2.5.5). */
+  min-height: var(--touch-min);
   border-radius: var(--radius-small);
 }
 .rk-knopf-gruen {
@@ -822,11 +867,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: var(--touch-min);
+  height: var(--touch-min);
   border-radius: var(--radius-pill);
   color: var(--rk-text-light);
   flex-shrink: 0;
+}
+.rk-uebung-schliessen:hover {
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
 }
 .rk-uebung-xp {
   display: inline-flex;

@@ -32,10 +32,15 @@ export const T = {
 
   stats: {
     serie: 'Tage Serie',
+    serieKurz: 'Tage',
     xp: 'XP',
+    xpKurz: 'XP',
     woerter: 'Wörter gelernt',
+    woerterKurz: 'Wörter',
     edelsteine: 'Edelsteine',
+    edelsteineKurz: 'Steine',
     level: 'Level',
+    levelKurz: 'Lvl',
     faellig: 'fällig',
   },
 

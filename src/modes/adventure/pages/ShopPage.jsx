@@ -305,7 +305,7 @@ export default function ShopPage() {
             </Card>
           </>
         ) : artikelListe.length ? (
-          <ul className="adv-shopraster shop-raster" role="list">
+          <ul className="adv-shopraster" role="list">
             {artikelListe.map((a) => (
               <ArtikelKarte
                 key={a.id}

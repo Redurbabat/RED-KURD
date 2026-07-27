@@ -33,16 +33,27 @@ export default function ProgressBar({
   )
 }
 
+// Dieselben Farbnamen wie bei ProgressBar — ein fertiger CSS-Wert geht auch.
+const RING_FARBEN = {
+  primary: 'var(--rk-primary)',
+  green: 'var(--rk-green-dark)',
+  blue: 'var(--rk-blue)',
+  gold: 'var(--adv-gold)',
+  orange: 'var(--rk-orange)',
+  purple: 'var(--rk-purple)',
+}
+
 /** Runder Fortschrittsring. */
-export function ProgressRing({ wert, label, groesse = 76, farbe = 'var(--rk-primary)', text }) {
+export function ProgressRing({ wert, label, groesse = 76, farbe = 'primary', text }) {
   const prozent = Math.max(0, Math.min(wert, 100))
+  const ringFarbe = RING_FARBEN[farbe] || farbe
   return (
     <div
       className="rk-ring"
       style={{
         width: groesse,
         height: groesse,
-        background: `conic-gradient(${farbe} ${prozent * 3.6}deg, var(--rk-border) 0deg)`,
+        background: `conic-gradient(${ringFarbe} ${prozent * 3.6}deg, var(--rk-border) 0deg)`,
       }}
       role="progressbar"
       aria-valuenow={prozent}

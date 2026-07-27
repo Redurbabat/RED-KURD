@@ -154,7 +154,7 @@ export default function AdventureProfilePage() {
           </Badge>
         }
       >
-        <ul className="adv-abzeichenraster ap-abzeichen" role="list">
+        <ul className="adv-abzeichenraster" role="list">
           {auszeichnungen.map((a) => (
             <li key={a.id} className={'adv-abzeichen' + (a.frei ? '' : ' gesperrt')}>
               <span className={`adv-abzeichen-icon ap-ton-${a.farbe}`}>

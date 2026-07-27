@@ -66,6 +66,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-3);
+  list-style: none;
 }
 .rk-plan-feld {
   display: flex;
@@ -415,6 +416,18 @@
   color: #8a5100;
   font-size: var(--text-sm);
   margin-bottom: var(--space-4);
+}
+
+/* Im dunklen Design bleiben die festen Brauntoene sonst unlesbar. */
+:root[data-theme='dark'] .rk-hinweisstreifen {
+  border-color: #6b4c1c;
+  color: #ffd58a;
+}
+:root[data-theme='dark'] .rk-zielkarte {
+  border-color: #1f5c40;
+}
+:root[data-theme='dark'] .rk-zielkarte.geschafft {
+  border-color: #6b4c1c;
 }
 
 /* Wortliste */
