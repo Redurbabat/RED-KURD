@@ -88,13 +88,8 @@ export default function StatsHeader({ modus = 'modern' }) {
               label={T.stats.edelsteine}
               kurzLabel={T.stats.edelsteineKurz}
             />
-            <Wert
-              icon="schild"
-              ton="ton-level"
-              wert={s.level}
-              label={T.stats.level}
-              kurzLabel={T.stats.levelKurz}
-            />
+            {/* Energie ist bewusst unbegrenzt: Lerninhalte werden nie gesperrt. */}
+            <Wert icon="blitz" ton="ton-energie" wert="∞" label="Energie" kurzLabel="Energie" />
           </>
         ) : (
           <Wert

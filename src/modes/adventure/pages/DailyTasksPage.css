@@ -1,84 +1,185 @@
-/* Aufgabenseite des Abenteuer-Modus. Die Aufgabenzeile selbst kommt aus
-   adventure.css — hier steht nur, was diese Seite zusätzlich braucht. */
+/* Tagesaufgaben des Abenteuer-Modus (Designpaket Bild 9).
+   Aufgabenzeile, Truhe und Belohnungszeile kommen aus adventure.css — hier
+   steht nur, was diese Seite zusätzlich braucht. Eigene Klassen tragen das
+   Präfix „dq-". Seiten-CSS wird vor den Basisdateien geladen, deshalb sind
+   Regeln, die einer Basisregel widersprechen, mit .dq-seite verstärkt. */
 
-.dt-seite .rk-icon {
+.dq-seite .rk-icon {
   flex-shrink: 0;
 }
 
-/* --- Zusammenfassung --- */
-.dt-uebersicht h2 {
+/* ---------- Tagesfortschritt ---------- */
+.dq-fortschritt {
+  margin-bottom: var(--space-4);
+}
+.dq-fortschritt-titel {
   font-size: var(--text-lg);
+  color: var(--adv-text);
   margin-bottom: var(--space-3);
+  overflow-wrap: anywhere;
 }
-.dt-zahlen {
-  display: grid;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-  list-style: none;
-}
-.dt-zahlen > li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: 800;
+/* Der Prozentwert liegt im Mockup türkis rechts neben dem Balken. */
+.dq-fortschritt .rk-balken-wert {
+  color: var(--adv-teal);
+  font-size: var(--text-base);
 }
 
-/* --- Bestätigung nach dem Abholen ---
+/* ---------- Rückmeldung ----------
    Der Bereich bleibt immer im Baum (nie display:none), damit Screenreader
    die Meldung zuverlässig vorlesen. */
-.dt-gewinn {
+.dq-meldung-text {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-medium);
-  background: var(--rk-green-soft);
+  background: rgba(37, 139, 87, 0.14);
   border: 1px solid var(--adv-green);
-  color: var(--rk-text);
+  color: var(--adv-text);
   font-weight: 800;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
 }
 
-/* --- Aufgabenliste --- */
-.dt-liste {
+/* ---------- Aufgabenliste ---------- */
+.dq-liste {
   list-style: none;
 }
-/* Auf schmalen Geräten rutscht die Aktion in eine eigene Zeile. */
-.dt-aufgabe {
+/* Erste Zeile: Plakette, Text, Stand. Balken und Aktion rutschen darunter. */
+.dq-seite .dq-aufgabe {
   flex-wrap: wrap;
+  row-gap: var(--space-3);
+  align-items: flex-start;
 }
-.dt-aktion {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  flex-basis: 100%;
+.dq-text {
+  flex: 1 1 120px;
 }
-.dt-offen {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
+.dq-seite .adv-aufgabe-text strong {
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  overflow-wrap: anywhere;
+}
+.dq-erklaerung {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.dq-lohn {
+  margin-top: var(--space-1);
   font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.dq-balken,
+.dq-aktion {
+  flex: 1 0 100%;
+}
+.dq-aktion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-.rk-hinweisstreifen.dt-hinweis {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
+/* Runde Plakette je Aufgabe — grün, orange, lila im Wechsel. */
+.dq-seite .dq-marke {
+  width: 48px;
+  height: 48px;
+}
+.dq-ton-gruen .dq-marke {
+  background: var(--adv-green);
+  color: #0d2b00;
+}
+.dq-ton-orange .dq-marke {
+  background: var(--adv-orange);
+  color: #4a2600;
+}
+.dq-ton-lila .dq-marke {
+  background: var(--adv-purple);
+  color: #2c0846;
+}
+
+/* Der Stand trägt denselben Ton wie die Plakette — die Zahl bleibt aber der
+   eigentliche Träger der Information. */
+.dq-ton-gruen .adv-aufgabe-stand {
+  color: var(--adv-green);
+}
+.dq-ton-orange .adv-aufgabe-stand {
+  color: var(--adv-orange);
+}
+.dq-ton-lila .adv-aufgabe-stand {
+  color: var(--adv-purple);
+}
+
+.dq-wochenstand {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
+}
+
+/* ---------- Tagestruhe ---------- */
+.dq-seite .dq-truhe {
+  flex-wrap: wrap;
+  row-gap: var(--space-3);
   margin-bottom: 0;
 }
-:root[data-theme='dark'] .dt-seite .rk-hinweisstreifen {
-  color: var(--rk-text);
+.dq-truhe-marke {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--adv-gold);
+  color: #4a3200;
+}
+.dq-truhe-titel {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+  color: var(--adv-gold);
+  overflow-wrap: anywhere;
+}
+.dq-truhe-lohn {
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  font-weight: 800;
+  color: var(--adv-text);
+  overflow-wrap: anywhere;
+}
+.dq-truhe-hinweis {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.dq-truhe .rk-knopf {
+  flex: 1 0 100%;
 }
 
-@media (min-width: 560px) {
-  .dt-aktion {
-    flex-basis: auto;
+.dq-fussnote {
+  margin-top: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--adv-text-muted);
+}
+
+/* Ab 420 px ist genug Platz, damit der Truhen-Knopf neben dem Text steht. */
+@media (min-width: 420px) {
+  .dq-truhe .rk-knopf {
+    flex: 0 0 auto;
     margin-left: auto;
   }
-  .dt-zahlen {
-    grid-template-columns: 1fr 1fr;
+}
+
+/* Ab 560 px passen Balken und Aktion in eine gemeinsame Zeile. */
+@media (min-width: 560px) {
+  .dq-balken {
+    flex: 1 1 240px;
+  }
+  .dq-aktion {
+    flex: 0 0 auto;
+    margin-left: auto;
   }
 }

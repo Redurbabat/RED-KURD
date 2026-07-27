@@ -38,76 +38,90 @@ export const LEKTIONS_ARTEN = [
   },
 ]
 
+/**
+ * Der Weg führt durch eine zusammenhängende kurdische Landschaft:
+ * Bergdorf → Familienhaus → Basar → Steinbrücke → Stadt → Kela → Newroz-Platz.
+ * Die ersten fünf Welten folgen genau der vorgegebenen Gliederung; die beiden
+ * letzten nehmen die übrigen Einheiten auf, damit kein Lerninhalt und kein
+ * bereits erreichter Fortschritt verloren geht.
+ */
 export const WELTEN = [
   {
     id: 'w1',
     nr: 1,
     name: 'Erste Gespräche',
-    untertitel: 'Silav, nav û malbat',
+    untertitel: 'Silav û nasîn',
+    ort: 'Bergdorf',
     landschaft: 'dorf',
-    farbe: '#55b85a',
-    himmel: '#a8e4b6',
-    einheiten: ['begruessung', 'vorstellen', 'familie', 'zahlen'],
+    farbe: 'var(--rk-kurd-green)',
+    himmel: '#7fc4de',
+    einheiten: ['begruessung', 'vorstellen', 'namefragen', 'herkunft', 'verabschieden'],
   },
   {
     id: 'w2',
     nr: 2,
-    name: 'Mein Alltag',
-    untertitel: 'Mal, dem û xwarin',
-    landschaft: 'felder',
-    farbe: '#f4b942',
-    himmel: '#ffe6a8',
-    einheiten: ['zuhause', 'zeit', 'essen', 'einkaufen'],
+    name: 'Familie und Zuhause',
+    untertitel: 'Malbat û mal',
+    ort: 'Familienhaus',
+    landschaft: 'familienhaus',
+    farbe: 'var(--rk-earth)',
+    himmel: '#e0b98a',
+    einheiten: ['familie', 'verwandtschaft', 'zuhause', 'stadt', 'gaeste'],
   },
   {
     id: 'w3',
     nr: 3,
-    name: 'Unterwegs',
-    untertitel: 'Bajar, rê û rêwîtî',
-    landschaft: 'stadt',
-    farbe: '#2596f3',
-    himmel: '#bfe0fb',
-    einheiten: ['stadt', 'verkehr', 'reisen', 'orientierung'],
+    name: 'Alltag',
+    untertitel: 'Rojane',
+    ort: 'Basar',
+    landschaft: 'basar',
+    farbe: 'var(--rk-gold)',
+    himmel: '#f2d79a',
+    einheiten: ['essen', 'zeit', 'einkaufen', 'arbeit', 'taetigkeiten'],
   },
   {
     id: 'w4',
     nr: 4,
-    name: 'Menschen und Gefühle',
-    untertitel: 'Laş, hest û hevaltî',
-    landschaft: 'see',
-    farbe: '#8b5cf6',
-    himmel: '#d9cdfb',
-    einheiten: ['koerper', 'gefuehle', 'gesundheit', 'freundschaft'],
+    name: 'Unterwegs',
+    untertitel: 'Li rê',
+    ort: 'Steinbrücke und Stadt',
+    landschaft: 'bruecke',
+    farbe: 'var(--rk-turquoise)',
+    himmel: '#9fd6dd',
+    einheiten: ['verkehr', 'wegbeschreibung', 'reisen', 'hotel', 'orientierung'],
   },
   {
     id: 'w5',
     nr: 5,
-    name: 'Kultur und Sprache',
-    untertitel: 'Muzîk, çîrok û Newroz',
-    landschaft: 'berge',
-    farbe: '#f28c28',
-    himmel: '#ffd6ae',
-    einheiten: ['musik', 'redewendungen', 'geschichten', 'newroz'],
+    name: 'Kultur und Wurzeln',
+    untertitel: 'Çand û rehên me',
+    ort: 'Newroz-Platz',
+    landschaft: 'newroz',
+    farbe: 'var(--rk-kelim-red)',
+    himmel: '#e8a08a',
+    einheiten: ['newroz', 'musik', 'dengbej', 'redewendungen', 'geschichten'],
   },
   {
     id: 'w6',
     nr: 6,
-    name: 'Natur und Farben',
-    untertitel: 'Xweza, ajal û reng',
-    landschaft: 'wald',
-    farbe: '#0ea5a8',
-    himmel: '#b6ebec',
-    einheiten: ['natur', 'tiere', 'farben', 'kleidung'],
+    name: 'Mensch und Natur',
+    untertitel: 'Laş, hest û xweza',
+    ort: 'Hochweide',
+    landschaft: 'berge',
+    farbe: 'var(--rk-kurd-green)',
+    himmel: '#a8cfdd',
+    einheiten: ['zahlen', 'koerper', 'gefuehle', 'gesundheit', 'freundschaft', 'natur', 'tiere'],
   },
   {
     id: 'w7',
     nr: 7,
-    name: 'Sprache im Einsatz',
-    untertitel: 'Kar, pirs û hevok',
-    landschaft: 'hochland',
-    farbe: '#087f8c',
-    himmel: '#9fd8e0',
-    einheiten: ['verben', 'fragen', 'arbeit', 'schule', 'saetze'],
+    name: 'Wörter und Sätze',
+    untertitel: 'Peyv û hevok',
+    ort: 'Kela',
+    landschaft: 'kela',
+    farbe: 'var(--rk-earth)',
+    himmel: '#e2c9a2',
+    einheiten: ['farben', 'kleidung', 'verben', 'fragen', 'schule', 'saetze'],
   },
 ]
 
@@ -258,6 +272,103 @@ export function weltFortschritt(weltId) {
     prozent: einheiten.length ? Math.round((fertig / einheiten.length) * 100) : 0,
     offen: fertig < einheiten.length,
   }
+}
+
+/**
+ * Knotentypen des Lernpfads (Designpaket, Bild 3).
+ * Nur `lektion` und `pruefung` sind echte Lerninhalte; Truhe und Bonusspiel
+ * sind Beiwerk und sperren nie etwas.
+ */
+export const KNOTEN_ARTEN = {
+  lektion: { name: 'Lektion', icon: 'stern' },
+  wiederholen: { name: 'Wiederholen', icon: 'wiederholen' },
+  hoeren: { name: 'Hören', icon: 'kopfhoerer' },
+  truhe: { name: 'Schatz', icon: 'truhe' },
+  spiel: { name: 'Bonusspiel', icon: 'puzzle' },
+  pruefung: { name: 'Prüfung', icon: 'schild' },
+  abschluss: { name: 'Abschluss', icon: 'krone' },
+}
+
+/**
+ * Baut den Lernpfad einer Welt: die Einheiten als Stationen, dazwischen
+ * eine Truhe und ein Bonusspiel, am Ende Prüfung und Abschluss.
+ * @returns {Array<{id, art, name, untertitel, einheitId, status, prozent, sterne, icon, symbol}>}
+ */
+export function weltPfad(weltId) {
+  const einheiten = einheitenDerWelt(weltId)
+  if (!einheiten.length) return []
+
+  const stand = holeFortschritt()
+  const knoten = []
+
+  einheiten.forEach((e, i) => {
+    const letzte = i === einheiten.length - 1
+    const status = einheitStatus(e.id)
+    knoten.push({
+      id: `${weltId}-${e.id}`,
+      art: letzte ? 'pruefung' : 'lektion',
+      name: e.name,
+      untertitel: letzte ? 'Prüfung dieser Welt' : `Einheit ${e.nr}`,
+      einheitId: e.id,
+      status,
+      prozent: stand.einheiten[e.id] || 0,
+      sterne: stand.sterne[e.id] || 0,
+      symbol: e.symbol,
+      icon: letzte ? KNOTEN_ARTEN.pruefung.icon : KNOTEN_ARTEN.lektion.icon,
+    })
+
+    // Nach jeder zweiten Einheit eine Truhe, dazwischen ein Bonusspiel.
+    if (!letzte && i % 2 === 1) {
+      knoten.push({
+        id: `${weltId}-truhe-${i}`,
+        art: 'truhe',
+        name: KNOTEN_ARTEN.truhe.name,
+        untertitel: 'Belohnung unterwegs',
+        status: status === 'fertig' ? 'aktuell' : 'gesperrt',
+        icon: KNOTEN_ARTEN.truhe.icon,
+      })
+    } else if (!letzte && i % 2 === 0 && i > 0) {
+      knoten.push({
+        id: `${weltId}-spiel-${i}`,
+        art: 'spiel',
+        name: KNOTEN_ARTEN.spiel.name,
+        untertitel: 'Satzbau zum Aufwärmen',
+        status: status === 'gesperrt' ? 'gesperrt' : 'aktuell',
+        icon: KNOTEN_ARTEN.spiel.icon,
+      })
+    }
+  })
+
+  const alleFertig = einheiten.every((e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB)
+  knoten.push({
+    id: `${weltId}-abschluss`,
+    art: 'abschluss',
+    name: KNOTEN_ARTEN.abschluss.name,
+    untertitel: alleFertig ? 'Welt geschafft' : 'Schliesse alle Stationen ab',
+    status: alleFertig ? 'fertig' : 'gesperrt',
+    icon: KNOTEN_ARTEN.abschluss.icon,
+  })
+
+  return knoten
+}
+
+/**
+ * Die Station, an der Hêlo gerade steht.
+ * Truhe und Bonusspiel zaehlen nicht — Hêlo wartet dort, wo wirklich gelernt
+ * wird, sonst steht er neben einer Belohnung statt neben der naechsten Lektion.
+ */
+const LERN_ARTEN = ['lektion', 'pruefung']
+
+export function aktuellerKnoten(weltId) {
+  const pfad = weltPfad(weltId)
+  const lernen = pfad.filter((k) => LERN_ARTEN.includes(k.art))
+  return (
+    lernen.find((k) => k.status === 'aktuell') ||
+    lernen.find((k) => k.status === 'begonnen') ||
+    lernen.find((k) => k.status !== 'fertig') ||
+    lernen[lernen.length - 1] ||
+    null
+  )
 }
 
 /**

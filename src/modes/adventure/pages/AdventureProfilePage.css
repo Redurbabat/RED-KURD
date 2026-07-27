@@ -1,5 +1,6 @@
-/* Profil des Abenteuer-Modus. Held-Karte und Abzeichenraster kommen aus
-   adventure.css — hier steht nur, was diese Seite zusätzlich braucht.
+/* Profil des Abenteuer-Modus (Designpaket Bild 11).
+   Das Abzeichenraster kommt aus adventure.css — hier steht nur, was diese
+   Seite zusätzlich braucht. Eigene Klassen tragen das Präfix „ap-".
    Seiten-CSS wird vor den Basisdateien geladen, deshalb sind Regeln, die einer
    Basisregel widersprechen, mit .ap-seite verstärkt. */
 
@@ -7,27 +8,49 @@
   flex-shrink: 0;
 }
 
-/* --- Kopf mit Hêlo im Profilrahmen --- */
+/* ---------- Profilkopf ---------- */
 .ap-kopf {
-  flex-wrap: wrap;
-}
-.ap-rahmen {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: var(--space-2);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.ap-plakette {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
   flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--adv-teal);
+  color: #04241f;
+  font-family: var(--font-head);
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  line-height: 1;
 }
-/* Goldener Rahmen — nur sichtbar, wenn der Shop-Artikel angelegt ist. */
-.ap-rahmen-gold {
+/* Goldener Ring — nur, wenn der Profilrahmen aus dem Shop angelegt ist. */
+.ap-plakette-rahmen {
   border: 3px solid var(--adv-gold);
-  box-shadow: 0 0 0 5px rgba(244, 185, 66, 0.28);
+  box-shadow: 0 0 0 5px rgba(232, 184, 62, 0.26);
 }
-.ap-level {
-  font-size: var(--text-sm);
-  margin-bottom: var(--space-2);
+.ap-kopf-text {
+  flex: 1;
+  min-width: 0;
+}
+.ap-name {
+  font-size: var(--text-2xl);
+  color: var(--adv-text);
+  overflow-wrap: anywhere;
+}
+.ap-rolle {
+  margin: var(--space-1) 0 var(--space-3);
+  font-size: var(--text-base);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.ap-kopf .rk-balken-wert {
+  color: var(--adv-blue);
 }
 .ap-rahmen-hinweis {
   display: flex;
@@ -36,176 +59,253 @@
   margin-top: var(--space-2);
   font-size: var(--text-xs);
   font-weight: 800;
-  color: var(--rk-text-on-dark);
-}
-
-/* --- Zahlen --- */
-.ap-zahlen {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-2);
-  list-style: none;
-}
-.ap-zahlen > li {
-  display: flex;
-}
-.ap-zahlen .rk-kachel {
-  flex: 1;
-  overflow-wrap: break-word;
-}
-
-/* --- Welten --- */
-.ap-welten {
-  list-style: none;
-  display: grid;
-  gap: var(--space-4);
-}
-.ap-welt-kopf {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
-}
-.ap-welt-kopf strong {
-  flex: 1;
-  min-width: 0;
-  font-family: var(--font-head);
-  font-size: var(--text-base);
-  overflow-wrap: break-word;
-}
-.ap-welt-sterne {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
-  white-space: nowrap;
-}
-.ap-welt-unter,
-.ap-welt-stand {
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
-}
-.ap-welt-unter {
-  margin-bottom: var(--space-2);
-}
-.ap-welt-stand {
-  margin-top: var(--space-1);
-}
-
-/* --- Auszeichnungen ---
-   Gesperrte Abzeichen bleiben lesbar: sie tragen Schloss-Icon und Text,
-   die Information hängt also nicht an der Farbe. */
-.ap-seite .adv-abzeichenraster {
-  list-style: none;
-}
-.ap-seite .adv-abzeichen.gesperrt {
-  opacity: 1;
-  filter: none;
-  background: var(--rk-surface-soft);
-  border-style: dashed;
-}
-.ap-seite .adv-abzeichen.gesperrt .adv-abzeichen-icon {
-  background: var(--rk-border);
-  color: var(--rk-text-muted);
-}
-.ap-abzeichen-status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
-}
-
-/* Farbe je Auszeichnung — die Namen kommen aus achievementsStore.js. */
-.ap-seite .ap-ton-green {
-  background: var(--rk-green-soft);
-  color: var(--rk-green-dark);
-}
-.ap-seite .ap-ton-orange {
-  background: var(--rk-orange-soft);
-  color: var(--rk-orange-dark);
-}
-.ap-seite .ap-ton-blue {
-  background: var(--rk-blue-soft);
-  color: var(--rk-blue-dark);
-}
-.ap-seite .ap-ton-purple {
-  background: var(--rk-purple-soft);
-  color: var(--rk-purple-dark);
-}
-.ap-seite .ap-ton-teal {
-  background: var(--rk-primary-soft);
-  color: var(--rk-primary-dark);
-}
-.ap-seite .ap-ton-gold {
-  background: var(--rk-yellow-soft);
-  color: #8a5f04;
-}
-/* Im dunklen Design sind die dunklen Varianten zu schwach — hier die hellen. */
-:root[data-theme='dark'] .ap-seite .ap-ton-green {
-  color: var(--rk-green);
-}
-:root[data-theme='dark'] .ap-seite .ap-ton-orange {
-  color: var(--rk-orange);
-}
-:root[data-theme='dark'] .ap-seite .ap-ton-blue {
-  color: var(--rk-blue);
-}
-:root[data-theme='dark'] .ap-seite .ap-ton-purple {
-  color: var(--rk-purple);
-}
-:root[data-theme='dark'] .ap-seite .ap-ton-teal {
-  color: var(--rk-primary);
-}
-:root[data-theme='dark'] .ap-seite .ap-ton-gold {
   color: var(--adv-gold);
 }
 
-/* --- Aussehen --- */
-.ap-aussehen {
-  list-style: none;
+/* ---------- Vier Kennzahlen ---------- */
+.ap-kennzahlen {
   display: grid;
-  gap: var(--space-3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+  list-style: none;
+  margin-bottom: var(--space-5);
 }
-.ap-aussehen > li {
+.ap-kachel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-1);
+  border-radius: var(--radius-medium);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
+  text-align: center;
+}
+.ap-kachel strong {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+.ap-kachel span {
+  font-size: var(--text-xs);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.ap-kachel-gruen strong {
+  color: var(--adv-green);
+}
+.ap-kachel-blau strong {
+  color: var(--adv-blue);
+}
+.ap-kachel-orange strong {
+  color: var(--adv-orange);
+}
+.ap-kachel-gold strong {
+  color: var(--adv-gold);
+}
+
+/* ---------- Auszeichnungen ---------- */
+.ap-abschnittskopf {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
 }
-.ap-aussehen-text {
-  flex: 1;
-  min-width: 0;
+.ap-abschnittskopf .rk-abschnitt-titel {
+  margin: 0;
 }
-.ap-aussehen-text strong {
-  display: block;
-  font-size: var(--text-sm);
+.ap-seite .ap-abzeichenraster {
+  list-style: none;
+}
+.ap-abzeichen strong {
   overflow-wrap: break-word;
+  hyphens: auto;
 }
-.ap-aussehen-text small {
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+.ap-seite .ap-abzeichen-icon {
+  width: 52px;
+  height: 52px;
 }
-.ap-shoplink {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: var(--touch-min);
-  font-size: var(--text-sm);
+.ap-abzeichen-nr {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
   font-weight: 800;
-  color: var(--rk-primary-dark);
-  text-decoration: none;
+  line-height: 1;
 }
-.ap-fussnote {
-  margin-top: var(--space-3);
-  font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+.ap-abzeichen-status {
+  overflow-wrap: break-word;
+  color: var(--adv-ink-muted);
+}
+.ap-abzeichen-status.frei {
+  color: var(--adv-green-dark);
 }
 
-@media (min-width: 640px) {
-  .ap-zahlen {
-    grid-template-columns: repeat(3, 1fr);
+/* Gesperrte Abzeichen bleiben lesbar: Schloss-Icon und das Wort „Gesperrt"
+   tragen die Information, nicht die Farbe. */
+.ap-seite .ap-abzeichen.gesperrt {
+  opacity: 1;
+  border-style: dashed;
+  border-color: var(--adv-earth);
+  background: var(--adv-parchment-dark);
+}
+.ap-seite .ap-abzeichen.gesperrt .ap-abzeichen-icon {
+  background: var(--adv-parchment-edge);
+  color: var(--adv-ink-muted);
+}
+.ap-seite .ap-abzeichen.gesperrt strong {
+  color: var(--adv-ink-muted);
+}
+
+/* Farbe je Auszeichnung — die Namen kommen aus achievementsStore.js. */
+.ap-seite .ap-abzeichen.ap-ton-green .ap-abzeichen-icon {
+  background: var(--adv-green);
+  color: #0d2b00;
+}
+.ap-seite .ap-abzeichen.ap-ton-orange .ap-abzeichen-icon {
+  background: var(--adv-orange);
+  color: #4a2600;
+}
+.ap-seite .ap-abzeichen.ap-ton-blue .ap-abzeichen-icon {
+  background: var(--adv-blue);
+  color: #002b3d;
+}
+.ap-seite .ap-abzeichen.ap-ton-purple .ap-abzeichen-icon {
+  background: var(--adv-purple);
+  color: #2c0846;
+}
+.ap-seite .ap-abzeichen.ap-ton-teal .ap-abzeichen-icon {
+  background: var(--adv-teal);
+  color: #04241f;
+}
+.ap-seite .ap-abzeichen.ap-ton-gold .ap-abzeichen-icon {
+  background: var(--adv-gold);
+  color: #4a3200;
+}
+
+/* ---------- Wochenaktivität ---------- */
+.ap-woche {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-1);
+  list-style: none;
+  align-items: end;
+}
+.ap-woche-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.ap-woche-saeule {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  max-width: 26px;
+  height: 84px;
+  border-radius: var(--radius-small);
+  background: var(--adv-surface-soft);
+  overflow: hidden;
+}
+.ap-woche-fuellung {
+  width: 100%;
+  border-radius: var(--radius-small);
+  background: var(--adv-teal);
+}
+.ap-woche-tag.heute .ap-woche-fuellung {
+  background: var(--adv-gold);
+}
+.ap-woche-name {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--adv-text-muted);
+}
+.ap-woche-tag.heute .ap-woche-name {
+  color: var(--adv-gold);
+}
+.ap-woche-summe {
+  margin-top: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
+}
+
+/* ---------- Einstellungen ---------- */
+.ap-einstellungen {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-border);
+  color: var(--adv-text);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.ap-einstellungen span {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+/* Der Basar liegt bewusst hier im Profil und nicht in der Hauptnavigation. */
+.ap-basar-zahl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  color: var(--adv-ink);
+}
+.ap-basar-zahl strong {
+  font-family: var(--font-head);
+  font-size: var(--text-2xl);
+  line-height: 1;
+}
+.ap-basar-zahl span {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--adv-ink-muted);
+}
+.ap-basar-text {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+.ap-basar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--adv-earth);
+  border-bottom: 4px solid var(--adv-earth-dark);
+  color: var(--rk-cream);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.ap-basar-link span {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.ap-basar-link:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
+/* Ab 400 px ist Platz für eine grössere Plakette und höhere Säulen. */
+@media (min-width: 400px) {
+  .ap-plakette {
+    width: 96px;
+    height: 96px;
+  }
+  .ap-woche-saeule {
+    height: 104px;
+    max-width: 32px;
   }
 }

@@ -1,4 +1,4 @@
-// Eine Station im Abenteuer: Pergament-Einstieg, Übung und Ergebnis.
+// Eine Station im Abenteuer: Einführung, Übung und Ergebnis in einer Seite.
 // Der Lernstand ist derselbe wie im Modern-Modus — nur die Erzählung ist anders.
 import { useEffect, useRef, useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
@@ -7,9 +7,7 @@ import { T } from '../../../core/texts.js'
 import {
   BESTANDEN_AB,
   einheitProzent,
-  einheitSterne,
   holeEinheit,
-  holeWelt,
 } from '../../../core/courses/courseRepository.js'
 import { planeLektion } from '../../../core/session/sessionPlanner.js'
 import { baueUebungen } from '../../../core/session/exerciseFactory.js'
@@ -19,12 +17,13 @@ import {
   setzeSterne,
 } from '../../../core/progress/progressStore.js'
 import { statistik } from '../../../core/progress/progressSelectors.js'
+import { spieleWort } from '../../../core/audio/audioService.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import EmptyState, { LoadingState, ErrorState } from '../../../components/common/EmptyState.jsx'
 import './AdventureLessonPage.css'
 
@@ -33,18 +32,7 @@ const SCHRITTE = ['lernen', 'hoeren', 'pruefung']
 
 const XP_JE_AUFGABE = 10
 const EDELSTEINE_JE_PRUEFUNG = 2
-const WOERTER_VORSCHAU = 6
-
-/** Rein bildlich — die Zahl steht immer als Text daneben. */
-function Sterne({ anzahl }) {
-  return (
-    <span className="advl-sterne" aria-hidden="true">
-      {[1, 2, 3].map((i) => (
-        <Icon key={i} name="stern" groesse={16} className={i <= anzahl ? 'advl-stern-voll' : 'advl-stern-leer'} />
-      ))}
-    </span>
-  )
-}
+const WOERTER_VORSCHAU = 5
 
 /** ?schritt=pruefung springt direkt zur Abschlussprüfung. */
 function startSchritt() {
@@ -61,6 +49,7 @@ export default function AdventureLessonPage({ unitId }) {
   const [lauf, setLauf] = useState(null)
   const [ergebnis, setErgebnis] = useState(null)
   const [sterne, setSterne] = useState(null)
+  const [belohnung, setBelohnung] = useState(null)
 
   const gewertet = useRef(false)
   const laufNr = useRef(0)
@@ -74,14 +63,13 @@ export default function AdventureLessonPage({ unitId }) {
     setLauf(null)
     setErgebnis(null)
     setSterne(null)
+    setBelohnung(null)
     gewertet.current = false
   }, [unitId])
 
   // Nur die Mini-Prüfung zählt für den Lernstand — und das genau einmal je Durchgang.
   // Edelsteine gibt es ausschliesslich für eine BESTANDENE Prüfung und nur einmal
   // je Einheit; sonst liessen sie sich durch Wiederholen beliebig oft abholen.
-  const [belohnung, setBelohnung] = useState(null)
-
   useEffect(() => {
     if (phase !== 'ergebnis' || !ergebnis || !einheit) return
     if (lektionId !== 'pruefung') return
@@ -102,7 +90,7 @@ export default function AdventureLessonPage({ unitId }) {
       edelsteine = EDELSTEINE_JE_PRUEFUNG
     }
     setBelohnung({
-      xp: ergebnis.richtig * 10,
+      xp: ergebnis.richtig * XP_JE_AUFGABE,
       edelsteine,
       // Der Serienpunkt kommt aus gibXp() in der Übung — hier nur melden, wenn
       // die Serie dadurch tatsächlich gewachsen ist.
@@ -122,20 +110,22 @@ export default function AdventureLessonPage({ unitId }) {
     )
   }
 
-  const welt = einheit.weltId ? holeWelt(einheit.weltId) : null
-  const weltPfad = einheit.weltId ? '/adventure/world/' + einheit.weltId : '/adventure/world'
+  const weltAdresse = einheit.weltId ? '/adventure/world/' + einheit.weltId : '/adventure/world'
   const platz = SCHRITTE.indexOf(lektionId)
   const naechsterSchritt = platz >= 0 ? SCHRITTE[platz + 1] || null : null
   const istPruefung = lektionId === 'pruefung'
   const fehlerlauf = !!(lauf && lauf.fehlerlauf)
 
   function zurWeltkarte() {
-    navigiere(weltPfad)
+    navigiere(weltAdresse)
   }
 
   function lektionVon(id) {
     return einheit.lektionen.find((l) => l.id === `${einheit.id}-${id}`) || null
   }
+
+  const aktuelleLektion = lektionVon(lektionId)
+  const schrittNr = aktuelleLektion ? aktuelleLektion.nr : 1
 
   /** Baut einen neuen Durchgang; der Zähler hält die Aufgaben beim Neuzeichnen stabil. */
   function starte(id) {
@@ -151,6 +141,7 @@ export default function AdventureLessonPage({ unitId }) {
     })
     setErgebnis(null)
     setSterne(null)
+    setBelohnung(null)
     gewertet.current = false
     setPhase('uebung')
   }
@@ -169,6 +160,7 @@ export default function AdventureLessonPage({ unitId }) {
     })
     setErgebnis(null)
     setSterne(null)
+    setBelohnung(null)
     setPhase('uebung')
   }
 
@@ -177,127 +169,130 @@ export default function AdventureLessonPage({ unitId }) {
     else zurWeltkarte()
   }
 
-  // ===== 1. Einstieg =====
+  const zurueckKnopf = (
+    <button type="button" className="rk-zurueck al-zurueck" onClick={zurWeltkarte}>
+      <Icon name="pfeilLinks" groesse={18} />
+      <span>Zurück zur Welt</span>
+    </button>
+  )
+
+  // ===== 1. Einführung (Bild 4) =====
 
   if (phase === 'intro') {
-    const prozent = einheitProzent(einheit.id)
-    const gesammelteSterne = einheitSterne(einheit.id)
     const vorschau = einheit.woerter.slice(0, WOERTER_VORSCHAU)
-    const weitere = Math.max(0, einheit.woerter.length - vorschau.length)
 
     return (
-      <div className="advl-seite">
-        <PageHeader
-          titel={einheit.name}
-          untertitel={welt ? `Einheit ${einheit.nr} · Welt ${welt.nr}: ${welt.name}` : `Einheit ${einheit.nr}`}
-          variante="rucksack"
-          zurueck={weltPfad}
-          zurueckText="Zurück zur Weltkarte"
-        />
+      <div className="al-seite">
+        <header className="al-kopf">
+          {zurueckKnopf}
+          <h1 className="al-titel">
+            {einheit.name} · Lektion {schrittNr}
+          </h1>
+          <div className="al-kopf-reihe">
+            <p className="al-lead">
+              {einheit.woerter.length} Wörter in drei Schritten — Hêlo begleitet dich.
+            </p>
+            <HeloMascot variante="winken" groesse={120} className="al-helo" />
+          </div>
+        </header>
 
-        <div className="adv-pergament advl-intro">
-          <p className="advl-symbol" aria-hidden="true">
-            {einheit.symbol}
-          </p>
-          <h2>{einheit.name}</h2>
-          <p className="advl-ziel">{einheit.ziel}</p>
+        <section className="al-lernziel" aria-labelledby="al-lernziel-titel">
+          <div className="al-lernziel-kopf">
+            <span className="al-lernziel-marke" aria-hidden="true">
+              <Icon name="kompass" groesse={24} />
+            </span>
+            <div className="al-lernziel-inhalt">
+              <h2 className="al-lernziel-titel" id="al-lernziel-titel">
+                {T.kurs.lernziel}
+              </h2>
+              <p className="al-lernziel-text">{einheit.ziel}</p>
+            </div>
+          </div>
 
-          <ul className="advl-zahlen" role="list">
-            <li>
-              <Icon name="buch" groesse={16} />
-              <span>{einheit.woerter.length} Wörter</span>
-            </li>
-            <li>
-              <Icon name="fussspur" groesse={16} />
-              <span>{prozent} % geschafft</span>
-            </li>
-            <li>
-              <Sterne anzahl={gesammelteSterne} />
-              <span>{gesammelteSterne} von 3 Sternen</span>
-            </li>
-          </ul>
-
-          <h3 className="advl-titel" id="advl-woerter-titel">
+          <h3 className="al-woerter-titel" id="al-woerter-titel">
             {T.kurs.wichtigeWoerter}
           </h3>
-          <ul className="rk-wortliste advl-woerter" role="list" aria-labelledby="advl-woerter-titel">
+          <ul className="al-wortchips" role="list" aria-labelledby="al-woerter-titel">
             {vorschau.map((w) => (
-              <li key={w.ku} className="rk-wortchip">
-                {w.bild && (
-                  <span className="advl-wort-bild" aria-hidden="true">
-                    {w.bild}
-                  </span>
-                )}
-                <strong lang="ku">{w.ku}</strong>
-                <span className="advl-wort-de" lang="de">
-                  {w.de}
-                </span>
+              <li key={w.ku}>
+                <button
+                  type="button"
+                  className="al-wortchip"
+                  aria-label={`${w.ku} anhören`}
+                  onClick={() => spieleWort(w.ku)}
+                >
+                  <span lang="ku">{w.ku}</span>
+                  <Icon name="note" groesse={14} />
+                </button>
               </li>
             ))}
-            {weitere > 0 && (
-              <li className="rk-wortchip advl-wort-rest">
-                <Icon name="plus" groesse={16} />
-                <span>{weitere} weitere</span>
-              </li>
-            )}
           </ul>
+        </section>
 
-          <h3 className="advl-titel" id="advl-schritte-titel">
-            Dein Weg durch diese Station
-          </h3>
-          <ol className="advl-schritte" role="list" aria-labelledby="advl-schritte-titel">
-            {SCHRITTE.map((id) => {
-              const l = lektionVon(id)
-              if (!l) return null
-              return (
-                <li key={id} className={'advl-schritt' + (id === 'lernen' ? ' aktiv' : '')}>
-                  <span className="advl-schritt-nr" aria-hidden="true">
+        <h2 className="al-abschnitt-titel" id="al-inhalt-titel">
+          Lektionsinhalt
+        </h2>
+        <ul className="al-schritte" role="list" aria-labelledby="al-inhalt-titel">
+          {SCHRITTE.map((id) => {
+            const l = lektionVon(id)
+            if (!l) return null
+            const aktiv = id === lektionId
+            return (
+              <li key={id}>
+                <button
+                  type="button"
+                  className={'al-schritt' + (aktiv ? ' aktiv' : '')}
+                  aria-current={aktiv ? 'step' : undefined}
+                  onClick={() => starte(id)}
+                >
+                  <span className={`al-schritt-nr al-nr-${id}`} aria-hidden="true">
                     {l.nr}
                   </span>
-                  <Icon name={l.icon} groesse={20} />
-                  <span className="advl-schritt-text">
-                    <strong>
-                      Schritt {l.nr}: {l.name}
-                    </strong>
-                    <small>
-                      {l.beschreibung} · {l.dauer}
+                  <span className="al-schritt-text">
+                    <strong className="al-schritt-name">{l.name}</strong>
+                    <small className="al-schritt-meta">
+                      Schritt {l.nr} · {l.dauer}
                     </small>
                   </span>
-                  {id === 'lernen' && <Badge ton="gold">Start</Badge>}
-                </li>
-              )
-            })}
-          </ol>
+                  {aktiv && <Badge ton="teal">Jetzt dran</Badge>}
+                  <Icon name="pfeilRechts" groesse={20} className="al-schritt-pfeil" />
+                </button>
+              </li>
+            )
+          })}
+        </ul>
 
-          <PrimaryButton art="gold" groesse="gross" breit icon="play" onClick={() => starte('lernen')}>
-            {T.kurs.losGehts}
-          </PrimaryButton>
-        </div>
+        <PrimaryButton
+          art="gruen"
+          groesse="gross"
+          breit
+          className="al-start"
+          onClick={() => starte(lektionId)}
+        >
+          Lektion starten
+        </PrimaryButton>
       </div>
     )
   }
 
-  // ===== 2. Übung =====
+  // ===== 2. Übung (Bild 5–7) =====
 
   if (phase === 'uebung') {
     if (!lauf) return <LoadingState text="Station wird vorbereitet …" />
 
     if (!lauf.uebungen.length) {
       return (
-        <div className="advl-seite">
-          <PageHeader
-            titel={einheit.name}
-            untertitel="Hier liess sich gerade nichts vorbereiten."
-            variante="denken"
-            zurueck={weltPfad}
-            zurueckText="Zurück zur Weltkarte"
-          />
+        <div className="al-seite">
+          <header className="al-kopf">
+            {zurueckKnopf}
+            <h1 className="al-titel">{einheit.name}</h1>
+          </header>
           <ErrorState
             titel="Diese Aufgaben liessen sich nicht bauen."
             text="Für diesen Schritt kamen keine Übungen zusammen. Versuche es noch einmal."
             nochmal={() => starte(lektionId)}
           />
-          <div className="advl-fuss">
+          <div className="al-fuss">
             <PrimaryButton art="still" icon="welt" onClick={zurWeltkarte}>
               Zur Weltkarte
             </PrimaryButton>
@@ -323,25 +318,68 @@ export default function AdventureLessonPage({ unitId }) {
     )
   }
 
-  // ===== 3. Ergebnis =====
+  // ===== 3. Ergebnis (Bild 8) =====
 
   if (!ergebnis) return <LoadingState text="Ergebnis wird berechnet …" />
 
   const bestanden = ergebnis.prozent >= BESTANDEN_AB
+  const truheVerdient = istPruefung && !fehlerlauf && bestanden
+
   let ergebnisTitel = 'Gute Arbeit!'
   if (fehlerlauf) ergebnisTitel = 'Fehler geübt!'
   else if (istPruefung && !bestanden) ergebnisTitel = 'Noch nicht bestanden'
 
+  const kopfTitel = istPruefung && !fehlerlauf && !bestanden ? 'Schritt beendet' : 'Lektion abgeschlossen!'
+  const kopfText = fehlerlauf
+    ? `Du hast deine Fehler aus ${einheit.name} wiederholt.`
+    : `Du hast ${einheit.name} · Lektion ${schrittNr} gemeistert.`
+
+  const zahlen = belohnung || { xp: ergebnis.richtig * XP_JE_AUFGABE, edelsteine: 0, serie: 0 }
   const naechsteLektion = naechsterSchritt ? lektionVon(naechsterSchritt) : null
 
   return (
-    <div className="advl-seite">
+    <div className="al-seite">
+      <header className="al-ergebnis-kopf">
+        <h1 className="al-titel">{kopfTitel}</h1>
+        <p className="al-ergebnis-unter">{kopfText}</p>
+      </header>
+
+      <ul className="al-ergebnis-zahlen" role="list">
+        <li>
+          <strong className="al-zahl-wert al-zahl-blau">{ergebnis.prozent} %</strong>
+          <span className="al-zahl-label">Genauigkeit</span>
+        </li>
+        <li>
+          <strong className="al-zahl-wert al-zahl-gold">+{zahlen.xp}</strong>
+          <span className="al-zahl-label">XP</span>
+        </li>
+        <li>
+          <strong className="al-zahl-wert al-zahl-teal">+{zahlen.edelsteine}</strong>
+          <span className="al-zahl-label">Edelsteine</span>
+        </li>
+      </ul>
+
+      {truheVerdient && (
+        <div className="adv-truhe al-truhe">
+          <span className="al-truhe-marke" aria-hidden="true">
+            <Icon name="truhe" groesse={26} />
+          </span>
+          <div className="adv-truhe-text">
+            <strong>Schatztruhe erhalten</strong>
+            <span>Öffne sie auf der Weltkarte.</span>
+          </div>
+        </div>
+      )}
+
       {naechsteLektion && (
-        <p className="adv-pergament advl-naechster">
+        <p className="al-naechster">
           <Icon name="fussspur" groesse={18} />
           <span>
-            Als Nächstes wartet <strong>Schritt {naechsteLektion.nr}: {naechsteLektion.name}</strong> — mit
-            „Weiter“ gehst du direkt dorthin.
+            Als Nächstes wartet{' '}
+            <strong>
+              Schritt {naechsteLektion.nr}: {naechsteLektion.name}
+            </strong>{' '}
+            — mit „Weiter“ gehst du direkt dorthin.
           </span>
         </p>
       )}
@@ -351,22 +389,20 @@ export default function AdventureLessonPage({ unitId }) {
         titel={ergebnisTitel}
         ergebnis={ergebnis}
         sterne={istPruefung && !fehlerlauf ? sterne : null}
-        belohnung={
-          belohnung || { xp: ergebnis.richtig * XP_JE_AUFGABE, edelsteine: 0, serie: 0 }
-        }
+        belohnung={zahlen}
         weiter={weiter}
         wiederholen={() => starte(lektionId)}
         fehlerUeben={fehlerUeben}
       />
 
       {istPruefung && !fehlerlauf && !bestanden && (
-        <p className="advl-hinweis gedaempft zentriert">
+        <p className="al-hinweis gedaempft zentriert">
           Ab {BESTANDEN_AB} % gilt die Einheit als bestanden — wiederhole die Prüfung, wenn du magst.
         </p>
       )}
 
       {naechsteLektion && (
-        <div className="advl-fuss">
+        <div className="al-fuss">
           <PrimaryButton art="still" icon="welt" onClick={zurWeltkarte}>
             Zur Weltkarte
           </PrimaryButton>

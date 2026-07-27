@@ -43,28 +43,77 @@
   --rk-warning: #f59e0b;
   --rk-error: #e64b4b;
 
-  /* --- Abenteuerfarben --- */
-  --adv-sky: #90d7f8;
-  --adv-teal: #087f8c;
-  --adv-teal-dark: #05616b;
-  --adv-gold: #f4b942;
-  --adv-gold-dark: #c8901f;
-  --adv-gold-deep: #a06f10;
-  --adv-parchment: #f9edcf;
-  --adv-parchment-dark: #ecd9a8;
-  --adv-parchment-edge: #d8bf8a;
-  --adv-brown: #7a4b28;
-  --adv-brown-dark: #5b3619;
-  --adv-brown-light: #a9762f;
-  --adv-green: #55b85a;
-  --adv-stone: #9aa3ad;
-  --adv-stone-warm: #b9ae95;
-  --adv-stone-dark: #7d7360;
-  --adv-night: #09212d;
-  /* Kurdische Akzente: Mohnrot, Kelim-Rot, Bergsteinbeige */
-  --adv-poppy: #dd4436;
-  --adv-kelim: #b8473a;
-  --adv-ink: #4a3418;
+  /* ===== Traditionell kurdische Farbwelt =====
+     Nacht, Stein, Türkis, Gold, Kelim-Rot, Kurdengrün, Erde, Pergament, Creme.
+     Der Abenteuer-Modus darf dunkel sein — Text steht aber immer auf einer
+     hellen Karte oder auf Pergament. */
+  --rk-night: #081c24;
+  --rk-stone: #31454b;
+  --rk-turquoise: #00aeb3;
+  --rk-gold: #e8b83e;
+  --rk-kelim-red: #b72d32;
+  --rk-kurd-green: #258b57;
+  --rk-earth: #8a5835;
+  --rk-parchment: #f3e4bd;
+  --rk-cream: #fffaf0;
+
+  /* ===== Abenteuer-Modus (aus der Farbwelt abgeleitet) ===== */
+  --adv-bg: var(--rk-night);
+  --adv-bg-deep: #04121a;
+  --adv-surface: #12303a;
+  --adv-surface-soft: var(--rk-stone);
+  --adv-border: #3d5760;
+
+  --adv-teal: var(--rk-turquoise);
+  --adv-teal-dark: #007f83;
+  --adv-gold: var(--rk-gold);
+  --adv-gold-dark: #b98c1c;
+  --adv-green: var(--rk-kurd-green);
+  --adv-green-dark: #1a6a41;
+  --adv-red: var(--rk-kelim-red);
+  --adv-red-dark: #8d1f24;
+  --adv-earth: var(--rk-earth);
+  --adv-earth-dark: #633d23;
+  /* Die Farbwelt kennt kein Blau, Violett oder Rosa. Diese drei Rollen
+     (kuehler Akzent, Level/Energie, Hervorhebung) zeigen deshalb auf Toene
+     aus der Farbwelt — so ziehen alle vorhandenen Verwendungen mit. */
+  --adv-blue: var(--rk-turquoise);
+  --adv-blue-dark: #007f83;
+  --adv-orange: #d9822b;
+  --adv-purple: var(--adv-granat);
+  --adv-pink: var(--adv-granat);
+
+  /* Helle Flächen für Text im dunklen Modus */
+  --adv-parchment: var(--rk-parchment);
+  --adv-parchment-dark: #e4d1a3;
+  --adv-parchment-edge: #c9b078;
+  --adv-cream: var(--rk-cream);
+
+  --adv-text: #f6efdd;
+  --adv-text-muted: #b6bfbe;
+  --adv-text-dark: #2b1f10;
+  /* Text auf Pergament */
+  --adv-ink: #3d2b12;
+  --adv-ink-muted: #6f5a37;
+
+  --adv-shadow-3d: 0 6px 0 rgba(0, 0, 0, 0.28);
+  --adv-shadow-card: 0 12px 30px rgba(0, 0, 0, 0.22);
+
+  /* Kurdische Akzente für Landschaften und Ornamente */
+  --adv-sky: #7fc4de;
+  --adv-brown: var(--rk-earth);
+  --adv-brown-dark: #5f3c22;
+  --adv-brown-light: #a87244;
+  --adv-stone-warm: #9c8f76;
+  --adv-stone-dark: #6b6252;
+  --adv-night: var(--rk-night);
+  --adv-poppy: #c62f2a;
+  --adv-kelim: var(--rk-kelim-red);
+  --adv-granat: #9e2233;
+
+  /* Referenzformat der Mockups */
+  --screen-width: 390px;
+  --screen-height: 844px;
 
   /* --- Abstaende --- */
   --space-1: 4px;

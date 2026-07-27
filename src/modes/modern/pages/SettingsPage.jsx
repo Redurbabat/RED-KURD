@@ -72,6 +72,10 @@ export default function SettingsPage() {
         variante="ruhig"
       />
 
+      {/* Der Moduswechsel steht bewusst ganz oben — er ist die Einstellung,
+          die am meisten veraendert (Designpaket, Bild 12). */}
+      <ModusKarte />
+
       <section className="rk-abschnitt">
         <h2 className="rk-abschnitt-titel">Profil und Lernziele</h2>
         <ProfilKarte />
@@ -87,7 +91,6 @@ export default function SettingsPage() {
 
       <section className="rk-abschnitt">
         <h2 className="rk-abschnitt-titel">Darstellung</h2>
-        <ModusKarte />
         <DesignKarte />
       </section>
 
@@ -379,7 +382,11 @@ function ModusKarte() {
   }
 
   return (
-    <Card titel={T.einstellungen.modus} icon="rahmen">
+    <Card titel={T.einstellungen.modus} icon="rahmen" className="set-moduskartenblock">
+      {/* Der Hinweis steht ueber den Karten — er ist die Antwort auf die Frage,
+          die sich hier jeder stellt. */}
+      <p className="set-modushinweis-oben">{T.einstellungen.modusHinweis}</p>
+
       <ul className="set-modusliste">
         {MODI.map((m) => {
           const aktiv = m.id === aktueller
@@ -387,19 +394,21 @@ function ModusKarte() {
             <li key={m.id}>
               <button
                 type="button"
-                className={'set-moduskarte' + (aktiv ? ' aktiv' : '')}
+                className={`set-moduskarte set-moduskarte-${m.id}` + (aktiv ? ' aktiv' : '')}
                 aria-pressed={aktiv}
                 onClick={() => {
                   if (!aktiv) setFrage(m.id)
                 }}
               >
-                <span className="set-mini-rahmen">{VORSCHAU[m.id]}</span>
-                <strong className="set-moduskarte-name">{m.name}</strong>
-                <span className="set-moduskarte-text">{m.beschreibung}</span>
-                <span className="set-moduskarte-stand">
-                  <Icon name={aktiv ? 'haken' : 'pfeilRechts'} groesse={16} />
-                  {aktiv ? 'Aktiv' : 'Wechseln'}
+                <span className="set-moduskarte-text-block">
+                  <strong className="set-moduskarte-name">{m.name}</strong>
+                  <span className="set-moduskarte-text">{m.beschreibung}</span>
                 </span>
+                <span className="set-moduskarte-marke" aria-hidden="true">
+                  <Icon name={aktiv ? 'haken' : 'pfeilRechts'} groesse={18} />
+                </span>
+                <span className="nur-sr">{aktiv ? 'Aktiver Modus' : 'Zu diesem Modus wechseln'}</span>
+                <span className="set-mini-rahmen">{VORSCHAU[m.id]}</span>
               </button>
             </li>
           )

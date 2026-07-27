@@ -1,5 +1,5 @@
-// Shop des Abenteuer-Modus. Hier gibt es ausschliesslich Aussehen und Komfort —
-// Lerninhalte sind und bleiben frei zugänglich.
+// Shop des Abenteuer-Modus (Designpaket Bild 10). Hier gibt es ausschliesslich
+// Aussehen und Komfort — alle Lerninhalte bleiben frei zugänglich.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { T } from '../../../core/texts.js'
@@ -21,7 +21,6 @@ import Badge from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import StatChip from '../../../components/common/StatChip.jsx'
 import EmptyState from '../../../components/common/EmptyState.jsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './ShopPage.css'
 
 /** Der Schatzschlüssel wird sofort eingelöst — so viel bringt die Bonustruhe. */
@@ -36,14 +35,34 @@ const TRUHEN_STUFEN = [
   { xp: 30, edelsteine: 2, schluessel: 1 },
 ]
 
+// Kurze Beschriftung der Reiter — im Lernstand heisst die letzte Kategorie
+// „Tägliche Belohnung", im Abenteuer-Modus zeigen wir „Tagestruhe".
+const TAB_NAME = { taeglich: 'Tagestruhe' }
+
+// Farbton je Artikel wie im Mockup. Unbekannte Artikel bekommen Türkis.
+const ARTIKEL_TON = {
+  'helo-schal': 'rot',
+  'bergpfad-thema': 'gruen',
+  klangpaket: 'blau',
+  'streak-schutz': 'teal',
+  profilrahmen: 'lila',
+  schatzschluessel: 'gold',
+}
+
 function waehrungIcon(waehrung) {
   return waehrung === 'schluessel' ? 'schluessel' : 'edelstein'
 }
 
-/** „1 Edelstein“ / „3 Edelsteine“ — Schlüssel bleibt in beiden Fällen gleich. */
+/** „1 Edelstein" / „3 Edelsteine" — Schlüssel bleibt in beiden Fällen gleich. */
 function waehrungText(anzahl, waehrung) {
   if (waehrung === 'schluessel') return `${anzahl} Schlüssel`
   return `${anzahl} ${anzahl === 1 ? 'Edelstein' : 'Edelsteine'}`
+}
+
+function truhenText(stufe) {
+  const teile = [`+${stufe.xp} XP`, `+${waehrungText(stufe.edelsteine, 'edelsteine')}`]
+  if (stufe.schluessel) teile.push(`+${waehrungText(stufe.schluessel, 'schluessel')}`)
+  return teile.join(' · ')
 }
 
 function ArtikelKarte({ artikel, vorrat, kaufen, umschalten }) {
@@ -54,44 +73,42 @@ function ArtikelKarte({ artikel, vorrat, kaufen, umschalten }) {
   const fehlt = Math.max(0, artikel.preis - vorrat)
   const preisText = waehrungText(artikel.preis, artikel.waehrung)
   const fehltText = waehrungText(fehlt, artikel.waehrung)
+  const ton = ARTIKEL_TON[artikel.id] || 'teal'
 
   return (
-    <li className={'adv-artikel' + (gekauft ? ' gekauft' : '')}>
+    <li className={`adv-artikel sh-artikel sh-ton-${ton}` + (gekauft ? ' gekauft' : '')}>
       <div className="adv-artikel-kopf">
-        <span className="adv-artikel-icon">
-          <Icon name={artikel.icon} groesse={24} />
+        <span className="adv-artikel-icon sh-artikel-icon">
+          <Icon name={artikel.icon} groesse={22} />
         </span>
-        <div className="shop-artikel-text">
+        <div className="sh-artikel-text">
           <strong>{artikel.name}</strong>
-          <p>{artikel.beschreibung}</p>
+          <p>Kosmetische Belohnung</p>
         </div>
       </div>
 
-      <p className="shop-preiszeile">
-        <span className="adv-artikel-preis">
-          <Icon name={waehrungIcon(artikel.waehrung)} groesse={18} />
-          <span>{preisText}</span>
-        </span>
+      {/* Im Mockup steht in der Pille nur die Zahl — die Währung liest der
+          Screenreader trotzdem mit. */}
+      <span className="adv-artikel-preis sh-preis">
+        <Icon name={waehrungIcon(artikel.waehrung)} groesse={18} />
+        <span aria-hidden="true">{artikel.preis}</span>
+        <span className="nur-sr">Preis: {preisText}</span>
+      </span>
+
+      <div className="sh-aktion">
         {aktiv && (
           <Badge ton="gruen" icon="haken">
             Aktiv
           </Badge>
         )}
-        {gekauft && !aktiv && (
-          <Badge ton="neutral" icon="haken">
-            Gekauft
-          </Badge>
-        )}
-      </p>
 
-      <div className="shop-aktion">
         {gekauft ? (
           <PrimaryButton
             art={aktiv ? 'still' : 'gruen'}
             groesse="klein"
             icon={aktiv ? 'kreuz' : 'haken'}
             onClick={() => umschalten(artikel)}
-            aria-label={`„${artikel.name}“ ${aktiv ? 'abwählen' : 'anlegen'}`}
+            aria-label={`„${artikel.name}“ ${aktiv ? 'abwählen' : 'anlegen'}. ${artikel.beschreibung}`}
           >
             {aktiv ? 'Abwählen' : 'Anlegen'}
           </PrimaryButton>
@@ -101,7 +118,7 @@ function ArtikelKarte({ artikel, vorrat, kaufen, umschalten }) {
             groesse="klein"
             icon="shop"
             onClick={() => kaufen(artikel)}
-            aria-label={`„${artikel.name}“ für ${preisText} kaufen`}
+            aria-label={`„${artikel.name}“ für ${preisText} kaufen. ${artikel.beschreibung}`}
           >
             Kaufen
           </PrimaryButton>
@@ -112,18 +129,19 @@ function ArtikelKarte({ artikel, vorrat, kaufen, umschalten }) {
               groesse="klein"
               icon="shop"
               disabled
-              aria-label={`„${artikel.name}“ kaufen — noch ${fehltText} nötig`}
+              aria-label={`„${artikel.name}“ kaufen — dafür fehlen dir noch ${fehltText}`}
             >
               Kaufen
             </PrimaryButton>
-            <span className="shop-fehlt">
+            <span className="sh-hinweiszeile">
               <Icon name="info" groesse={16} />
               <span>Noch {fehltText} nötig</span>
             </span>
           </>
         )}
+
         {verbrauch && (
-          <span className="shop-fehlt">
+          <span className="sh-hinweiszeile">
             <Icon name="wiederholen" groesse={16} />
             <span>Immer wieder kaufbar</span>
           </span>
@@ -137,10 +155,8 @@ export default function ShopPage() {
   useLernstand()
   const [tab, setTab] = useState(KATEGORIEN[0].id)
   const [meldung, setMeldung] = useState('')
-  const [truhenGewinn, setTruhenGewinn] = useState(null)
 
   const s = statistik()
-  const vorrat = { edelsteine: s.edelsteine, schluessel: s.schluessel }
   const kategorie = KATEGORIEN.find((k) => k.id === tab) || KATEGORIEN[0]
   const artikelListe = ARTIKEL.filter((a) => a.kategorie === kategorie.id)
   const truheOffen = truheBereit()
@@ -184,7 +200,9 @@ export default function ShopPage() {
 
   function oeffneTruhe() {
     const gewinn = truheOeffnen()
-    if (gewinn) setTruhenGewinn(gewinn)
+    setMeldung(
+      gewinn ? `Truhe geöffnet: ${truhenText(gewinn)}.` : 'Die Tagestruhe ist heute schon geöffnet.'
+    )
   }
 
   function wechsle(id) {
@@ -193,14 +211,14 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="shop-seite">
+    <div className="sh-seite">
       <PageHeader
         titel="Shop"
-        untertitel="Nur Aussehen und Komfort — nie Lerninhalte."
-        variante="truhe"
+        untertitel="Kosmetische Belohnungen für dein Abenteuer."
+        ohneMaskottchen
       />
 
-      <ul className="shop-besitz" role="list" aria-label="Dein Besitz">
+      <ul className="sh-besitz" role="list" aria-label="Dein Besitz">
         <li>
           <StatChip icon="edelstein" wert={s.edelsteine} label="Edelsteine" ton="teal" />
         </li>
@@ -209,87 +227,74 @@ export default function ShopPage() {
         </li>
       </ul>
 
-      <div className="rk-tabs" role="tablist" aria-label="Kategorien im Shop">
+      <div className="rk-tabs sh-tabs" role="tablist" aria-label="Kategorien im Shop">
         {KATEGORIEN.map((k) => (
           <button
             key={k.id}
             type="button"
             role="tab"
-            id={`shop-tab-${k.id}`}
+            id={`sh-tab-${k.id}`}
             className="rk-tab"
             aria-selected={tab === k.id}
-            aria-controls="shop-panel"
+            aria-controls="sh-panel"
             onClick={() => wechsle(k.id)}
           >
             <Icon name={k.icon} groesse={18} />
-            <span>{k.name}</span>
+            <span>{TAB_NAME[k.id] || k.name}</span>
           </button>
         ))}
       </div>
 
-      <div className="shop-meldung" aria-live="polite">
+      <div className="sh-meldung" aria-live="polite">
         {meldung && (
-          <p className="shop-meldung-text">
+          <p className="sh-meldung-text">
             <Icon name="info" groesse={18} />
             <span>{meldung}</span>
           </p>
         )}
       </div>
 
-      <div id="shop-panel" role="tabpanel" aria-labelledby={`shop-tab-${kategorie.id}`}>
+      <div id="sh-panel" role="tabpanel" aria-labelledby={`sh-tab-${kategorie.id}`}>
+        <h2 className="nur-sr">{TAB_NAME[kategorie.id] || kategorie.name}</h2>
+
         {kategorie.id === 'taeglich' ? (
           <>
-            <div className="adv-truhe">
-              <HeloMascot variante="truhe" groesse={64} dekorativ />
+            <div className="adv-truhe sh-truhe">
+              <span className="sh-truhe-marke">
+                <Icon name="truhe" groesse={30} />
+              </span>
               <div className="adv-truhe-text">
-                {truheOffen ? (
-                  <>
-                    <strong>Die heutige Truhe ist noch verschlossen.</strong>
-                    <p>Jeden Tag wartet eine neue Truhe auf dich — kostenlos.</p>
-                  </>
-                ) : (
-                  <>
-                    <strong>Heute schon geöffnet</strong>
-                    <p>Morgen liegt die nächste Truhe für dich bereit.</p>
-                  </>
-                )}
+                <strong>{truheOffen ? 'Die heutige Truhe wartet' : 'Heute schon geöffnet'}</strong>
+                <p className="sh-truhe-text">
+                  {truheOffen
+                    ? `Sie kostet nichts und bringt dir ${truhenText(TRUHEN_STUFEN[stufe])}.`
+                    : 'Morgen liegt die nächste Truhe für dich bereit.'}
+                </p>
               </div>
               {truheOffen && (
-                <PrimaryButton art="gold" icon="truhe" onClick={oeffneTruhe}>
+                <PrimaryButton
+                  art="gold"
+                  icon="truhe"
+                  onClick={oeffneTruhe}
+                  aria-label={`${T.abenteuer.truheOeffnen}: ${truhenText(TRUHEN_STUFEN[stufe])}`}
+                >
                   {T.abenteuer.truheOeffnen}
                 </PrimaryButton>
               )}
             </div>
 
-            <div aria-live="polite">
-              {truhenGewinn && (
-                <p className="shop-gewinn">
-                  <Icon name="haken" groesse={18} />
-                  <span>
-                    Truhe geöffnet: +{truhenGewinn.xp} XP · +
-                    {waehrungText(truhenGewinn.edelsteine, 'edelsteine')}
-                    {truhenGewinn.schluessel
-                      ? ` · +${waehrungText(truhenGewinn.schluessel, 'schluessel')}`
-                      : ''}
-                  </span>
-                </p>
-              )}
-            </div>
-
-            <Card titel="So wächst deine Belohnung" icon="flamme">
-              <p className="shop-text">
-                Der Inhalt der Truhe richtet sich nach deiner Serie. Sie durchläuft eine feste
-                Reihe von fünf Stufen und beginnt danach wieder von vorn. Deine Serie liegt gerade
-                bei {s.serie} {s.serie === 1 ? 'Tag' : 'Tagen'}.
+            <Card className="sh-stufenkarte">
+              <h3 className="sh-kartentitel">So wächst deine Belohnung</h3>
+              <p className="sh-text">
+                Der Inhalt der Truhe richtet sich nach deiner Serie. Sie durchläuft eine feste Reihe
+                von fünf Stufen und beginnt danach wieder von vorn. Deine Serie liegt gerade bei{' '}
+                {s.serie} {s.serie === 1 ? 'Tag' : 'Tagen'}.
               </p>
-              <ul className="shop-stufen" role="list">
+              <ul className="sh-stufen" role="list">
                 {TRUHEN_STUFEN.map((t, i) => (
-                  <li key={t.xp} className="shop-stufe">
-                    <span className="shop-stufe-nr">Stufe {i + 1}</span>
-                    <span className="shop-stufe-inhalt">
-                      +{t.xp} XP · +{waehrungText(t.edelsteine, 'edelsteine')}
-                      {t.schluessel ? ` · +${waehrungText(t.schluessel, 'schluessel')}` : ''}
-                    </span>
+                  <li key={t.xp} className="sh-stufe">
+                    <span className="sh-stufe-nr">Stufe {i + 1}</span>
+                    <span className="sh-stufe-inhalt">{truhenText(t)}</span>
                     {i === stufe && (
                       <Badge ton="gold" icon="stern">
                         Deine Stufe
@@ -298,19 +303,19 @@ export default function ShopPage() {
                   </li>
                 ))}
               </ul>
-              <p className="shop-text">
+              <p className="sh-text">
                 Die Tagestruhe kostet nichts. Mit einem Schatzschlüssel öffnest du zusätzlich eine
                 Bonustruhe.
               </p>
             </Card>
           </>
         ) : artikelListe.length ? (
-          <ul className="adv-shopraster" role="list">
+          <ul className="adv-shopraster sh-raster" role="list">
             {artikelListe.map((a) => (
               <ArtikelKarte
                 key={a.id}
                 artikel={a}
-                vorrat={a.waehrung === 'schluessel' ? vorrat.schluessel : vorrat.edelsteine}
+                vorrat={a.waehrung === 'schluessel' ? s.schluessel : s.edelsteine}
                 kaufen={kaufen}
                 umschalten={umschalten}
               />
@@ -325,7 +330,7 @@ export default function ShopPage() {
         )}
       </div>
 
-      <p className="rk-hinweisstreifen shop-hinweis">
+      <p className="sh-hinweis">
         <Icon name="info" groesse={18} />
         <span>
           Im Shop gibt es nur Aussehen und Komfort. Alle Lerninhalte sind und bleiben frei

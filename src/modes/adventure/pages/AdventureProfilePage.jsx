@@ -1,8 +1,9 @@
-// Profil des Abenteuer-Modus: Level, Zahlen, Welten, Auszeichnungen und
-// das gewählte Aussehen. Alle Werte kommen aus dem einen gemeinsamen Lernstand.
+// Profil des Abenteuer-Modus (Designpaket Bild 11): Profilkopf mit Level,
+// vier Kennzahlen, Auszeichnungen und Wochenaktivität. Alle Werte kommen aus
+// dem einen gemeinsamen Lernstand.
 import { useLernstand } from '../../../core/store.js'
 import { Link } from '../../../app/router.jsx'
-import { statistik } from '../../../core/progress/progressSelectors.js'
+import { statistik, wochenAktivitaet } from '../../../core/progress/progressSelectors.js'
 import { level } from '../../../core/progress/progressStore.js'
 import { WELTEN, weltFortschritt } from '../../../core/courses/courseRepository.js'
 import { holeProfil } from '../../../core/profile/profileStore.js'
@@ -13,19 +14,15 @@ import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
-import { StatTile } from '../../../components/common/StatChip.jsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './AdventureProfilePage.css'
 
-/** Aussehen und Komfort aus dem Shop — die Reihenfolge bestimmt die Anzeige. */
-const AUSSEHEN = [
-  { art: 'mascot', name: 'Begleiter', icon: 'schal' },
-  { art: 'thema', name: 'Thema der Weltkarte', icon: 'berg' },
-  { art: 'rahmen', name: 'Profilrahmen', icon: 'rahmen' },
-  { art: 'klang', name: 'Klang', icon: 'note' },
-]
+/** Erster Buchstabe des Namens für die Plakette. */
+function initialeVon(name) {
+  const sauber = (name || '').trim()
+  return sauber ? sauber.charAt(0).toUpperCase() : 'H'
+}
 
-/** „2026-07-27“ → „27.07.2026“ */
+/** „2026-07-27" → „27.07.2026" */
 function datumText(iso) {
   if (!iso) return null
   const teile = iso.split('-')
@@ -39,36 +36,39 @@ export default function AdventureProfilePage() {
   const s = statistik()
   const stufe = level()
   const profil = holeProfil()
-  const name = (profil && profil.name) || 'Dein Profil'
+  const name = (profil && profil.name && profil.name.trim()) || 'Hêlo'
   const rahmen = aktiverArtikel('rahmen')
   const auszeichnungen = holeAuszeichnungen()
   const frei = auszeichnungen.filter((a) => a.frei).length
   const weltenFertig = WELTEN.filter((w) => !weltFortschritt(w.id).offen).length
 
+  const woche = wochenAktivitaet()
+  const wochenMax = Math.max(1, ...woche.map((t) => t.anzahl))
+  const wochenSumme = woche.reduce((summe, t) => summe + t.anzahl, 0)
+
   return (
     <div className="ap-seite">
-      <PageHeader
-        titel="Profil"
-        untertitel="Dein Stand, deine Welten und deine Auszeichnungen."
-        ohneMaskottchen
-      />
+      <PageHeader titel="Profil" untertitel="Dein Abenteuer und deine Erfolge." ohneMaskottchen />
 
-      <div className="adv-held ap-kopf">
-        <span className={'ap-rahmen' + (rahmen ? ' ap-rahmen-gold' : '')}>
-          <HeloMascot variante="daumen" groesse={92} dekorativ />
+      <div className="ap-kopf">
+        <span
+          className={'ap-plakette' + (rahmen ? ' ap-plakette-rahmen' : '')}
+          aria-hidden="true"
+        >
+          {initialeVon(name)}
         </span>
-        <div className="adv-held-text">
-          <span className="adv-held-etikett">Dein Abenteuer</span>
-          <h2>{name}</h2>
-          <p className="ap-level">
-            Level {stufe.stufe} · noch {stufe.bisNaechstes} XP bis Level {stufe.stufe + 1}
+
+        <div className="ap-kopf-text">
+          <h2 className="ap-name">{name}</h2>
+          <p className="ap-rolle">
+            Level {stufe.stufe} · <span lang="ku">Kurmancî</span>-Lernender
           </p>
           <ProgressBar
             wert={stufe.fortschritt}
             max={100}
-            label={`Level ${stufe.stufe}: ${stufe.fortschritt} von 100 XP bis Level ${stufe.stufe + 1}`}
-            farbe="gold"
-            klein
+            label={`Level ${stufe.stufe}: noch ${stufe.bisNaechstes} XP bis Level ${stufe.stufe + 1}`}
+            farbe="blue"
+            zeigeWert
           />
           {rahmen && (
             <p className="ap-rahmen-hinweis">
@@ -79,142 +79,128 @@ export default function AdventureProfilePage() {
         </div>
       </div>
 
-      <section className="rk-abschnitt" aria-labelledby="ap-zahlen-titel">
-        <h2 className="rk-abschnitt-titel" id="ap-zahlen-titel">
-          Deine Zahlen
-        </h2>
-        <ul className="ap-zahlen" role="list">
-          <li>
-            <StatTile icon="edelstein" wert={s.edelsteine} label="Edelsteine" />
-          </li>
-          <li>
-            <StatTile icon="schluessel" wert={s.schluessel} label="Schlüssel" />
-          </li>
-          <li>
-            <StatTile icon="flamme" wert={s.serie} label="Tage Serie" />
-          </li>
-          <li>
-            <StatTile icon="buch" wert={s.gelernt} label="Wörter gelernt" />
-          </li>
-          <li>
-            <StatTile icon="schild" wert={s.sicher} label="Wörter sicher" />
-          </li>
-          <li>
-            <StatTile
-              icon="welt"
-              wert={`${weltenFertig}/${WELTEN.length}`}
-              label="Welten abgeschlossen"
-            />
-          </li>
-        </ul>
-      </section>
+      <h2 className="nur-sr">Deine Zahlen</h2>
+      <ul className="ap-kennzahlen" role="list">
+        <li className="ap-kachel ap-kachel-gruen">
+          <strong>
+            {weltenFertig}/{WELTEN.length}
+          </strong>
+          <span>Welten</span>
+        </li>
+        <li className="ap-kachel ap-kachel-blau">
+          <strong>{s.gelernt}</strong>
+          <span>Wörter</span>
+        </li>
+        <li className="ap-kachel ap-kachel-orange">
+          <strong>{s.serie}</strong>
+          <span>Serie</span>
+        </li>
+        <li className="ap-kachel ap-kachel-gold">
+          <strong>{s.xp}</strong>
+          <span>XP</span>
+        </li>
+      </ul>
 
-      <Card titel="Welten" icon="welt">
-        <ul className="ap-welten" role="list">
-          {WELTEN.map((w) => {
-            const f = weltFortschritt(w.id)
-            return (
-              <li key={w.id} className="ap-welt">
-                <div className="ap-welt-kopf">
-                  <strong lang="de">
-                    {w.nr}. {w.name}
-                  </strong>
-                  <span className="ap-welt-sterne">
-                    <Icon name="stern" groesse={16} />
-                    <span>
-                      {f.sterne} von {f.maxSterne} Sternen
-                    </span>
-                  </span>
-                </div>
-                <p className="ap-welt-unter" lang="ku">
-                  {w.untertitel}
-                </p>
-                <ProgressBar
-                  wert={f.prozent}
-                  label={`Welt ${w.name}: ${f.prozent} Prozent abgeschlossen`}
-                  farbe={f.offen ? 'gold' : 'green'}
-                  klein
-                />
-                <p className="ap-welt-stand">
-                  {f.fertig} von {f.gesamt} Einheiten · {f.prozent} %
-                  {f.offen ? '' : ' · abgeschlossen'}
-                </p>
-              </li>
-            )
-          })}
-        </ul>
-      </Card>
-
-      <Card
-        titel="Auszeichnungen"
-        icon="krone"
-        aktion={
+      <section className="rk-abschnitt" aria-labelledby="ap-abzeichen-titel">
+        <div className="ap-abschnittskopf">
+          <h2 className="rk-abschnitt-titel" id="ap-abzeichen-titel">
+            Auszeichnungen
+          </h2>
           <Badge ton="gold" icon="stern">
             {frei} von {auszeichnungen.length}
           </Badge>
-        }
-      >
-        <ul className="adv-abzeichenraster" role="list">
-          {auszeichnungen.map((a) => (
-            <li key={a.id} className={'adv-abzeichen' + (a.frei ? '' : ' gesperrt')}>
-              <span className={`adv-abzeichen-icon ap-ton-${a.farbe}`}>
-                <Icon name={a.icon} groesse={26} />
+        </div>
+
+        <ul className="adv-abzeichenraster ap-abzeichenraster" role="list">
+          {auszeichnungen.map((a, i) => (
+            <li
+              key={a.id}
+              className={
+                'adv-abzeichen ap-abzeichen' + (a.frei ? ` ap-ton-${a.farbe}` : ' gesperrt')
+              }
+            >
+              <span className="adv-abzeichen-icon ap-abzeichen-icon">
+                {a.frei ? (
+                  <span className="ap-abzeichen-nr" aria-hidden="true">
+                    {i + 1}
+                  </span>
+                ) : (
+                  <Icon name="schloss" groesse={22} />
+                )}
               </span>
               <strong>{a.name}</strong>
-              <small>{a.beschreibung}</small>
-              {a.frei ? (
-                <span className="ap-abzeichen-status">
-                  <Icon name="haken" groesse={14} />
-                  <span>{a.seit ? `seit ${datumText(a.seit)}` : 'freigeschaltet'}</span>
-                </span>
-              ) : (
-                <span className="ap-abzeichen-status">
-                  <Icon name="schloss" groesse={14} />
-                  <span>Noch nicht freigeschaltet</span>
-                </span>
-              )}
+              <small className={'ap-abzeichen-status' + (a.frei ? ' frei' : '')}>
+                {a.frei ? 'Freigeschaltet' : 'Gesperrt'}
+              </small>
+              <span className="nur-sr">
+                {a.beschreibung}
+                {a.frei && a.seit ? ` Erreicht am ${datumText(a.seit)}.` : ''}
+              </span>
             </li>
           ))}
         </ul>
-      </Card>
+      </section>
 
-      <Card
-        titel="Aussehen"
-        icon="shop"
-        aktion={
-          <Link to="/adventure/shop" className="ap-shoplink">
-            <span>Zum Shop</span>
-            <Icon name="pfeilRechts" groesse={16} />
-          </Link>
-        }
-      >
-        <ul className="ap-aussehen" role="list">
-          {AUSSEHEN.map((eintrag) => {
-            const artikel = aktiverArtikel(eintrag.art)
-            return (
-              <li key={eintrag.art}>
-                <Icon name={eintrag.icon} groesse={22} />
-                <div className="ap-aussehen-text">
-                  <strong>{eintrag.name}</strong>
-                  <small>{artikel ? artikel.name : 'Nichts angelegt'}</small>
-                </div>
-                {artikel ? (
-                  <Badge ton="gruen" icon="haken">
-                    Aktiv
-                  </Badge>
-                ) : (
-                  <Badge ton="neutral" icon="minus">
-                    Frei
-                  </Badge>
-                )}
+      <section className="rk-abschnitt" aria-labelledby="ap-woche-titel">
+        <h2 className="rk-abschnitt-titel" id="ap-woche-titel">
+          Wochenaktivität
+        </h2>
+        <Card className="ap-wochenkarte">
+          <ul className="ap-woche" role="list">
+            {woche.map((t) => (
+              <li key={t.datum} className={'ap-woche-tag' + (t.heute ? ' heute' : '')}>
+                <span className="ap-woche-saeule" aria-hidden="true">
+                  <span
+                    className="ap-woche-fuellung"
+                    style={{ height: t.anzahl ? Math.max(8, (t.anzahl / wochenMax) * 100) + '%' : 0 }}
+                  />
+                </span>
+                <span className="ap-woche-name" aria-hidden="true">
+                  {t.tag}
+                </span>
+                <span className="nur-sr">
+                  {t.tag}, {datumText(t.datum)}: {t.anzahl}{' '}
+                  {t.anzahl === 1 ? 'Aufgabe' : 'Aufgaben'}
+                  {t.heute ? ' (heute)' : ''}
+                </span>
               </li>
-            )
-          })}
-        </ul>
-        <p className="ap-fussnote">
-          Aussehen und Komfort ändern nichts am Kurs. Alle Lerninhalte bleiben frei zugänglich.
-        </p>
-      </Card>
+            ))}
+          </ul>
+          <p className="ap-woche-summe">
+            {wochenSumme} {wochenSumme === 1 ? 'Aufgabe' : 'Aufgaben'} in den letzten sieben Tagen.
+          </p>
+        </Card>
+      </section>
+
+      {/* Der Basar ist bewusst kein Hauptbereich mehr — Lernen und Kultur
+          stehen in der Navigation vorne. Hier im Profil bleibt er erreichbar. */}
+      <section className="rk-abschnitt" aria-labelledby="ap-basar-titel">
+        <h2 className="rk-abschnitt-titel" id="ap-basar-titel">
+          Basar
+        </h2>
+        <Card className="ap-basarkarte">
+          <p className="ap-basar-zahl">
+            <Icon name="edelstein" groesse={20} />
+            <strong>{s.edelsteine}</strong>
+            <span>{s.edelsteine === 1 ? 'Edelstein' : 'Edelsteine'}</span>
+          </p>
+          <p className="ap-basar-text">
+            Edelsteine sammelst du beim Lernen. Im Basar tauschst du sie gegen Schal, Weste
+            und Kelim-Tasche für Hêlo — nichts davon schaltet Lerninhalte frei.
+          </p>
+          <Link to="/adventure/shop" className="ap-basar-link">
+            <Icon name="shop" groesse={18} />
+            <span>Basar öffnen</span>
+            <Icon name="pfeilRechts" groesse={18} />
+          </Link>
+        </Card>
+      </section>
+
+      <Link to="/settings" className="ap-einstellungen">
+        <Icon name="einstellungen" groesse={18} />
+        <span>Zu den Einstellungen</span>
+        <Icon name="pfeilRechts" groesse={18} />
+      </Link>
     </div>
   )
 }

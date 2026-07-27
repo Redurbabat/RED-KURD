@@ -164,19 +164,67 @@
   list-style: none;
 }
 
+/* Hinweis ueber den Karten — er beantwortet die Frage, die sich hier jeder stellt. */
+.set-modushinweis-oben {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* Waagerechte Karte: Text links, Zustandsmarke rechts, Vorschau darunter. */
 .set-moduskarte {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
   width: 100%;
   height: 100%;
   text-align: left;
-  padding: var(--space-3);
+  padding: var(--space-4);
   border: 2px solid var(--rk-border);
   border-radius: var(--radius-medium);
   background: var(--rk-surface);
   transition: border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+}
+.set-moduskarte-text-block {
+  min-width: 0;
+}
+.set-moduskarte .set-mini-rahmen {
+  grid-column: 1 / -1;
+}
+/* Runde Zustandsmarke rechts — Haken beim aktiven, Pfeil beim anderen. */
+.set-moduskarte-marke {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border);
+  color: var(--rk-text-muted);
+  flex-shrink: 0;
+}
+.set-moduskarte.aktiv .set-moduskarte-marke {
+  background: var(--rk-primary);
+  border-color: var(--rk-primary);
+  color: #fff;
+}
+/* Die Abenteuer-Karte traegt ihre eigene Farbe — Gold statt Tuerkis. */
+.set-moduskarte-abenteuer.aktiv {
+  border-color: var(--adv-gold);
+  background: rgba(255, 202, 40, 0.12);
+}
+.set-moduskarte-abenteuer.aktiv .set-moduskarte-name {
+  color: #8a5f04;
+}
+.set-moduskarte-abenteuer.aktiv .set-moduskarte-marke {
+  background: var(--adv-gold);
+  border-color: var(--adv-gold);
+  color: #4a3200;
+}
+:root[data-theme='dark'] .set-moduskarte-abenteuer.aktiv .set-moduskarte-name {
+  color: var(--adv-gold);
 }
 .set-moduskarte:hover {
   border-color: var(--rk-primary);
@@ -196,24 +244,7 @@
   font-size: var(--text-sm);
   color: var(--rk-text-muted);
 }
-.set-moduskarte-stand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  margin-top: auto;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--rk-surface-soft);
-  border: 1px solid var(--rk-border);
-  font-size: var(--text-xs);
-  font-weight: 800;
-  color: var(--rk-text-muted);
-}
-.set-moduskarte.aktiv .set-moduskarte-stand {
-  background: var(--rk-primary);
-  border-color: var(--rk-primary);
-  color: var(--rk-text-on-dark);
-}
+
 
 /* Kleine gezeichnete Vorschau der beiden Oberflächen. */
 .set-mini-rahmen {
