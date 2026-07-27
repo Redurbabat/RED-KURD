@@ -1,0 +1,99 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rot: #c0392b;
+  --gruen: #27ae60;
+  --gelb: #f1c40f;
+  --dunkel: #1e2430;
+  --hell: #f7f7f5;
+  --karte: #ffffff;
+  --rand: #e3e3de;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--hell);
+  color: var(--dunkel);
+  line-height: 1.6;
+}
+
+.app { max-width: 760px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+header { text-align: center; margin-bottom: 1.5rem; }
+header h1 {
+  font-size: 2.2rem;
+  background: linear-gradient(90deg, var(--rot), var(--gelb), var(--gruen));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.untertitel { color: #666; margin-bottom: 1rem; }
+
+nav { display: flex; gap: .5rem; justify-content: center; }
+nav button {
+  border: 1px solid var(--rand);
+  background: var(--karte);
+  padding: .5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+nav button.aktiv { background: var(--dunkel); color: #fff; border-color: var(--dunkel); }
+
+main section {
+  background: var(--karte);
+  border: 1px solid var(--rand);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+h2 { margin-bottom: .8rem; }
+ul { margin: .8rem 0 .8rem 1.2rem; }
+
+.suche {
+  width: 100%;
+  padding: .7rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--rand);
+  border-radius: 10px;
+  margin-bottom: .4rem;
+}
+.hinweis { color: #888; font-size: .9rem; margin-bottom: .8rem; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--rand); }
+th { color: #666; font-size: .85rem; text-transform: uppercase; letter-spacing: .03em; }
+.ku { font-weight: 600; color: var(--rot); }
+.kat { color: #999; font-size: .9rem; }
+
+.frage { font-size: 1.2rem; margin: 1rem 0; }
+.optionen { display: grid; gap: .6rem; grid-template-columns: 1fr 1fr; }
+.option {
+  padding: .9rem;
+  font-size: 1.05rem;
+  border: 2px solid var(--rand);
+  border-radius: 12px;
+  background: var(--karte);
+  cursor: pointer;
+}
+.option:hover { border-color: var(--dunkel); }
+.option.richtig { border-color: var(--gruen); background: #eafaf1; }
+.option.falsch { border-color: var(--rot); background: #fdedec; }
+
+.weiter {
+  margin-top: 1rem;
+  padding: .7rem 1.6rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--dunkel);
+  color: #fff;
+  cursor: pointer;
+}
+.ergebnis { margin-top: 1rem; font-size: 1.1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+footer { text-align: center; margin-top: 2rem; color: #999; font-size: .9rem; }
+footer a { color: var(--rot); }
+
+@media (max-width: 480px) {
+  .optionen { grid-template-columns: 1fr; }
+}
