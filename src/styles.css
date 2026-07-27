@@ -391,3 +391,93 @@ th { color: #9aa7b2; font-size: .72rem; text-transform: uppercase; letter-spacin
   .plan-spalten { flex-wrap: wrap; }
   .skill-stufe { display: none; }
 }
+
+/* ===== PDF-Nachzuegler: Tagesziel, Edelsteine, Klassik, Entdecken ===== */
+.sprechblase {
+  background: var(--karte); border: 1px solid var(--rand); border-radius: 12px;
+  padding: .5rem .8rem; font-size: .85rem; color: var(--text-hell); margin-top: .3rem;
+  max-width: 420px;
+}
+.avatar-knopf { border: none; background: none; padding: 0; cursor: pointer; }
+.avatar-knopf img { width: 38px; height: 38px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.heute-start.gruen-start { background: var(--gruen); box-shadow: 0 4px 12px rgba(47,169,110,.3); }
+.fortsetzen-prozent {
+  background: rgba(255,255,255,.2); border-radius: 999px; padding: .35rem .7rem;
+  font-size: .9rem; font-weight: 900;
+}
+.ziel-karte {
+  display: flex; align-items: center; gap: 1rem;
+  background: var(--gruen-hell); border: 1px solid #bfe8d2; border-radius: 16px;
+  padding: .8rem 1rem; margin: .8rem 0;
+}
+.ziel-karte.geschafft { background: var(--orange-hell); border-color: #f3ddb0; }
+.ziel-text { flex: 1; display: flex; flex-direction: column; }
+.ziel-rechts { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+.ziel-stand { font-weight: 900; }
+.geschenk { font-size: 1.6rem; }
+.misch-hero {
+  display: flex; align-items: center; gap: 1rem; justify-content: space-between;
+  background: linear-gradient(120deg, var(--blau), #1b5fc4);
+  border-radius: 16px; padding: 1rem 1.1rem; color: #fff; margin: .8rem 0;
+  box-shadow: 0 4px 12px rgba(47,128,237,.3);
+}
+.mini.weiss { background: #fff; color: var(--blau); border-color: #fff; }
+.dauer-chip {
+  font-size: .68rem; font-weight: 800; color: var(--text-hell);
+  background: var(--bg); border: 1px solid var(--rand); border-radius: 999px;
+  padding: .12rem .55rem; margin-top: .3rem;
+}
+.einheit-hero {
+  display: flex; align-items: center; gap: 1rem;
+  background: linear-gradient(120deg, var(--blau), #1b5fc4);
+  border-radius: 16px; padding: 1rem 1.1rem; color: #fff; margin: .8rem 0;
+}
+.einheit-hero > div:first-child { flex: 1; display: flex; flex-direction: column; gap: .15rem; }
+.hero-etikett { font-size: .65rem; font-weight: 900; letter-spacing: .08em;
+  background: rgba(255,255,255,.2); border-radius: 999px; padding: .15rem .6rem; width: fit-content; }
+.ku-vorschau { color: var(--teal-dunkel); font-weight: 700; }
+.klick-karte { display: block; width: 100%; text-align: left; cursor: pointer; font-family: inherit; }
+.klick-karte:hover { border-color: var(--teal); }
+.text-karten { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+.text-karte {
+  display: flex; flex-direction: column; gap: .2rem; align-items: flex-start;
+  border: 1px solid var(--rand); border-radius: 12px; background: var(--karte);
+  padding: 0 0 .6rem; overflow: hidden; cursor: pointer; font-family: inherit; text-align: left;
+}
+.text-karte img { width: 100%; height: 64px; object-fit: cover; }
+.text-karte strong { padding: 0 .6rem; font-size: .85rem; }
+.text-karte small { padding: 0 .6rem; color: var(--text-hell); font-size: .72rem; }
+.text-karte .niveau { margin: .3rem 0 0 .6rem; }
+.modus-wahl { display: flex; gap: .7rem; }
+.modus-box {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: .15rem;
+  padding: 1rem; border: 2px solid var(--rand); border-radius: 14px;
+  background: var(--karte); font-family: inherit; cursor: pointer; font-size: 1.4rem;
+}
+.modus-box strong { font-size: .95rem; }
+.modus-box small { font-size: .72rem; color: var(--text-hell); }
+.modus-box.gewaehlt { border-color: var(--teal); background: var(--teal-hell); }
+
+/* ===== Klassik-Modus (dunkel & verspielt) ===== */
+body.klassik {
+  --bg: #0b1524; --karte: #14243b; --rand: #22385a;
+  --text: #e9f0f8; --text-hell: #93a7bf;
+  --teal: #1fc4da; --teal-dunkel: #17a3b6; --teal-hell: #123a4d;
+  --blau: #3b8bff; --blau-hell: #16304f;
+  --gruen: #35c47c; --gruen-hell: #123c2c;
+  --orange: #ffb347; --orange-hell: #3a2c14; --orange-dunkel: #ffb347;
+  --rot-hell: #43202a; --lila-hell: #2b2350;
+  background: var(--bg);
+}
+body.klassik .leiste, body.klassik .topbar { background: #0e1c30; }
+body.klassik .stat-chip, body.klassik .sprach-pille { background: var(--karte); }
+body.klassik .rueckstand { background: #3a2c14; border-color: #5c4520; color: #ffd58a; }
+body.klassik .ziel-karte { background: var(--gruen-hell); border-color: #1d5a41; }
+body.klassik .ziel-karte.geschafft { background: var(--orange-hell); border-color: #5c4520; }
+body.klassik .feedback.gut { background: var(--gruen-hell); border-color: #1d5a41; color: #7fe0af; }
+body.klassik .feedback.schlecht { background: var(--rot-hell); border-color: #6b2f3c; color: #ff9aa4; }
+body.klassik .buchstabe { background: var(--blau-hell); color: #7db6ff; }
+body.klassik .heute-start { box-shadow: 0 4px 16px rgba(31,196,218,.35); }
+body.klassik .niveau-Anfänger { background: var(--gruen-hell); color: #7fe0af; }
+body.klassik .niveau-Leicht { background: var(--teal-hell); color: #7fdcea; }
+body.klassik .niveau-Mittel { background: var(--orange-hell); color: #ffd58a; }

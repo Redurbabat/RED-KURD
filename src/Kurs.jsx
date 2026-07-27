@@ -118,6 +118,24 @@ export default function Kurs() {
         </div>
       </div>
 
+      {(() => {
+        const naechste = kurse.find(k2 => !(stand.lektionen[k2.id] >= 80)) || kurse[0]
+        const p = stand.lektionen[naechste.id] || 0
+        return (
+          <div className="einheit-hero">
+            <div>
+              <span className="hero-etikett">AKTUELLE EINHEIT</span>
+              <strong>{naechste.symbol} {naechste.name}</strong>
+              <div className="hell-text">{naechste.woerter.slice(0, 3).map(w => w.ku).join(' · ')} …</div>
+            </div>
+            <div className="ring hell-ring" style={{ background: `conic-gradient(#fff ${p * 3.6}deg, rgba(255,255,255,.25) 0deg)` }}>
+              <span>{p} %</span>
+            </div>
+            <button className="mini weiss" onClick={() => oeffne(naechste.id)}>Weiter ›</button>
+          </div>
+        )
+      })()}
+
       <div className="einheiten-liste">
         {kurse.map((k, i) => {
           const best = stand.lektionen[k.id]
@@ -131,7 +149,8 @@ export default function Kurs() {
               <span className={'einheit-nr' + (fertig ? ' gruen' : naechste ? ' teal' : '')}>{i + 1}</span>
               <span className="einheit-bild">{k.symbol}</span>
               <span className="einheit-text">
-                <strong>{k.name}</strong>
+                <strong>{k.name} {fertig ? (best >= 95 ? '⭐⭐⭐' : best >= 85 ? '⭐⭐' : '⭐') : ''}</strong>
+                <small className="ku-vorschau">{k.woerter.slice(0, 3).map(w => w.ku).join(' · ')} … · {k.woerter.length} Wörter</small>
                 {fertig && <small className="gruen-text">Abgeschlossen · {best} %</small>}
                 {begonnen && <small>{best} % — noch nicht bestanden</small>}
                 {naechste && <small className="teal-text">Als Nächstes empfohlen</small>}

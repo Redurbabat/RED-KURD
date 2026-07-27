@@ -5,7 +5,8 @@ import Ueben from './Ueben.jsx'
 import Entdecken from './Entdecken.jsx'
 import Fortschritt from './Fortschritt.jsx'
 import Onboarding from './Onboarding.jsx'
-import { statistik, profilLaden } from './fortschritt.js'
+import { statistik, profilLaden, edelsteine, level, appModus, setzeAppModus } from './fortschritt.js'
+import Einstellungen from './Einstellungen.jsx'
 import { statischeAnzahl } from './statisch.js'
 import './styles.css'
 
@@ -21,6 +22,8 @@ export default function App() {
   const [seite, setSeite] = useState('heute')
   const [status, setStatus] = useState(null)
   const [eingerichtet, setEingerichtet] = useState(!!profilLaden())
+
+  useEffect(() => { setzeAppModus(appModus()) }, [])
 
   useEffect(() => {
     fetch('/api/status').then(r => r.json()).then(setStatus).catch(() =>
@@ -57,6 +60,11 @@ export default function App() {
           <span className="top-lücke" />
           <span className="stat-chip klein">🔥 <strong>{s.serie}</strong> <small>Tage</small></span>
           <span className="stat-chip klein gelb">⭐ <strong>{s.xp}</strong> <small>XP</small></span>
+          <span className="stat-chip klein">💎 <strong>{edelsteine()}</strong></span>
+          <span className="stat-chip klein">🎖️ <strong>{level().stufe}</strong></span>
+          <button className="avatar-knopf" onClick={() => setSeite('einstellungen')}>
+            <img src="/bilder/helo-avatar.png" alt="Einstellungen" />
+          </button>
         </div>
         <main>
           {seite === 'heute' && <Heute status={status} />}
@@ -64,6 +72,8 @@ export default function App() {
           {seite === 'ueben' && <Ueben />}
           {seite === 'entdecken' && <Entdecken />}
           {seite === 'fortschritt' && <Fortschritt />}
+          {seite === 'einstellungen' && <Einstellungen zurueck={() => setSeite('heute')}
+            neustart={() => setEingerichtet(false)} />}
         </main>
       </div>
     </div>

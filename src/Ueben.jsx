@@ -5,14 +5,15 @@ import { Uebung, baueUebungen, mische, alleKursWoerter } from './Uebung.jsx'
 import { spieleWort } from './audio.js'
 import Satzbau from './Satzbau.jsx'
 import Aussprache from './Aussprache.jsx'
+import TagesZiel from './TagesZiel.jsx'
 
 const MODI = [
-  { id: 'wdh', symbol: '📇', farbe: 'gruen', name: 'Karteikarten', text: 'Wiederholen & merken' },
-  { id: 'hoeren', symbol: '🎧', farbe: 'lila', name: 'Hören', text: 'Wörter und Sätze verstehen' },
-  { id: 'aussprache', symbol: '🎙️', farbe: 'orange', name: 'Sprechen', text: 'Nachsprechen & aufnehmen' },
-  { id: 'schreiben', symbol: '✍️', farbe: 'teal', name: 'Schreiben', text: 'Tippen und Diktat' },
-  { id: 'bilder', symbol: '🖼️', farbe: 'gruen', name: 'Bilder', text: 'Foto-Vokabeln' },
-  { id: 'satzbau', symbol: '🧩', farbe: 'orange', name: 'Satzbau', text: 'Sätze aus Blöcken bauen' },
+  { id: 'bilder', symbol: '🖼️', farbe: 'gruen', name: 'Bilder', text: 'Sieh dir Bilder an und lerne neue Wörter.', chip: '🟢 Leicht · 5 Min' },
+  { id: 'hoeren', symbol: '🎧', farbe: 'lila', name: 'Hören', text: 'Höre zu und verstehe gesprochene Wörter.', chip: '🟡 Mittel · 10 Min' },
+  { id: 'schreiben', symbol: '✍️', farbe: 'teal', name: 'Schreiben', text: 'Schreibe Wörter und Sätze richtig auf.', chip: '🟡 Mittel · 10 Min' },
+  { id: 'satzbau', symbol: '🧩', farbe: 'orange', name: 'Satzbau', text: 'Baue Wörter zu sinnvollen Sätzen.', chip: '🔴 Schwer · 10 Min' },
+  { id: 'aussprache', symbol: '🎙️', farbe: 'orange', name: 'Aussprache', text: 'Sprich nach und verbessere deine Aussprache.', chip: '🟡 Mittel · 5–10 Min' },
+  { id: 'wdh', symbol: '🔁', farbe: 'gruen', name: 'Wiederholen', text: 'Stärke dein Wissen durch Wiederholung.', chip: '🔵 Variabel · 5–15 Min' },
 ]
 
 export default function Ueben() {
@@ -48,9 +49,12 @@ export default function Ueben() {
     )
   }
   if (aktiv) {
-    const modus = MODI.find(m => m.id === aktiv)
+    const modus = MODI.find(m => m.id === aktiv) || { symbol: '🎯', name: 'Heutige Mischung' }
     let woerter, arten
-    if (aktiv === 'wdh') {
+    if (aktiv === 'mischung') {
+      woerter = mische(alleKursWoerter).slice(0, 12)
+      arten = ['hoeren', 'tippen']
+    } else if (aktiv === 'wdh') {
       woerter = mische(faellig).slice(0, 15).map(k => ({ de: k.de, ku: k.ku, bild: findeBild(k.ku) }))
       arten = undefined
     } else {
@@ -81,12 +85,21 @@ export default function Ueben() {
         <img src="/bilder/helo-avatar.png" alt="Hêlo" className="kopf-avatar" />
       </div>
 
+      <div className="misch-hero">
+        <div>
+          <strong>🎯 Heutige Mischung</strong>
+          <div className="hell-text">Hör- & Schreibaufgaben · 10–15 Min</div>
+        </div>
+        <button className="mini weiss" onClick={() => setAktiv('mischung')}>Jetzt starten ›</button>
+      </div>
+
       <div className="ueben-kacheln">
         {MODI.map(m => (
           <button key={m.id} className="ueben-kachel" onClick={() => setAktiv(m.id)}>
             <span className={'icon-chip ' + m.farbe}>{m.symbol}</span>
             <strong>{m.name}</strong>
             <span className="hinweis">{m.text}</span>
+            {m.chip && <span className="dauer-chip">{m.chip}</span>}
             {m.id === 'wdh' && faellig.length > 0 && <span className="abzeichen">{faellig.length}</span>}
             <span className="pfeil">›</span>
           </button>
@@ -107,6 +120,8 @@ export default function Ueben() {
           </div>
         </div>
       )}
+
+      <TagesZiel />
 
       {schwierige.length > 0 && (
         <div className="karte">

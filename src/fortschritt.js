@@ -206,3 +206,57 @@ export function wochenAktivitaet() {
   }
   return aus
 }
+
+// ===== Edelsteine, Level, Tagesziel, Tages-Truhe (PDF-Design) =====
+export function edelsteine() { return lade().edelsteine || 0 }
+export function gibEdelsteine(n) {
+  const d = lade()
+  d.edelsteine = (d.edelsteine || 0) + n
+  speichere(d)
+}
+export function level() {
+  const xp = lade().xp || 0
+  return { stufe: Math.floor(xp / 100) + 1, fortschritt: xp % 100 }
+}
+
+const TAGESZIEL = 20
+export function tagesZiel() {
+  const d = lade()
+  const e = (d.tage && d.tage[heute()]) || { aufgaben: 0 }
+  return { erledigt: Math.min(e.aufgaben, TAGESZIEL), ziel: TAGESZIEL,
+    belohnt: d.zielBelohnt === heute() }
+}
+export function pruefeTagesziel() {
+  const d = lade()
+  const e = (d.tage && d.tage[heute()]) || { aufgaben: 0 }
+  if (e.aufgaben >= TAGESZIEL && d.zielBelohnt !== heute()) {
+    d.zielBelohnt = heute()
+    d.xp = (d.xp || 0) + 20
+    d.edelsteine = (d.edelsteine || 0) + 1
+    speichere(d)
+    return true
+  }
+  return false
+}
+export function truheOffen() { return lade().truhe !== heute() }
+export function truheOeffnen() {
+  const d = lade()
+  if (d.truhe === heute()) return null
+  d.truhe = heute()
+  const xp = 10 + Math.floor(Math.random() * 21)
+  const stein = Math.random() < 0.5 ? 1 : 0
+  d.xp = (d.xp || 0) + xp
+  d.edelsteine = (d.edelsteine || 0) + stein
+  speichere(d)
+  return { xp, stein }
+}
+
+// App-Modus: modern (hell) oder klassik (dunkel)
+const MODUS_KEY = 'red-kurd-modus'
+export function appModus() {
+  try { return localStorage.getItem(MODUS_KEY) || 'modern' } catch { return 'modern' }
+}
+export function setzeAppModus(m) {
+  try { localStorage.setItem(MODUS_KEY, m) } catch {}
+  document.body.classList.toggle('klassik', m === 'klassik')
+}

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { kurse } from './data/kurse.js'
 import { holeStand, faelligeKartenAlle, statistik, sessionLaden, sessionLoeschen, profilLaden, gesternStatistik } from './fortschritt.js'
 import { Uebung, baueUebungen, mische, alleKursWoerter } from './Uebung.jsx'
+import TagesZiel from './TagesZiel.jsx'
 
 const MODI = [
   { id: 'kurz', name: 'Kurz', dauer: '~5 Min', aufgaben: 8 },
@@ -71,8 +72,8 @@ export default function Heute({ status }) {
     <section>
       <div className="seiten-kopf">
         <div>
-          <h1>{gruss} 👋</h1>
-          <p className="untertitel-neu">Schön, dass du dranbleibst!</p>
+          <h1>{gruss}! 👋</h1>
+          <p className="sprechblase">Hêlo sagt: Kurmancî lernen macht jeden Tag ein Stück reicher!</p>
         </div>
         <img src="/bilder/helo-avatar.png" alt="Hêlo" className="kopf-avatar" />
       </div>
@@ -83,12 +84,14 @@ export default function Heute({ status }) {
         <button className="heute-start fortsetzen" onClick={() => setSitzung({
           uebungen: gespeichert.uebungen, startIndex: gespeichert.index,
           startPunkte: gespeichert.punkte, titel: gespeichert.titel })}>
-          ▶ Sitzung fortsetzen · Aufgabe {gespeichert.index + 1} von {gespeichert.uebungen.length}
+          <span style={{ flex: 1, textAlign: 'left' }}>▶ Sitzung fortsetzen<br />
+            <small style={{ fontWeight: 600 }}>{gespeichert.titel || 'Heute'} · Aufgabe {gespeichert.index + 1} von {gespeichert.uebungen.length}</small></span>
+          <span className="fortsetzen-prozent">{Math.round((gespeichert.index / gespeichert.uebungen.length) * 100)} %</span>
         </button>
       )}
 
-      <button className="heute-start" onClick={() => { sessionLoeschen(); setSitzung({ uebungen: plan.uebungen }) }}>
-        ▶ Weiterlernen
+      <button className="heute-start gruen-start" onClick={() => { sessionLoeschen(); setSitzung({ uebungen: plan.uebungen }) }}>
+        📖 Weiterlernen — deine gemischte Sitzung
       </button>
 
       <div className="karte">
@@ -149,6 +152,8 @@ export default function Heute({ status }) {
           <div className="hinweis">Weiter so! Jede Übung bringt dich weiter.</div>
         </div>
       )}
+
+      <TagesZiel />
 
       {status && status.saetze > 0 && (
         <p className="hinweis">
