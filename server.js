@@ -38,7 +38,11 @@ const server = http.createServer((req, res) => {
         `SELECT lang, wort, wortart, ipa, bedeutungen, formen FROM wiki_eintraege
          WHERE wort LIKE ? LIMIT 15`
       ).all(q + "%");
-      return json(res, { woerter, wiki });
+      const formen = db.prepare(
+        `SELECT lang, lemma, form, merkmale FROM formen
+         WHERE form LIKE ? OR lemma LIKE ? LIMIT 25`
+      ).all(q + "%", q + "%");
+      return json(res, { woerter, wiki, formen });
     }
 
     if (url.pathname === "/api/beispiele" && q) {
@@ -70,7 +74,12 @@ const server = http.createServer((req, res) => {
     if (url.pathname === "/api/status") {
       const s = db.prepare("SELECT COUNT(*) AS n FROM saetze").get();
       const w = db.prepare("SELECT COUNT(*) AS n FROM woerter").get();
-      return json(res, { saetze: s.n, woerter: w.n, db: DB_PFAD });
+      let formen = 0, wortlisten = 0;
+      try {
+        formen = db.prepare("SELECT COUNT(*) AS n FROM formen").get().n;
+        wortlisten = db.prepare("SELECT COUNT(*) AS n FROM wortlisten").get().n;
+      } catch {}
+      return json(res, { saetze: s.n, woerter: w.n, formen, wortlisten, db: DB_PFAD });
     }
 
     json(res, { fehler: "Unbekannter Pfad. Nutze /api/suche, /api/beispiele, /api/vokabeln, /api/status" });
