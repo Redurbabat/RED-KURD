@@ -1,63 +1,87 @@
-// Startseite des Abenteuer-Modus: Kursauswahl, Kursstand, kurze Trainings und
-// eine Vorschau des aktuellen Lernpfads. Der Lernstand ist derselbe wie im
-// Modern-Modus — hier wird er nur anders erzählt.
-// Die Kopfstatistik (Serie, XP, Edelsteine, Energie) kommt aus der Shell.
-import { useState } from 'react'
+// Startseite des Abenteuer-Modus.
+// RED-KURD ist eine spezialisierte App: Deutsch als Ausgangssprache, Kurmancî
+// als Zielsprache — deshalb gibt es hier keine Sprachauswahl mehr, sondern
+// einen klaren Tagesablauf: Gruss, Tagesplan, ein Knopf zum Loslegen, der
+// Lernpfad, eine Kulturkarte und das Newroz-Feuer der Serie.
+// Gelesener Text steht immer auf Pergament — Card ist im Abenteuer-Modus
+// bereits eine Pergamentfläche. Kopfstatistik und Navigation kommen aus der
+// Shell und werden hier nicht wiederholt.
+import { useMemo } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
-import { T } from '../../../core/texts.js'
+import { grussText } from '../../../core/texts.js'
+import { statistik } from '../../../core/progress/progressSelectors.js'
+import { heute } from '../../../core/progress/scheduler.js'
 import {
+  aktuelleEinheit,
   aktuelleWelt,
   aktuellerKnoten,
-  kursFortschritt,
-  weltFortschritt,
   weltPfad,
 } from '../../../core/courses/courseRepository.js'
+import { planeSitzung } from '../../../core/session/sessionPlanner.js'
+import { standardDauer } from '../../../core/profile/profileStore.js'
+import { kulturkarten } from '../../../data/kultur.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
-import Badge from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import { ErrorState } from '../../../components/common/EmptyState.jsx'
+import Landscape from '../../../components/adventure/Landscape.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './AdventureHomePage.css'
 
-// Kurmancî ist der einzige fertige Kurs — die anderen sind ehrlich als „bald"
-// gekennzeichnet und führen nirgendwohin.
-const KURSE = [
-  { id: 'ku', kuerzel: 'KU', name: 'Kurmancî', aktiv: true },
-  { id: 'so', kuerzel: 'SO', name: 'Soranî' },
-  { id: 'zz', kuerzel: 'ZZ', name: 'Zazakî' },
-  { id: 'en', kuerzel: 'EN', name: 'Englisch' },
-]
-
-const TRAININGS = [
-  { id: 'lesen', name: 'Lesen', icon: 'buch', ton: 'lila', ziel: '/explore/reading' },
-  { id: 'aussprache', name: 'Aussprache', icon: 'mikrofon', ton: 'blau', ziel: '/practice/speaking' },
-  { id: 'satzbau', name: 'Satzbau', icon: 'puzzle', ton: 'teal', ziel: '/practice/sentence-builder' },
-]
+// Statuszeichen der Pfadvorschau — der Zustand steht nie nur in der Farbe,
+// sondern zusätzlich als Zeichen und als Text für Screenreader.
+const STATUS_MARKE = {
+  fertig: 'haken',
+  aktuell: 'fussspur',
+  begonnen: 'fussspur',
+  gesperrt: 'schloss',
+}
 
 const STATUS_TEXT = {
   fertig: 'abgeschlossen',
   aktuell: 'aktuelle Station',
   begonnen: 'begonnen',
-  gesperrt: 'noch gesperrt — vorherige Station zuerst abschliessen',
+  gesperrt: 'noch gesperrt',
 }
 
-/** Statuszeichen der Vorschau — Farbe allein sagt nie etwas aus. */
-function markeVon(status) {
-  if (status === 'fertig') return 'haken'
-  if (status === 'gesperrt') return 'schloss'
-  return 'fussspur'
+/** Ein Satz reicht auf der Startseite — der Rest steht auf der Kulturseite. */
+function ersterSatz(text) {
+  const roh = String(text || '').trim()
+  const ende = roh.indexOf('. ')
+  return ende > 0 ? roh.slice(0, ende + 1) : roh
+}
+
+/**
+ * Die Kulturkarte des Tages wechselt mit dem Kalendertag und ist dabei für
+ * alle Aufrufe desselben Tages dieselbe — kein Zufall, der bei jedem Rendern
+ * springt.
+ */
+function kulturDesTages() {
+  // Fehlen die Kulturkarten noch, entfällt die Karte einfach.
+  if (!kulturkarten?.length) return null
+  const zahl = heute()
+    .split('-')
+    .reduce((summe, teil) => summe + Number(teil), 0)
+  return kulturkarten[zahl % kulturkarten.length]
+}
+
+/** Einzahl und Mehrzahl sauber trennen. */
+function zaehlText(zahl, einzahl, mehrzahl) {
+  return zahl === 1 ? einzahl : mehrzahl
 }
 
 export default function AdventureHomePage() {
-  useLernstand()
-  const [hinweis, setHinweis] = useState('')
+  const stand = useLernstand()
 
   const welt = aktuelleWelt()
-  const kurs = kursFortschritt()
+  const einheit = aktuelleEinheit()
 
-  if (!welt) {
+  // Tagesplan und Pfadvorschau nur neu berechnen, wenn sich der Lernstand ändert.
+  const plan = useMemo(() => (einheit ? planeSitzung(standardDauer()) : null), [einheit, stand])
+  const pfad = useMemo(() => (welt ? weltPfad(welt.id).slice(0, 4) : []), [welt, stand])
+
+  if (!welt || !einheit) {
     return (
       <ErrorState
         titel="Dein Abenteuer liess sich nicht laden."
@@ -66,148 +90,174 @@ export default function AdventureHomePage() {
     )
   }
 
-  const stand = weltFortschritt(welt.id)
-  const vorschau = weltPfad(welt.id).slice(0, 4)
+  const serie = statistik().serie
   const naechste = aktuellerKnoten(welt.id)
-  const offen = Math.max(0, stand.gesamt - stand.fertig)
+  const kultur = kulturDesTages()
 
-  const rangText =
-    offen === 0
-      ? 'Höchster Rang erreicht — alle Einheiten dieser Welt sind geschafft.'
-      : `Noch ${offen} ${offen === 1 ? 'Einheit' : 'Einheiten'} bis zum nächsten Rang.`
+  // Nur die Zeilen zeigen, die heute wirklich anstehen.
+  const tagesplan = [
+    {
+      id: 'wiederholen',
+      icon: 'wiederholen',
+      zahl: plan.wiederholungen,
+      text: zaehlText(plan.wiederholungen, 'Wiederholung', 'Wiederholungen'),
+    },
+    {
+      id: 'neu',
+      icon: 'buch',
+      zahl: plan.neueWoerter,
+      text: zaehlText(plan.neueWoerter, 'neues Wort', 'neue Wörter'),
+    },
+    {
+      id: 'hoeren',
+      icon: 'kopfhoerer',
+      zahl: plan.hoerAufgaben,
+      text: zaehlText(plan.hoerAufgaben, 'Hörübung', 'Hörübungen'),
+    },
+  ].filter((zeile) => zeile.zahl > 0)
 
-  function waehleKurs(kursEintrag) {
-    if (kursEintrag.aktiv) {
-      navigiere('/adventure/worlds')
-      return
-    }
-    setHinweis(`${kursEintrag.name} kommt später — bleib bei Kurmancî.`)
-  }
+  const serieText =
+    serie > 0
+      ? `${serie} ${zaehlText(serie, 'Tag', 'Tage')} Serie — halte das Feuer am Brennen.`
+      : 'Noch keine Serie — heute entzündest du das Feuer zum ersten Mal.'
 
   return (
     <div className="ah-seite">
-      <header className="ah-kopf">
-        <h1>Deine Kurse</h1>
-        <p className="ah-kopf-unter">
-          Wähle eine Sprache oder setze deinen aktuellen Kurs fort.
-        </p>
-      </header>
-
-      <ul className="ah-kursreihe scroll-x" role="list">
-        {KURSE.map((k) => (
-          <li key={k.id} className="ah-kurs-zelle">
-            <button
-              type="button"
-              className={'ah-kurs' + (k.aktiv ? ' ah-kurs-aktiv' : '')}
-              aria-current={k.aktiv ? 'true' : undefined}
-              onClick={() => waehleKurs(k)}
-            >
-              <span className="ah-kurs-kachel" aria-hidden="true">
-                {k.kuerzel}
-              </span>
-              <span className="ah-kurs-name" lang={k.id === 'en' ? 'de' : 'ku'}>
-                {k.name}
-              </span>
-              {k.aktiv ? (
-                <span className="ah-kurs-stand">
-                  <Icon name="haken" groesse={14} />
-                  Aktiv
-                </span>
-              ) : (
-                <Badge ton="neutral">
-                  bald
-                  <span className="nur-sr"> — noch nicht verfügbar</span>
-                </Badge>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <p className="ah-hinweis" role="status" aria-live="polite">
-        {hinweis}
+      {/* Lernrichtung statt Sprachauswahl: Deutsch zuerst, Kurmancî danach. */}
+      <p className="ah-richtung">
+        <span lang="de">Deutsch</span>
+        <Icon name="pfeilRechts" groesse={22} className="ah-richtung-pfeil" />
+        <span lang="ku" className="ah-richtung-ziel">
+          Kurmancî
+        </span>
       </p>
 
-      <Card className="ah-score">
-        <div className="ah-score-kopf">
-          <h2 className="ah-score-titel">
-            <span lang="ku">Kurmancî</span>-Score
-          </h2>
-          <span className="ah-score-zahl">
-            {kurs.fertig} / {kurs.gesamt}
-          </span>
-        </div>
-        <ProgressBar
-          wert={kurs.fertig}
-          max={kurs.gesamt}
-          label={`Kurmancî-Kurs: ${kurs.fertig} von ${kurs.gesamt} Einheiten geschafft`}
-          farbe="green"
+      {/* Landschaftsband der aktuellen Welt, darauf die Begrüssung auf Pergament */}
+      <div className="adv-landschaft ah-band">
+        <Landscape
+          art={welt.landschaft}
+          farbe={welt.farbe}
+          himmel={welt.himmel}
+          className="adv-landschaft-svg"
         />
-        <p className="ah-score-hinweis">{rangText}</p>
-      </Card>
+        <div className="adv-landschaft-inhalt">
+          <Card className="ah-gruss">
+            <div className="ah-gruss-text">
+              <h1 className="ah-gruss-titel" lang="ku">
+                {grussText()}!
+              </h1>
+              <p className="ah-marke">Heute lernst du:</p>
+              <p className="ah-gruss-einheit">{einheit.name}</p>
+            </div>
+            <HeloMascot variante="winken" groesse={96} className="ah-helo" />
+          </Card>
+        </div>
+      </div>
 
-      <section className="rk-abschnitt" aria-labelledby="ah-neu-titel">
-        <h2 className="rk-abschnitt-titel" id="ah-neu-titel">
-          Neue Kurse
+      {/* Tagesplan */}
+      <Card className="ah-plan" aria-labelledby="ah-plan-titel">
+        <h2 className="ah-titel" id="ah-plan-titel">
+          Dein Tagesplan
         </h2>
-        <ul className="ah-neu-raster" role="list">
-          {TRAININGS.map((t) => (
-            <li key={t.id}>
-              <button type="button" className="ah-neu-kachel" onClick={() => navigiere(t.ziel)}>
-                <span className={'ah-neu-icon ah-neu-icon-' + t.ton}>
-                  <Icon name={t.icon} groesse={26} />
-                </span>
-                <span className="ah-neu-name">{t.name}</span>
-                <span className="ah-neu-unter">Neues Training</span>
-              </button>
+        <span className="ah-kelim-linie" aria-hidden="true" />
+        <ul className="ah-plan-liste" role="list">
+          {tagesplan.map((zeile) => (
+            <li key={zeile.id} className="ah-plan-zeile">
+              <span className="ah-plan-icon" aria-hidden="true">
+                <Icon name={zeile.icon} groesse={20} />
+              </span>
+              <span className="ah-plan-zahl">{zeile.zahl}</span>
+              <span className="ah-plan-text">{zeile.text}</span>
             </li>
           ))}
         </ul>
-      </section>
-
-      <Card className="ah-pfadkarte">
-        <h2 className="ah-pfad-titel">Aktueller Lernpfad</h2>
-        <p className="ah-pfad-welt">
-          Welt {welt.nr} · {welt.name}
-        </p>
-
-        <ul className="ah-pfad-vorschau" role="list">
-          {vorschau.map((k, i) => (
-            <li key={k.id} className={'ah-pfad-punkt ah-pfad-' + k.status}>
-              <span className="ah-pfad-kreis" aria-hidden="true">
-                {i + 1}
-              </span>
-              <Icon name={markeVon(k.status)} groesse={14} className="ah-pfad-marke" />
-              <span className="nur-sr">
-                Station {i + 1}: {k.name} — {STATUS_TEXT[k.status] || k.status}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <p className="ah-pfad-naechste">
-          Nächste Station: {naechste ? naechste.name : 'Alle Stationen geschafft'}
-        </p>
-
-        <PrimaryButton
-          art="blau"
-          breit
-          icon="welt"
-          onClick={() => navigiere('/adventure/world/' + welt.id)}
-        >
-          Welt {welt.nr} öffnen
-        </PrimaryButton>
       </Card>
 
       <PrimaryButton
         art="gruen"
         groesse="gross"
         breit
-        className="ah-haupt"
-        onClick={() => navigiere('/adventure/worlds')}
+        icon="flamme"
+        className="ah-start"
+        onClick={() => navigiere('/adventure/lesson/' + einheit.id)}
       >
-        {T.abenteuer.start}
+        Lernen beginnen
       </PrimaryButton>
+
+      {/* Lernpfad-Vorschau */}
+      <Card className="ah-weg" aria-labelledby="ah-weg-titel">
+        <h2 className="ah-titel" id="ah-weg-titel">
+          Dein Weg
+        </h2>
+        <p className="ah-weg-ort">
+          <Icon name="berg" groesse={16} />
+          <span>
+            Welt {welt.nr} · {welt.ort}
+          </span>
+        </p>
+
+        <ul className="ah-punkte" role="list">
+          {pfad.map((knoten, i) => (
+            <li key={knoten.id} className={'ah-punkt ah-punkt-' + knoten.status}>
+              <span className="ah-punkt-raute" aria-hidden="true" />
+              <Icon
+                name={STATUS_MARKE[knoten.status] || 'fussspur'}
+                groesse={16}
+                className="ah-punkt-marke"
+              />
+              <span className="nur-sr">
+                Station {i + 1}: {knoten.name} — {STATUS_TEXT[knoten.status] || knoten.status}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <p className="ah-weg-naechste">
+          Nächste Station: {naechste ? naechste.name : 'Alle Stationen dieser Welt sind geschafft'}
+        </p>
+
+        <PrimaryButton art="gold" breit icon="welt" onClick={() => navigiere('/adventure/worlds')}>
+          Zum Lernpfad
+        </PrimaryButton>
+      </Card>
+
+      {/* Kultur des Tages — entfällt, solange es keine Kulturkarten gibt. */}
+      {kultur && (
+        <Card className="ah-kultur" aria-labelledby="ah-kultur-titel">
+          <p className="ah-marke">Kultur des Tages</p>
+          <h2 className="ah-titel" id="ah-kultur-titel">
+            {kultur.titel}
+          </h2>
+          <p className="ah-kultur-text" lang="de">
+            {ersterSatz(kultur.erklaerung)}
+          </p>
+
+          <span className="ah-kelim-linie" aria-hidden="true" />
+
+          {/* Deutsch zuerst, Kurmancî darunter */}
+          <p className="ah-kultur-de" lang="de">
+            {kultur.ausdruck?.de}
+          </p>
+          <p className="ah-kultur-ku" lang="ku">
+            {kultur.ausdruck?.ku}
+          </p>
+
+          <PrimaryButton
+            art="still"
+            breit
+            icon="herz"
+            onClick={() => navigiere('/adventure/culture')}
+          >
+            Mehr Kultur
+          </PrimaryButton>
+        </Card>
+      )}
+
+      {/* Serie als Newroz-Feuer */}
+      <Card className="ah-serie" aria-label="Deine Serie">
+        <HeloMascot variante="fackel" groesse={48} dekorativ className="ah-serie-helo" />
+        <p className="ah-serie-text">{serieText}</p>
+      </Card>
     </div>
   )
 }

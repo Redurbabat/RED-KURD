@@ -22,6 +22,7 @@ import AdventureLessonPage from '../modes/adventure/pages/AdventureLessonPage.js
 import DailyTasksPage from '../modes/adventure/pages/DailyTasksPage.jsx'
 import ShopPage from '../modes/adventure/pages/ShopPage.jsx'
 import AdventureProfilePage from '../modes/adventure/pages/AdventureProfilePage.jsx'
+import AdventureCulturePage from '../modes/adventure/pages/AdventureCulturePage.jsx'
 
 import NotFoundPage from '../modes/modern/pages/NotFoundPage.jsx'
 
@@ -53,6 +54,7 @@ const ROUTEN = [
   ['/adventure/lesson/:lessonId', (p) => <AdventureLessonPage unitId={p.lessonId} />],
   ['/adventure/quests', () => <DailyTasksPage />],
   ['/adventure/tasks', () => <DailyTasksPage />],
+  ['/adventure/culture', () => <AdventureCulturePage />],
   ['/adventure/shop', () => <ShopPage />],
   ['/adventure/profile', () => <AdventureProfilePage />],
 ]

@@ -249,6 +249,52 @@
   overflow-wrap: anywhere;
 }
 
+/* Der Basar liegt bewusst hier im Profil und nicht in der Hauptnavigation. */
+.ap-basar-zahl {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  color: var(--adv-ink);
+}
+.ap-basar-zahl strong {
+  font-family: var(--font-head);
+  font-size: var(--text-2xl);
+  line-height: 1;
+}
+.ap-basar-zahl span {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--adv-ink-muted);
+}
+.ap-basar-text {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+.ap-basar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--adv-earth);
+  border-bottom: 4px solid var(--adv-earth-dark);
+  color: var(--rk-cream);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+.ap-basar-link span {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.ap-basar-link:active {
+  transform: translateY(2px);
+  border-bottom-width: 2px;
+}
+
 /* Ab 400 px ist Platz für eine grössere Plakette und höhere Säulen. */
 @media (min-width: 400px) {
   .ap-plakette {

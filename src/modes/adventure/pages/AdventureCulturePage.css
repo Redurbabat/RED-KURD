@@ -1,0 +1,256 @@
+/* Kulturseite des Abenteuer-Modus.
+   Jede Kulturkarte ist eine echte Pergamentfläche: dunkler Hintergrund der
+   Seite, gelesener Text immer auf hellem Grund. Eigene Klassen tragen das
+   Präfix „ak-". Seiten-CSS wird vor den Basisdateien geladen, deshalb sind
+   Regeln, die einer Basisregel widersprechen, mit .ak-seite verstärkt. */
+
+.ak-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+/* ---------- Themen-Reiter ----------
+   Der ausgewählte Reiter trägt Gold statt Türkis — er sitzt auf dem dunklen
+   Grund und soll wie eine Messingmarke wirken. Der Zustand steht zusätzlich
+   in aria-selected, Farbe allein trägt hier keine Information. */
+.ak-tabs {
+  margin-bottom: var(--space-4);
+}
+.ak-seite .rk-tab {
+  min-height: var(--touch-min);
+}
+.ak-seite .rk-tab[aria-selected='true'] {
+  background: var(--adv-gold);
+  border-color: var(--adv-gold);
+  color: var(--adv-bg);
+}
+
+/* ---------- Kartenliste ---------- */
+.ak-liste {
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* ---------- Pergamentkarte ----------
+   Die Karte dreht ihre Tokens lokal auf Pergament zurück. Dadurch lesen alle
+   Bausteine darin (Etikett, Ton-Knopf, gedämpfte Zeilen) ohne Sonderfälle
+   die richtigen Farben. */
+.ak-seite .ak-karte {
+  --rk-surface: var(--adv-cream);
+  --rk-surface-soft: var(--adv-parchment-dark);
+  --rk-border: var(--adv-parchment-edge);
+  --rk-border-strong: var(--adv-earth);
+  --rk-text: var(--adv-ink);
+  --rk-text-muted: var(--adv-ink-muted);
+
+  display: block;
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--adv-parchment);
+  border: 2px solid var(--adv-parchment-edge);
+  border-radius: var(--radius-large);
+  color: var(--adv-ink);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- Kopf: Plakette und Thema ---------- */
+.ak-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.ak-plakette {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--adv-earth);
+  color: var(--adv-cream);
+  border: 2px solid var(--adv-parchment-edge);
+}
+.ak-seite .ak-thema {
+  background: var(--adv-parchment-dark);
+  border: 1px solid var(--adv-parchment-edge);
+  color: var(--adv-ink);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ---------- Titel und Erklärung ---------- */
+.ak-seite .ak-titel {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  color: var(--adv-ink);
+  margin-bottom: var(--space-2);
+  overflow-wrap: anywhere;
+}
+.ak-seite .ak-text {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--adv-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Kelim-Trennlinie ----------
+   Rautengitter aus zwei gekreuzten Streifenmustern — dieselbe Formensprache
+   wie die Bordüren, aber ohne zusätzliche Grafik. */
+.ak-band {
+  display: block;
+  height: 10px;
+  margin: var(--space-4) 0;
+  border-radius: var(--radius-pill);
+  background:
+    repeating-linear-gradient(135deg, var(--adv-kelim) 0 5px, transparent 5px 10px),
+    repeating-linear-gradient(45deg, var(--adv-earth) 0 5px, transparent 5px 10px),
+    var(--adv-parchment-dark);
+}
+
+/* ---------- Ausdruck und Beispiel ----------
+   Deutsch steht oben, Kurmancî darunter. Der farbige Streifen links nimmt den
+   Ton des Themas auf, der Text bleibt immer tintenbraun — so hängt die
+   Lesbarkeit nie an der Themenfarbe. */
+.ak-block {
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  border: 1px solid var(--adv-parchment-edge);
+  border-left: 4px solid var(--adv-earth);
+  background: var(--adv-cream);
+}
+.ak-block-marke {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--adv-ink-muted);
+}
+.ak-seite .ak-de {
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  font-weight: 800;
+  color: var(--adv-ink);
+  overflow-wrap: anywhere;
+}
+.ak-ku-zeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.ak-seite .ak-ku {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--adv-ink);
+  overflow-wrap: anywhere;
+}
+.ak-seite .ak-hoeren {
+  flex-shrink: 0;
+  color: var(--adv-earth);
+  border: 1px solid var(--adv-parchment-edge);
+  background: var(--adv-parchment);
+}
+.ak-seite .ak-hoeren:hover {
+  background: var(--adv-parchment-dark);
+  color: var(--adv-ink);
+}
+
+/* ---------- Hinweis ---------- */
+.ak-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--adv-parchment-dark);
+  color: var(--adv-ink);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.ak-hinweis .rk-icon {
+  margin-top: 2px;
+  color: var(--adv-earth);
+}
+
+/* ---------- Fuß der Karte ---------- */
+.ak-fuss {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.ak-seite .ak-fuss .rk-knopf {
+  flex: 1 1 100%;
+}
+
+/* ---------- Farbtöne der Themen ----------
+   Der Ton färbt nur Plakette und Streifen. Das Thema steht immer als Wort
+   im Etikett daneben. */
+.ak-seite .ak-ton-erde .ak-plakette {
+  background: var(--adv-earth);
+  color: var(--adv-cream);
+}
+.ak-seite .ak-ton-erde .ak-block {
+  border-left-color: var(--adv-earth);
+}
+.ak-seite .ak-ton-rot .ak-plakette {
+  background: var(--adv-red);
+  color: var(--adv-cream);
+}
+.ak-seite .ak-ton-rot .ak-block {
+  border-left-color: var(--adv-red);
+}
+.ak-seite .ak-ton-gruen .ak-plakette {
+  background: var(--adv-green);
+  color: var(--adv-cream);
+}
+.ak-seite .ak-ton-gruen .ak-block {
+  border-left-color: var(--adv-green);
+}
+.ak-seite .ak-ton-teal .ak-plakette {
+  background: var(--adv-teal);
+  color: var(--adv-bg);
+}
+.ak-seite .ak-ton-teal .ak-block {
+  border-left-color: var(--adv-teal);
+}
+.ak-seite .ak-ton-gold .ak-plakette {
+  background: var(--adv-gold);
+  color: var(--adv-bg);
+}
+.ak-seite .ak-ton-gold .ak-block {
+  border-left-color: var(--adv-gold);
+}
+
+/* ---------- Schlusskarte ---------- */
+.ak-seite .ak-warum {
+  margin-top: var(--space-5);
+}
+.ak-seite .ak-warum p + p {
+  margin-top: var(--space-2);
+}
+
+/* Ab 560 px passt der Merken-Knopf neben den restlichen Kartenfuß. */
+@media (min-width: 560px) {
+  .ak-seite .ak-fuss .rk-knopf {
+    flex: 0 0 auto;
+  }
+}
+
+/* Auf breiten Bildschirmen stehen zwei Karten nebeneinander. */
+@media (min-width: 860px) {
+  .ak-liste {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

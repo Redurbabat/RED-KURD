@@ -1,5 +1,6 @@
 // Die gemeinsame Übungsoberfläche. Modern-Modus und Abenteuer-Modus nutzen
 // exakt diese Komponente — nur die Klasse `stil` ändert das Aussehen.
+// Ausgangssprache ist immer Deutsch, Zielsprache Kurmancî.
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
@@ -17,6 +18,26 @@ const BUCHSTABEN = ['A', 'B', 'C', 'D']
 const XP_JE_AUFGABE = 10
 
 /**
+ * Aussprache der kurmancîschen Sonderzeichen, jeweils mit deutschem Vergleich.
+ * Die Reihenfolge bestimmt, welcher Hinweis bei mehreren Treffern gezeigt wird.
+ */
+const AUSSPRACHE = [
+  { zeichen: 'ş', vergleich: 'klingt wie „sch“ in „Schule“' },
+  { zeichen: 'ç', vergleich: 'klingt wie „tsch“ in „Tschüss“' },
+  { zeichen: 'ê', vergleich: 'ist ein langes, geschlossenes „e“ wie in „Beet“' },
+  { zeichen: 'î', vergleich: 'ist ein langes „i“ wie in „Bier“' },
+  { zeichen: 'û', vergleich: 'ist ein langes „u“ wie in „Buch“' },
+  { zeichen: 'x', vergleich: 'klingt wie das „ch“ in „Bach“' },
+]
+
+/** Erster passender Aussprachehinweis zu einem Kurmancî-Wort, sonst leer. */
+function ausspracheHinweis(wort) {
+  const klein = String(wort || '').toLowerCase()
+  const treffer = AUSSPRACHE.find((a) => klein.includes(a.zeichen))
+  return treffer ? `Das „${treffer.zeichen}“ ${treffer.vergleich}.` : ''
+}
+
+/**
  * Hilfstext unter einer Antwortmöglichkeit.
  * Die Richtung muss mitgegeben werden: „du" ist auf Deutsch ein Pronomen und
  * auf Kurmancî die Zwei — ohne Richtung stünde unter dem deutschen „du" die
@@ -25,6 +46,24 @@ const XP_JE_AUFGABE = 10
 function untertitel(option, optionenSindKurmanci) {
   const treffer = optionenSindKurmanci ? deutschVon(option) : kurmanciVon(option)
   return treffer && treffer !== option ? treffer : ''
+}
+
+/** Ist die richtige Antwort dieser Aufgabenart auf Kurmancî? */
+function antwortIstKurmanci(art) {
+  return art === 'wahl-ku' || art === 'tippen'
+}
+
+/**
+ * Die Bedeutung der richtigen Antwort in der jeweils anderen Sprache.
+ * @returns {{text:string, sprache:'de'|'ku'}|null}
+ */
+function bedeutungZurAntwort(u) {
+  // Beim Bild ist die Antwort ein Wort-Bild — dazu passt die deutsche Bedeutung.
+  if (u.art === 'bild') return u.w.de ? { text: u.w.de, sprache: 'de' } : null
+  const nachDeutsch = antwortIstKurmanci(u.art)
+  const treffer = nachDeutsch ? deutschVon(u.antwort) || u.w.de : kurmanciVon(u.antwort) || u.w.ku
+  if (!treffer || treffer === u.antwort) return null
+  return { text: treffer, sprache: nachDeutsch ? 'de' : 'ku' }
 }
 
 /** Nur die Daten sichern, die zum Fortsetzen nötig sind. */
@@ -129,6 +168,8 @@ export default function ExercisePlayer({
   const skill = SKILL_JE_ART[u.art] || 'erkennen'
   // Nur bei 'wahl-ku' stehen Kurmancî-Wörter zur Auswahl, sonst deutsche.
   const optionenKu = u.art === 'wahl-ku'
+  const bedeutung = bedeutungZurAntwort(u)
+  const hinweis = ausspracheHinweis(u.w.ku)
 
   function bewerten(richtig) {
     const sekunden = Math.min(120, Math.round((Date.now() - startZeit.current) / 1000))
@@ -201,11 +242,11 @@ export default function ExercisePlayer({
         {titel} · {T.uebung.aufgabe} {index + 1} {T.uebung.von} {uebungen.length}
       </p>
 
-      {/* ---- Bildaufgabe ---- */}
+      {/* ---- Bildaufgabe: Frage auf Kurmancî, Antwort ist ein Wort-Bild ---- */}
       {u.art === 'bild' && (
         <>
           <h2 className="rk-frage">
-            Welches Bild passt zu <strong lang="ku">{u.frage}</strong>?
+            Welches Bild passt zu „<strong lang="ku">{u.frage}</strong>“?
           </h2>
           <HoerKnopf wort={u.frage} />
           <div className="rk-optionen rk-optionen-bild">
@@ -232,19 +273,29 @@ export default function ExercisePlayer({
         <>
           {u.art === 'hoeren' ? (
             <>
-              <h2 className="rk-frage">Was hörst du?</h2>
+              <h2 className="rk-frage">Höre das kurmancîsche Wort. Was bedeutet es auf Deutsch?</h2>
               <HoerKnopf wort={u.frage} gross />
             </>
           ) : (
             <>
               <h2 className="rk-frage">
-                {u.w.bild && (
+                {/* Das Wort-Bild steht nur bei „wahl-ku" neben der Frage. Bei
+                    „wahl-de" wird die deutsche Bedeutung gesucht — das Bild
+                    würde sie verraten. */}
+                {u.w.bild && u.art === 'wahl-ku' && (
                   <span className="rk-frage-bild" aria-hidden="true">
                     {u.w.bild}
                   </span>
                 )}
-                Wie sagt man{' '}
-                <strong lang={u.art === 'wahl-de' ? 'ku' : 'de'}>{u.frage}</strong>?
+                {u.art === 'wahl-ku' ? (
+                  <>
+                    Wie sagt man „<strong lang="de">{u.frage}</strong>“ auf Kurmancî?
+                  </>
+                ) : (
+                  <>
+                    Was bedeutet „<strong lang="ku">{u.frage}</strong>“ auf Deutsch?
+                  </>
+                )}
               </h2>
               {u.art === 'wahl-de' && <HoerKnopf wort={u.w.ku} />}
             </>
@@ -280,7 +331,7 @@ export default function ExercisePlayer({
         </>
       )}
 
-      {/* ---- Tippaufgabe ---- */}
+      {/* ---- Tippaufgabe: deutsches Wort vorgeben, Kurmancî tippen ---- */}
       {u.art === 'tippen' && (
         <>
           <h2 className="rk-frage" id="tipp-frage">
@@ -289,7 +340,7 @@ export default function ExercisePlayer({
                 {u.w.bild}
               </span>
             )}
-            Tippe auf Kurmancî: <strong lang="de">{u.frage}</strong>
+            Schreibe „<strong lang="de">{u.frage}</strong>“ auf Kurmancî.
           </h2>
           <form onSubmit={pruefeTipp} className="rk-tippzeile">
             <label className="nur-sr" htmlFor="tipp-feld">
@@ -330,11 +381,17 @@ export default function ExercisePlayer({
                 </>
               ) : (
                 <>
-                  <strong>{T.uebung.falsch}</strong> {T.uebung.falschText}:{' '}
-                  <strong lang={u.art === 'tippen' || u.art === 'wahl-ku' ? 'ku' : 'de'}>{u.antwort}</strong>
-                  {u.art !== 'tippen' && untertitel(u.antwort, optionenKu) && (
-                    <div className="gedaempft">{untertitel(u.antwort, optionenKu)}</div>
+                  <strong>{T.uebung.falsch}</strong>
+                  <div>
+                    {T.uebung.falschText}:{' '}
+                    <strong lang={antwortIstKurmanci(u.art) ? 'ku' : 'de'}>{u.antwort}</strong>
+                  </div>
+                  {bedeutung && (
+                    <div className="gedaempft" lang={bedeutung.sprache}>
+                      {bedeutung.text}
+                    </div>
                   )}
+                  {hinweis && <div className="gedaempft">{hinweis}</div>}
                 </>
               )}
             </div>
@@ -354,18 +411,23 @@ export default function ExercisePlayer({
         </PrimaryButton>
       )}
 
-      <p className="rk-tipp">
-        <Icon name="info" groesse={16} />
-        Tipp: Höre dir die Aussprache an und sprich laut mit.
-        <button
-          type="button"
-          className="rk-tonknopf"
-          onClick={() => spieleWort(u.w.ku)}
-          aria-label={`${u.w.ku} anhören`}
-        >
-          <Icon name="lautsprecher" groesse={18} />
-        </button>
-      </p>
+      {/* Bei „wahl-ku" und „tippen" ist das kurmancîsche Wort die gesuchte
+          Antwort — vorgesprochen würde der Tonknopf sie verraten. Dort taucht
+          er erst nach dem Antworten auf, sonst von Anfang an. */}
+      {(!antwortIstKurmanci(u.art) || antwort !== null) && (
+        <p className="rk-tipp">
+          <Icon name="info" groesse={16} />
+          Tipp: Höre dir die Aussprache an und sprich laut mit.
+          <button
+            type="button"
+            className="rk-tonknopf"
+            onClick={() => spieleWort(u.w.ku)}
+            aria-label={`${u.w.ku} anhören`}
+          >
+            <Icon name="lautsprecher" groesse={18} />
+          </button>
+        </p>
+      )}
     </div>
   )
 }

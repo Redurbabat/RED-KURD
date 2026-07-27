@@ -9,21 +9,23 @@ export const MODERN_NAV = [
   { id: 'fortschritt', pfad: '/progress', name: T.nav.fortschritt, icon: 'fortschritt' },
 ]
 
+// Lernen und Kultur stehen im Vordergrund — der Shop liegt im Profil.
 export const ABENTEUER_NAV = [
-  { id: 'welt', pfad: '/adventure', name: T.nav.welt, icon: 'welt' },
+  { id: 'start', pfad: '/adventure', name: 'Start', icon: 'heute' },
+  { id: 'lernpfad', pfad: '/adventure/worlds', name: 'Lernpfad', icon: 'welt' },
   { id: 'aufgaben', pfad: '/adventure/tasks', name: T.nav.aufgaben, icon: 'aufgaben' },
-  { id: 'shop', pfad: '/adventure/shop', name: T.nav.shop, icon: 'shop' },
+  { id: 'kultur', pfad: '/adventure/culture', name: 'Kultur', icon: 'musik' },
   { id: 'profil', pfad: '/adventure/profile', name: T.nav.profil, icon: 'profil' },
 ]
 
 /** Welcher Navigationspunkt ist beim aktuellen Pfad aktiv? */
 export function istAktiv(eintrag, pfad) {
-  if (eintrag.pfad === '/adventure') {
-    return (
-      pfad === '/adventure' ||
-      pfad.startsWith('/adventure/world') ||
-      pfad.startsWith('/adventure/lesson')
-    )
+  if (eintrag.pfad === '/adventure') return pfad === '/adventure'
+  if (eintrag.pfad === '/adventure/worlds') {
+    return pfad.startsWith('/adventure/world') || pfad.startsWith('/adventure/lesson')
+  }
+  if (eintrag.pfad === '/adventure/profile') {
+    return pfad.startsWith('/adventure/profile') || pfad.startsWith('/adventure/shop')
   }
   if (eintrag.pfad === '/today') return pfad === '/today' || pfad === '/'
   return pfad === eintrag.pfad || pfad.startsWith(eintrag.pfad + '/')

@@ -172,6 +172,30 @@ export default function AdventureProfilePage() {
         </Card>
       </section>
 
+      {/* Der Basar ist bewusst kein Hauptbereich mehr — Lernen und Kultur
+          stehen in der Navigation vorne. Hier im Profil bleibt er erreichbar. */}
+      <section className="rk-abschnitt" aria-labelledby="ap-basar-titel">
+        <h2 className="rk-abschnitt-titel" id="ap-basar-titel">
+          Basar
+        </h2>
+        <Card className="ap-basarkarte">
+          <p className="ap-basar-zahl">
+            <Icon name="edelstein" groesse={20} />
+            <strong>{s.edelsteine}</strong>
+            <span>{s.edelsteine === 1 ? 'Edelstein' : 'Edelsteine'}</span>
+          </p>
+          <p className="ap-basar-text">
+            Edelsteine sammelst du beim Lernen. Im Basar tauschst du sie gegen Schal, Weste
+            und Kelim-Tasche für Hêlo — nichts davon schaltet Lerninhalte frei.
+          </p>
+          <Link to="/adventure/shop" className="ap-basar-link">
+            <Icon name="shop" groesse={18} />
+            <span>Basar öffnen</span>
+            <Icon name="pfeilRechts" groesse={18} />
+          </Link>
+        </Card>
+      </section>
+
       <Link to="/settings" className="ap-einstellungen">
         <Icon name="einstellungen" groesse={18} />
         <span>Zu den Einstellungen</span>

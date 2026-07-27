@@ -1,4 +1,6 @@
 // Aussprache-Studio: anhören, nachsprechen, aufnehmen und vergleichen.
+// Hier wird gesprochen, nicht übersetzt — deshalb steht das Kurmancî oben und
+// die deutsche Bedeutung darunter.
 // Bewusst ohne Bewertung durch die App — du hörst selbst, was noch anders klingt.
 import { useEffect, useRef, useState } from 'react'
 import { EINHEITEN } from '../../core/courses/courseRepository.js'
@@ -13,6 +15,19 @@ import './PronunciationStudio.css'
 
 const XP_JE_AUFNAHME = 5
 const VERGLEICH_PAUSE = 1600
+
+/**
+ * Die sechs kurmancîschen Sonderzeichen mit deutschem Vergleich.
+ * Dieselbe Tabelle nutzt auch die Rückmeldung in der Übung.
+ */
+const AUSSPRACHE = [
+  { zeichen: 'ê', vergleich: 'ist ein langes, geschlossenes „e“ wie in „Beet“' },
+  { zeichen: 'î', vergleich: 'ist ein langes „i“ wie in „Bier“' },
+  { zeichen: 'û', vergleich: 'ist ein langes „u“ wie in „Buch“' },
+  { zeichen: 'ş', vergleich: 'klingt wie „sch“ in „Schule“' },
+  { zeichen: 'ç', vergleich: 'klingt wie „tsch“ in „Tschüss“' },
+  { zeichen: 'x', vergleich: 'klingt wie das „ch“ in „Bach“' },
+]
 
 const FEHLERTEXTE = {
   'kein-mikrofon': {
@@ -218,95 +233,115 @@ export default function PronunciationStudio() {
           {einheit.name} · {einheit.woerter.length} Wörter
         </h2>
 
-        <ul className="ps-liste">
-          {einheit.woerter.map((w) => {
-            const laeuft = aufnahmeWort === w.ku
-            return (
-              <li key={w.ku} className="ps-zeile">
-                {w.bild && (
-                  <span className="ps-bild" aria-hidden="true">
-                    {w.bild}
-                  </span>
-                )}
-                <div className="ps-text">
-                  <strong lang="ku" className="ps-ku">
-                    {w.ku}
-                  </strong>
-                  <span lang="de" className="ps-de">
-                    {w.de}
-                  </span>
-                  <span className="ps-marken">
-                    {hatAufnahme[w.ku] && (
-                      <Badge ton="gruen" icon="haken">
-                        Aufnahme vorhanden
-                      </Badge>
-                    )}
-                    {laeuft && (
-                      <Badge ton="rot" icon="mikrofon">
-                        Aufnahme läuft
-                      </Badge>
-                    )}
-                  </span>
-                </div>
-                <div className="ps-knoepfe">
-                  <PrimaryButton
-                    groesse="klein"
-                    art="still"
-                    icon="lautsprecher"
-                    aria-label={`${w.ku} anhören`}
-                    onClick={() => spieleWort(w.ku)}
-                  >
-                    Anhören
-                  </PrimaryButton>
-
-                  {laeuft ? (
-                    <PrimaryButton
-                      groesse="klein"
-                      art="gefahr"
-                      icon="pause"
-                      aria-label={`Aufnahme von ${w.ku} stoppen`}
-                      onClick={stoppeAufnahme}
-                    >
-                      Stopp
-                    </PrimaryButton>
-                  ) : (
-                    <PrimaryButton
-                      groesse="klein"
-                      icon="mikrofon"
-                      aria-label={`${w.ku} aufnehmen`}
-                      onClick={() => starteAufnahme(w.ku)}
-                    >
-                      Aufnehmen
-                    </PrimaryButton>
-                  )}
-
-                  {hatAufnahme[w.ku] && (
-                    <>
-                      <PrimaryButton
-                        groesse="klein"
-                        art="still"
-                        icon="play"
-                        aria-label={`Meine Aufnahme von ${w.ku} abspielen`}
-                        onClick={() => spieleMeine(w.ku)}
-                      >
-                        Meine Aufnahme
-                      </PrimaryButton>
-                      <PrimaryButton
-                        groesse="klein"
-                        art="still"
-                        icon="wiederholen"
-                        aria-label={`Vorlage und meine Aufnahme von ${w.ku} vergleichen`}
-                        onClick={() => vergleiche(w.ku)}
-                      >
-                        Vergleichen
-                      </PrimaryButton>
-                    </>
-                  )}
-                </div>
+        {/* Aussprachehilfe: die sechs Sonderzeichen mit deutschem Vergleich. */}
+        <Card titel="Aussprachehilfe" icon="sprache">
+          <p className="gedaempft ps-datenschutz">
+            Diese sechs Buchstaben gibt es im Deutschen so nicht:
+          </p>
+          <ul className="ps-liste">
+            {AUSSPRACHE.map((a) => (
+              <li key={a.zeichen} className="reihe">
+                <strong className="ps-bild" lang="ku">
+                  {a.zeichen}
+                </strong>
+                <span lang="de">{a.vergleich}</span>
               </li>
-            )
-          })}
-        </ul>
+            ))}
+          </ul>
+        </Card>
+
+        <div className="stapel-eng">
+          <p className="gedaempft">Sprich nach:</p>
+          <ul className="ps-liste">
+            {einheit.woerter.map((w) => {
+              const laeuft = aufnahmeWort === w.ku
+              return (
+                <li key={w.ku} className="ps-zeile">
+                  {w.bild && (
+                    <span className="ps-bild" aria-hidden="true">
+                      {w.bild}
+                    </span>
+                  )}
+                  <div className="ps-text">
+                    <strong lang="ku" className="ps-ku">
+                      {w.ku}
+                    </strong>
+                    <span lang="de" className="ps-de">
+                      {w.de}
+                    </span>
+                    <span className="ps-marken">
+                      {hatAufnahme[w.ku] && (
+                        <Badge ton="gruen" icon="haken">
+                          Aufnahme vorhanden
+                        </Badge>
+                      )}
+                      {laeuft && (
+                        <Badge ton="rot" icon="mikrofon">
+                          Aufnahme läuft
+                        </Badge>
+                      )}
+                    </span>
+                  </div>
+                  <div className="ps-knoepfe">
+                    <PrimaryButton
+                      groesse="klein"
+                      art="still"
+                      icon="lautsprecher"
+                      aria-label={`${w.ku} anhören`}
+                      onClick={() => spieleWort(w.ku)}
+                    >
+                      Anhören
+                    </PrimaryButton>
+
+                    {laeuft ? (
+                      <PrimaryButton
+                        groesse="klein"
+                        art="gefahr"
+                        icon="pause"
+                        aria-label={`Aufnahme von ${w.ku} stoppen`}
+                        onClick={stoppeAufnahme}
+                      >
+                        Stopp
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        groesse="klein"
+                        icon="mikrofon"
+                        aria-label={`${w.ku} aufnehmen`}
+                        onClick={() => starteAufnahme(w.ku)}
+                      >
+                        Aufnehmen
+                      </PrimaryButton>
+                    )}
+
+                    {hatAufnahme[w.ku] && (
+                      <>
+                        <PrimaryButton
+                          groesse="klein"
+                          art="still"
+                          icon="play"
+                          aria-label={`Meine Aufnahme von ${w.ku} abspielen`}
+                          onClick={() => spieleMeine(w.ku)}
+                        >
+                          Meine Aufnahme
+                        </PrimaryButton>
+                        <PrimaryButton
+                          groesse="klein"
+                          art="still"
+                          icon="wiederholen"
+                          aria-label={`Vorlage und meine Aufnahme von ${w.ku} vergleichen`}
+                          onClick={() => vergleiche(w.ku)}
+                        >
+                          Vergleichen
+                        </PrimaryButton>
+                      </>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </section>
     </>
   )

@@ -1,4 +1,5 @@
 // Satzbau: echte Beispielsätze aus Wortblöcken zusammensetzen.
+// Vorgegeben wird der deutsche Satz, gebaut wird der kurmancîsche.
 // Die Sätze kommen aus den statischen Beispieldaten, nicht aus dem Wiederholsystem.
 import { useEffect, useMemo, useState } from 'react'
 import { zufallsPaare } from '../../core/data/staticData.js'
@@ -142,7 +143,8 @@ export default function SentenceBuilder() {
         Satz {runde + 1} von {saetze.length} · {punkte} richtig
       </p>
 
-      <Card titel="Baue den Satz auf Kurmancî" icon="puzzle">
+      <Card titel="Bilde den kurmancîschen Satz:" icon="puzzle">
+        {/* Vorgabe ist immer der deutsche Satz. */}
         <p className="sb-vorgabe" lang="de">
           „{paar.uebersetzung}“
         </p>
@@ -189,22 +191,27 @@ export default function SentenceBuilder() {
           ))}
         </ul>
 
+        {/* Nach dem Prüfen immer erst der Kurmancî-Satz, darunter die Übersetzung. */}
         <div aria-live="polite">
           {ergebnis === true && (
-            <p className="sb-rueckmeldung sb-gut">
+            <div className="sb-rueckmeldung sb-gut">
               <Icon name="haken" groesse={20} />
-              <span>
-                Richtig! <strong lang="ku">{paar.satz}</strong> · +{XP_JE_SATZ} XP
-              </span>
-            </p>
+              <div className="stapel-eng">
+                <strong>Richtig! · +{XP_JE_SATZ} XP</strong>
+                <span lang="ku">{paar.satz}</span>
+                <span lang="de">{paar.uebersetzung}</span>
+              </div>
+            </div>
           )}
           {ergebnis === false && (
-            <p className="sb-rueckmeldung sb-schlecht">
+            <div className="sb-rueckmeldung sb-schlecht">
               <Icon name="kreuz" groesse={20} />
-              <span>
-                Richtig wäre: <strong lang="ku">{paar.satz}</strong>
-              </span>
-            </p>
+              <div className="stapel-eng">
+                <strong>Richtig wäre:</strong>
+                <span lang="ku">{paar.satz}</span>
+                <span lang="de">{paar.uebersetzung}</span>
+              </div>
+            </div>
           )}
         </div>
 
