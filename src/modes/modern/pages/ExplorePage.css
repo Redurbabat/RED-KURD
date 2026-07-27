@@ -1,0 +1,53 @@
+/* ===== Entdecken (Modern) ===== */
+
+.ex-kacheln {
+  list-style: none;
+}
+.ex-kacheln > li {
+  display: flex;
+}
+
+/* Die ClickCard setzt ihren Pfeil oben rechts absolut — dafuer Platz lassen. */
+.ex-kachel {
+  flex: 1;
+  padding-right: var(--space-6);
+  margin-bottom: 0;
+}
+
+.ex-kachel-text {
+  display: block;
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+
+.ex-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Textvorschau in der Lesen-Kachel */
+.ex-vorschau {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.ex-vorschau-zeile {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+}
+.ex-vorschau-titel {
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  color: var(--rk-text);
+}
+.ex-vorschau-meta {
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}

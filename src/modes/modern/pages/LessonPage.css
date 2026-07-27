@@ -1,0 +1,16 @@
+/* ===== Lektionsablauf (Modern) ===== */
+
+.lesson-naechster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 520px;
+  margin: 0 auto var(--space-5);
+  padding: 0 var(--space-4);
+}
+
+.lesson-hinweis {
+  max-width: 520px;
+  margin: 0 auto var(--space-6);
+  padding: 0 var(--space-4);
+}

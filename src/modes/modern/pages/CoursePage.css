@@ -1,0 +1,75 @@
+/* ===== Kursübersicht (Modern) ===== */
+
+/* Hervorgehobene aktuelle Einheit */
+.rk-hero.kurs-aktuell {
+  flex-wrap: wrap;
+}
+.kurs-hero-symbol {
+  font-size: 2.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.kurs-hero-balken {
+  margin-top: var(--space-2);
+}
+
+/* Statusspalte in der Einheitenliste */
+.rk-einheit .kurs-status {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-1);
+  max-width: 10rem;
+  text-align: right;
+}
+.kurs-status-zeile {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.kurs-status-text {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  color: var(--rk-text-muted);
+}
+.kurs-icon-fertig {
+  color: var(--rk-green-dark);
+  flex-shrink: 0;
+}
+.kurs-icon-gesperrt {
+  color: var(--rk-text-light);
+  flex-shrink: 0;
+}
+
+.kurs-sterne {
+  display: inline-flex;
+  gap: 2px;
+}
+
+/* Hinweis unter der Liste */
+.rk-hinweisstreifen.kurs-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  margin-bottom: 0;
+}
+.rk-hinweisstreifen.kurs-hinweis .rk-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Schmale Geräte: Status rutscht unter den Namen statt zu quetschen. */
+@media (max-width: 559px) {
+  .rk-einheitenliste .rk-einheit {
+    flex-wrap: wrap;
+  }
+  .rk-einheit .kurs-status {
+    flex-basis: 100%;
+    max-width: none;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .rk-hero.kurs-aktuell .rk-knopf {
+    width: 100%;
+  }
+}

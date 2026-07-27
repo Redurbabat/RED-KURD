@@ -1,0 +1,129 @@
+/* Shop des Abenteuer-Modus. Karten, Raster und Truhe kommen aus adventure.css —
+   hier steht nur, was diese Seite zusätzlich braucht. Seiten-CSS wird vor den
+   Basisdateien geladen, deshalb sind eigene Regeln mit .shop-seite verstärkt. */
+
+.shop-seite .rk-icon {
+  flex-shrink: 0;
+}
+
+/* --- Besitz-Leiste --- */
+.shop-besitz {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin-bottom: var(--space-4);
+}
+
+/* --- Rückmeldung nach Kauf oder Wechsel ---
+   Der Bereich bleibt immer im Baum (nie display:none), damit Screenreader
+   die Meldung zuverlässig vorlesen. */
+.shop-meldung-text,
+.shop-gewinn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  color: var(--rk-text);
+  font-weight: 800;
+  font-size: var(--text-sm);
+}
+/* Neutral, weil hier auch „Dafür fehlen dir noch Edelsteine." erscheint. */
+.shop-meldung-text {
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border-strong);
+}
+.shop-gewinn {
+  background: var(--rk-green-soft);
+  border: 1px solid var(--adv-green);
+}
+
+/* --- Artikel --- */
+.shop-seite .adv-shopraster {
+  list-style: none;
+}
+.shop-artikel-text {
+  flex: 1;
+  min-width: 0;
+}
+.shop-artikel-text strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: var(--text-base);
+  overflow-wrap: break-word;
+}
+.shop-artikel-text p {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+
+.shop-preiszeile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Auf schmalen Geräten rutschen Knopf und Hinweis untereinander. */
+.shop-aktion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.shop-fehlt {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--rk-text-muted);
+}
+
+/* --- Tägliche Belohnung --- */
+.shop-text {
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-3);
+}
+.shop-stufen {
+  list-style: none;
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.shop-stufe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-sm);
+}
+.shop-stufe-nr {
+  font-family: var(--font-head);
+  font-weight: 800;
+  min-width: 68px;
+}
+.shop-stufe-inhalt {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  color: var(--rk-text-muted);
+}
+
+/* --- Schlusshinweis --- */
+.rk-hinweisstreifen.shop-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  margin-bottom: 0;
+}
+:root[data-theme='dark'] .shop-seite .rk-hinweisstreifen {
+  color: var(--rk-text);
+}

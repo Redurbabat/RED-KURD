@@ -1,0 +1,90 @@
+/* Weltkarte einer einzelnen Welt. Pfad, Stationen und Pergament kommen aus
+   adventure.css — hier stehen nur die Ergänzungen dieser Seite. */
+
+.adv-weltkarte .rk-icon {
+  flex-shrink: 0;
+}
+
+.wd-uebersicht-zahlen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin-top: var(--space-3);
+  list-style: none;
+}
+.wd-uebersicht-zahlen > li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+.rk-hinweisstreifen.wd-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+/* Oben Platz für Hêlo, der über der aktuellen Station steht.
+   Zwei Klassen, damit die Regel die Polsterung aus adventure.css schlägt. */
+.adv-karte.wd-karte {
+  padding-top: var(--space-7);
+}
+
+/* Jede Station ist der Bezugspunkt für Hêlo daneben. */
+.wd-station {
+  position: relative;
+}
+
+.wd-stern-voll {
+  fill: var(--adv-gold);
+  color: var(--adv-gold);
+}
+.wd-stern-leer {
+  fill: none;
+  color: var(--rk-text-light);
+  opacity: 0.75;
+}
+
+.wd-knopf {
+  margin-top: var(--space-4);
+}
+
+.wd-truhe {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.wd-truhe-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.wd-gewinn {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-weight: 800;
+  color: var(--rk-primary-dark);
+}
+
+/* Dunkles Design: gesperrte Stationen und Hinweise bleiben lesbar. */
+:root[data-theme='dark'] .adv-weltkarte .adv-station.gesperrt {
+  background: rgba(20, 34, 48, 0.78);
+}
+:root[data-theme='dark'] .adv-weltkarte .rk-hinweisstreifen {
+  color: var(--rk-text);
+}
+
+/* Sehr schmale Geräte: Sterne rutschen unter den Namen statt zu quetschen. */
+@media (max-width: 419px) {
+  .adv-weltkarte .adv-station {
+    flex-wrap: wrap;
+  }
+  .adv-weltkarte .adv-station-sterne {
+    flex-basis: 100%;
+  }
+}
