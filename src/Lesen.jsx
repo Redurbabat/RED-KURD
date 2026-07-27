@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { merkeWort } from './fortschritt.js'
 import { sprich } from './schrift.js'
+import { spieleWort } from './audio.js'
 import { zufallsPaare, sucheStatisch } from './statisch.js'
 import { texte } from './data/texte.js'
 import { gibXp } from './fortschritt.js'
@@ -60,7 +61,7 @@ function Satz({ paar }) {
       {popup && (
         <div className="popup">
           <strong>{popup.wort}</strong>{' '}
-          <button className="mini ton" onClick={() => sprich(popup.wort)}>🔊</button>
+          <button className="mini ton" onClick={() => spieleWort(popup.wort)}>🔊</button>
           {popup.laden && <span className="hinweis"> suche…</span>}
           {popup.treffer && popup.treffer.length === 0 && (!popup.erklaerungen || !popup.erklaerungen.length) && (
             <div className="hinweis">Nichts gefunden (vielleicht eine gebeugte Form).</div>

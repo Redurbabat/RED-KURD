@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { kurse } from './data/kurse.js'
 import { gibXp, karteBewertenSkill, sessionSpeichern, sessionLoeschen } from './fortschritt.js'
 import { sprich } from './schrift.js'
+import { spieleWort } from './audio.js'
 
 // Fisher-Yates statt sort(random) – fair gemischt
 export function mische(arr) {
@@ -94,7 +95,7 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
   }, [index, fertig])
 
   useEffect(() => {
-    if (u && u.art === 'hoeren' && antwort === null) sprich(u.frage)
+    if (u && u.art === 'hoeren' && antwort === null) spieleWort(u.frage)
   }, [index])
 
   if (fertig) {
@@ -159,7 +160,7 @@ export function Uebung({ uebungen, titel, fertigMelden, startIndex, startPunkte 
       {u.art === 'hoeren' && (
         <>
           <div className="frage">
-            <button className="hoer-knopf" onClick={() => sprich(u.frage)}>🔊</button>
+            <button className="hoer-knopf" onClick={() => spieleWort(u.frage)}>🔊</button>
             {' '}Was hörst du? Wähle die Bedeutung:
           </div>
           <div className="optionen">

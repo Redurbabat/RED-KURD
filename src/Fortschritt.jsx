@@ -1,5 +1,5 @@
 // Fortschritt: Koennen statt nur XP
-import { statistik, fertigkeiten, ankiExport } from './fortschritt.js'
+import { statistik, fertigkeiten, ankiExport, exportiereAlles, importiereAlles } from './fortschritt.js'
 import { kurse } from './data/kurse.js'
 import { holeStand } from './fortschritt.js'
 
@@ -52,7 +52,32 @@ export default function Fortschritt() {
         a.download = 'red-kurd-anki.txt'
         a.click()
       }}>📤 Für Anki exportieren</button>
-      <p className="hinweis">Dein Lernstand wird in diesem Browser gespeichert.</p>
+      <h3>Geräte-Sync (ohne Konto)</h3>
+      <div className="knopfzelle" style={{ flexWrap: 'wrap', gap: '.5rem' }}>
+        <button className="mini" onClick={() => {
+          const blob = new Blob([exportiereAlles()], { type: 'application/json' })
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(blob)
+          a.download = 'red-kurd-lernstand.json'
+          a.click()
+        }}>⬆️ Lernstand exportieren</button>
+        <label className="mini" style={{ cursor: 'pointer' }}>
+          ⬇️ Lernstand importieren
+          <input type="file" accept=".json" style={{ display: 'none' }} onChange={(e) => {
+            const datei = e.target.files[0]
+            if (!datei) return
+            const leser = new FileReader()
+            leser.onload = () => {
+              try { importiereAlles(leser.result); window.location.reload() }
+              catch { alert('Datei konnte nicht gelesen werden.') }
+            }
+            leser.readAsText(datei)
+          }} />
+        </label>
+      </div>
+      <p className="hinweis">Exportiere deinen Lernstand als Datei und importiere ihn auf dem Handy
+        (oder umgekehrt) — deine Daten bleiben komplett bei dir, ganz ohne Konto.
+        Dein Lernstand wird sonst in diesem Browser gespeichert.</p>
     </section>
   )
 }

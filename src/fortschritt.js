@@ -178,3 +178,21 @@ export function profilSpeichern(p) {
 export function profilLaden() {
   try { return JSON.parse(localStorage.getItem(PROFIL_KEY)) } catch { return null }
 }
+
+// ===== Geraete-Sync per Datei (ohne Konto, local-first) =====
+export function exportiereAlles() {
+  return JSON.stringify({
+    version: 1,
+    exportiert: new Date().toISOString(),
+    fortschritt: lade(),
+    profil: profilLaden(),
+  }, null, 2)
+}
+
+export function importiereAlles(text) {
+  const daten = JSON.parse(text)
+  if (!daten || daten.version !== 1) throw new Error('Unbekanntes Format')
+  if (daten.fortschritt) speichere(daten.fortschritt)
+  if (daten.profil) profilSpeichern(daten.profil)
+  return true
+}

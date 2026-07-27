@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { kurse } from './data/kurse.js'
 import { sprich } from './schrift.js'
-import { speichereAufnahme, holeAufnahme } from './audio.js'
+import { speichereAufnahme, holeAufnahme, spieleWort } from './audio.js'
 import { gibXp } from './fortschritt.js'
 
 export default function Aussprache() {
@@ -82,7 +82,7 @@ export default function Aussprache() {
             <tr key={w.ku}>
               <td>{w.bild} <span className="ku">{w.ku}</span> <span className="kat">{w.de}</span></td>
               <td className="knopfzelle">
-                <button className="mini" onClick={() => sprich(w.ku)}>🔊 Anhören</button>
+                <button className="mini" onClick={() => spieleWort(w.ku)}>🔊 Anhören</button>
                 {aufnahmeWort === w.ku ? (
                   <button className="mini aufnahme-laeuft" onClick={stoppeAufnahme}>⏹ Stopp</button>
                 ) : (
