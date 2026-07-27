@@ -154,15 +154,15 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>RED-KURD</h1>
+        <h1><img src="/icon-192.png" alt="" className="logo" /> RED-KURD</h1>
         <p className="untertitel">Kurdisch lernen – frei und offen</p>
         <nav>
-          <button className={seite === 'start' ? 'aktiv' : ''} onClick={() => setSeite('start')}>Start</button>
-          <button className={seite === 'woerterbuch' ? 'aktiv' : ''} onClick={() => setSeite('woerterbuch')}>Wörterbuch</button>
-          <button className={seite === 'lernen' ? 'aktiv' : ''} onClick={() => setSeite('lernen')}>Lernen</button>
-          <button className={seite === 'lesen' ? 'aktiv' : ''} onClick={() => setSeite('lesen')}>Lesen</button>
-          <button className={seite === 'werkzeuge' ? 'aktiv' : ''} onClick={() => setSeite('werkzeuge')}>Schrift</button>
-          <button className={seite === 'statistik' ? 'aktiv' : ''} onClick={() => setSeite('statistik')}>Statistik</button>
+          <button className={seite === 'start' ? 'aktiv' : ''} onClick={() => setSeite('start')}>🏠 Start</button>
+          <button className={seite === 'woerterbuch' ? 'aktiv' : ''} onClick={() => setSeite('woerterbuch')}>📕 Wörterbuch</button>
+          <button className={seite === 'lernen' ? 'aktiv' : ''} onClick={() => setSeite('lernen')}>🎓 Lernen</button>
+          <button className={seite === 'lesen' ? 'aktiv' : ''} onClick={() => setSeite('lesen')}>📖 Lesen</button>
+          <button className={seite === 'werkzeuge' ? 'aktiv' : ''} onClick={() => setSeite('werkzeuge')}>🔤 Schrift</button>
+          <button className={seite === 'statistik' ? 'aktiv' : ''} onClick={() => setSeite('statistik')}>📊 Statistik</button>
         </nav>
       </header>
       <main>

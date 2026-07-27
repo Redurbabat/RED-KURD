@@ -170,3 +170,77 @@ footer a { color: var(--rot); }
   padding: .25rem .6rem; font-size: .8rem; border-radius: 6px;
   border: 1px solid var(--dunkel); background: var(--dunkel); color: #fff; cursor: pointer;
 }
+
+/* ===== App-Design: wie eine echte App ===== */
+body {
+  background: linear-gradient(160deg, #fdf6ec 0%, #f7f7f5 40%, #f2f6f2 100%);
+  min-height: 100vh;
+}
+header {
+  background: linear-gradient(135deg, #c0392b, #96281b);
+  border-radius: 20px;
+  padding: 1.3rem 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 8px 24px rgba(192, 57, 43, .25);
+}
+header h1 {
+  background: none; color: #f1c40f; -webkit-text-fill-color: #f1c40f;
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  font-size: 1.9rem; letter-spacing: .02em;
+}
+.logo { width: 44px; height: 44px; border-radius: 12px; }
+.untertitel { color: #f5d6d0; }
+nav { flex-wrap: wrap; }
+nav button {
+  background: rgba(255, 255, 255, .12); color: #fff;
+  border: 1px solid rgba(255, 255, 255, .25);
+  transition: all .15s ease;
+}
+nav button:hover { background: rgba(255, 255, 255, .25); transform: translateY(-1px); }
+nav button.aktiv { background: #f1c40f; color: #6b2417; border-color: #f1c40f; font-weight: 700; }
+
+main section {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+  border-radius: 20px;
+}
+.option, .kurs, .weiter, .taste, .mini, .wdh-knopf {
+  transition: all .15s ease;
+}
+.option:hover, .kurs:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0, 0, 0, .08); }
+.option:active, .kurs:active { transform: scale(.97); }
+.weiter { box-shadow: 0 4px 12px rgba(30, 36, 48, .3); }
+.weiter:hover { transform: translateY(-1px); }
+
+@keyframes puls-richtig {
+  0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); }
+}
+@keyframes wackeln {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); } 75% { transform: translateX(6px); }
+}
+.option.richtig { animation: puls-richtig .4s ease; }
+.option.falsch { animation: wackeln .4s ease; }
+
+.balken {
+  height: 10px; background: var(--rand); border-radius: 999px;
+  overflow: hidden; margin-bottom: .8rem;
+}
+.balken-voll {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--gelb), var(--gruen));
+  transition: width .4s ease;
+}
+
+.bild-optionen { grid-template-columns: repeat(4, 1fr); }
+.bild-option { padding: 1rem .4rem; }
+.gross-bild { font-size: 2.6rem; line-height: 1; }
+.frage-bild { font-size: 2rem; margin-right: .6rem; vertical-align: middle; }
+
+@media (max-width: 560px) {
+  .app { padding: .8rem .6rem 2rem; }
+  header h1 { font-size: 1.5rem; }
+  .logo { width: 34px; height: 34px; }
+  nav button { padding: .4rem .8rem; font-size: .85rem; }
+  .bild-optionen { grid-template-columns: repeat(2, 1fr); }
+  .kursbaum { grid-template-columns: repeat(2, 1fr); }
+}

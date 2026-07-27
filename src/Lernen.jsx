@@ -8,7 +8,26 @@ function mische(arr) { return [...arr].sort(() => Math.random() - 0.5) }
 function baueUebungen(woerter, alleWoerter) {
   const uebungen = []
   for (const w of mische(woerter)) {
-    const art = mische(['wahl-ku', 'wahl-de', 'tippen'])[0]
+    const arten = ['wahl-ku', 'wahl-de', 'tippen']
+    // Bild-Uebung nur, wenn genug verschiedene Bilder da sind
+    if (w.bild) {
+      const andere = alleWoerter.filter(x => x.bild && x.bild !== w.bild && x.ku !== w.ku)
+      if (andere.length >= 3) arten.push('bild', 'bild')
+    }
+    const art = mische(arten)[0]
+    if (art === 'bild') {
+      const falsche = []
+      const gesehen = new Set([w.bild])
+      for (const x of mische(alleWoerter)) {
+        if (x.bild && !gesehen.has(x.bild) && x.ku !== w.ku) {
+          falsche.push(x); gesehen.add(x.bild)
+          if (falsche.length === 3) break
+        }
+      }
+      uebungen.push({ art, frage: w.ku, antwort: w.bild,
+        optionen: mische([w, ...falsche]).map(x => ({ bild: x.bild, ku: x.ku })), w })
+      continue
+    }
     if (art === 'tippen') {
       uebungen.push({ art, frage: w.de, antwort: w.ku, w })
     } else if (art === 'wahl-de') {
@@ -67,8 +86,32 @@ function Uebung({ titel, woerter, alleWoerter, fertigMelden }) {
 
   return (
     <div>
+      <div className="balken"><div className="balken-voll" style={{ width: `${(index / uebungen.length) * 100}%` }} /></div>
       <p className="hinweis">{titel} · Übung {index + 1} von {uebungen.length} · {punkte} richtig</p>
-      {u.art === 'tippen' ? (
+      {u.art === 'bild' ? (
+        <>
+          <div className="frage">Welches Bild passt zu <strong>„{u.frage}"</strong>?
+            {' '}<span className="kat">({u.w.de})</span></div>
+          <div className="optionen bild-optionen">
+            {u.optionen.map(opt => {
+              let cls = 'option bild-option'
+              if (antwort !== null) {
+                if (opt.bild === u.antwort) cls += ' richtig'
+                else if (opt.bild === antwort) cls += ' falsch'
+              }
+              return (
+                <button key={opt.bild} className={cls} onClick={() => {
+                  if (antwort !== null) return
+                  setAntwort(opt.bild)
+                  bewerten(opt.bild === u.antwort)
+                }}>
+                  <span className="gross-bild">{opt.bild}</span>
+                </button>
+              )
+            })}
+          </div>
+        </>
+      ) : u.art === 'tippen' ? (
         <>
           <div className="frage">Tippe auf Kurmancî: <strong>„{u.frage}"</strong></div>
           <form onSubmit={pruefeTipp} className="suchzeile">
@@ -90,6 +133,7 @@ function Uebung({ titel, woerter, alleWoerter, fertigMelden }) {
       ) : (
         <>
           <div className="frage">
+            {u.w.bild && <span className="frage-bild">{u.w.bild}</span>}
             Was heißt <strong>„{u.frage}"</strong> auf {u.art === 'wahl-de' ? 'Deutsch' : 'Kurmancî'}?
           </div>
           <div className="optionen">
