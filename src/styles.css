@@ -119,3 +119,30 @@ footer a { color: var(--rot); }
 .wikibox h3 { margin-bottom: .6rem; }
 .wikieintrag { padding: .4rem 0; border-bottom: 1px solid var(--rand); }
 .wikieintrag:last-child { border-bottom: none; }
+
+.statzeile { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; color: #555; }
+.wdh-knopf {
+  display: block; width: 100%; padding: .8rem; margin-bottom: 1rem;
+  border: 2px solid var(--gelb); border-radius: 12px;
+  background: #fef9e7; font-size: 1rem; cursor: pointer;
+}
+.kursbaum { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .7rem; }
+.kurs {
+  display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  padding: 1rem .5rem; border: 2px solid var(--rand); border-radius: 14px;
+  background: var(--karte); cursor: pointer;
+}
+.kurs:hover { border-color: var(--dunkel); }
+.kurs.begonnen { border-color: var(--gelb); }
+.kurs.geschafft { border-color: var(--gruen); background: #eafaf1; }
+.kurs-symbol { font-size: 1.8rem; }
+.kurs-name { font-weight: 600; text-align: center; }
+.kurs-stand { font-size: .85rem; color: #888; }
+.richtig-text { color: var(--gruen); font-weight: 600; margin-top: .6rem; }
+.falsch-text { color: var(--rot); font-weight: 600; margin-top: .6rem; }
+.statgitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .7rem; }
+.statkarte {
+  text-align: center; padding: 1rem; border: 1px solid var(--rand);
+  border-radius: 12px; background: var(--hell);
+}
+.statzahl { font-size: 1.8rem; font-weight: 700; color: var(--rot); }

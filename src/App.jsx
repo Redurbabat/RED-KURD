@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { woerter as startWoerter } from './data/woerter.js'
+import Lernen from './Lernen.jsx'
+import { statistik } from './fortschritt.js'
 
 const SPRACHEN = { deu: 'Deutsch', kur: 'Kurdisch', kmr: 'Kurmancî', ckb: 'Soranî', eng: 'Englisch', tur: 'Türkisch' }
 const name = (c) => SPRACHEN[c] || c
@@ -110,68 +112,21 @@ function Woerterbuch() {
   )
 }
 
-function mische(arr) { return [...arr].sort(() => Math.random() - 0.5) }
-
-function Lektion() {
-  const [fragen, setFragen] = useState(null)
-  const [index, setIndex] = useState(0)
-  const [punkte, setPunkte] = useState(0)
-  const [antwort, setAntwort] = useState(null)
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = await fetch('/api/vokabeln?von=deu&nach=kur&anzahl=10')
-        const d = await r.json()
-        if (d.vokabeln && d.vokabeln.length >= 4) {
-          setFragen(d.vokabeln.map(v => ({ de: v.wort, ku: v.uebersetzung })))
-          return
-        }
-      } catch { /* Server aus */ }
-      setFragen(mische(startWoerter).slice(0, 10))
-    })()
-  }, [])
-
-  if (!fragen) return <section><p className="hinweis">Lade Vokabeln…</p></section>
-
-  const frage = fragen[index]
-  const optionen = (() => {
-    const falsche = mische(fragen.filter(w => w.ku !== frage.ku)).slice(0, 3)
-    while (falsche.length < 3) falsche.push(mische(startWoerter)[0])
-    return mische([frage, ...falsche])
-  })()
-  const fertig = index === fragen.length - 1 && antwort !== null
-
-  function waehle(opt) {
-    if (antwort !== null) return
-    setAntwort(opt.ku)
-    if (opt.ku === frage.ku) setPunkte(p => p + 1)
-  }
-
+function Statistik() {
+  const s = statistik()
+  const geschafft = Object.values(s.lektionen).filter(p => p >= 80).length
   return (
     <section>
-      <h2>Lernen · Zufalls-Vokabeln aus der Datenbank</h2>
-      <p className="hinweis">Frage {index + 1} von {fragen.length} · {punkte} richtig</p>
-      <div className="frage">Was heißt <strong>„{frage.de}"</strong> auf Kurdisch?</div>
-      <div className="optionen">
-        {optionen.map((opt, i) => {
-          let cls = 'option'
-          if (antwort !== null) {
-            if (opt.ku === frage.ku) cls += ' richtig'
-            else if (opt.ku === antwort) cls += ' falsch'
-          }
-          return <button key={i} className={cls} onClick={() => waehle(opt)}>{opt.ku}</button>
-        })}
+      <h2>Deine Statistik</h2>
+      <div className="statgitter">
+        <div className="statkarte"><div className="statzahl">{s.xp}</div><div>XP gesammelt</div></div>
+        <div className="statkarte"><div className="statzahl">{s.serie}</div><div>Tage Serie 🔥</div></div>
+        <div className="statkarte"><div className="statzahl">{s.gelernt}</div><div>Wörter gelernt</div></div>
+        <div className="statkarte"><div className="statzahl">{s.sicher}</div><div>Wörter sicher</div></div>
+        <div className="statkarte"><div className="statzahl">{s.faellig}</div><div>zum Wiederholen</div></div>
+        <div className="statkarte"><div className="statzahl">{geschafft}/10</div><div>Lektionen geschafft</div></div>
       </div>
-      {antwort !== null && !fertig && (
-        <button className="weiter" onClick={() => { setAntwort(null); setIndex(i => i + 1) }}>Weiter →</button>
-      )}
-      {fertig && (
-        <div className="ergebnis">
-          🎉 {punkte} von {fragen.length} richtig!
-          <button className="weiter" onClick={() => window.location.reload()}>Neue Runde</button>
-        </div>
-      )}
+      <p className="hinweis">Dein Lernstand wird in diesem Browser gespeichert.</p>
     </section>
   )
 }
@@ -193,6 +148,7 @@ export default function App() {
           <button className={seite === 'start' ? 'aktiv' : ''} onClick={() => setSeite('start')}>Start</button>
           <button className={seite === 'woerterbuch' ? 'aktiv' : ''} onClick={() => setSeite('woerterbuch')}>Wörterbuch</button>
           <button className={seite === 'lernen' ? 'aktiv' : ''} onClick={() => setSeite('lernen')}>Lernen</button>
+          <button className={seite === 'statistik' ? 'aktiv' : ''} onClick={() => setSeite('statistik')}>Statistik</button>
         </nav>
       </header>
       <main>
@@ -216,7 +172,8 @@ export default function App() {
           </section>
         )}
         {seite === 'woerterbuch' && <Woerterbuch />}
-        {seite === 'lernen' && <Lektion />}
+        {seite === 'lernen' && <Lernen />}
+        {seite === 'statistik' && <Statistik />}
       </main>
       <footer>
         RED-KURD · Open Source (MIT) · Daten: Tatoeba (CC BY), FreeDict, Wiktionary ·{' '}
