@@ -102,3 +102,12 @@ export function merkeWort(de, ku) {
     speichere(d)
   }
 }
+
+export function ankiExport() {
+  const d = lade()
+  const zeilen = Object.keys(d.karten || {}).map(schluessel => {
+    const [de, ku] = schluessel.split('|')
+    return de + '\t' + ku
+  })
+  return zeilen.join('\n')
+}

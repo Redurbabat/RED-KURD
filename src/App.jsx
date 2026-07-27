@@ -4,7 +4,8 @@ import Lernen from './Lernen.jsx'
 import Lesen from './Lesen.jsx'
 import Werkzeuge from './Werkzeuge.jsx'
 import { sucheStatisch, beispieleStatisch, statischeAnzahl } from './statisch.js'
-import { statistik } from './fortschritt.js'
+import { arabischNachLatein } from './schrift.js'
+import { statistik, ankiExport } from './fortschritt.js'
 
 const SPRACHEN = { deu: 'Deutsch', kur: 'Kurdisch', kmr: 'Kurmancî', ckb: 'Soranî', eng: 'Englisch', tur: 'Türkisch' }
 const name = (c) => SPRACHEN[c] || c
@@ -15,16 +16,30 @@ function Woerterbuch() {
   const [beispiele, setBeispiele] = useState(null)
   const [laden, setLaden] = useState(false)
   const [offline, setOffline] = useState(false)
+  const [vorschlaege, setVorschlaege] = useState([])
+  const [beugungen, setBeugungen] = useState(null)
 
-  async function suchen(e) {
+  async function suchen(e, direktQ) {
     e && e.preventDefault()
-    const q = suche.trim()
+    let q = (direktQ || suche).trim()
     if (!q) return
-    setLaden(true); setBeispiele(null)
+    // Arabische Schrift? Automatisch in Latein umwandeln und mitsuchen
+    if (/[\u0600-\u06FF]/.test(q)) {
+      const lat = arabischNachLatein(q).trim()
+      if (lat) { setSuche(lat); q = lat }
+    }
+    setLaden(true); setBeispiele(null); setVorschlaege([]); setBeugungen(null)
     try {
       const r = await fetch('/api/suche?q=' + encodeURIComponent(q))
       const d = await r.json()
       setErgebnis(d); setOffline(false)
+      if ((d.woerter || []).length === 0 && (d.wiki || []).length === 0) {
+        try {
+          const rv = await fetch('/api/aehnlich?q=' + encodeURIComponent(q))
+          const dv = await rv.json()
+          setVorschlaege(dv.vorschlaege || [])
+        } catch { /* egal */ }
+      }
     } catch {
       try {
         setErgebnis(await sucheStatisch(q))
@@ -41,6 +56,14 @@ function Woerterbuch() {
       }
     }
     setLaden(false)
+  }
+
+  async function zeigBeugungen(wort) {
+    try {
+      const r = await fetch('/api/formen?q=' + encodeURIComponent(wort))
+      const d = await r.json()
+      setBeugungen({ wort, formen: d.formen || [] })
+    } catch { /* Server aus */ }
   }
 
   async function zeigBeispiele(wort, lang) {
@@ -74,7 +97,16 @@ function Woerterbuch() {
       {ergebnis && !laden && (
         <>
           {ergebnis.woerter.length === 0 && ergebnis.wiki.length === 0 && (
-            <p className="hinweis">Nichts gefunden für „{suche}".</p>
+            <div>
+              <p className="hinweis">Nichts gefunden für „{suche}".</p>
+              {vorschlaege.length > 0 && (
+                <p>Meintest du:{' '}
+                  {vorschlaege.map(v => (
+                    <button key={v} className="mini vorschlag" onClick={() => { setSuche(v); suchen(null, v) }}>{v}</button>
+                  ))}
+                </p>
+              )}
+            </div>
           )}
           {ergebnis.woerter.length > 0 && (
             <table>
@@ -85,7 +117,12 @@ function Woerterbuch() {
                     <td>{w.wort}</td>
                     <td className="ku">{w.uebersetzung}</td>
                     <td className="kat">{name(w.lang)} → {name(w.ziel_lang)}</td>
-                    <td><button className="mini" onClick={() => zeigBeispiele(w.wort, w.lang)}>Sätze</button></td>
+                    <td className="knopfzelle">
+                      <button className="mini" onClick={() => zeigBeispiele(w.wort, w.lang)}>Sätze</button>
+                      {(w.lang === 'kmr' || w.lang === 'kur') && (
+                        <button className="mini" onClick={() => zeigBeugungen(w.wort)}>Formen</button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -101,6 +138,20 @@ function Woerterbuch() {
                   {w.formen && <div className="kat">Formen: {w.formen}</div>}
                 </div>
               ))}
+            </div>
+          )}
+          {beugungen && (
+            <div className="wikibox">
+              <h3>Beugungstabelle: {beugungen.wort}</h3>
+              {beugungen.formen.length === 0 && <p className="hinweis">Keine Formen in der Datenbank.</p>}
+              <div className="formen-gitter">
+                {beugungen.formen.map((f, i) => (
+                  <div key={i} className="form-eintrag">
+                    <span className="ku">{f.form}</span>
+                    <span className="kat">{f.merkmale}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           {beispiele && (
@@ -136,7 +187,16 @@ function Statistik() {
         <div className="statkarte"><div className="statzahl">{s.faellig}</div><div>zum Wiederholen</div></div>
         <div className="statkarte"><div className="statzahl">{geschafft}/10</div><div>Lektionen geschafft</div></div>
       </div>
-      <p className="hinweis">Dein Lernstand wird in diesem Browser gespeichert.</p>
+      <button className="weiter" onClick={() => {
+        const daten = ankiExport()
+        const blob = new Blob([daten], { type: 'text/tab-separated-values' })
+        const a = document.createElement('a')
+        a.href = URL.createObjectURL(blob)
+        a.download = 'red-kurd-anki.txt'
+        a.click()
+      }}>📤 Gelernte Wörter für Anki exportieren</button>
+      <p className="hinweis">Dein Lernstand wird in diesem Browser gespeichert.
+        Der Anki-Export erzeugt eine Datei, die du in Anki über „Datei → Importieren" laden kannst.</p>
     </section>
   )
 }

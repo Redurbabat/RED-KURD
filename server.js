@@ -79,6 +79,37 @@ const server = http.createServer((req, res) => {
       return json(res, { vokabeln });
     }
 
+    if (url.pathname === "/api/aehnlich" && q) {
+      // Rechtschreibhilfe auf Basis der Hunspell-Wortlisten
+      const kandidaten = db.prepare(
+        `SELECT DISTINCT wort FROM wortlisten
+         WHERE wort LIKE ? AND length(wort) BETWEEN ? AND ? LIMIT 3000`
+      ).all(q[0] + "%", q.length - 1, q.length + 1);
+      const dist = (a, b) => {
+        if (Math.abs(a.length - b.length) > 1) return 9;
+        const m = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+        for (let j = 1; j <= b.length; j++) m[0][j] = j;
+        for (let i = 1; i <= a.length; i++)
+          for (let j = 1; j <= b.length; j++)
+            m[i][j] = Math.min(m[i-1][j] + 1, m[i][j-1] + 1,
+              m[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+        return m[a.length][b.length];
+      };
+      const s = q.toLowerCase();
+      const vorschlaege = kandidaten
+        .map(k => ({ wort: k.wort, d: dist(s, k.wort.toLowerCase()) }))
+        .filter(k => k.d <= 1 && k.wort.toLowerCase() !== s)
+        .slice(0, 6).map(k => k.wort);
+      return json(res, { vorschlaege });
+    }
+
+    if (url.pathname === "/api/formen" && q) {
+      const formen = db.prepare(
+        `SELECT form, merkmale FROM formen WHERE lemma = ? ORDER BY merkmale LIMIT 60`
+      ).all(q);
+      return json(res, { formen });
+    }
+
     if (url.pathname === "/api/satzpaare") {
       const anzahl = Math.min(parseInt(url.searchParams.get("anzahl") || "15"), 50);
       let paare = db.prepare(
