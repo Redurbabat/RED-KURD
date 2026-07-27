@@ -1,13 +1,15 @@
-/* Shop des Abenteuer-Modus. Karten, Raster und Truhe kommen aus adventure.css —
-   hier steht nur, was diese Seite zusätzlich braucht. Seiten-CSS wird vor den
-   Basisdateien geladen, deshalb sind eigene Regeln mit .shop-seite verstärkt. */
+/* Shop des Abenteuer-Modus (Designpaket Bild 10).
+   Raster, Artikelkarte, Preis-Pille und Truhe kommen aus adventure.css — hier
+   steht nur, was diese Seite zusätzlich braucht. Eigene Klassen tragen das
+   Präfix „sh-". Seiten-CSS wird vor den Basisdateien geladen, deshalb sind
+   Regeln, die einer Basisregel widersprechen, mit .sh-seite verstärkt. */
 
-.shop-seite .rk-icon {
+.sh-seite .rk-icon {
   flex-shrink: 0;
 }
 
-/* --- Besitz-Leiste --- */
-.shop-besitz {
+/* ---------- Besitzleiste ---------- */
+.sh-besitz {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -15,115 +17,251 @@
   margin-bottom: var(--space-4);
 }
 
-/* --- Rückmeldung nach Kauf oder Wechsel ---
+.sh-tabs {
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- Rückmeldung ----------
    Der Bereich bleibt immer im Baum (nie display:none), damit Screenreader
-   die Meldung zuverlässig vorlesen. */
-.shop-meldung-text,
-.shop-gewinn {
+   die Meldung zuverlässig vorlesen. Neutral gehalten, weil hier auch
+   „Dafür fehlen dir noch Edelsteine." erscheint. */
+.sh-meldung-text {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-medium);
-  color: var(--rk-text);
+  background: var(--adv-surface-soft);
+  border: 1px solid var(--adv-border);
+  color: var(--adv-text);
   font-weight: 800;
   font-size: var(--text-sm);
-}
-/* Neutral, weil hier auch „Dafür fehlen dir noch Edelsteine." erscheint. */
-.shop-meldung-text {
-  background: var(--rk-surface-soft);
-  border: 1px solid var(--rk-border-strong);
-}
-.shop-gewinn {
-  background: var(--rk-green-soft);
-  border: 1px solid var(--adv-green);
+  overflow-wrap: anywhere;
 }
 
-/* --- Artikel --- */
-.shop-seite .adv-shopraster {
+/* ---------- Artikelraster ----------
+   minmax(0, 1fr) statt 1fr: so sprengt ein langer Artikelname die Spalte nicht
+   und die Seite scrollt auch bei 320 px nie waagerecht. */
+.sh-seite .sh-raster {
   list-style: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
 }
-.shop-artikel-text {
-  flex: 1;
+.sh-seite .sh-artikel {
+  gap: var(--space-3);
+}
+.sh-artikel-text {
   min-width: 0;
 }
-.shop-artikel-text strong {
+.sh-artikel-text strong {
   display: block;
   font-family: var(--font-head);
   font-size: var(--text-base);
-  overflow-wrap: break-word;
+  color: var(--adv-text);
+  overflow-wrap: anywhere;
 }
-.shop-artikel-text p {
-  font-size: var(--text-sm);
-  color: var(--rk-text-muted);
+.sh-artikel-text p {
+  margin-top: 2px;
+  font-size: var(--text-xs);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
 }
 
-.shop-preiszeile {
+/* Auf sehr schmalen Geräten stehen Plakette und Text untereinander, sonst
+   passt bei zwei Spalten kein Wort mehr in eine Zeile. */
+.sh-seite .sh-artikel .adv-artikel-kopf {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.sh-seite .sh-artikel-icon {
+  width: 52px;
+  height: 52px;
+}
+
+/* Die Preis-Pille füllt im Mockup die ganze Kartenbreite. */
+.sh-seite .sh-preis {
+  align-self: stretch;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.sh-aktion {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
-
-/* Auf schmalen Geräten rutschen Knopf und Hinweis untereinander. */
-.shop-aktion {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
+/* In der schmalen Spalte nimmt der Knopf die volle Kartenbreite ein. */
+.sh-seite .sh-aktion .rk-knopf {
+  flex: 1 1 100%;
+  min-width: 0;
+  padding-left: var(--space-3);
+  padding-right: var(--space-3);
 }
-.shop-fehlt {
+.sh-hinweiszeile {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
   font-size: var(--text-xs);
-  color: var(--rk-text-muted);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
 }
 
-/* --- Tägliche Belohnung --- */
-.shop-text {
+/* Farbton je Artikel — Plakette und Preis tragen dieselbe Farbe. */
+.sh-seite .sh-ton-rot .sh-artikel-icon {
+  background: var(--adv-red);
+  color: #3d0000;
+}
+.sh-seite .sh-ton-rot .sh-preis {
+  background: rgba(255, 75, 75, 0.16);
+  color: #ff8a80;
+}
+.sh-seite .sh-ton-gruen .sh-artikel-icon {
+  background: var(--adv-green);
+  color: #0d2b00;
+}
+.sh-seite .sh-ton-gruen .sh-preis {
+  background: rgba(66, 209, 0, 0.16);
+  color: var(--adv-green);
+}
+.sh-seite .sh-ton-blau .sh-artikel-icon {
+  background: var(--adv-blue);
+  color: #002b3d;
+}
+.sh-seite .sh-ton-blau .sh-preis {
+  background: rgba(39, 181, 245, 0.16);
+  color: var(--adv-blue);
+}
+.sh-seite .sh-ton-teal .sh-artikel-icon {
+  background: var(--adv-teal);
+  color: #04241f;
+}
+.sh-seite .sh-ton-teal .sh-preis {
+  background: rgba(20, 200, 176, 0.16);
+  color: var(--adv-teal);
+}
+.sh-seite .sh-ton-lila .sh-artikel-icon {
+  background: var(--adv-purple);
+  color: #2c0846;
+}
+.sh-seite .sh-ton-lila .sh-preis {
+  background: rgba(200, 107, 247, 0.18);
+  color: var(--adv-purple);
+}
+.sh-seite .sh-ton-gold .sh-artikel-icon {
+  background: var(--adv-gold);
+  color: #4a3200;
+}
+.sh-seite .sh-ton-gold .sh-preis {
+  background: rgba(255, 202, 40, 0.18);
+  color: var(--adv-gold);
+}
+
+/* ---------- Tagestruhe ---------- */
+.sh-seite .sh-truhe {
+  flex-wrap: wrap;
+  row-gap: var(--space-3);
+}
+.sh-truhe-marke {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--adv-gold);
+  color: #4a3200;
+}
+.sh-truhe-text {
+  margin-top: var(--space-1);
   font-size: var(--text-sm);
-  color: var(--rk-text-muted);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
+}
+.sh-truhe .rk-knopf {
+  flex: 1 0 100%;
+}
+
+.sh-kartentitel {
+  font-size: var(--text-lg);
+  color: var(--adv-text);
+  margin-bottom: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.sh-text {
+  font-size: var(--text-sm);
+  color: var(--adv-text-muted);
   margin-bottom: var(--space-3);
 }
-.shop-stufen {
+.sh-stufen {
   list-style: none;
   display: grid;
   gap: var(--space-2);
   margin-bottom: var(--space-3);
 }
-.shop-stufe {
+.sh-stufe {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-small);
-  background: var(--rk-surface-soft);
+  background: var(--adv-surface-soft);
   font-size: var(--text-sm);
 }
-.shop-stufe-nr {
+.sh-stufe-nr {
   font-family: var(--font-head);
   font-weight: 800;
-  min-width: 68px;
+  color: var(--adv-text);
+  min-width: 64px;
 }
-.shop-stufe-inhalt {
+.sh-stufe-inhalt {
   flex: 1;
   min-width: 0;
-  overflow-wrap: break-word;
-  color: var(--rk-text-muted);
+  color: var(--adv-text-muted);
+  overflow-wrap: anywhere;
 }
 
-/* --- Schlusshinweis --- */
-.rk-hinweisstreifen.shop-hinweis {
+/* ---------- Schlusshinweis ---------- */
+.sh-hinweis {
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
   margin-top: var(--space-5);
-  margin-bottom: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: rgba(255, 202, 40, 0.12);
+  border: 1px solid var(--adv-gold-dark);
+  color: var(--adv-text);
+  font-size: var(--text-sm);
+  font-weight: 800;
 }
-:root[data-theme='dark'] .shop-seite .rk-hinweisstreifen {
-  color: var(--rk-text);
+
+/* Unter 380 px braucht die schmale Spalte etwas weniger Innenabstand. */
+@media (max-width: 379px) {
+  .sh-seite .sh-artikel {
+    padding: var(--space-3);
+  }
+}
+
+/* Ab dem Referenzformat 390 px steht die Plakette wieder neben dem Namen. */
+@media (min-width: 390px) {
+  .sh-seite .sh-artikel .adv-artikel-kopf {
+    flex-direction: row;
+    align-items: center;
+  }
+  .sh-seite .sh-raster {
+    gap: var(--space-3);
+  }
+}
+
+/* Ab 420 px passt der Truhen-Knopf neben den Text. */
+@media (min-width: 420px) {
+  .sh-truhe .rk-knopf {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
 }

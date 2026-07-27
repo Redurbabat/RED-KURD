@@ -1,81 +1,108 @@
-/* Weltübersicht des Abenteuer-Modus. Die Kacheln selbst kommen aus
-   adventure.css — hier steht nur, was diese Seite zusätzlich braucht. */
+/* Weltenübersicht (Designpaket Bild 2).
+   Raster, Kachel und Fuss kommen aus adventure.css — hier steht nur, was
+   diese Seite zusätzlich braucht. Eigene Klassen tragen das Präfix „wm-". */
 
-.adv-welten .rk-icon {
+.wm-seite .rk-icon {
   flex-shrink: 0;
 }
 
-.adv-welten-gesamt p {
+.wm-raster {
   margin-top: var(--space-2);
-  font-size: var(--text-sm);
 }
 
-.adv-welten .adv-weltraster {
-  list-style: none;
-}
-
-/* Titelzeile: Name links, Zustandsmarke rechts — bricht auf schmalen Geräten um. */
-.adv-welten-kopf {
-  display: flex;
+/* Die ganze Kachel ist ein Knopf: Bild links, Inhalt in der Mitte, Pfeil rechts. */
+.wm-kachel {
   align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
+  cursor: pointer;
+  text-align: left;
 }
-.adv-welten-kopf h3 {
-  flex: 1;
-  min-width: 0;
-  overflow-wrap: break-word;
+.wm-kachel .adv-weltkachel-bild {
+  display: block;
+}
+.wm-kachel .adv-weltkachel-inhalt h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.wm-kachel .adv-weltkachel-inhalt p {
+  margin: var(--space-1) 0 var(--space-2);
+  overflow-wrap: anywhere;
+}
+.wm-kachel .adv-weltkachel-fuss {
+  flex-wrap: wrap;
+  row-gap: var(--space-2);
 }
 
-.adv-welten-zahlen {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
-  margin-top: var(--space-3);
-  list-style: none;
-}
-.adv-welten-zahlen > li {
+/* Zahlenpaare im Kachelfuss */
+.wm-zahl {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
+  gap: var(--space-1);
   font-weight: 800;
-  color: var(--rk-text-muted);
+  white-space: nowrap;
 }
 
-/* Zwei Klassen, damit die Regel die Grundregel für Absätze in der Kachel schlägt. */
-.adv-weltkachel-inhalt .adv-welten-sperre {
+/* Gesperrt: nie nur Farbe — Schloss-Icon und Begründung stehen im Klartext. */
+.wm-sperrgrund {
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
-  margin-top: var(--space-3);
-  margin-bottom: 0;
+  flex-basis: 100%;
+  color: var(--adv-text-muted);
+  line-height: 1.35;
 }
 
-/* Die ganze Kachel ist ein Link: die Fläche liegt über dem Inhalt.
-   So bleibt der Fortschrittsbalken ein echter Fortschrittsbalken. */
-.adv-welten-flaeche {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: var(--radius-large);
-  text-decoration: none;
-}
-.adv-welten-flaeche:focus-visible {
-  outline: 3px solid var(--rk-blue);
-  outline-offset: -5px;
+.wm-pfeil {
+  align-self: center;
+  color: var(--adv-text-muted);
 }
 
-.rk-hinweisstreifen.adv-welten-hinweis {
+/* ---------- Farbton je Welt (wie im Mockup) ---------- */
+.wm-ton-green .adv-weltkachel-nr,
+.wm-ton-green .wm-pfeil {
+  color: var(--adv-green);
+}
+.wm-ton-blue .adv-weltkachel-nr,
+.wm-ton-blue .wm-pfeil {
+  color: var(--adv-blue);
+}
+.wm-ton-gold .adv-weltkachel-nr,
+.wm-ton-gold .wm-pfeil {
+  color: var(--adv-gold);
+}
+.wm-ton-purple .adv-weltkachel-nr,
+.wm-ton-purple .wm-pfeil {
+  color: var(--adv-purple);
+}
+.wm-ton-orange .adv-weltkachel-nr,
+.wm-ton-orange .wm-pfeil {
+  color: var(--adv-orange);
+}
+
+/* ---------- Hinweisstreifen unter der Liste ---------- */
+.wm-hinweis {
   display: flex;
   align-items: flex-start;
   gap: var(--space-2);
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   margin-bottom: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: rgba(255, 202, 40, 0.1);
+  border: 1px solid var(--adv-gold-dark);
+  color: var(--adv-text);
+  font-size: var(--text-sm);
+}
+.wm-hinweis .rk-icon {
+  color: var(--adv-gold);
 }
 
-/* Dunkles Design: der Hinweisstreifen bleibt lesbar. */
-:root[data-theme='dark'] .adv-welten .rk-hinweisstreifen {
-  color: var(--rk-text);
+/* Sehr schmale Geräte: das Landschaftsbild gibt Platz an den Text ab. */
+@media (max-width: 380px) {
+  .wm-kachel .adv-weltkachel-bild {
+    width: 72px;
+    height: 62px;
+  }
+  .wm-kachel {
+    gap: var(--space-3);
+  }
 }

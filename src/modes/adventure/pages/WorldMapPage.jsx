@@ -1,14 +1,10 @@
-// Übersicht aller sieben Welten. Jede Kachel zeigt ihre Landschaft, den
-// Fortschritt und ihren Zustand — gesperrte Welten bleiben anklickbar.
+// Weltenübersicht des Abenteuer-Modus (Designpaket Bild 2).
+// Jede Kachel zeigt Landschaft, Fortschritt und Zustand — gesperrte Welten
+// bleiben anklickbar, die Reihenfolge ist nur eine Empfehlung.
 import { useLernstand } from '../../../core/store.js'
-import { Link } from '../../../app/router.jsx'
+import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
-import {
-  WELTEN,
-  kursFortschritt,
-  weltFortschritt,
-  weltStatus,
-} from '../../../core/courses/courseRepository.js'
+import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.js'
 import Landscape from '../../../components/adventure/Landscape.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
@@ -16,132 +12,111 @@ import Badge from '../../../components/common/Badge.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import './WorldMapPage.css'
 
-const STATUS_TEXT = {
-  fertig: T.abenteuer.abgeschlossen,
-  aktuell: T.abenteuer.aktuell,
-  gesperrt: T.abenteuer.gesperrt,
-}
+// Jede Welt trägt einen eigenen Farbton — wie im Mockup Welt 1 grün, Welt 2
+// blau, Welt 3 gold, Welt 4 lila. Ab Welt 6 wiederholt sich die Reihe.
+const TOENE = ['green', 'blue', 'gold', 'purple', 'orange']
 
-const BALKEN_FARBE = {
-  fertig: 'green',
-  aktuell: 'gold',
-  gesperrt: 'primary',
-}
+const SPERRGRUND = 'Öffnet sich, wenn die Hälfte der vorigen Welt geschafft ist'
 
-function StatusMarke({ status }) {
-  if (status === 'fertig') {
-    return (
-      <Badge ton="gruen" icon="haken">
-        {T.abenteuer.abgeschlossen}
-      </Badge>
-    )
-  }
-  if (status === 'aktuell') {
-    return (
-      <Badge ton="gold" icon="stern">
-        {T.abenteuer.aktuell}
-      </Badge>
-    )
-  }
-  return null
+function statusText(status) {
+  if (status === 'fertig') return T.abenteuer.abgeschlossen
+  if (status === 'gesperrt') return T.abenteuer.gesperrt
+  return T.abenteuer.aktuell
 }
 
 export default function WorldMapPage() {
   useLernstand()
-  const gesamt = kursFortschritt()
 
   return (
-    <div className="adv-welten">
+    <div className="wm-seite">
       <PageHeader
         titel="Deine Welten"
-        untertitel="Sieben Landschaften, ein Weg."
-        variante="rucksack"
-        zurueck="/adventure"
-        zurueckText="Zum Abenteuer"
+        untertitel="Jede Welt enthält mehrere Einheiten, Geschichten und Belohnungen."
+        ohneMaskottchen
       />
 
-      <div className="adv-pergament adv-welten-gesamt">
-        <h2>Dein Weg durch alle Welten</h2>
-        <ProgressBar
-          wert={gesamt.prozent}
-          label={`Gesamtfortschritt: ${gesamt.fertig} von ${gesamt.gesamt} Einheiten geschafft`}
-          farbe="gold"
-          zeigeWert
-        />
-        <p>
-          {gesamt.fertig} von {gesamt.gesamt} Einheiten geschafft.
-        </p>
-      </div>
+      <h2 className="nur-sr">Alle Welten</h2>
 
-      <ul className="adv-weltraster" role="list">
-        {WELTEN.map((welt) => {
+      <ul className="adv-weltraster wm-raster" role="list">
+        {WELTEN.map((welt, i) => {
           const stand = weltFortschritt(welt.id)
           const status = weltStatus(welt.id)
-          const statusText = STATUS_TEXT[status] || T.abenteuer.aktuell
+          const ton = TOENE[i % TOENE.length]
+          const beschriftung =
+            `Welt ${welt.nr}, ${welt.name} öffnen. ${statusText(status)}. ` +
+            `${stand.fertig} von ${stand.gesamt} Einheiten geschafft, ` +
+            `${stand.sterne} von ${stand.maxSterne} Sternen.` +
+            (status === 'gesperrt' ? ` ${SPERRGRUND}.` : '')
+
           return (
             <li key={welt.id}>
-              <div className={'adv-weltkachel' + (status === 'gesperrt' ? ' gesperrt' : '')}>
-                <div className="adv-weltkachel-bild">
-                  <Landscape
-                    art={welt.landschaft}
-                    farbe={welt.farbe}
-                    himmel={welt.himmel}
-                    className="adv-landschaft-svg"
-                  />
-                </div>
+              <button
+                type="button"
+                className={
+                  `adv-weltkachel wm-kachel wm-ton-${ton}` +
+                  (status === 'gesperrt' ? ' gesperrt' : '')
+                }
+                aria-label={beschriftung}
+                onClick={() => navigiere('/adventure/world/' + welt.id)}
+              >
+                <span className="adv-weltkachel-bild">
+                  <Landscape art={welt.landschaft} farbe={welt.farbe} himmel={welt.himmel} />
+                </span>
 
-                <div className="adv-weltkachel-inhalt">
-                  <div className="adv-welten-kopf">
-                    <h3 lang="de">
-                      Welt {welt.nr} · {welt.name}
-                    </h3>
-                    <StatusMarke status={status} />
-                  </div>
-
+                <span className="adv-weltkachel-inhalt">
+                  <span className="adv-weltkachel-nr">Welt {welt.nr}</span>
+                  <h3>{welt.name}</h3>
                   <p lang="ku">{welt.untertitel}</p>
 
                   <ProgressBar
                     wert={stand.prozent}
-                    label={`Welt ${welt.nr} ${welt.name}: ${stand.prozent} Prozent geschafft`}
-                    farbe={BALKEN_FARBE[status] || 'primary'}
+                    label={`Welt ${welt.nr} ${welt.name}: Fortschritt`}
+                    farbe={ton}
                     klein
+                    zeigeWert
                   />
 
-                  <ul className="adv-welten-zahlen" role="list">
-                    <li>
-                      <Icon name="kurs" groesse={16} />
+                  <span className="adv-weltkachel-fuss">
+                    <span className="wm-zahl">
+                      <Icon name="kurs" groesse={14} />
                       <span>
                         {stand.fertig}/{stand.gesamt} Einheiten
                       </span>
-                    </li>
-                    <li>
-                      <Icon name="stern" groesse={16} />
+                    </span>
+                    <span className="wm-zahl">
+                      <Icon name="stern" groesse={14} />
                       <span>
-                        {stand.sterne} von {stand.maxSterne} Sternen
+                        {stand.sterne}/{stand.maxSterne} Sterne
                       </span>
-                    </li>
-                  </ul>
+                    </span>
 
-                  {status === 'gesperrt' && (
-                    <p className="adv-welten-sperre">
-                      <Icon name="schloss" groesse={16} />
-                      <span>Öffnet sich, wenn die Hälfte der vorigen Welt geschafft ist</span>
-                    </p>
-                  )}
-                </div>
-
-                <Link to={'/adventure/world/' + welt.id} className="adv-welten-flaeche">
-                  <span className="nur-sr">
-                    {`Welt ${welt.nr}, ${welt.name} öffnen — ${statusText}, ${stand.fertig} von ${stand.gesamt} Einheiten geschafft, ${stand.sterne} von ${stand.maxSterne} Sternen`}
+                    {status === 'fertig' && (
+                      <Badge ton="gruen" icon="haken">
+                        {T.abenteuer.abgeschlossen}
+                      </Badge>
+                    )}
+                    {status === 'aktuell' && (
+                      <Badge ton="gold" icon="stern">
+                        {T.abenteuer.aktuell}
+                      </Badge>
+                    )}
+                    {status === 'gesperrt' && (
+                      <span className="wm-sperrgrund">
+                        <Icon name="schloss" groesse={14} />
+                        <span>{SPERRGRUND}</span>
+                      </span>
+                    )}
                   </span>
-                </Link>
-              </div>
+                </span>
+
+                <Icon name="pfeilRechts" groesse={20} className="wm-pfeil" />
+              </button>
             </li>
           )
         })}
       </ul>
 
-      <p className="rk-hinweisstreifen adv-welten-hinweis">
+      <p className="wm-hinweis">
         <Icon name="info" groesse={18} />
         <span>
           Gesperrte Welten kannst du trotzdem öffnen und ansehen — die Reihenfolge ist nur ein

@@ -1,30 +1,27 @@
-// Die Weltkarte einer einzelnen Welt: ein Pfad aus Stationen über der
-// Landschaft, dazu Abschlussprüfung und Welt-Truhe.
+// Lernpfad einer Welt (Designpaket Bild 3): Abschnittskarte, Zickzack-Pfad aus
+// Stationen, Hêlo als Wegbegleiter und darunter der Stand dieser Welt.
+// Die Lernlogik liegt in courseRepository — hier wird nur dargestellt.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {
-  einheitProzent,
-  einheitSterne,
-  einheitStatus,
-  einheitenDerWelt,
+  aktuellerKnoten,
+  holeEinheit,
   holeWelt,
   weltFortschritt,
+  weltPfad,
 } from '../../../core/courses/courseRepository.js'
 import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.js'
-import Landscape from '../../../components/adventure/Landscape.jsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
-import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import EmptyState from '../../../components/common/EmptyState.jsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
-import { KelimBand } from '../../../components/adventure/KelimBorder.jsx'
 import './WorldDetailPage.css'
 
-const TRUHEN_EDELSTEINE = 5
+const TRUHE_EDELSTEINE = 5
+const TRUHE_AB_EINHEITEN = 2
 
 const KLASSE_JE_STATUS = {
   fertig: 'fertig',
@@ -36,9 +33,15 @@ const KLASSE_JE_STATUS = {
 const STATUS_TEXT = {
   fertig: T.abenteuer.abgeschlossen,
   aktuell: T.abenteuer.aktuell,
-  begonnen: 'Begonnen',
   gesperrt: T.abenteuer.gesperrt,
 }
+
+// Nur Lektionen und Prüfungen tragen Sterne; Truhe, Spiel und Abschluss nicht.
+const MIT_STERNEN = ['lektion', 'pruefung']
+// Truhe und Bonusspiel sind keine Lektionen — sie bekommen die eckige Plakette.
+const ECKIG = ['truhe', 'spiel']
+
+const PLAKETTENTEXT = { truhe: 'TRUHE', spiel: 'SPIEL' }
 
 function datumText(iso) {
   const d = new Date(iso)
@@ -48,14 +51,9 @@ function datumText(iso) {
 
 function Sterne({ anzahl }) {
   return (
-    <span className="adv-station-sterne" role="img" aria-label={`${anzahl} von 3 Sternen`}>
+    <span className="adv-station-sterne" aria-hidden="true">
       {[1, 2, 3].map((i) => (
-        <Icon
-          key={i}
-          name="stern"
-          groesse={16}
-          className={i <= anzahl ? 'wd-stern-voll' : 'wd-stern-leer'}
-        />
+        <Icon key={i} name="stern" groesse={14} className={i <= anzahl ? '' : 'adv-stern-leer'} />
       ))}
     </span>
   )
@@ -63,9 +61,8 @@ function Sterne({ anzahl }) {
 
 export default function WorldDetailPage({ worldId }) {
   useLernstand()
-  // Merkt sich, für welche Welt gerade eine Truhe geöffnet wurde — beim Wechsel
-  // auf eine andere Welt verschwindet die Meldung dadurch von selbst.
-  const [gewinnWelt, setGewinnWelt] = useState(null)
+  // Rückmeldung für Truhe, Abschluss und gesperrte Stationen.
+  const [meldung, setMeldung] = useState('')
 
   const welt = holeWelt(worldId)
 
@@ -75,45 +72,163 @@ export default function WorldDetailPage({ worldId }) {
         variante="denken"
         titel="Diese Welt kennt Hêlo nicht."
         text="Vielleicht hat sich die Adresse verlaufen. Wähle eine Welt aus der Übersicht."
-        aktion={() => navigiere('/adventure/world')}
-        aktionText="Zur Weltübersicht"
+        aktion={() => navigiere('/adventure/worlds')}
+        aktionText="Zu den Welten"
       />
     )
   }
 
-  const einheiten = einheitenDerWelt(welt.id)
+  const pfad = weltPfad(welt.id)
   const stand = weltFortschritt(welt.id)
-  const letzte = einheiten[einheiten.length - 1] || null
-  const alleFertig = stand.gesamt > 0 && stand.fertig >= stand.gesamt
-  const offeneEinheiten = Math.max(0, stand.gesamt - stand.fertig)
-  const truheDatum = weltTruheDatum(welt.id)
+  const jetzt = aktuellerKnoten(welt.id)
 
-  function truheOeffnen() {
-    if (truheDatum || !alleFertig) return
-    // Bucht die Edelsteine und merkt sich die Truhe im gemeinsamen Lernstand,
-    // damit ein Import sie nicht erneut oeffnen laesst.
-    if (oeffneWeltTruhe(welt.id, TRUHEN_EDELSTEINE) !== null) setGewinnWelt(welt.id)
+  // Lernziel der Station, an der Hêlo gerade steht — sonst das der ersten Einheit.
+  const zielKnoten = jetzt?.einheitId ? jetzt : pfad.find((k) => k.einheitId)
+  const einheit = zielKnoten ? holeEinheit(zielKnoten.einheitId) : null
+  const lernziel = einheit?.ziel || 'Lerne die Wörter dieser Welt Schritt für Schritt.'
+
+  const truheDatum = weltTruheDatum(welt.id)
+  const truheBereit = stand.fertig >= TRUHE_AB_EINHEITEN
+  const nochOffen = Math.max(0, stand.gesamt - stand.fertig)
+
+  const truhenStand = truheDatum
+    ? `Welt-Truhe am ${datumText(truheDatum)} geöffnet`
+    : truheBereit
+      ? 'Welt-Truhe ist bereit — tippe im Pfad auf die Truhe'
+      : `Welt-Truhe öffnet sich nach ${TRUHE_AB_EINHEITEN} abgeschlossenen Einheiten`
+
+  function knotenGeklickt(knoten) {
+    switch (knoten.art) {
+      case 'lektion':
+      case 'pruefung':
+        navigiere('/adventure/lesson/' + knoten.einheitId)
+        return
+      case 'spiel':
+        navigiere('/practice/sentence-builder')
+        return
+      case 'wiederholen':
+        navigiere('/practice/review')
+        return
+      case 'hoeren':
+        navigiere('/practice/listening')
+        return
+      case 'truhe': {
+        if (!truheBereit) {
+          setMeldung('Schliesse zwei Einheiten ab, dann öffnet sich die Truhe.')
+          return
+        }
+        const gewinn = oeffneWeltTruhe(welt.id, TRUHE_EDELSTEINE)
+        setMeldung(
+          gewinn === null
+            ? `Diese Truhe ist schon geöffnet — die ${TRUHE_EDELSTEINE} Edelsteine liegen in deinem Beutel.`
+            : `Truhe geöffnet: +${gewinn} Edelsteine für deinen Beutel.`
+        )
+        return
+      }
+      case 'abschluss':
+        setMeldung(
+          stand.offen
+            ? `Noch ${nochOffen} von ${stand.gesamt} Einheiten bis zum Abschluss dieser Welt.`
+            : `Geschafft! Alle ${stand.gesamt} Einheiten dieser Welt sind bestanden.`
+        )
+        return
+      default:
+        setMeldung(knoten.untertitel || knoten.name)
+    }
   }
 
   return (
-    <div className="adv-weltkarte">
-      <PageHeader
-        titel={`Welt ${welt.nr} · ${welt.name}`}
-        untertitel={<span lang="ku">{welt.untertitel}</span>}
-        variante="rucksack"
-        zurueck="/adventure/world"
-        zurueckText="Zu den Welten"
-      />
+    <div className="wd-seite">
+      <h1 className="nur-sr">
+        Lernpfad der Welt {welt.nr}: {welt.name}
+      </h1>
 
-      <div className="adv-pergament wd-uebersicht">
-        <h2>Dein Stand in dieser Welt</h2>
+      <button type="button" className="rk-zurueck" onClick={() => navigiere('/adventure/worlds')}>
+        <Icon name="pfeilLinks" groesse={18} />
+        <span>Zu den Welten</span>
+      </button>
+
+      <section className="adv-abschnitt wd-abschnitt" aria-labelledby="wd-welttitel">
+        <span className="adv-abschnitt-marke">
+          Welt {welt.nr} · <span lang="ku">{welt.untertitel}</span>
+        </span>
+        <h2 id="wd-welttitel">{welt.name}</h2>
+        <p>Lernziel: {lernziel}</p>
+      </section>
+
+      <p className="wd-hinweis">
+        <Icon name="info" groesse={18} />
+        <span>
+          „{T.abenteuer.gesperrt}“ ist nur eine Empfehlung von Hêlo — antippen und ausprobieren
+          kannst du jede Station.
+        </span>
+      </p>
+
+      <div className="wd-pfadflaeche">
+        <ol className="adv-pfad wd-pfad">
+          {pfad.map((knoten) => {
+            const statusText = STATUS_TEXT[knoten.status] || knoten.untertitel
+            const zeigtSterne = MIT_STERNEN.includes(knoten.art)
+            const sterne = knoten.sterne || 0
+            const eckig = ECKIG.includes(knoten.art)
+            const beschriftung = zeigtSterne
+              ? `${knoten.name} — ${statusText}, ${sterne} von 3 Sternen`
+              : `${knoten.name} — ${statusText}`
+
+            return (
+              <li key={knoten.id}>
+                <button
+                  type="button"
+                  className={`adv-station ${KLASSE_JE_STATUS[knoten.status] || ''}`}
+                  aria-label={beschriftung}
+                  onClick={() => knotenGeklickt(knoten)}
+                >
+                  <span className={eckig ? 'adv-knoten-truhe' : 'adv-knoten'} aria-hidden="true">
+                    {knoten.status === 'gesperrt' ? (
+                      <Icon name="schloss" groesse={26} />
+                    ) : knoten.status === 'fertig' ? (
+                      <Icon name="haken" groesse={28} />
+                    ) : (
+                      <Icon name={knoten.icon} groesse={28} />
+                    )}
+                    {PLAKETTENTEXT[knoten.art] && (
+                      <span className="wd-plakettentext">{PLAKETTENTEXT[knoten.art]}</span>
+                    )}
+                  </span>
+
+                  <span className="adv-station-name">{knoten.name}</span>
+                  <span className="adv-station-status">{statusText}</span>
+                  {zeigtSterne && <Sterne anzahl={sterne} />}
+                </button>
+
+                {jetzt?.id === knoten.id && (
+                  <span className="adv-helo-position">
+                    <HeloMascot variante="rucksack" groesse={72} dekorativ />
+                  </span>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+
+      <div className="wd-meldungbereich" aria-live="polite">
+        {meldung && (
+          <p className="wd-meldung">
+            <Icon name="info" groesse={18} />
+            <span>{meldung}</span>
+          </p>
+        )}
+      </div>
+
+      <Card titel="Dein Stand in dieser Welt" icon="berg" className="wd-stand">
         <ProgressBar
           wert={stand.prozent}
-          label={`Welt ${welt.nr} ${welt.name}: ${stand.prozent} Prozent geschafft`}
+          label={`Welt ${welt.nr} ${welt.name}: Fortschritt`}
           farbe="gold"
           zeigeWert
         />
-        <ul className="wd-uebersicht-zahlen" role="list">
+        <ul className="wd-standliste" role="list">
           <li>
             <Icon name="kurs" groesse={16} />
             <span>
@@ -126,153 +241,11 @@ export default function WorldDetailPage({ worldId }) {
               {stand.sterne} von {stand.maxSterne} Sternen
             </span>
           </li>
+          <li>
+            <Icon name="truhe" groesse={16} />
+            <span>{truhenStand}</span>
+          </li>
         </ul>
-      </div>
-
-      <p className="rk-hinweisstreifen wd-hinweis">
-        <Icon name="info" groesse={18} />
-        <span>
-          „{T.abenteuer.gesperrt}“ ist nur eine Empfehlung: Du kannst jede Station antippen und
-          ausprobieren — der Weg gehört dir.
-        </span>
-      </p>
-
-      <div className="adv-karte wd-karte">
-        <Landscape
-          art={welt.landschaft}
-          farbe={welt.farbe}
-          himmel={welt.himmel}
-          format="karte"
-          className="adv-karte-hintergrund"
-        />
-        <KelimBand hoehe={14} className="kelim-oben" />
-        <KelimBand hoehe={14} className="kelim-unten" />
-
-        <ol className="adv-pfad">
-          {einheiten.map((einheit) => {
-            const status = einheitStatus(einheit.id)
-            const prozent = einheitProzent(einheit.id)
-            const sterne = einheitSterne(einheit.id)
-            const statusText = STATUS_TEXT[status] || STATUS_TEXT.begonnen
-            return (
-              <li key={einheit.id} className="wd-station">
-                {status === 'aktuell' && (
-                  <span className="adv-helo-position">
-                    <HeloMascot variante="rucksack" groesse={54} dekorativ />
-                  </span>
-                )}
-                <button
-                  type="button"
-                  className={`adv-station ${KLASSE_JE_STATUS[status] || ''}`}
-                  onClick={() => navigiere('/adventure/lesson/' + einheit.id)}
-                  aria-label={`Einheit ${einheit.nr}: ${einheit.name} — ${statusText}, ${prozent} Prozent, ${sterne} von 3 Sternen`}
-                >
-                  <span className="adv-knoten" aria-hidden="true">
-                    {status === 'gesperrt' ? (
-                      <Icon name="schloss" groesse={26} />
-                    ) : status === 'fertig' ? (
-                      <Icon name="haken" groesse={28} />
-                    ) : (
-                      einheit.symbol
-                    )}
-                  </span>
-                  <span className="adv-station-text">
-                    <strong>
-                      {einheit.nr}. {einheit.name}
-                    </strong>
-                    <small>
-                      {statusText} · {prozent} %
-                    </small>
-                    <Sterne anzahl={sterne} />
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
-
-      <Card titel="Abschlussprüfung" icon="schild">
-        {alleFertig && letzte ? (
-          <>
-            <p>
-              Alle Einheiten dieser Welt sind bestanden. Die Abschlussprüfung nimmt dich noch einmal
-              durch „{letzte.name}“ — hier holst du dir den dritten Stern.
-            </p>
-            <PrimaryButton
-              art="gold"
-              icon="play"
-              className="wd-knopf"
-              onClick={() => navigiere('/adventure/lesson/' + letzte.id)}
-            >
-              Prüfung starten
-            </PrimaryButton>
-          </>
-        ) : (
-          <>
-            <p>
-              Die Abschlussprüfung öffnet sich, wenn alle Einheiten dieser Welt bestanden sind.
-            </p>
-            <ProgressBar
-              wert={stand.fertig}
-              max={Math.max(1, stand.gesamt)}
-              label={`Abschlussprüfung: ${stand.fertig} von ${stand.gesamt} Einheiten bestanden`}
-              farbe="blue"
-            />
-            <p className="gedaempft">
-              Noch {offeneEinheiten} {offeneEinheiten === 1 ? 'Einheit' : 'Einheiten'} bis zur
-              Prüfung.
-            </p>
-            <PrimaryButton art="still" icon="schloss" className="wd-knopf" disabled>
-              Prüfung starten
-            </PrimaryButton>
-          </>
-        )}
-      </Card>
-
-      <Card titel="Schatztruhe der Welt" icon="truhe">
-        <div className="wd-truhe">
-          <HeloMascot variante="truhe" groesse={72} dekorativ />
-          <div className="wd-truhe-text">
-            {truheDatum ? (
-              <p>
-                Du hast diese Truhe am {datumText(truheDatum)} geöffnet. Die{' '}
-                {TRUHEN_EDELSTEINE} Edelsteine liegen längst in deinem Beutel.
-              </p>
-            ) : alleFertig ? (
-              <p>
-                Die Welt ist zu 100 % geschafft — die Truhe gehört dir. In ihr warten{' '}
-                {TRUHEN_EDELSTEINE} Edelsteine.
-              </p>
-            ) : (
-              <p>
-                Die Truhe öffnet sich, wenn diese Welt zu 100 % geschafft ist. Du bist bei{' '}
-                {stand.prozent} %.
-              </p>
-            )}
-          </div>
-        </div>
-
-        {!truheDatum && (
-          <PrimaryButton
-            art="gold"
-            icon="truhe"
-            className="wd-knopf"
-            disabled={!alleFertig}
-            onClick={truheOeffnen}
-          >
-            Truhe öffnen (+{TRUHEN_EDELSTEINE} Edelsteine)
-          </PrimaryButton>
-        )}
-
-        <div aria-live="polite">
-          {gewinnWelt === welt.id && (
-            <p className="wd-gewinn">
-              <Icon name="edelstein" groesse={18} />
-              <span>Truhe geöffnet: +{TRUHEN_EDELSTEINE} Edelsteine</span>
-            </p>
-          )}
-        </div>
       </Card>
     </div>
   )

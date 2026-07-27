@@ -102,6 +102,44 @@
   color: #4a0027;
 }
 
+/* Vier Kennzahlen muessen auf 390 px nebeneinander passen, ohne dass Zahlen
+   ueber die Trennlinien laufen. */
+@media (max-width: 560px) {
+  .rk-shell-abenteuer .rk-werteleiste {
+    padding: var(--space-2) 0;
+  }
+  .rk-shell-abenteuer .rk-wert {
+    padding: 0 var(--space-2);
+    gap: 5px;
+    overflow: hidden;
+  }
+  .rk-shell-abenteuer .rk-wert-icon {
+    width: 26px;
+    height: 26px;
+    padding: 5px;
+  }
+  .rk-shell-abenteuer .rk-wert-text strong {
+    font-size: 1.05rem;
+  }
+  .rk-shell-abenteuer .rk-wert-text small {
+    font-size: 0.6rem;
+  }
+}
+@media (max-width: 360px) {
+  .rk-shell-abenteuer .rk-wert {
+    padding: 0 5px;
+    gap: 3px;
+  }
+  .rk-shell-abenteuer .rk-wert-icon {
+    width: 22px;
+    height: 22px;
+    padding: 4px;
+  }
+  .rk-shell-abenteuer .rk-wert-text strong {
+    font-size: 0.95rem;
+  }
+}
+
 /* ---------- Navigation ---------- */
 .rk-shell-abenteuer .rk-untennav {
   background: rgba(7, 17, 23, 0.96);
@@ -222,16 +260,30 @@
   padding: var(--space-4) 0;
 }
 .adv-pfad > li:nth-child(4n + 1) {
-  transform: translateX(14%);
+  transform: translateX(22%);
 }
 .adv-pfad > li:nth-child(4n + 2) {
-  transform: translateX(-16%);
+  transform: translateX(-24%);
 }
 .adv-pfad > li:nth-child(4n + 3) {
-  transform: translateX(6%);
+  transform: translateX(10%);
 }
 .adv-pfad > li:nth-child(4n + 4) {
-  transform: translateX(-8%);
+  transform: translateX(-14%);
+}
+@media (max-width: 380px) {
+  .adv-pfad > li:nth-child(4n + 1) {
+    transform: translateX(15%);
+  }
+  .adv-pfad > li:nth-child(4n + 2) {
+    transform: translateX(-16%);
+  }
+  .adv-pfad > li:nth-child(4n + 3) {
+    transform: translateX(7%);
+  }
+  .adv-pfad > li:nth-child(4n + 4) {
+    transform: translateX(-9%);
+  }
 }
 
 /* Verbindungslinie zur vorigen Station */
@@ -332,8 +384,13 @@
   gap: 2px;
   color: var(--adv-gold);
 }
+/* Erreichte Sterne sind gefuellt — leere bleiben nur umrandet. */
+.adv-station-sterne .rk-icon {
+  fill: currentColor;
+}
 .adv-stern-leer {
   color: #46626e;
+  fill: none !important;
 }
 
 /* Hêlo steht neben dem Pfad */

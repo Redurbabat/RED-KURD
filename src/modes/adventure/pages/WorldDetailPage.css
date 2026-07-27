@@ -1,90 +1,133 @@
-/* Weltkarte einer einzelnen Welt. Pfad, Stationen und Pergament kommen aus
-   adventure.css — hier stehen nur die Ergänzungen dieser Seite. */
+/* Lernpfad einer Welt (Designpaket Bild 3).
+   Abschnittskarte, Pfad und Stationen kommen aus adventure.css — hier steht
+   nur, was diese Seite zusätzlich braucht. Präfix „wd-". */
 
-.adv-weltkarte .rk-icon {
+.wd-seite .rk-icon {
   flex-shrink: 0;
 }
 
-.wd-uebersicht-zahlen {
+.wd-abschnitt {
+  margin-top: var(--space-3);
+}
+.wd-abschnitt .adv-abschnitt-marke {
+  overflow-wrap: anywhere;
+}
+
+/* Hinweis, dass gesperrte Stationen nur eine Empfehlung sind. */
+.wd-hinweis {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-4);
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: rgba(255, 202, 40, 0.1);
+  border: 1px solid var(--adv-gold-dark);
+  color: var(--adv-text);
+  font-size: var(--text-sm);
+}
+.wd-hinweis .rk-icon {
+  color: var(--adv-gold);
+}
+
+/* Der Zickzack schiebt die Stationen seitlich heraus — die Fläche fängt das ab,
+   damit auf 320 px nichts waagerecht scrollt. */
+.wd-pfadflaeche {
+  position: relative;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+/* Truhe und Bonusspiel: eckige Plakette mit Icon über dem Wort. */
+.wd-pfad .adv-knoten-truhe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.wd-plakettentext {
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+}
+
+/* Stationsnamen dürfen umbrechen statt die Kachel zu sprengen. */
+.wd-pfad .adv-station {
+  max-width: 190px;
+  cursor: pointer;
+}
+/* Gesperrte Stationen bleiben anklickbar — die Sperre ist nur eine Empfehlung. */
+.wd-pfad .adv-station.gesperrt {
+  cursor: pointer;
+}
+.wd-pfad .adv-station-name,
+.wd-pfad .adv-station-status {
+  overflow-wrap: anywhere;
+}
+
+/* Hêlo steht am rechten Rand neben der aktuellen Station. */
+.wd-pfad .adv-helo-position {
+  right: 2%;
+}
+
+/* Rückmeldung zu Truhe, Abschluss und gesperrten Stationen. */
+.wd-meldungbereich {
+  margin-bottom: var(--space-4);
+}
+.wd-meldung {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-medium);
+  background: var(--adv-surface);
+  border: 1px solid var(--adv-teal);
+  color: var(--adv-text);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+.wd-meldung .rk-icon {
+  color: var(--adv-teal);
+}
+
+/* Standkarte am Seitenende */
+.wd-standliste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
   margin-top: var(--space-3);
   list-style: none;
 }
-.wd-uebersicht-zahlen > li {
-  display: inline-flex;
-  align-items: center;
+.wd-standliste > li {
+  display: flex;
+  align-items: flex-start;
   gap: var(--space-2);
   font-size: var(--text-sm);
   font-weight: 800;
 }
 
-.rk-hinweisstreifen.wd-hinweis {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-}
-
-/* Oben Platz für Hêlo, der über der aktuellen Station steht.
-   Zwei Klassen, damit die Regel die Polsterung aus adventure.css schlägt. */
-.adv-karte.wd-karte {
-  padding-top: var(--space-7);
-}
-
-/* Jede Station ist der Bezugspunkt für Hêlo daneben. */
-.wd-station {
-  position: relative;
-}
-
-.wd-stern-voll {
-  fill: var(--adv-gold);
-  color: var(--adv-gold);
-}
-.wd-stern-leer {
-  fill: none;
-  color: var(--rk-text-light);
-  opacity: 0.75;
-}
-
-.wd-knopf {
-  margin-top: var(--space-4);
-}
-
-.wd-truhe {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-.wd-truhe-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.wd-gewinn {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
-  font-weight: 800;
-  color: var(--rk-primary-dark);
-}
-
-/* Dunkles Design: gesperrte Stationen und Hinweise bleiben lesbar. */
-:root[data-theme='dark'] .adv-weltkarte .adv-station.gesperrt {
-  background: rgba(20, 34, 48, 0.78);
-}
-:root[data-theme='dark'] .adv-weltkarte .rk-hinweisstreifen {
-  color: var(--rk-text);
-}
-
-/* Sehr schmale Geräte: Sterne rutschen unter den Namen statt zu quetschen. */
-@media (max-width: 419px) {
-  .adv-weltkarte .adv-station {
-    flex-wrap: wrap;
+/* Schmale Geräte: flacherer Zickzack und kleinerer Hêlo, damit die Stationen
+   auf 320 px vollständig sichtbar bleiben. */
+@media (max-width: 400px) {
+  .wd-pfad.adv-pfad > li:nth-child(4n + 1) {
+    transform: translateX(9%);
   }
-  .adv-weltkarte .adv-station-sterne {
-    flex-basis: 100%;
+  .wd-pfad.adv-pfad > li:nth-child(4n + 2) {
+    transform: translateX(-10%);
+  }
+  .wd-pfad.adv-pfad > li:nth-child(4n + 3) {
+    transform: translateX(4%);
+  }
+  .wd-pfad.adv-pfad > li:nth-child(4n + 4) {
+    transform: translateX(-5%);
+  }
+  .wd-pfad .adv-station {
+    max-width: 150px;
+  }
+  .wd-pfad .adv-helo-position {
+    right: 0;
+    transform: translateY(-50%) scale(0.68);
+    transform-origin: 100% 50%;
   }
 }

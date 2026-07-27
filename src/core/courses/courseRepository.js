@@ -338,10 +338,23 @@ export function weltPfad(weltId) {
   return knoten
 }
 
-/** Die Station, an der Hêlo gerade steht. */
+/**
+ * Die Station, an der Hêlo gerade steht.
+ * Truhe und Bonusspiel zaehlen nicht — Hêlo wartet dort, wo wirklich gelernt
+ * wird, sonst steht er neben einer Belohnung statt neben der naechsten Lektion.
+ */
+const LERN_ARTEN = ['lektion', 'pruefung']
+
 export function aktuellerKnoten(weltId) {
   const pfad = weltPfad(weltId)
-  return pfad.find((k) => k.status === 'aktuell') || pfad.find((k) => k.status !== 'fertig') || null
+  const lernen = pfad.filter((k) => LERN_ARTEN.includes(k.art))
+  return (
+    lernen.find((k) => k.status === 'aktuell') ||
+    lernen.find((k) => k.status === 'begonnen') ||
+    lernen.find((k) => k.status !== 'fertig') ||
+    lernen[lernen.length - 1] ||
+    null
+  )
 }
 
 /**

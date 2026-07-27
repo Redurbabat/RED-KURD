@@ -1,61 +1,63 @@
-// Startseite des Abenteuer-Modus: Begrüssung, aktuelle Welt, Weg zur nächsten
-// Einheit, Tagesaufgaben und Schatztruhe. Der Lernstand ist derselbe wie im
+// Startseite des Abenteuer-Modus: Kursauswahl, Kursstand, kurze Trainings und
+// eine Vorschau des aktuellen Lernpfads. Der Lernstand ist derselbe wie im
 // Modern-Modus — hier wird er nur anders erzählt.
+// Die Kopfstatistik (Serie, XP, Edelsteine, Energie) kommt aus der Shell.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
-import { navigiere, Link } from '../../../app/router.jsx'
-import { T, grussText } from '../../../core/texts.js'
-import { aktuelleEinheit, aktuelleWelt, einheitProzent } from '../../../core/courses/courseRepository.js'
-import { level, truheBereit, truheOeffnen } from '../../../core/progress/progressStore.js'
-import { holeAufgaben, holeBelohnung } from '../../../core/tasks/taskStore.js'
-import Landscape from '../../../components/adventure/Landscape.jsx'
+import { navigiere } from '../../../app/router.jsx'
+import { T } from '../../../core/texts.js'
+import {
+  aktuelleWelt,
+  aktuellerKnoten,
+  kursFortschritt,
+  weltFortschritt,
+  weltPfad,
+} from '../../../core/courses/courseRepository.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 import { ErrorState } from '../../../components/common/EmptyState.jsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
-import HeloMessage from '../../../components/mascot/HeloMessage.jsx'
 import './AdventureHomePage.css'
 
-/** „1 Edelstein“ / „2 Edelsteine“ — Schlüssel bleibt in beiden Fällen gleich. */
-function edelsteinText(n) {
-  return `${n} ${n === 1 ? 'Edelstein' : 'Edelsteine'}`
+// Kurmancî ist der einzige fertige Kurs — die anderen sind ehrlich als „bald"
+// gekennzeichnet und führen nirgendwohin.
+const KURSE = [
+  { id: 'ku', kuerzel: 'KU', name: 'Kurmancî', aktiv: true },
+  { id: 'so', kuerzel: 'SO', name: 'Soranî' },
+  { id: 'zz', kuerzel: 'ZZ', name: 'Zazakî' },
+  { id: 'en', kuerzel: 'EN', name: 'Englisch' },
+]
+
+const TRAININGS = [
+  { id: 'lesen', name: 'Lesen', icon: 'buch', ton: 'lila', ziel: '/explore/reading' },
+  { id: 'aussprache', name: 'Aussprache', icon: 'mikrofon', ton: 'blau', ziel: '/practice/speaking' },
+  { id: 'satzbau', name: 'Satzbau', icon: 'puzzle', ton: 'teal', ziel: '/practice/sentence-builder' },
+]
+
+const STATUS_TEXT = {
+  fertig: 'abgeschlossen',
+  aktuell: 'aktuelle Station',
+  begonnen: 'begonnen',
+  gesperrt: 'noch gesperrt — vorherige Station zuerst abschliessen',
 }
 
-function BelohnungsChips({ belohnung }) {
-  if (!belohnung) return null
-  return (
-    <span className="adv-belohnungszeile">
-      {belohnung.xp ? (
-        <Badge ton="gold" icon="stern">
-          +{belohnung.xp} XP
-        </Badge>
-      ) : null}
-      {belohnung.edelsteine ? (
-        <Badge ton="teal" icon="edelstein">
-          +{edelsteinText(belohnung.edelsteine)}
-        </Badge>
-      ) : null}
-      {belohnung.schluessel ? (
-        <Badge ton="lila" icon="schluessel">
-          +{belohnung.schluessel} Schlüssel
-        </Badge>
-      ) : null}
-    </span>
-  )
+/** Statuszeichen der Vorschau — Farbe allein sagt nie etwas aus. */
+function markeVon(status) {
+  if (status === 'fertig') return 'haken'
+  if (status === 'gesperrt') return 'schloss'
+  return 'fussspur'
 }
 
 export default function AdventureHomePage() {
   useLernstand()
-  const [truhenGewinn, setTruhenGewinn] = useState(null)
-  const [aufgabenGewinn, setAufgabenGewinn] = useState(null)
+  const [hinweis, setHinweis] = useState('')
 
-  const einheit = aktuelleEinheit()
   const welt = aktuelleWelt()
+  const kurs = kursFortschritt()
 
-  if (!einheit || !welt) {
+  if (!welt) {
     return (
       <ErrorState
         titel="Dein Abenteuer liess sich nicht laden."
@@ -64,200 +66,145 @@ export default function AdventureHomePage() {
     )
   }
 
-  const prozent = einheitProzent(einheit.id)
-  const stufe = level()
-  const aufgaben = holeAufgaben().taeglich.slice(0, 3)
-  const truheOffen = truheBereit()
+  const stand = weltFortschritt(welt.id)
+  const vorschau = weltPfad(welt.id).slice(0, 4)
+  const naechste = aktuellerKnoten(welt.id)
+  const offen = Math.max(0, stand.gesamt - stand.fertig)
 
-  function oeffneTruhe() {
-    const gewinn = truheOeffnen()
-    if (gewinn) setTruhenGewinn(gewinn)
-  }
+  const rangText =
+    offen === 0
+      ? 'Höchster Rang erreicht — alle Einheiten dieser Welt sind geschafft.'
+      : `Noch ${offen} ${offen === 1 ? 'Einheit' : 'Einheiten'} bis zum nächsten Rang.`
 
-  function holeAufgabenBelohnung(id) {
-    const gewinn = holeBelohnung(id)
-    if (gewinn) setAufgabenGewinn(gewinn)
+  function waehleKurs(kursEintrag) {
+    if (kursEintrag.aktiv) {
+      navigiere('/adventure/worlds')
+      return
+    }
+    setHinweis(`${kursEintrag.name} kommt später — bleib bei Kurmancî.`)
   }
 
   return (
-    <div className="adv-start">
-      <header className="adv-start-gruss">
-        <h1 lang="ku">{grussText()}!</h1>
-        <HeloMessage
-          variante="winken"
-          text="Kurmancî lernen macht jeden Tag ein Stück reicher."
-        />
+    <div className="ah-seite">
+      <header className="ah-kopf">
+        <h1>Deine Kurse</h1>
+        <p className="ah-kopf-unter">
+          Wähle eine Sprache oder setze deinen aktuellen Kurs fort.
+        </p>
       </header>
 
-      <div className="adv-landschaft">
-        <Landscape
-          art={welt.landschaft}
-          farbe={welt.farbe}
-          himmel={welt.himmel}
-          className="adv-landschaft-svg"
-        />
-        <div className="adv-landschaft-inhalt">
-          <div className="adv-dunkelkarte adv-start-weltschild">
-            <span className="adv-held-etikett">Welt {welt.nr} von 7</span>
-            <h2 lang="de">{welt.name}</h2>
-            <p lang="ku">{welt.untertitel}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="adv-start-level">
-        <Icon name="krone" groesse={22} />
-        <div className="adv-start-level-text">
-          <span>
-            Level {stufe.stufe} · noch {stufe.bisNaechstes} XP bis Level {stufe.stufe + 1}
-          </span>
-          <ProgressBar
-            wert={stufe.fortschritt}
-            max={100}
-            label={`Level ${stufe.stufe}: ${stufe.fortschritt} von 100 XP bis Level ${stufe.stufe + 1}`}
-            farbe="gold"
-            klein
-          />
-        </div>
-      </div>
-
-      <section className="rk-abschnitt" aria-labelledby="adv-start-abenteuer">
-        <h2 className="rk-abschnitt-titel" id="adv-start-abenteuer">
-          {T.abenteuer.titel}
-        </h2>
-
-        <div className="adv-held">
-          <HeloMascot variante="rucksack" groesse={64} dekorativ />
-          <div className="adv-held-text">
-            <span className="adv-held-etikett">{T.abenteuer.fortsetzen}</span>
-            <h3>{einheit.name}</h3>
-            <ProgressBar
-              wert={prozent}
-              label={`Fortschritt in der Einheit ${einheit.name}: ${prozent} Prozent`}
-              farbe="gold"
-              klein
-            />
-            <p className="adv-start-held-stand">
-              Einheit {einheit.nr} · {prozent} % geschafft
-            </p>
-          </div>
-          <PrimaryButton
-            art="gold"
-            icon="play"
-            onClick={() => navigiere('/adventure/lesson/' + einheit.id)}
-            aria-label={`${T.abenteuer.weitergehen} in der Einheit ${einheit.name}`}
-          >
-            {T.abenteuer.weitergehen}
-          </PrimaryButton>
-        </div>
-      </section>
-
-      <Card titel={T.abenteuer.tagesaufgaben} icon="aufgaben">
-        <ul className="adv-start-aufgaben" role="list">
-          {aufgaben.map((a) => (
-            <li key={a.id} className={'adv-aufgabe' + (a.geschafft ? ' geschafft' : '')}>
-              <Icon name={a.icon} groesse={22} />
-              <div className="adv-aufgabe-text">
-                <strong>{a.name}</strong>
-                <ProgressBar
-                  wert={a.stand}
-                  max={a.ziel}
-                  label={`${a.name}: ${a.stand} von ${a.ziel}`}
-                  farbe={a.geschafft ? 'gold' : 'green'}
-                  klein
-                />
-                <BelohnungsChips belohnung={a.belohnung} />
-              </div>
-              <span className="adv-aufgabe-stand">
-                {a.stand}/{a.ziel}
+      <ul className="ah-kursreihe scroll-x" role="list">
+        {KURSE.map((k) => (
+          <li key={k.id} className="ah-kurs-zelle">
+            <button
+              type="button"
+              className={'ah-kurs' + (k.aktiv ? ' ah-kurs-aktiv' : '')}
+              aria-current={k.aktiv ? 'true' : undefined}
+              onClick={() => waehleKurs(k)}
+            >
+              <span className="ah-kurs-kachel" aria-hidden="true">
+                {k.kuerzel}
               </span>
-              {a.geschafft && !a.abgeholt && (
-                <PrimaryButton
-                  art="gold"
-                  groesse="klein"
-                  icon="edelstein"
-                  onClick={() => holeAufgabenBelohnung(a.id)}
-                  aria-label={`${T.abenteuer.belohnungHolen} für „${a.name}“`}
-                >
-                  {T.abenteuer.belohnungHolen}
-                </PrimaryButton>
-              )}
-              {a.abgeholt && (
-                <Badge ton="gruen" icon="haken">
-                  {T.abenteuer.abgeholt}
+              <span className="ah-kurs-name" lang={k.id === 'en' ? 'de' : 'ku'}>
+                {k.name}
+              </span>
+              {k.aktiv ? (
+                <span className="ah-kurs-stand">
+                  <Icon name="haken" groesse={14} />
+                  Aktiv
+                </span>
+              ) : (
+                <Badge ton="neutral">
+                  bald
+                  <span className="nur-sr"> — noch nicht verfügbar</span>
                 </Badge>
               )}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <p className="ah-hinweis" role="status" aria-live="polite">
+        {hinweis}
+      </p>
+
+      <Card className="ah-score">
+        <div className="ah-score-kopf">
+          <h2 className="ah-score-titel">
+            <span lang="ku">Kurmancî</span>-Score
+          </h2>
+          <span className="ah-score-zahl">
+            {kurs.fertig} / {kurs.gesamt}
+          </span>
+        </div>
+        <ProgressBar
+          wert={kurs.fertig}
+          max={kurs.gesamt}
+          label={`Kurmancî-Kurs: ${kurs.fertig} von ${kurs.gesamt} Einheiten geschafft`}
+          farbe="green"
+        />
+        <p className="ah-score-hinweis">{rangText}</p>
+      </Card>
+
+      <section className="rk-abschnitt" aria-labelledby="ah-neu-titel">
+        <h2 className="rk-abschnitt-titel" id="ah-neu-titel">
+          Neue Kurse
+        </h2>
+        <ul className="ah-neu-raster" role="list">
+          {TRAININGS.map((t) => (
+            <li key={t.id}>
+              <button type="button" className="ah-neu-kachel" onClick={() => navigiere(t.ziel)}>
+                <span className={'ah-neu-icon ah-neu-icon-' + t.ton}>
+                  <Icon name={t.icon} groesse={26} />
+                </span>
+                <span className="ah-neu-name">{t.name}</span>
+                <span className="ah-neu-unter">Neues Training</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <Card className="ah-pfadkarte">
+        <h2 className="ah-pfad-titel">Aktueller Lernpfad</h2>
+        <p className="ah-pfad-welt">
+          Welt {welt.nr} · {welt.name}
+        </p>
+
+        <ul className="ah-pfad-vorschau" role="list">
+          {vorschau.map((k, i) => (
+            <li key={k.id} className={'ah-pfad-punkt ah-pfad-' + k.status}>
+              <span className="ah-pfad-kreis" aria-hidden="true">
+                {i + 1}
+              </span>
+              <Icon name={markeVon(k.status)} groesse={14} className="ah-pfad-marke" />
+              <span className="nur-sr">
+                Station {i + 1}: {k.name} — {STATUS_TEXT[k.status] || k.status}
+              </span>
             </li>
           ))}
         </ul>
 
-        <div aria-live="polite">
-          {aufgabenGewinn && (
-            <p className="adv-start-gewinn">
-              <Icon name="haken" groesse={18} />
-              <span>
-                Belohnung erhalten: +{aufgabenGewinn.xp || 0} XP
-                {aufgabenGewinn.edelsteine ? ` · +${edelsteinText(aufgabenGewinn.edelsteine)}` : ''}
-                {aufgabenGewinn.schluessel ? ` · +${aufgabenGewinn.schluessel} Schlüssel` : ''}
-              </span>
-            </p>
-          )}
-        </div>
-
-        <p>
-          <Link to="/adventure/tasks" className="adv-start-link">
-            <span>Alle Aufgaben</span>
-            <Icon name="pfeilRechts" groesse={18} />
-          </Link>
+        <p className="ah-pfad-naechste">
+          Nächste Station: {naechste ? naechste.name : 'Alle Stationen geschafft'}
         </p>
+
+        <PrimaryButton
+          art="blau"
+          breit
+          icon="welt"
+          onClick={() => navigiere('/adventure/world/' + welt.id)}
+        >
+          Welt {welt.nr} öffnen
+        </PrimaryButton>
       </Card>
 
-      <section className="rk-abschnitt" aria-labelledby="adv-start-truhe">
-        <h2 className="rk-abschnitt-titel" id="adv-start-truhe">
-          {T.abenteuer.truhe}
-        </h2>
-
-        <div className="adv-truhe">
-          <HeloMascot variante="truhe" groesse={64} dekorativ />
-          <div className="adv-truhe-text">
-            {truheOffen ? (
-              <>
-                <strong>Eine Truhe wartet auf dich.</strong>
-                <p>Jeden Tag steht eine neue Truhe am Weg — heute ist sie noch verschlossen.</p>
-              </>
-            ) : (
-              <>
-                <strong>Truhe geöffnet</strong>
-                <p>Heute schon geöffnet — morgen wartet eine neue Truhe.</p>
-              </>
-            )}
-            <div aria-live="polite">
-              {truhenGewinn && (
-                <p className="adv-start-gewinn">
-                  <Icon name="stern" groesse={18} />
-                  <span>
-                    +{truhenGewinn.xp} XP · +{edelsteinText(truhenGewinn.edelsteine)}
-                    {truhenGewinn.schluessel ? ` · +${truhenGewinn.schluessel} Schlüssel` : ''}
-                  </span>
-                </p>
-              )}
-            </div>
-          </div>
-          {truheOffen && (
-            <PrimaryButton art="gold" icon="truhe" onClick={oeffneTruhe}>
-              {T.abenteuer.truheOeffnen}
-            </PrimaryButton>
-          )}
-        </div>
-      </section>
-
       <PrimaryButton
-        art="gold"
+        art="gruen"
         groesse="gross"
         breit
-        icon="welt"
-        className="adv-start-haupt"
-        onClick={() => navigiere('/adventure/world')}
+        className="ah-haupt"
+        onClick={() => navigiere('/adventure/worlds')}
       >
         {T.abenteuer.start}
       </PrimaryButton>
