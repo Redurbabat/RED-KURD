@@ -42,7 +42,15 @@ const server = http.createServer((req, res) => {
         `SELECT lang, lemma, form, merkmale FROM formen
          WHERE form LIKE ? OR lemma LIKE ? LIMIT 25`
       ).all(q + "%", q + "%");
-      return json(res, { woerter, wiki, formen });
+      let kt = [];
+      try {
+        kt = db.prepare(
+          `SELECT lang, wort, wortart, bedeutungen FROM kurdish_tech
+           WHERE wort LIKE ? LIMIT 20`
+        ).all(q + "%").map(e => ({ lang: e.lang, wort: e.wort, wortart: e.wortart,
+          ipa: "", bedeutungen: e.bedeutungen, formen: "", quelle: "kurdish-tech" }));
+      } catch {}
+      return json(res, { woerter, wiki: wiki.concat(kt), formen });
     }
 
     if (url.pathname === "/api/beispiele" && q) {
