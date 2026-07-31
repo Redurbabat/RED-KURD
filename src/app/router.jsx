@@ -17,15 +17,29 @@ export function navigiere(zu, optionen = {}) {
   if (typeof window === 'undefined') return
   const ziel = zu.startsWith('/') ? zu : '/' + zu
   if (aktuellerPfad() === ziel && !optionen.erzwingen) return
-  if (window.location.protocol === 'file:') {
-    window.location.hash = ziel
-  } else if (optionen.ersetzen) {
-    window.history.replaceState({}, '', ziel)
-  } else {
-    window.history.pushState({}, '', ziel)
+
+  const wechseln = () => {
+    if (window.location.protocol === 'file:') {
+      window.location.hash = ziel
+    } else if (optionen.ersetzen) {
+      window.history.replaceState({}, '', ziel)
+    } else {
+      window.history.pushState({}, '', ziel)
+    }
+    window.dispatchEvent(new Event(EREIGNIS))
+    if (!optionen.haltePosition) window.scrollTo({ top: 0, behavior: 'auto' })
   }
-  window.dispatchEvent(new Event(EREIGNIS))
-  if (!optionen.haltePosition) window.scrollTo({ top: 0, behavior: 'auto' })
+
+  // Moderne Browser überblenden echte Seitenzustände ohne Zusatzbibliothek.
+  // Reduzierte/abgeschaltete Animationen respektieren wir weiterhin.
+  const bewegt =
+    document.documentElement.dataset.animations !== 'off' &&
+    !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  if (bewegt && document.startViewTransition && window.location.protocol !== 'file:') {
+    document.startViewTransition(wechseln)
+  } else {
+    wechseln()
+  }
 }
 
 const RouteKontext = createContext({ pfad: '/', teile: [] })
@@ -107,6 +121,8 @@ export const UMLEITUNGEN = {
   '/heute': '/today',
   '/index.html': '/today',
   '/kurs': '/course',
+  '/kurse': '/languages',
+  '/sprachen': '/languages',
   '/ueben': '/practice',
   '/entdecken': '/explore',
   '/woerterbuch': '/explore/dictionary',

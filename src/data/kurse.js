@@ -319,4 +319,24 @@ const grundKurse = [
   ]},
 ]
 
-export const kurse = [...grundKurse, ...zusaetzlicheKurse]
+const KURS_FOTOS = {
+  essen: { src: '/bilder/lernwelt/obst.jpg', alt: 'Verschiedene frische Früchte auf einem Tablett' },
+  natur: { src: '/bilder/lernwelt/landschaft.jpg', alt: 'Akrê mit Häusern und Bergen in Kurdistan' },
+  zuhause: { src: '/bilder/lernwelt/haus.jpg', alt: 'Modernes Wohnhaus in Deutschland' },
+  reisen: { src: '/bilder/lernwelt/zug.jpg', alt: 'Personenzug an einem Bahnsteig' },
+  schule: { src: '/bilder/lernwelt/schule.jpg', alt: 'Echtes Klassenzimmer mit Tischen und Stühlen' },
+  hotel: { src: '/bilder/lernwelt/haus.jpg', alt: 'Modernes Wohnhaus in Deutschland' },
+  stadt: { src: '/bilder/lernwelt/landschaft.jpg', alt: 'Akrê mit Häusern und Bergen in Kurdistan' },
+  verkehr: { src: '/bilder/lernwelt/zug.jpg', alt: 'Personenzug an einem Bahnsteig' },
+  wetter: { src: '/bilder/lernwelt/landschaft.jpg', alt: 'Akrê mit Häusern und Bergen in Kurdistan' },
+  wohnung: { src: '/bilder/lernwelt/haus.jpg', alt: 'Modernes Wohnhaus in Deutschland' },
+  kueche: { src: '/bilder/lernwelt/kueche.jpg', alt: 'Echte Aufnahme einer eingerichteten Küche' },
+  restaurant: { src: '/bilder/lernwelt/restaurant.jpg', alt: 'Gedeckter Tisch in einem Restaurant' },
+  obst: { src: '/bilder/lernwelt/obst.jpg', alt: 'Verschiedene frische Früchte auf einem Tablett' },
+  gemuese: { src: '/bilder/lernwelt/gemuese.jpg', alt: 'Auswahl frischer Früchte und Gemüsesorten' },
+}
+
+export const kurse = [...grundKurse, ...zusaetzlicheKurse].map((kurs) => ({
+  ...kurs,
+  foto: KURS_FOTOS[kurs.id] || null,
+}))

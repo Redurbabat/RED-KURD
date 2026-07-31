@@ -8,9 +8,9 @@ import {
 } from '../src/core/courses/courseRepository.js'
 import { planeLektion } from '../src/core/session/sessionPlanner.js'
 
-test('der erweiterte Kurs enthält 48 Kapitel und 500 direkte Lernpaare', () => {
-  assert.equal(EINHEITEN.length, 48)
-  assert.equal(ALLE_WOERTER.length, 500)
+test('der erweiterte Kurs enthält 50 Kapitel und 524 direkte Lernpaare', () => {
+  assert.equal(EINHEITEN.length, 50)
+  assert.equal(ALLE_WOERTER.length, 524)
   assert.equal(LEKTIONS_ARTEN.length, 5)
 })
 

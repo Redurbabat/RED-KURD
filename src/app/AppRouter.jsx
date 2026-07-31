@@ -9,6 +9,9 @@ import SessionPage from '../modes/modern/pages/SessionPage.jsx'
 import CoursePage from '../modes/modern/pages/CoursePage.jsx'
 import UnitPage from '../modes/modern/pages/UnitPage.jsx'
 import LessonPage from '../modes/modern/pages/LessonPage.jsx'
+import LanguagesPage from '../modes/modern/pages/LanguagesPage.jsx'
+import LanguageCoursePage from '../modes/modern/pages/LanguageCoursePage.jsx'
+import LanguageLessonPage from '../modes/modern/pages/LanguageLessonPage.jsx'
 import PracticePage from '../modes/modern/pages/PracticePage.jsx'
 import PracticeRunPage from '../modes/modern/pages/PracticeRunPage.jsx'
 import ExplorePage from '../modes/modern/pages/ExplorePage.jsx'
@@ -34,6 +37,13 @@ const ROUTEN = [
   ['/course', () => <CoursePage />],
   ['/course/:unitId', (p) => <UnitPage unitId={p.unitId} />],
   ['/course/:unitId/lesson/:lessonId', (p) => <LessonPage unitId={p.unitId} lessonId={p.lessonId} />],
+
+  ['/languages', () => <LanguagesPage />],
+  ['/languages/:languageId', (p) => <LanguageCoursePage languageId={p.languageId} />],
+  [
+    '/languages/:languageId/:chapterId',
+    (p) => <LanguageLessonPage languageId={p.languageId} chapterId={p.chapterId} />,
+  ],
 
   ['/practice', () => <PracticePage />],
   ['/practice/:trainingId', (p) => <PracticeRunPage trainingId={p.trainingId} />],

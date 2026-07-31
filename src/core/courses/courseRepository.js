@@ -152,7 +152,7 @@ export const WELTEN = [
     landschaft: 'dorf',
     farbe: 'var(--rk-blue)',
     himmel: '#65bde2',
-    einheiten: ['wochentage', 'wetter', 'wohnung', 'kueche', 'sport'],
+    einheiten: ['wochentage', 'wetter', 'wohnung', 'kueche', 'obst', 'gemuese', 'sport'],
   },
   {
     id: 'w9',

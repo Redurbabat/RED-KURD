@@ -1,0 +1,85 @@
+{
+  "quelle": "Wikimedia Commons",
+  "fotos": [
+    {
+      "id": "obst",
+      "datei": "/bilder/lernwelt/obst.jpg",
+      "alt": "Verschiedene frische Früchte auf einem Tablett",
+      "titel": "Liat Portal for Foodie Disorder - Assorted Fresh Fruit Tray.jpg",
+      "urheber": "HaJunkiyada",
+      "lizenz": "CC BY-SA 4.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3ALiat_Portal_for_Foodie_Disorder_-_Assorted_Fresh_Fruit_Tray.jpg"
+    },
+    {
+      "id": "gemuese",
+      "datei": "/bilder/lernwelt/gemuese.jpg",
+      "alt": "Eine Auswahl verschiedener frischer Gemüsesorten",
+      "titel": "K8666-1 (8453555721).jpg",
+      "urheber": "USDAgov",
+      "lizenz": "Public domain",
+      "lizenzUrl": "https://commons.wikimedia.org/wiki/File%3AK8666-1_(8453555721).jpg",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AK8666-1_(8453555721).jpg"
+    },
+    {
+      "id": "haus",
+      "datei": "/bilder/lernwelt/haus.jpg",
+      "alt": "Modernes Wohnhaus in Deutschland",
+      "titel": "German House.jpg",
+      "urheber": "Rüdiger Müller",
+      "lizenz": "CC BY-SA 4.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AGerman_House.jpg"
+    },
+    {
+      "id": "kueche",
+      "datei": "/bilder/lernwelt/kueche.jpg",
+      "alt": "Echte Aufnahme einer eingerichteten Küche",
+      "titel": "Kitchen interior design.jpg",
+      "urheber": "EddieRider at English Wikipedia",
+      "lizenz": "Public domain",
+      "lizenzUrl": "https://commons.wikimedia.org/wiki/File%3AKitchen_interior_design.jpg",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AKitchen_interior_design.jpg"
+    },
+    {
+      "id": "restaurant",
+      "datei": "/bilder/lernwelt/restaurant.jpg",
+      "alt": "Gedeckter Tisch in einem Restaurant",
+      "titel": "Arnaud's restaurant, New Orleans, interior November 2013 - Table setting.jpg",
+      "urheber": "rulenumberone2",
+      "lizenz": "CC BY 2.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by/2.0",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AArnaud's_restaurant%2C_New_Orleans%2C_interior_November_2013_-_Table_setting.jpg"
+    },
+    {
+      "id": "landschaft",
+      "datei": "/bilder/lernwelt/landschaft.jpg",
+      "alt": "Akrê mit Häusern und Bergen in Kurdistan",
+      "titel": "Akre city.jpg",
+      "urheber": "Sarchia Khursheed",
+      "lizenz": "CC BY-SA 4.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AAkre_city.jpg"
+    },
+    {
+      "id": "schule",
+      "datei": "/bilder/lernwelt/schule.jpg",
+      "alt": "Echtes Klassenzimmer mit Tischen, Stühlen und Tafel",
+      "titel": "Classroom2.jpg",
+      "urheber": "Darklanlan",
+      "lizenz": "CC0",
+      "lizenzUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AClassroom2.jpg"
+    },
+    {
+      "id": "zug",
+      "datei": "/bilder/lernwelt/zug.jpg",
+      "alt": "Personenzug an einem Bahnsteig",
+      "titel": "Gusev passenger train 2025-05 5354.JPG",
+      "urheber": "Artyom Svetlov",
+      "lizenz": "CC BY 4.0",
+      "lizenzUrl": "https://creativecommons.org/licenses/by/4.0",
+      "quelle": "https://commons.wikimedia.org/wiki/File%3AGusev_passenger_train_2025-05_5354.JPG"
+    }
+  ]
+}

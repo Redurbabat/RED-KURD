@@ -1,0 +1,324 @@
+.sprachlektion {
+  width: min(820px, 100%);
+  margin: 0 auto;
+  padding-bottom: var(--space-6);
+}
+.sprachlektion-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.sprachlektion-kopf-fortschritt {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+}
+.sprachlektion-kopf-fortschritt > span {
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.sprachlektion-flagge {
+  font-size: 2rem;
+  filter: drop-shadow(0 5px 5px rgb(0 0 0 / 0.35));
+}
+.sprachlektion-buehne {
+  display: grid;
+  gap: var(--space-5);
+}
+.sprachlektion-fotokarte {
+  position: relative;
+  min-height: 270px;
+  overflow: hidden;
+  border: 3px solid var(--rk-border-strong);
+  border-radius: 28px;
+  box-shadow: 0 8px 0 #07161c, 0 20px 42px rgb(0 0 0 / 0.24);
+  transform: perspective(900px) rotateX(1.5deg);
+}
+.sprachlektion-fotokarte img {
+  width: 100%;
+  height: 100%;
+  min-height: 270px;
+  max-height: 360px;
+  object-fit: cover;
+  animation: sprachlektion-foto-atmen 12s ease-in-out infinite alternate;
+}
+.sprachlektion-fotoverlauf {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(4 16 22 / 0.75), transparent 52%);
+}
+.sprachlektion-fotolabel {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-3);
+  padding: 0.35rem 0.65rem;
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: 999px;
+  background: rgb(3 17 22 / 0.72);
+  color: #fff;
+  font-size: var(--text-xs);
+  backdrop-filter: blur(10px);
+}
+.sprachlektion-wortkarte,
+.sprachlektion-quizfrage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 255px;
+  padding: clamp(1.25rem, 5vw, 2.5rem);
+  overflow: hidden;
+  border: 3px solid color-mix(in srgb, var(--kurs-farbe) 68%, var(--rk-border));
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% -20%, color-mix(in srgb, var(--kurs-farbe) 33%, transparent), transparent 54%),
+    var(--rk-surface);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 8px 0 color-mix(in srgb, var(--kurs-farbe) 38%, #07161c);
+  text-align: center;
+}
+.sprachlektion-wort-symbol {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin-bottom: var(--space-2);
+  border: 2px solid rgb(255 255 255 / 0.28);
+  border-radius: 26px;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--kurs-farbe) 68%, #fff), var(--kurs-farbe));
+  box-shadow:
+    inset 7px 8px 12px rgb(255 255 255 / 0.25),
+    inset -7px -9px 14px rgb(0 0 0 / 0.2),
+    0 14px 25px rgb(0 0 0 / 0.28);
+  font-size: 2.35rem;
+  animation: sprachlektion-symbol 3.7s ease-in-out infinite;
+}
+.sprachlektion-ausgang,
+.sprachlektion-quizfrage > p {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.sprachlektion-wortkarte h1,
+.sprachlektion-quizfrage h1 {
+  margin: var(--space-1) 0 var(--space-4);
+  font-size: clamp(2rem, 8vw, 3.7rem);
+  line-height: 1;
+}
+.sprachlektion-audio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 58px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--kurs-farbe);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--kurs-farbe) 20%, var(--rk-surface));
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--kurs-farbe) 52%, #07161c);
+  font-weight: 900;
+}
+.sprachlektion-audio-wellen {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+}
+.sprachlektion-audio-wellen i {
+  width: 3px;
+  height: 30%;
+  border-radius: 9px;
+  background: currentColor;
+  animation: sprachlektion-welle 0.8s ease-in-out infinite alternate;
+}
+.sprachlektion-audio-wellen i:nth-child(2) { height: 80%; animation-delay: -0.4s; }
+.sprachlektion-audio-wellen i:nth-child(3) { height: 55%; animation-delay: -0.2s; }
+.sprachlektion-audio-wellen i:nth-child(4) { height: 100%; animation-delay: -0.6s; }
+.sprachlektion-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.sprachlektion-quiz {
+  width: min(680px, 100%);
+  margin: 0 auto;
+}
+.sprachlektion-quizfrage {
+  min-height: 230px;
+}
+.sprachlektion-mini-audio {
+  position: absolute;
+  right: var(--space-4);
+  bottom: var(--space-4);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--rk-border-strong);
+  border-radius: 50%;
+  background: var(--rk-surface-soft);
+  color: var(--rk-blue);
+}
+.sprachlektion-optionen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.sprachlektion-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 78px;
+  padding: var(--space-3);
+  border: 3px solid var(--rk-border-strong);
+  border-radius: 20px;
+  background: var(--rk-surface);
+  box-shadow: 0 6px 0 #07161c;
+  text-align: left;
+}
+.sprachlektion-option > span:first-child {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+}
+.sprachlektion-option strong {
+  flex: 1;
+}
+.sprachlektion-option.richtig {
+  border-color: var(--rk-green);
+  background: color-mix(in srgb, var(--rk-green) 15%, var(--rk-surface));
+  color: var(--rk-green);
+}
+.sprachlektion-option.falsch {
+  border-color: var(--rk-red);
+  background: color-mix(in srgb, var(--rk-red) 14%, var(--rk-surface));
+  color: var(--rk-red);
+  animation: sprachlektion-schuetteln 260ms ease;
+}
+.sprachlektion-option.inaktiv {
+  opacity: 0.55;
+}
+.sprachlektion-feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid;
+  border-radius: 22px;
+  animation: sprachlektion-hoch 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sprachlektion-feedback.richtig {
+  border-color: var(--rk-green);
+  background: color-mix(in srgb, var(--rk-green) 14%, var(--rk-surface));
+}
+.sprachlektion-feedback.falsch {
+  border-color: var(--rk-red);
+  background: color-mix(in srgb, var(--rk-red) 12%, var(--rk-surface));
+}
+.sprachlektion-feedback > span {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.sprachlektion-feedback > span > span {
+  color: var(--rk-text-muted);
+}
+
+.sprachlektion-ergebnis {
+  display: grid;
+  place-items: center;
+  max-width: 600px;
+  min-height: 65vh;
+  text-align: center;
+}
+.sprachlektion-ergebnis-kugel {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  margin-bottom: var(--space-4);
+  border: 3px solid var(--rk-yellow);
+  border-radius: 40px;
+  background: linear-gradient(145deg, #ffe58b, #f59e0b);
+  box-shadow:
+    inset 10px 12px 18px rgb(255 255 255 / 0.36),
+    inset -10px -12px 16px rgb(109 55 0 / 0.25),
+    0 16px 0 #915509,
+    0 28px 45px rgb(0 0 0 / 0.3);
+  color: #fff;
+  transform: rotate(-5deg);
+  animation: sprachlektion-feiern 1.8s ease-in-out infinite;
+}
+.sprachlektion-ergebnis-kugel.bestanden {
+  border-color: var(--rk-green);
+  background: linear-gradient(145deg, #51e6b2, #08a77e);
+  box-shadow:
+    inset 10px 12px 18px rgb(255 255 255 / 0.32),
+    inset -10px -12px 16px rgb(0 67 49 / 0.25),
+    0 16px 0 #08745b,
+    0 28px 45px rgb(0 0 0 / 0.3);
+}
+.sprachlektion-ergebnis > p:not(.rk-hero-etikett) {
+  margin: var(--space-2) 0 var(--space-4);
+  color: var(--rk-text-muted);
+}
+.sprachlektion-ergebnis .rk-fortschritt {
+  width: min(420px, 100%);
+}
+.sprachlektion-ergebnis-aktionen {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+@keyframes sprachlektion-foto-atmen {
+  from { transform: scale(1); }
+  to { transform: scale(1.055); }
+}
+@keyframes sprachlektion-symbol {
+  0%,
+  100% { transform: perspective(500px) rotateY(-7deg) translateY(0); }
+  50% { transform: perspective(500px) rotateY(7deg) translateY(-7px); }
+}
+@keyframes sprachlektion-welle {
+  to { transform: scaleY(0.35); }
+}
+@keyframes sprachlektion-schuetteln {
+  25% { transform: translateX(-7px); }
+  50% { transform: translateX(7px); }
+  75% { transform: translateX(-3px); }
+}
+@keyframes sprachlektion-hoch {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+}
+@keyframes sprachlektion-feiern {
+  0%,
+  100% { transform: rotate(-5deg) translateY(0); }
+  50% { transform: rotate(5deg) translateY(-12px); }
+}
+
+@media (max-width: 580px) {
+  .sprachlektion-optionen {
+    grid-template-columns: 1fr;
+  }
+  .sprachlektion-feedback {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .sprachlektion-feedback .rk-knopf {
+    width: 100%;
+  }
+  .sprachlektion-navigation .rk-knopf {
+    flex: 1;
+  }
+}

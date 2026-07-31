@@ -57,12 +57,13 @@ function Rahmen() {
   const ohneNav =
     pfad === '/session' ||
     /^\/course\/[^/]+\/lesson\//.test(pfad) ||
+    /^\/languages\/[^/]+\/[^/]+$/.test(pfad) ||
     /^\/adventure\/lesson\//.test(pfad) ||
     /^\/practice\/[^/]+$/.test(pfad)
 
   // Die Zusatzspalte ergänzt die Übersichtsseiten — nicht die Übungen und
   // nicht die Seiten, die den Platz selbst brauchen (Einstellungen, Weltkarte).
-  const MIT_ZUSATZ = ['/today', '/course', '/practice', '/explore', '/progress', '/adventure']
+  const MIT_ZUSATZ = ['/today', '/languages', '/course', '/practice', '/explore', '/progress', '/adventure']
   const mitZusatz = !ohneNav && MIT_ZUSATZ.some((p) => pfad === p || pfad.startsWith(p + '/'))
   const nichtZusatz = pfad.startsWith('/settings') || pfad.startsWith('/adventure/world')
 
@@ -109,8 +110,16 @@ export default function App() {
     anwenden()
     const medien = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
     const auf = () => anwenden()
+    const druecken = (ereignis) => {
+      const knopf = ereignis.target?.closest?.('button, [role="button"]')
+      if (knopf && !knopf.disabled && navigator.vibrate) navigator.vibrate(8)
+    }
     medien && medien.addEventListener && medien.addEventListener('change', auf)
-    return () => medien && medien.removeEventListener && medien.removeEventListener('change', auf)
+    document.addEventListener('pointerdown', druecken, { passive: true })
+    return () => {
+      medien && medien.removeEventListener && medien.removeEventListener('change', auf)
+      document.removeEventListener('pointerdown', druecken)
+    }
   }, [])
 
   if (!eingerichtet) {

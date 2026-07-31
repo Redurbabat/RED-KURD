@@ -94,6 +94,16 @@ export default function UnitPage({ unitId }) {
         zurueckText="Zum Kurs"
       />
 
+      {einheit.foto && (
+        <figure className="unit-echtfoto">
+          <img src={einheit.foto.src} alt={einheit.foto.alt} />
+          <figcaption>
+            <Icon name="bild" groesse={17} />
+            Echtes Lernfoto aus Wikimedia Commons · lokal gespeichert
+          </figcaption>
+        </figure>
+      )}
+
       <section className="rk-abschnitt" aria-labelledby="unit-ueberblick-titel">
         <h2 className="rk-abschnitt-titel" id="unit-ueberblick-titel">
           Überblick

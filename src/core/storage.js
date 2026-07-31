@@ -10,6 +10,7 @@ export const KEYS = {
   auszeichnungen: 'red-kurd-achievements-v1',
   aufgaben: 'red-kurd-tasks-v1',
   herzen: 'red-kurd-hearts-v1',
+  sprachkurse: 'red-kurd-language-courses-v1',
 }
 
 // Alte Schluessel aus Version 1 — werden einmalig uebernommen, nie geloescht.

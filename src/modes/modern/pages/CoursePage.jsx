@@ -88,9 +88,16 @@ function EinheitKarte({ einheit }) {
         onClick={() => navigiere('/course/' + einheit.id)}
       >
         <span className="rk-einheit-nr">{einheit.nr}</span>
-        <span className="rk-einheit-symbol" aria-hidden="true">
-          {einheit.symbol}
-        </span>
+        {einheit.foto ? (
+          <span className="kurs-einheit-foto">
+            <img src={einheit.foto.src} alt="" loading="lazy" />
+            <span aria-hidden="true">{einheit.symbol}</span>
+          </span>
+        ) : (
+          <span className="rk-einheit-symbol" aria-hidden="true">
+            {einheit.symbol}
+          </span>
+        )}
         <span className="rk-einheit-text">
           <strong>{einheit.name}</strong>
           <small>
@@ -117,6 +124,11 @@ export default function CoursePage() {
 
   return (
     <>
+      <button type="button" className="rk-zurueck" onClick={() => navigiere('/languages')}>
+        <Icon name="pfeilLinks" groesse={18} />
+        <span>Alle Sprachkurse</span>
+      </button>
+
       <PageHeader
         titel={T.kurs.titel}
         untertitel="Deutsch → Kurmancî — lerne Schritt für Schritt. Hêlo begleitet dich auf deinem Weg."

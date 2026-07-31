@@ -83,3 +83,48 @@ export async function hatEchteStimme(wort) {
   const idx = await ladeAudioIndex()
   return !!idx[wort.toLowerCase()]
 }
+
+/** Text mit einer zum Kurs passenden, lokal verfügbaren Systemstimme sprechen. */
+export function spieleText(text, locale = 'de-DE') {
+  if (!tonAn() || typeof speechSynthesis === 'undefined' || !text) return 'aus'
+  speechSynthesis.cancel()
+  const ausgabe = new SpeechSynthesisUtterance(String(text))
+  ausgabe.lang = locale
+  ausgabe.rate = 0.86
+  ausgabe.pitch = 1
+  const kurz = locale.toLowerCase().split('-')[0]
+  const stimmen = speechSynthesis.getVoices()
+  const stimme =
+    stimmen.find((eintrag) => eintrag.lang?.toLowerCase() === locale.toLowerCase()) ||
+    stimmen.find((eintrag) => eintrag.lang?.toLowerCase().startsWith(kurz))
+  if (stimme) ausgabe.voice = stimme
+  speechSynthesis.speak(ausgabe)
+  return stimme ? 'systemstimme' : 'standardstimme'
+}
+
+/** Ein kurzer lokaler Tastenton plus Gerätevibration für spürbares Feedback. */
+export function klickGefuehl(art = 'normal') {
+  if (typeof navigator !== 'undefined' && navigator.vibrate) {
+    navigator.vibrate(art === 'richtig' ? [12, 28, 18] : art === 'falsch' ? [30, 25, 30] : 8)
+  }
+  if (!tonAn()) return
+  const AudioKontext = window.AudioContext || window.webkitAudioContext
+  if (!AudioKontext) return
+  try {
+    const kontext = new AudioKontext()
+    const oscillator = kontext.createOscillator()
+    const lautstaerke = kontext.createGain()
+    oscillator.type = 'sine'
+    oscillator.frequency.value = art === 'richtig' ? 720 : art === 'falsch' ? 180 : 330
+    lautstaerke.gain.setValueAtTime(0.0001, kontext.currentTime)
+    lautstaerke.gain.exponentialRampToValueAtTime(0.035, kontext.currentTime + 0.006)
+    lautstaerke.gain.exponentialRampToValueAtTime(0.0001, kontext.currentTime + 0.07)
+    oscillator.connect(lautstaerke)
+    lautstaerke.connect(kontext.destination)
+    oscillator.start()
+    oscillator.stop(kontext.currentTime + 0.075)
+    oscillator.addEventListener('ended', () => kontext.close(), { once: true })
+  } catch {
+    /* Manche Browser sperren AudioContext trotz Nutzeraktion – dann bleibt die Vibration. */
+  }
+}

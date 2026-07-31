@@ -67,6 +67,7 @@ button {
   cursor: pointer;
   background: none;
   border: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
@@ -192,4 +193,46 @@ a {
 .scroll-x {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Spürbares Drücken: Tiefe, Bewegung und ein schneller Lichtwechsel. */
+button,
+[role='button'] {
+  touch-action: manipulation;
+}
+.rk-taktil,
+.rk-knopf,
+.rk-icon-knopf,
+.rk-untennav-knopf,
+.rk-seitennav-knopf {
+  transform-origin: center bottom;
+  will-change: transform;
+}
+.rk-taktil:active:not(:disabled),
+.rk-knopf:active:not(:disabled),
+.rk-icon-knopf:active:not(:disabled),
+.rk-untennav-knopf:active:not(:disabled),
+.rk-seitennav-knopf:active:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(3px) scale(0.975);
+}
+
+/* Sanfter Übergang zwischen App-Seiten (View Transition API). */
+::view-transition-old(root) {
+  animation: rk-seite-raus 170ms ease both;
+}
+::view-transition-new(root) {
+  animation: rk-seite-rein 260ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes rk-seite-raus {
+  to {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.992);
+  }
+}
+@keyframes rk-seite-rein {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
 }

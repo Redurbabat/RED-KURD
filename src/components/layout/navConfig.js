@@ -3,7 +3,7 @@ import { T } from '../../core/texts.js'
 
 export const MODERN_NAV = [
   { id: 'heute', pfad: '/today', name: T.nav.heute, icon: 'heute' },
-  { id: 'kurs', pfad: '/course', name: T.nav.kurs, icon: 'kurs' },
+  { id: 'kurs', pfad: '/languages', name: 'Kurse', icon: 'kurs' },
   { id: 'ueben', pfad: '/practice', name: T.nav.ueben, icon: 'ueben' },
   { id: 'entdecken', pfad: '/explore', name: T.nav.entdecken, icon: 'entdecken' },
   { id: 'fortschritt', pfad: '/progress', name: T.nav.fortschritt, icon: 'fortschritt' },
@@ -29,5 +29,8 @@ export function istAktiv(eintrag, pfad) {
     return pfad.startsWith('/adventure/profile') || pfad.startsWith('/adventure/shop')
   }
   if (eintrag.pfad === '/today') return pfad === '/today' || pfad === '/'
+  if (eintrag.pfad === '/languages') {
+    return pfad.startsWith('/languages') || pfad.startsWith('/course')
+  }
   return pfad === eintrag.pfad || pfad.startsWith(eintrag.pfad + '/')
 }
