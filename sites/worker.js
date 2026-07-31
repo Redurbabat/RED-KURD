@@ -2,6 +2,8 @@
 // Statische Dateien kommen aus dem ASSETS-Binding; unbekannte App-Adressen
 // erhalten index.html, damit der clientseitige Router Tiefenlinks öffnen kann.
 
+import { authAntwort } from './auth.js'
+
 const DATEN_PREFIX = '/daten/'
 const ADMIN_PREFIX = '/__admin/r2/'
 const APP_PREFIX = 'app/'
@@ -161,6 +163,9 @@ async function mitOeffentlicherAdresse(response, request) {
 
 export default {
   async fetch(request, env) {
+    const kontoAntwort = await authAntwort(request, env)
+    if (kontoAntwort) return kontoAntwort
+
     const adminAntwort = await r2Hochladen(request, env)
     if (adminAntwort) return adminAntwort
 

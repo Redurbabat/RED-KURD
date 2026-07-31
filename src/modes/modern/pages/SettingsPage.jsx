@@ -17,6 +17,7 @@ import {
 import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiStore.js'
 import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.js'
 import { holeShop } from '../../../core/shop/shopStore.js'
+import { abmelden, holeKonto } from '../../../core/auth/authApi.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'
@@ -55,6 +56,7 @@ const MODI = [
 ]
 
 const SCHNELLZUGRIFFE = [
+  { id: 'set-konto', name: 'Mein Konto', text: 'E-Mail und Abmeldung', icon: 'profil' },
   { id: 'set-modus', name: 'App-Modus', text: 'Modern, Abenteuer oder Redlingo', icon: 'welt' },
   { id: 'set-profil', name: 'Profil & Kurs', text: 'Ziel, Variante und Tagesziel', icon: 'profil' },
   { id: 'set-ton', name: 'Ton & Erinnerungen', text: 'Audio und tägliche Erinnerung', icon: 'glocke' },
@@ -110,6 +112,11 @@ export default function SettingsPage() {
         </ul>
       </nav>
 
+      <section className="rk-abschnitt" id="set-konto">
+        <h2 className="rk-abschnitt-titel">Mein Konto</h2>
+        <KontoKarte />
+      </section>
+
       {/* Der Moduswechsel steht bewusst ganz oben — er ist die Einstellung,
           die am meisten veraendert (Designpaket, Bild 12). */}
       <div id="set-modus">
@@ -144,6 +151,52 @@ export default function SettingsPage() {
 }
 
 /* ===================== Bausteine ===================== */
+
+function KontoKarte() {
+  const [konto, setKonto] = useState(null)
+  const [fehler, setFehler] = useState('')
+  const [laedt, setLaedt] = useState(false)
+
+  useEffect(() => {
+    holeKonto()
+      .then(setKonto)
+      .catch(() => setFehler('Die Kontodaten konnten gerade nicht geladen werden.'))
+  }, [])
+
+  async function kontoAbmelden() {
+    setLaedt(true)
+    setFehler('')
+    try {
+      await abmelden()
+      window.location.assign('/')
+    } catch (grund) {
+      setFehler(grund instanceof Error ? grund.message : 'Abmelden war nicht möglich.')
+      setLaedt(false)
+    }
+  }
+
+  return (
+    <Card titel="Angemeldetes Konto" icon="profil">
+      <div className="set-kontozeile">
+        <span className="set-kontoavatar" aria-hidden="true">
+          <Icon name="profil" groesse={24} />
+        </span>
+        <span>
+          <small>E-Mail-Adresse</small>
+          <strong>{konto?.email || (fehler ? 'Nicht verfügbar' : 'Wird geladen …')}</strong>
+        </span>
+      </div>
+      {fehler && <p className="set-kontofehler" role="alert">{fehler}</p>}
+      <PrimaryButton art="still" breit icon="pfeilLinks" disabled={laedt} onClick={kontoAbmelden}>
+        {laedt ? 'Abmelden …' : 'Sicher abmelden'}
+      </PrimaryButton>
+      <p className="gedaempft set-fussnote">
+        Nach der Abmeldung bleibt dein Lernstand auf diesem Gerät gespeichert. Für den nächsten
+        Zugriff meldest du dich wieder mit deiner E-Mail und deinem Passwort an.
+      </p>
+    </Card>
+  )
+}
 
 /**
  * Auswahl mit echten Radios. Damit funktionieren Tastatur, Screenreader und
@@ -557,8 +610,8 @@ function DatenschutzKarte() {
         <li>
           <Icon name="haken" groesse={18} />
           <span>
-            <strong>Kein Konto, keine Cloud:</strong> Es gibt keine Anmeldung und keinen Server,
-            der deine Daten sammelt.
+            <strong>Minimale Kontodaten:</strong> Nur E-Mail, gesalzener Passwort-Hash und
+            Sitzungsdaten liegen in Cloudflare D1. Das Passwort ist niemals lesbar gespeichert.
           </span>
         </li>
         <li>

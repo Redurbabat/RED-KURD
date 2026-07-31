@@ -80,6 +80,43 @@
   margin-top: var(--space-2);
 }
 
+.set-kontozeile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+}
+.set-kontozeile > span:last-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+.set-kontozeile strong {
+  overflow-wrap: anywhere;
+}
+.set-kontozeile small {
+  color: var(--rk-text-muted);
+}
+.set-kontoavatar {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--rk-primary);
+}
+.set-kontofehler {
+  margin-bottom: var(--space-3);
+  color: var(--rk-error);
+  font-size: var(--text-sm);
+}
+
 .set-seite .set-hinweis {
   margin-top: var(--space-3);
   color: var(--rk-primary-dark);

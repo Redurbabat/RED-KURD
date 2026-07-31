@@ -217,8 +217,8 @@ function Zusammenfassung({ antworten, fertig }) {
         <li>
           <Icon name="schild" groesse={22} />
           <span className="onb-plan-text">
-            <strong>Kostenlos und lokal</strong>
-            <small>Kein Konto, keine Werbung, keine Datenübertragung</small>
+            <strong>Kostenlos und sicher</strong>
+            <small>Nur dein Konto liegt in der Cloud; dein Lernstand bleibt lokal</small>
           </span>
         </li>
       </ul>

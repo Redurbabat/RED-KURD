@@ -1,0 +1,62 @@
+.auth-seite {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(420px, 0.95fr);
+  background: radial-gradient(circle at 12% 10%, rgba(239, 83, 80, 0.16), transparent 32%), linear-gradient(135deg, #07171e 0%, #102a34 50%, #0b2028 100%);
+}
+.auth-buehne { position: relative; display: flex; min-height: 100vh; flex-direction: column; overflow: hidden; padding: clamp(24px, 5vw, 72px); color: #fff; }
+.auth-buehne::before, .auth-buehne::after { content: ''; position: absolute; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.08); pointer-events: none; }
+.auth-buehne::before { width: 460px; height: 460px; right: -220px; top: 8%; }
+.auth-buehne::after { width: 680px; height: 680px; left: -420px; bottom: -330px; }
+.auth-marke { position: relative; z-index: 1; display: flex; align-items: center; gap: 13px; }
+.auth-marke-bild { display: grid; place-items: center; width: 52px; height: 52px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 16px; background: rgba(255, 255, 255, 0.07); }
+.auth-marke-bild img { width: 45px; height: 45px; object-fit: contain; }
+.auth-marke > span:last-child { display: flex; flex-direction: column; }
+.auth-marke strong { font-family: var(--font-head); font-size: 1.35rem; letter-spacing: 0.04em; }
+.auth-marke small { color: #9fb4bc; font-size: 0.72rem; }
+.auth-werbetext { position: relative; z-index: 1; width: min(660px, 100%); margin: auto 0; padding: 70px 0 150px; }
+.auth-kicker { display: inline-flex; margin-bottom: 18px; padding: 7px 14px; border: 1px solid rgba(239, 83, 80, 0.45); border-radius: 999px; color: #ff8b89; background: rgba(239, 83, 80, 0.09); font-size: 0.78rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; }
+.auth-werbetext h1 { color: #fff; font-size: clamp(2.45rem, 5vw, 4.9rem); line-height: 0.98; }
+.auth-werbetext > p { max-width: 590px; margin-top: 24px; color: #bfd0d6; font-size: clamp(1rem, 1.5vw, 1.18rem); }
+.auth-vorteile { display: grid; gap: 11px; margin-top: 30px; list-style: none; color: #e8f0f2; }
+.auth-vorteile li { display: flex; align-items: center; gap: 10px; }
+.auth-vorteile .rk-icon { color: #66d39a; }
+.auth-maskottchen { position: absolute; right: clamp(20px, 7vw, 105px); bottom: 20px; filter: drop-shadow(0 20px 22px rgba(0, 0, 0, 0.32)); transform: rotate(2deg); }
+.auth-panel { display: flex; min-height: 100vh; flex-direction: column; justify-content: center; padding: clamp(28px, 6vw, 88px); border-left: 1px solid var(--rk-border); background: var(--rk-bg); box-shadow: -24px 0 70px rgba(0, 0, 0, 0.18); }
+.auth-formkopf { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.auth-mini-logo { display: grid; width: 50px; height: 50px; place-items: center; flex-shrink: 0; border-radius: 15px; color: white; background: var(--rk-red); box-shadow: 0 5px 0 var(--rk-red-dark); }
+.auth-formkopf h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+.auth-formkopf p { color: var(--rk-text-muted); }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 5px; margin-bottom: 26px; border: 1px solid var(--rk-border); border-radius: 15px; background: var(--rk-surface-soft); }
+.auth-tabs button { min-height: 46px; border-radius: 11px; color: var(--rk-text-muted); font-weight: 900; }
+.auth-tabs button.aktiv { color: var(--rk-text); background: var(--rk-surface); box-shadow: 0 3px 10px rgba(20, 45, 55, 0.09); }
+.auth-formular { display: flex; flex-direction: column; gap: 18px; }
+.auth-feld { display: flex; flex-direction: column; gap: 7px; color: var(--rk-text); font-weight: 850; }
+.auth-eingabe { display: flex; align-items: center; min-height: 56px; overflow: hidden; padding-left: 16px; border: 2px solid var(--rk-border); border-radius: 14px; color: var(--rk-text-light); background: var(--rk-surface); transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease; }
+.auth-eingabe:focus-within { border-color: var(--rk-blue); box-shadow: 0 0 0 4px var(--rk-blue-soft); }
+.auth-eingabe input { min-width: 0; min-height: 52px; flex: 1; border: 0; outline: 0; padding: 0 14px; color: var(--rk-text); background: transparent; font-weight: 700; }
+.auth-eingabe input::placeholder { color: var(--rk-text-light); font-weight: 600; }
+.auth-passwort-zeigen { display: grid; width: 52px; min-height: 52px; place-items: center; color: var(--rk-text-muted); }
+.auth-fehler { display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px; border: 1px solid var(--rk-error); border-radius: 12px; color: var(--rk-red-dark); background: var(--rk-red-soft); font-size: var(--text-sm); }
+.auth-fehler span { flex: 1; }
+.auth-fehler button { text-decoration: underline; font-weight: 900; }
+.auth-datenschutz { display: flex; align-items: flex-start; gap: 9px; margin-top: 22px; color: var(--rk-text-muted); font-size: var(--text-xs); }
+.auth-datenschutz .rk-icon { margin-top: 2px; color: var(--rk-green-dark); }
+.auth-laedt { grid-template-columns: 1fr; place-items: center; align-content: center; gap: 16px; color: white; }
+.auth-ladezeichen { width: 54px; height: 54px; border: 6px solid rgba(255,255,255,.18); border-top-color: var(--rk-red); border-radius: 50%; animation: auth-drehen .8s linear infinite; }
+@keyframes auth-drehen { to { transform: rotate(360deg); } }
+@media (max-width: 860px) {
+  .auth-seite { grid-template-columns: 1fr; background: var(--rk-bg); }
+  .auth-buehne { min-height: auto; padding: 22px 22px 34px; }
+  .auth-werbetext { padding: 46px 0 86px; }
+  .auth-werbetext h1 { font-size: clamp(2.2rem, 11vw, 3.8rem); }
+  .auth-vorteile { display: none; }
+  .auth-maskottchen { right: 8px; bottom: -18px; transform: scale(.72) rotate(2deg); transform-origin: bottom right; }
+  .auth-panel { min-height: auto; padding: 34px 20px 54px; border: 0; border-radius: 28px 28px 0 0; box-shadow: 0 -14px 35px rgba(0,0,0,.18); }
+}
+@media (max-width: 430px) {
+  .auth-marke small { display: none; }
+  .auth-werbetext { padding-top: 36px; }
+  .auth-werbetext > p { max-width: 78%; font-size: .92rem; }
+  .auth-formkopf { align-items: flex-start; }
+}

@@ -16,6 +16,8 @@ import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
 import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
+import { holeKonto } from '../core/auth/authApi.js'
+import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
 
 import '../styles/tokens.css'
 import '../styles/global.css'
@@ -124,8 +126,24 @@ function Rahmen() {
 
 export default function App() {
   const [eingerichtet, setEingerichtet] = useState(() => istEingerichtet())
+  const [konto, setKonto] = useState({ status: 'laedt', wert: null, fehler: '' })
+
+  async function kontoPruefen() {
+    setKonto((alt) => ({ ...alt, status: 'laedt', fehler: '' }))
+    try {
+      const wert = await holeKonto()
+      setKonto({ status: wert ? 'angemeldet' : 'gast', wert, fehler: '' })
+    } catch (grund) {
+      setKonto({
+        status: 'gast',
+        wert: null,
+        fehler: grund instanceof Error ? grund.message : 'Die Anmeldung ist gerade nicht verfügbar.',
+      })
+    }
+  }
 
   useEffect(() => {
+    kontoPruefen()
     anwenden()
     const medien = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null
     const auf = () => anwenden()
@@ -140,6 +158,18 @@ export default function App() {
       document.removeEventListener('pointerdown', druecken)
     }
   }, [])
+
+  if (konto.status === 'laedt') return <AuthLoading />
+
+  if (konto.status !== 'angemeldet') {
+    return (
+      <AuthPage
+        anfangsFehler={konto.fehler}
+        onErneut={kontoPruefen}
+        onErfolg={(wert) => setKonto({ status: 'angemeldet', wert, fehler: '' })}
+      />
+    )
+  }
 
   if (!eingerichtet) {
     return <Onboarding fertig={() => setEingerichtet(true)} />
