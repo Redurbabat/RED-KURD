@@ -18,6 +18,9 @@ import ExplorePage from '../modes/modern/pages/ExplorePage.jsx'
 import ProgressPage from '../modes/modern/pages/ProgressPage.jsx'
 import SettingsPage from '../modes/modern/pages/SettingsPage.jsx'
 
+import RedlingoHomePage from '../modes/redlingo/pages/RedlingoHomePage.jsx'
+import RedlingoProfilePage from '../modes/redlingo/pages/RedlingoProfilePage.jsx'
+
 import AdventureHomePage from '../modes/adventure/pages/AdventureHomePage.jsx'
 import WorldMapPage from '../modes/adventure/pages/WorldMapPage.jsx'
 import WorldDetailPage from '../modes/adventure/pages/WorldDetailPage.jsx'
@@ -57,6 +60,9 @@ const ROUTEN = [
   ['/progress', () => <ProgressPage />],
   ['/settings', () => <SettingsPage />],
 
+  ['/redlingo', () => <RedlingoHomePage />],
+  ['/redlingo/profile', () => <RedlingoProfilePage />],
+
   ['/adventure', () => <AdventureHomePage />],
   ['/adventure/worlds', () => <WorldMapPage />],
   ['/adventure/world', () => <WorldMapPage />],
@@ -74,13 +80,22 @@ export function istAbenteuerPfad(pfad) {
   return pfad.startsWith('/adventure')
 }
 
+/** Gehört der Pfad zur eigenen Redlingo-Ansicht? */
+export function istRedlingoPfad(pfad) {
+  return pfad.startsWith('/redlingo')
+}
+
 export default function AppRouter() {
   const { pfad } = useRoute()
 
   // Alte Adressen umleiten. Die Startseite richtet sich nach dem gewählten Modus.
   useEffect(() => {
     if (pfad === '/' || pfad === '/index.html') {
-      navigiere(appModus() === 'abenteuer' ? '/adventure' : '/today', { ersetzen: true })
+      const modus = appModus()
+      navigiere(
+        modus === 'abenteuer' ? '/adventure' : modus === 'redlingo' ? '/redlingo' : '/today',
+        { ersetzen: true }
+      )
       return
     }
     const ziel = loeseUmleitung(pfad)

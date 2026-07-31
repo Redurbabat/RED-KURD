@@ -1,0 +1,774 @@
+/* ===== Redlingo: kompakte schwarze Lernansicht mit rotem 3D-Klickgefühl =====
+   Nur die Darstellung wird überschrieben. Stores, Kursdaten und Übungen bleiben gemeinsam. */
+
+.rk-shell-redlingo {
+  --rk-bg: #090c10;
+  --rk-surface: #11161c;
+  --rk-surface-soft: #171d23;
+  --rk-border: #2a323a;
+  --rk-border-strong: #3a4650;
+  --rk-text: #f4f5f6;
+  --rk-text-muted: #a4abb2;
+  --rk-text-light: #707981;
+  --rk-primary: #df242d;
+  --rk-primary-dark: #ff4a51;
+  --rk-primary-soft: #321419;
+  --rk-red: #df242d;
+  --rk-red-dark: #ff4a51;
+  --rk-red-soft: #321419;
+  --rk-blue: #e3363f;
+  --rk-blue-dark: #ff5960;
+  --rk-blue-soft: #2f151a;
+  --rk-green-soft: #142819;
+  --rk-yellow-soft: #2d2410;
+  --rk-orange-soft: #2d1d10;
+  --rk-purple-soft: #261a31;
+  --radius-small: 9px;
+  --radius-medium: 12px;
+  --radius-large: 18px;
+  --shadow-card: 0 3px 0 #050608;
+  --shadow-button: 0 5px 0 #86131a;
+  color: var(--rk-text);
+  background:
+    radial-gradient(circle at 75% -10%, rgba(223, 36, 45, 0.12), transparent 28rem),
+    var(--rk-bg);
+}
+
+.rk-shell-redlingo .rk-hauptbereich,
+.rk-shell-redlingo .rk-spalten,
+.rk-shell-redlingo .rk-inhalt {
+  background: transparent;
+}
+
+.rk-shell-redlingo .rk-spalten {
+  max-width: 1120px;
+}
+
+.rk-shell-redlingo .rk-inhalt {
+  padding-top: 12px;
+}
+
+.rk-shell-redlingo .rk-kopfleiste {
+  gap: 5px;
+  background: rgba(9, 12, 16, 0.96);
+  border-bottom: 1px solid #20272e;
+  backdrop-filter: blur(14px);
+}
+
+.rk-shell-redlingo .rk-marke-klein img,
+.rk-shell-redlingo .rk-marke-logo {
+  filter: saturate(1.25) contrast(1.08);
+}
+
+.rk-shell-redlingo .rk-marke-wort strong,
+.rk-shell-redlingo .rk-marke-text strong {
+  color: #f5f6f7;
+  letter-spacing: 0.035em;
+}
+
+.rk-shell-redlingo .rk-marke-wort small,
+.rk-shell-redlingo .rk-marke-text small,
+.rk-shell-redlingo .rk-marke-rot {
+  color: #ef3a43;
+}
+
+.rk-shell-redlingo .rk-werteleiste {
+  padding: 5px 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.rk-shell-redlingo .rk-wert {
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.rk-shell-redlingo .rk-wert + .rk-wert {
+  border-left-color: #242c33;
+}
+
+.rk-shell-redlingo .rk-wert-text strong {
+  font-size: 1rem;
+}
+
+.rk-shell-redlingo .rk-wert-text small {
+  color: #77818a;
+}
+
+.rk-shell-redlingo .rk-kopf-profil,
+.rk-shell-redlingo .rk-kopf-zahnrad {
+  background: #11161c;
+  border-color: #2b343c;
+  color: #d8dce0;
+}
+
+.rk-shell-redlingo .rk-seitenleiste {
+  background: #0b0f13;
+  border-right: 1px solid #252c33;
+}
+
+.rk-shell-redlingo .rk-seitennav-knopf {
+  border: 1px solid transparent;
+  border-radius: 9px;
+}
+
+.rk-shell-redlingo .rk-seitennav-knopf:hover {
+  background: #151a20;
+  border-color: #2c343c;
+}
+
+.rk-shell-redlingo .rk-seitennav-knopf.aktiv {
+  color: #ff4a51;
+  background: #291217;
+  border-color: #6e2026;
+  box-shadow: inset 3px 0 #df242d;
+}
+
+.rk-shell-redlingo .rk-untennav {
+  background: rgba(10, 14, 18, 0.97);
+  border-top: 1px solid #293139;
+  box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(14px);
+}
+
+.rk-shell-redlingo .rk-untennav-knopf {
+  color: #69737c;
+}
+
+.rk-shell-redlingo .rk-untennav-knopf.aktiv {
+  color: #ff3f48;
+}
+
+.rk-shell-redlingo .rk-untennav-knopf.aktiv .rk-untennav-icon {
+  color: #ff3f48;
+  background: #33151a;
+  border: 1px solid #6d2026;
+}
+
+.rk-shell-redlingo .rk-karte,
+.rk-shell-redlingo .rk-kachel,
+.rk-shell-redlingo .rk-zielkarte,
+.rk-shell-redlingo .rk-startkarte {
+  background: #11161c;
+  border-color: #2d363e;
+  box-shadow: 0 3px 0 #050608;
+}
+
+.rk-shell-redlingo .rk-karte-warm,
+.rk-shell-redlingo .rk-karte-kuehl,
+.rk-shell-redlingo .rk-karte-lila,
+.rk-shell-redlingo .rk-karte-gruen {
+  background: #12171d;
+  border-color: #343d45;
+}
+
+.rk-shell-redlingo .rk-karte-titel,
+.rk-shell-redlingo .rk-abschnitt-titel,
+.rk-shell-redlingo .rk-seitenkopf h1 {
+  color: #f1f3f4;
+}
+
+.rk-shell-redlingo .rk-karte-titel .rk-icon,
+.rk-shell-redlingo .rk-seitenkopf .rk-icon {
+  color: #ef3740;
+}
+
+.rk-shell-redlingo .rk-knopf,
+.rk-shell-redlingo .rk-startkarte,
+.rk-shell-redlingo .rk-startkarte-gruen,
+.rk-shell-redlingo .rk-startkarte-teal {
+  background: #df242d;
+  color: #fff;
+  border: 1px solid #f24a52;
+  box-shadow: 0 5px 0 #811319;
+  text-transform: none;
+}
+
+.rk-shell-redlingo .rk-knopf-still {
+  background: #151b21;
+  color: #ff4a51;
+  border-color: #414b54;
+  box-shadow: 0 4px 0 #07090b;
+}
+
+.rk-shell-redlingo .rk-knopf:active:not(:disabled),
+.rk-shell-redlingo .rk-startkarte:active {
+  box-shadow: 0 1px 0 #811319;
+}
+
+.rk-shell-redlingo .rk-segment {
+  background: #0d1115;
+  border-color: #2e363e;
+  border-radius: 9px;
+}
+
+.rk-shell-redlingo .rk-segment-knopf {
+  border-radius: 7px;
+}
+
+.rk-shell-redlingo .rk-segment-knopf.aktiv {
+  color: #fff;
+  background: #3a151a;
+  box-shadow: inset 0 0 0 1px #7a2229;
+}
+
+.rk-shell-redlingo .rk-balken {
+  background: #303840;
+}
+
+.rk-shell-redlingo .rk-balken-voll,
+.rk-shell-redlingo .rk-balken-green,
+.rk-shell-redlingo .rk-balken-blue,
+.rk-shell-redlingo .rk-balken-orange,
+.rk-shell-redlingo .rk-balken-purple {
+  background: linear-gradient(90deg, #bd171f, #f13a43);
+}
+
+.rk-shell-redlingo .rk-ring::before {
+  background: #11161c;
+}
+
+.rk-shell-redlingo .rk-ring-text,
+.rk-shell-redlingo .rk-balken-wert,
+.rk-shell-redlingo a {
+  color: #ff525a;
+}
+
+.rk-shell-redlingo .rk-feld,
+.rk-shell-redlingo input,
+.rk-shell-redlingo textarea,
+.rk-shell-redlingo select,
+.rk-shell-redlingo .rk-antwort {
+  background: #0c1014;
+  border-color: #333c44;
+  color: #f2f3f4;
+}
+
+.rk-shell-redlingo .rk-antwort:hover,
+.rk-shell-redlingo .rk-karte-klick:hover {
+  border-color: #d52a33;
+}
+
+.rk-shell-redlingo .rk-uebung-kopf .rk-balken-voll {
+  background: #e22932;
+}
+
+/* ----- Eigene Redlingo-Seiten ----- */
+.rl-seite {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 8px 0 28px;
+}
+
+.rl-seite h1 {
+  font-size: clamp(1.65rem, 6vw, 2.35rem);
+}
+
+.rl-hero,
+.rl-tagesziel,
+.rl-bereich,
+.rl-levelkarte,
+.rl-profilkopf {
+  border: 1px solid #2c343c;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #141a20, #0f1419);
+  box-shadow: 0 4px 0 #050608;
+}
+
+.rl-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(20px, 5vw, 34px);
+  margin-bottom: 18px;
+  border-color: #5b1b21;
+}
+
+.rl-hero::after {
+  content: '';
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  right: -110px;
+  top: -120px;
+  border: 35px solid rgba(226, 41, 50, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.rl-hero-kopf,
+.rl-abschnittskopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.rl-hero-label,
+.rl-kicker {
+  display: block;
+  color: #d83942;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.rl-serie {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #f0a13a;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.rl-hero h1 {
+  margin: 13px 0 5px;
+}
+
+.rl-hero > p {
+  margin-bottom: 16px;
+  color: #9da5ac;
+}
+
+.rl-hauptaktion {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  margin-top: 20px;
+  padding: 13px 16px;
+  color: #fff;
+  background: #df242d;
+  border: 1px solid #fb4c54;
+  border-radius: 9px;
+  box-shadow: 0 5px 0 #811319;
+  font-weight: 900;
+  text-align: left;
+}
+
+.rl-hauptaktion span {
+  flex: 1;
+}
+
+.rl-tagesziel,
+.rl-bereich,
+.rl-levelkarte {
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.rl-abschnittskopf {
+  margin-bottom: 14px;
+}
+
+.rl-abschnittskopf h2 {
+  margin-top: 2px;
+  font-size: 1.15rem;
+}
+
+.rl-abschnittskopf > strong {
+  color: #f0464e;
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+}
+
+.rl-wochentage {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 7px;
+  margin-top: 16px;
+  list-style: none;
+}
+
+.rl-wochentage li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.rl-wochentage li > span {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  color: #6f7880;
+  background: #0b0f13;
+  border: 1px solid #303840;
+  border-radius: 50%;
+  font-size: 0.73rem;
+  font-weight: 900;
+}
+
+.rl-wochentage li.aktiv > span {
+  color: #fff;
+  background: #c91f27;
+  border-color: #ef444d;
+}
+
+.rl-wochentage li.heute > span {
+  box-shadow: 0 0 0 3px #39161b;
+}
+
+.rl-wochentage small {
+  color: #737c84;
+  font-size: 0.65rem;
+}
+
+.rl-schnellraster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.rl-schnellkarte,
+.rl-einstellungszeile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 72px;
+  padding: 12px;
+  color: #e9ebed;
+  background: #0c1014;
+  border: 1px solid #303941;
+  border-radius: 10px;
+  box-shadow: 0 3px 0 #050608;
+  text-align: left;
+}
+
+.rl-schnellkarte > span:nth-child(2),
+.rl-einstellungszeile > span {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.rl-schnellkarte small,
+.rl-einstellungszeile small {
+  color: #7d868e;
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.rl-schnell-icon {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  color: #ff4a52;
+  background: #321419;
+  border: 1px solid #622027;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.rl-statusraster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rl-statuskarte {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  padding: 16px;
+  color: #eaedef;
+  background: #11161c;
+  border: 1px solid #2d363e;
+  border-radius: 11px;
+  box-shadow: 0 3px 0 #050608;
+  text-align: left;
+}
+
+.rl-statuskarte .rk-icon {
+  grid-row: 1 / 3;
+  color: #ec343d;
+}
+
+.rl-statuskarte span {
+  color: #818991;
+  font-size: 0.72rem;
+}
+
+/* ----- Redlingo-Profil ----- */
+.rl-profilkopf {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.rl-avatar {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  color: #fff;
+  background: linear-gradient(145deg, #ee3a43, #94151c);
+  border: 3px solid #4b1b20;
+  border-radius: 50%;
+  box-shadow: 0 4px 0 #050608;
+  font-family: var(--font-head);
+  font-size: 1.65rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.rl-profiltext {
+  flex: 1;
+  min-width: 0;
+}
+
+.rl-profiltext h1 {
+  margin: 2px 0;
+  overflow-wrap: anywhere;
+}
+
+.rl-profiltext p,
+.rl-levelkarte p {
+  color: #8e979f;
+  font-size: 0.82rem;
+}
+
+.rl-rundknopf {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: #d5d9dd;
+  background: #0b0f13;
+  border: 1px solid #39434b;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.rl-levelkarte p {
+  margin-top: 10px;
+}
+
+.rl-profilzahlen {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 18px;
+  list-style: none;
+}
+
+.rl-profilzahlen li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  padding: 13px 6px;
+  background: #11161c;
+  border: 1px solid #2e363e;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.rl-profilzahlen .rk-icon,
+.rl-profilzahlen strong {
+  color: #ef3c45;
+}
+
+.rl-profilzahlen strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-family: var(--font-head);
+}
+
+.rl-profilzahlen span {
+  color: #7c858d;
+  font-size: 0.66rem;
+}
+
+.rl-balkendiagramm {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  height: 155px;
+  list-style: none;
+}
+
+.rl-balkendiagramm li {
+  display: grid;
+  grid-template-rows: 20px 1fr 18px;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rl-balkendiagramm strong,
+.rl-balkendiagramm small {
+  color: #78818a;
+  font-size: 0.68rem;
+}
+
+.rl-balken-aussen {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 100%;
+  overflow: hidden;
+  background: #242c33;
+  border-radius: 8px;
+}
+
+.rl-balken-aussen > span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #a81a22;
+  border-radius: 8px;
+}
+
+.rl-balkendiagramm li.heute .rl-balken-aussen > span {
+  background: #ef3740;
+}
+
+.rl-abzeichenraster {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  list-style: none;
+}
+
+.rl-abzeichenraster li {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 7px;
+  background: #0c1014;
+  border: 1px solid #2b343b;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.rl-abzeichenraster li > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: #f9b63b;
+  background: #2f2510;
+  border-radius: 50%;
+}
+
+.rl-abzeichenraster li.gesperrt {
+  opacity: 0.48;
+}
+
+.rl-abzeichenraster strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 0.76rem;
+}
+
+.rl-abzeichenraster small {
+  color: #7b848c;
+  font-size: 0.65rem;
+}
+
+.rl-einstellungszeile {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/* Mini-Vorschau in den Einstellungen */
+.set-moduskarte-redlingo .set-mini-rahmen {
+  border-color: #7e2027;
+}
+
+.set-mini-redlingo .set-mini-grund { fill: #090c10; }
+.set-mini-redlingo .set-mini-balken { fill: #1c2228; }
+.set-mini-redlingo .set-mini-akzent { fill: #df242d; }
+.set-mini-redlingo .set-mini-karte { fill: #252c33; }
+.set-mini-redlingo .set-mini-linie { fill: #f1f3f4; }
+
+@media (max-width: 620px) {
+  .rk-shell-redlingo .rk-spalten {
+    padding: 0 12px;
+  }
+
+  .rk-shell-redlingo .rk-kopfleiste {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .rk-shell-redlingo .rk-marke-wort small {
+    display: none;
+  }
+
+  .rk-shell-redlingo .rk-wert {
+    padding: 0 7px;
+  }
+
+  .rk-shell-redlingo .rk-wert-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .rk-shell-redlingo .rk-wert-text strong {
+    font-size: 0.9rem;
+  }
+
+  .rk-shell-redlingo .rk-wert-text small {
+    font-size: 0.58rem;
+  }
+
+  .rk-shell-redlingo .rk-untennav-text {
+    font-size: 0.62rem;
+  }
+
+  .rl-schnellraster {
+    grid-template-columns: 1fr;
+  }
+
+  .rl-statusraster {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 390px) {
+  .rl-profilzahlen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rl-abzeichenraster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rl-profilkopf {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .rl-avatar {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rk-shell-redlingo .rk-inhalt {
+    padding-top: 24px;
+  }
+
+  .rk-shell-redlingo .rk-kopfleiste {
+    min-height: 64px;
+  }
+}

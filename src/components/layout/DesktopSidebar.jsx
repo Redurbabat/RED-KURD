@@ -9,9 +9,12 @@ import { T } from '../../core/texts.js'
  *          modusWechsel:()=>void}} props
  */
 export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, modusWechsel }) {
+  const startPfad =
+    modus === 'abenteuer' ? '/adventure' : modus === 'redlingo' ? '/redlingo' : '/today'
+
   return (
     <aside className="rk-seitenleiste">
-      <button className="rk-marke" type="button" onClick={() => navigiere(modus === 'abenteuer' ? '/adventure' : '/today')}>
+      <button className="rk-marke" type="button" onClick={() => navigiere(startPfad)}>
         <img src="/bilder/logo.png" alt="" className="rk-marke-logo" width="40" height="40" />
         <span className="rk-marke-text">
           <strong>{T.app.name}</strong>
@@ -49,8 +52,8 @@ export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, mo
 
       <div className="rk-seitenleiste-fuss">
         <button type="button" className="rk-seitennav-knopf" onClick={modusWechsel}>
-          <Icon name={modus === 'abenteuer' ? 'heute' : 'welt'} groesse={22} />
-          <span>{modus === 'abenteuer' ? 'Modern-Modus' : 'Abenteuer-Modus'}</span>
+          <Icon name="rahmen" groesse={22} />
+          <span>Ansicht wechseln</span>
         </button>
         {!eintraege.some((eintrag) => eintrag.id === 'einstellungen') && (
           <button

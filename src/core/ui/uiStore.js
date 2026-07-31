@@ -1,11 +1,11 @@
-// Oberflaechen-Einstellungen: Modus (modern/abenteuer), Design, Ton, Animationen.
+// Oberflaechen-Einstellungen: Modus (modern/abenteuer/redlingo), Design, Ton, Animationen.
 // WICHTIG: Hier liegt nur die Darstellung. Der Lernstand ist davon voellig getrennt.
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
 
 const STANDARD = {
   version: 2,
-  mode: 'modern', // 'modern' | 'abenteuer'
+  mode: 'modern', // 'modern' | 'abenteuer' | 'redlingo'
   theme: 'dark', // 'light' | 'dark' | 'auto'
   soundEnabled: true,
   animationsEnabled: true,
@@ -42,7 +42,8 @@ export function appModus() {
 }
 
 export function setzeAppModus(mode) {
-  return setzeUi({ mode: mode === 'abenteuer' ? 'abenteuer' : 'modern' })
+  const erlaubt = ['modern', 'abenteuer', 'redlingo']
+  return setzeUi({ mode: erlaubt.includes(mode) ? mode : 'modern' })
 }
 
 export function tonAn() {
@@ -67,7 +68,12 @@ export function anwenden() {
   wurzel.setAttribute('data-mode', ui.mode)
   wurzel.setAttribute('data-animations', ui.animationsEnabled === false ? 'off' : 'on')
   const farbe = document.querySelector('meta[name="theme-color"]')
-  if (farbe) farbe.setAttribute('content', theme === 'dark' ? '#102229' : '#0ea5a8')
+  if (farbe) {
+    farbe.setAttribute(
+      'content',
+      ui.mode === 'redlingo' ? '#090c10' : theme === 'dark' ? '#102229' : '#0ea5a8'
+    )
+  }
 }
 
 // Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim

@@ -19,8 +19,20 @@ export const ABENTEUER_NAV = [
   { id: 'profil', pfad: '/adventure/profile', name: T.nav.profil, icon: 'profil' },
 ]
 
+export const REDLINGO_NAV = [
+  { id: 'redlingo-start', pfad: '/redlingo', name: 'Start', icon: 'heute' },
+  { id: 'kurs', pfad: '/languages', name: 'Kurse', icon: 'kurs' },
+  { id: 'ueben', pfad: '/practice', name: T.nav.ueben, icon: 'ueben' },
+  { id: 'fortschritt', pfad: '/progress', name: T.nav.fortschritt, icon: 'fortschritt' },
+  { id: 'redlingo-profil', pfad: '/redlingo/profile', name: T.nav.profil, icon: 'profil' },
+]
+
 /** Welcher Navigationspunkt ist beim aktuellen Pfad aktiv? */
 export function istAktiv(eintrag, pfad) {
+  if (eintrag.pfad === '/redlingo') return pfad === '/redlingo'
+  if (eintrag.pfad === '/redlingo/profile') {
+    return pfad.startsWith('/redlingo/profile') || pfad.startsWith('/settings')
+  }
   if (eintrag.pfad === '/adventure') return pfad === '/adventure'
   if (eintrag.pfad === '/adventure/worlds') {
     return pfad.startsWith('/adventure/world') || pfad.startsWith('/adventure/lesson')

@@ -6,7 +6,7 @@ import BottomNavigation from './BottomNavigation.jsx'
 import { T } from '../../core/texts.js'
 
 /**
- * @param {{modus:'modern'|'abenteuer', nav:Array, pfad:string, marken?:Object,
+ * @param {{modus:'modern'|'abenteuer'|'redlingo', nav:Array, pfad:string, marken?:Object,
  *          modusWechsel:()=>void, aside?:React.ReactNode, ohneNav?:boolean,
  *          children:React.ReactNode}} props
  */
@@ -21,7 +21,11 @@ export default function AppShell({
   children,
 }) {
   return (
-    <div className={'rk-shell' + (modus === 'abenteuer' ? ' rk-shell-abenteuer' : '')}>
+    <div
+      className={`rk-shell${modus === 'abenteuer' ? ' rk-shell-abenteuer' : ''}${
+        modus === 'redlingo' ? ' rk-shell-redlingo' : ''
+      }`}
+    >
       <a className="sprunglink" href="#inhalt">
         {T.nav.zumInhalt}
       </a>

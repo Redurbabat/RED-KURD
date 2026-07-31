@@ -47,10 +47,15 @@ const MODI = [
     name: 'Abenteuer',
     beschreibung: 'Spielerische Lernreise mit Karte und Belohnungen',
   },
+  {
+    id: 'redlingo',
+    name: 'Redlingo',
+    beschreibung: 'Kompakte schwarze Oberfläche mit rotem 3D-Klickgefühl',
+  },
 ]
 
 const SCHNELLZUGRIFFE = [
-  { id: 'set-modus', name: 'App-Modus', text: 'Modern oder Abenteuer', icon: 'welt' },
+  { id: 'set-modus', name: 'App-Modus', text: 'Modern, Abenteuer oder Redlingo', icon: 'welt' },
   { id: 'set-profil', name: 'Profil & Kurs', text: 'Ziel, Variante und Tagesziel', icon: 'profil' },
   { id: 'set-ton', name: 'Ton & Erinnerungen', text: 'Audio und tägliche Erinnerung', icon: 'glocke' },
   { id: 'set-design', name: 'Darstellung', text: 'Dunkel, hell oder automatisch', icon: 'mond' },
@@ -402,7 +407,26 @@ function VorschauAbenteuer() {
   )
 }
 
-const VORSCHAU = { modern: <VorschauModern />, abenteuer: <VorschauAbenteuer /> }
+function VorschauRedlingo() {
+  return (
+    <svg className="set-mini set-mini-redlingo" viewBox="0 0 140 90" aria-hidden="true" focusable="false">
+      <rect className="set-mini-grund" x="0" y="0" width="140" height="90" />
+      <rect className="set-mini-balken" x="9" y="8" width="122" height="14" rx="4" />
+      <rect className="set-mini-akzent" x="9" y="29" width="122" height="8" rx="4" />
+      <rect className="set-mini-karte" x="9" y="44" width="122" height="18" rx="5" />
+      <rect className="set-mini-linie" x="17" y="50" width="58" height="5" rx="2" />
+      <rect className="set-mini-karte" x="9" y="68" width="37" height="13" rx="4" />
+      <rect className="set-mini-karte" x="52" y="68" width="37" height="13" rx="4" />
+      <rect className="set-mini-karte" x="95" y="68" width="36" height="13" rx="4" />
+    </svg>
+  )
+}
+
+const VORSCHAU = {
+  modern: <VorschauModern />,
+  abenteuer: <VorschauAbenteuer />,
+  redlingo: <VorschauRedlingo />,
+}
 
 function ModusKarte() {
   const aktueller = appModus()
@@ -413,7 +437,7 @@ function ModusKarte() {
     setFrage(null)
     if (!neu) return
     setzeAppModus(neu)
-    navigiere(neu === 'abenteuer' ? '/adventure' : '/today')
+    navigiere(neu === 'abenteuer' ? '/adventure' : neu === 'redlingo' ? '/redlingo' : '/today')
   }
 
   return (
@@ -457,7 +481,13 @@ function ModusKarte() {
 
       <Modal
         offen={frage !== null}
-        titel={frage === 'abenteuer' ? T.einstellungen.zuAbenteuer : T.einstellungen.zuModern}
+        titel={
+          frage === 'abenteuer'
+            ? T.einstellungen.zuAbenteuer
+            : frage === 'redlingo'
+              ? 'Zu Redlingo wechseln?'
+              : T.einstellungen.zuModern
+        }
         schliessen={() => setFrage(null)}
         fussleiste={
           <>
@@ -472,7 +502,7 @@ function ModusKarte() {
       >
         <p>{T.einstellungen.modusHinweis}</p>
         <p className="gedaempft set-fussnote">
-          XP, Serie, Wörter, Kapitel und deine Sterne zählen in beiden Modi gemeinsam. Du
+          XP, Serie, Wörter, Kapitel und deine Sterne zählen in allen drei Modi gemeinsam. Du
           kannst hier jederzeit zurückwechseln.
         </p>
       </Modal>

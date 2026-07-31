@@ -23,24 +23,38 @@ function Wert({ icon, ton, wert, label, kurzLabel }) {
 }
 
 /**
- * @param {{modus:'modern'|'abenteuer'}} props
+ * @param {{modus:'modern'|'abenteuer'|'redlingo'}} props
  */
 export default function StatsHeader({ modus = 'modern' }) {
   const s = statistik()
 
   return (
-    <header className={'rk-kopfleiste' + (modus === 'abenteuer' ? ' abenteuer' : '')}>
+    <header
+      className={`rk-kopfleiste${modus === 'abenteuer' ? ' abenteuer' : ''}${
+        modus === 'redlingo' ? ' redlingo' : ''
+      }`}
+    >
       <div className="rk-kopf-zeile">
         <button
           type="button"
           className="rk-marke-klein"
-          onClick={() => navigiere(modus === 'abenteuer' ? '/adventure' : '/today')}
+          onClick={() =>
+            navigiere(
+              modus === 'abenteuer' ? '/adventure' : modus === 'redlingo' ? '/redlingo' : '/today'
+            )
+          }
           aria-label={`${T.app.name} – Startseite`}
         >
           <img src="/bilder/logo.png" alt="" width="40" height="40" />
           <span className="rk-marke-wort">
             <strong>
-              <span className="rk-marke-rot">RED</span>-KURD
+              {modus === 'redlingo' ? (
+                <span className="rk-marke-rot">REDLINGO</span>
+              ) : (
+                <>
+                  <span className="rk-marke-rot">RED</span>-KURD
+                </>
+              )}
             </strong>
             <small>{T.app.claim}</small>
           </span>
@@ -51,8 +65,16 @@ export default function StatsHeader({ modus = 'modern' }) {
         <button
           type="button"
           className="rk-kopf-profil"
-          onClick={() => navigiere(modus === 'abenteuer' ? '/adventure/profile' : '/settings')}
-          aria-label={modus === 'abenteuer' ? T.nav.profil : T.nav.einstellungen}
+          onClick={() =>
+            navigiere(
+              modus === 'abenteuer'
+                ? '/adventure/profile'
+                : modus === 'redlingo'
+                  ? '/redlingo/profile'
+                  : '/settings'
+            )
+          }
+          aria-label={modus === 'modern' ? T.nav.einstellungen : T.nav.profil}
         >
           {modus === 'abenteuer' ? (
             <HeloMascot variante="ruhig" groesse={30} dekorativ />
@@ -90,6 +112,17 @@ export default function StatsHeader({ modus = 'modern' }) {
             />
             {/* Energie ist bewusst unbegrenzt: Lerninhalte werden nie gesperrt. */}
             <Wert icon="blitz" ton="ton-energie" wert="∞" label="Energie" kurzLabel="Energie" />
+          </>
+        ) : modus === 'redlingo' ? (
+          <>
+            <Wert
+              icon="buch"
+              ton="ton-woerter"
+              wert={s.gelernt}
+              label={T.stats.woerter}
+              kurzLabel={T.stats.woerterKurz}
+            />
+            <Wert icon="schild" ton="ton-level" wert={s.level} label="Level" kurzLabel="Level" />
           </>
         ) : (
           <Wert
