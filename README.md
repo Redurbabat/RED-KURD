@@ -1,7 +1,12 @@
-# RED-KURD – Kurdisch lernen
+# RED-KURD – kostenlos und lokal Kurdisch lernen
 
 Kurmancî lernen – frei und offen. Start: **Deutsch–Kurmancî**, später weitere
 Sprachen. Schwester-Projekt von [BABAT-RED](https://github.com/Redurbabat/BABAT-RED).
+
+RED-KURD ist vollständig kostenlos: kein Abo, keine Werbung, kein Echtgeld-Shop
+und keine kostenpflichtige API. Lernstand, Einstellungen, Aufnahmen und
+Gamification-Daten bleiben im Browser auf dem eigenen Gerät. Eine vollständige
+Sicherung ist jederzeit über Export/Import möglich.
 
 ## Zwei Oberflächen, ein Lernstand
 

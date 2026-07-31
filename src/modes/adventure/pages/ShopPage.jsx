@@ -83,7 +83,7 @@ function ArtikelKarte({ artikel, vorrat, kaufen, umschalten }) {
         </span>
         <div className="sh-artikel-text">
           <strong>{artikel.name}</strong>
-          <p>Kosmetische Belohnung</p>
+          <p>{artikel.beschreibung}</p>
         </div>
       </div>
 
@@ -164,13 +164,17 @@ export default function ShopPage() {
 
   function kaufen(artikel) {
     const ergebnis = kaufe(artikel.id)
-    if (ergebnis === 'ok' && artikel.art === 'verbrauch') {
+    if (ergebnis === 'ok' && artikel.id === 'schatzschluessel') {
       // Der Schatzschlüssel wird sofort eingelöst. Der Lernstand kennt nur die
       // Tagestruhe, deshalb wird die Bonustruhe hier ausgezahlt.
       gibEdelsteine(BONUS_EDELSTEINE)
       setMeldung(
         `Gekauft! Die Bonustruhe bringt dir ${waehrungText(BONUS_EDELSTEINE, 'edelsteine')}.`
       )
+      return
+    }
+    if (ergebnis === 'ok' && artikel.id === 'streak-schutz') {
+      setMeldung('Serien-Schutz liegt bereit und wird bei einem fehlenden Lerntag automatisch genutzt.')
       return
     }
     if (ergebnis === 'ok') {
@@ -214,7 +218,7 @@ export default function ShopPage() {
     <div className="sh-seite">
       <PageHeader
         titel="Shop"
-        untertitel="Kosmetische Belohnungen für dein Abenteuer."
+        untertitel="Nur erspielte Edelsteine, niemals Echtgeld."
         ohneMaskottchen
       />
 
@@ -334,7 +338,7 @@ export default function ShopPage() {
         <Icon name="info" groesse={18} />
         <span>
           Im Shop gibt es nur Aussehen und Komfort. Alle Lerninhalte sind und bleiben frei
-          zugänglich.
+          zugänglich. Es gibt keine Käufe mit echtem Geld.
         </span>
       </p>
     </div>

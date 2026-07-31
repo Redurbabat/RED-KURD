@@ -3,7 +3,7 @@
 // WICHTIG (RED-KURD-Grundsatz): Herzen sperren NIE Lerninhalte — bei 0 Herzen
 // laeuft die Lektion als Uebungslauf weiter, es gibt nur keine Edelstein-
 // belohnung mehr fuer diese Runde. Der Modern-Modus benutzt Herzen nicht.
-import { lies, schreibe } from '../storage.js'
+import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
 import { zahleEdelsteine } from '../progress/progressStore.js'
 
@@ -11,7 +11,7 @@ export const MAX_HERZEN = 5
 export const NACHFUELL_PREIS = 10 // Edelsteine fuer volle Herzen
 const REGEN_MS = 4 * 60 * 60 * 1000 // 1 Herz je 4 Stunden
 
-const KEY = 'red-kurd-hearts-v1'
+const KEY = KEYS.herzen
 
 const LEER = { version: 1, herzen: MAX_HERZEN, zuletzt: 0 }
 

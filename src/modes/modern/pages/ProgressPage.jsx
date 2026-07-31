@@ -12,6 +12,7 @@ import {
   schwaechsteFertigkeit,
   staerksteFertigkeit,
   wochenAktivitaet,
+  wochenLiga,
   wochenMinuten,
   lernzeitText,
 } from '../../../core/progress/progressSelectors.js'
@@ -20,6 +21,7 @@ import {
   ankiZeilen,
   setzeFortschritt,
 } from '../../../core/progress/progressStore.js'
+import { importiereSpeicherstand } from '../../../core/storage.js'
 import { kursFortschritt } from '../../../core/courses/courseRepository.js'
 import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.js'
 import { holeUi, setzeUi } from '../../../core/ui/uiStore.js'
@@ -87,6 +89,7 @@ export default function ProgressPage() {
   const kurs = kursFortschritt()
   const werte = fertigkeiten()
   const woche = wochenAktivitaet()
+  const liga = wochenLiga()
   const maxTag = Math.max(1, ...woche.map((t) => t.anzahl))
 
   return (
@@ -239,6 +242,36 @@ export default function ProgressPage() {
       </section>
 
       <section className="rk-abschnitt">
+        <h2 className="rk-abschnitt-titel">Wochenliga</h2>
+        <Card titel={liga.name} icon={liga.icon} ton="kuehl" className="fp-liga">
+          <p className="fp-liga-text">{liga.text}</p>
+          {liga.naechste ? (
+            <>
+              <ProgressBar
+                wert={liga.fortschritt}
+                max={liga.spanne}
+                label={`${liga.name}: noch ${liga.fehlen} Aufgaben bis ${liga.naechste.name}`}
+                farbe="gold"
+                zeigeWert
+              />
+              <p className="gedaempft fp-fussnote">
+                Noch {liga.fehlen} Aufgaben bis zur {liga.naechste.name}.
+              </p>
+            </>
+          ) : (
+            <p className="fp-liga-gipfel">
+              <Icon name="krone" groesse={20} />
+              Höchste Liga dieser Woche erreicht.
+            </p>
+          )}
+          <p className="gedaempft fp-liga-lokal">
+            Diese persönliche Liga wird nur aus deinen lokal gelösten Aufgaben berechnet. Es gibt
+            keine öffentliche Rangliste und keine Übertragung.
+          </p>
+        </Card>
+      </section>
+
+      <section className="rk-abschnitt">
         <h2 className="rk-abschnitt-titel">Nächster Schritt</h2>
         <Empfehlung werte={werte} />
       </section>
@@ -372,6 +405,7 @@ function Datenverwaltung() {
         if (!daten || typeof daten !== 'object' || !daten.fortschritt) {
           throw new Error('kein Lernstand')
         }
+        if (daten.speicher) importiereSpeicherstand(daten.speicher)
         setzeFortschritt(daten.fortschritt)
         if (daten.profil) setzeProfil(daten.profil)
         if (daten.ui) setzeUi(daten.ui)

@@ -1,15 +1,18 @@
 // Der eine Lernstand fuer die ganze App.
 // Modern-Modus und Abenteuer-Modus schreiben und lesen genau hier — es gibt
 // bewusst KEINEN zweiten Fortschritt fuer das Abenteuer.
-import { KEYS, lies, schreibe } from '../storage.js'
+import { KEYS, lies, schreibe, exportiereSpeicherstand } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { heute, gestern, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.js'
+import { heute, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.js'
+import { aktualisiereSerie } from './gamification.js'
 
 const LEER = {
   version: 2,
   xp: 0,
   serie: 0,
   letzterTag: null,
+  serienSchutz: 0,
+  letzterSchutz: null,
   einheiten: {}, // { einheitId: besteProzent }
   sterne: {}, // { einheitId: 0..3 }
   bestanden: {}, // { einheitId: Anzahl bestandener Pruefungen }
@@ -64,10 +67,21 @@ export function gibXp(punkte) {
   const d = { ...laden() }
   d.xp = (d.xp || 0) + punkte
   if (d.letzterTag !== heute()) {
-    d.serie = d.letzterTag === gestern() ? (d.serie || 0) + 1 : 1
-    d.letzterTag = heute()
+    const neu = aktualisiereSerie(d, heute())
+    d.serie = neu.serie
+    d.letzterTag = neu.letzterTag
+    d.serienSchutz = neu.serienSchutz
+    if (neu.schutzBenutzt) d.letzterSchutz = heute()
   }
   return sichern(d)
+}
+
+/** Legt bis zu drei automatisch verwendete Schutz-Tage bereit. */
+export function gibSerienSchutz(anzahl = 1) {
+  const d = { ...laden() }
+  d.serienSchutz = Math.min(3, Math.max(0, (d.serienSchutz || 0) + anzahl))
+  sichern(d)
+  return d.serienSchutz
 }
 
 export function level() {
@@ -292,6 +306,7 @@ export function exportiereAlles(extra = {}) {
       app: 'RED-KURD',
       exportiert: new Date().toISOString(),
       fortschritt: laden(),
+      speicher: exportiereSpeicherstand(),
       ...extra,
     },
     null,

@@ -9,6 +9,7 @@ export const KEYS = {
   shop: 'red-kurd-shop-v1',
   auszeichnungen: 'red-kurd-achievements-v1',
   aufgaben: 'red-kurd-tasks-v1',
+  herzen: 'red-kurd-hearts-v1',
 }
 
 // Alte Schluessel aus Version 1 — werden einmalig uebernommen, nie geloescht.
@@ -56,6 +57,32 @@ export function entferne(key) {
   } catch {
     /* egal */
   }
+}
+
+/**
+ * Vollständige, lokale Sicherung aller bekannten App-Speicher.
+ * Es werden nur RED-KURD-Schlüssel gelesen; fremde Browserdaten bleiben unberührt.
+ */
+export function exportiereSpeicherstand() {
+  return Object.fromEntries(
+    Object.entries(KEYS)
+      .map(([name, key]) => [name, lies(key)])
+      .filter(([, wert]) => wert !== null)
+  )
+}
+
+/**
+ * Lokale Sicherung einspielen. Unbekannte Schlüssel werden bewusst ignoriert.
+ * @returns {number} Anzahl geschriebener Bereiche
+ */
+export function importiereSpeicherstand(speicher) {
+  if (!speicher || typeof speicher !== 'object' || Array.isArray(speicher)) return 0
+  let anzahl = 0
+  for (const [name, key] of Object.entries(KEYS)) {
+    if (!(name in speicher)) continue
+    if (schreibe(key, speicher[name])) anzahl += 1
+  }
+  return anzahl
 }
 
 // ===== Migration =====

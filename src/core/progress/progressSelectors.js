@@ -2,6 +2,7 @@
 // Reine Lesefunktionen — sie aendern nichts.
 import { holeFortschritt, level } from './progressStore.js'
 import { heute, tagVon, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.js'
+import { ligaFuerAufgaben } from './gamification.js'
 
 /** Alle heute faelligen Karten. */
 export function faelligeKarten() {
@@ -71,6 +72,8 @@ export function statistik() {
   return {
     xp: d.xp || 0,
     serie: d.serie || 0,
+    serienSchutz: d.serienSchutz || 0,
+    letzterSchutz: d.letzterSchutz || null,
     edelsteine: d.edelsteine || 0,
     schluessel: d.schluessel || 0,
     level: level().stufe,
@@ -119,6 +122,11 @@ export function gesternStatistik() {
 /** Wieviele Aufgaben wurden diese Woche geloest? (fuer Wochenaufgaben) */
 export function wochenSumme() {
   return wochenAktivitaet().reduce((s, t) => s + t.anzahl, 0)
+}
+
+/** Persönliche Liga ohne Server, Konto oder andere Lernende. */
+export function wochenLiga() {
+  return ligaFuerAufgaben(wochenSumme())
 }
 
 /** Lernminuten der letzten sieben Tage. */

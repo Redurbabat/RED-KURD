@@ -214,6 +214,13 @@ function Zusammenfassung({ antworten, fertig }) {
             <small>Dein Lernziel</small>
           </span>
         </li>
+        <li>
+          <Icon name="schild" groesse={22} />
+          <span className="onb-plan-text">
+            <strong>Kostenlos und lokal</strong>
+            <small>Kein Konto, keine Werbung, keine Datenübertragung</small>
+          </span>
+        </li>
       </ul>
 
       <p className="onb-hinweis">

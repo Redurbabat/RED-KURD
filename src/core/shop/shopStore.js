@@ -1,7 +1,12 @@
 // Shop: nur Aussehen und Komfort. Lerninhalte sind hier niemals gesperrt.
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { zahleEdelsteine, zahleSchluessel, holeFortschritt } from '../progress/progressStore.js'
+import {
+  zahleEdelsteine,
+  zahleSchluessel,
+  holeFortschritt,
+  gibSerienSchutz,
+} from '../progress/progressStore.js'
 
 export const KATEGORIEN = [
   { id: 'edelsteine', name: 'Edelsteine', icon: 'edelstein' },
@@ -42,12 +47,12 @@ export const ARTIKEL = [
   },
   {
     id: 'streak-schutz',
-    name: 'Streak-Schutz',
-    beschreibung: 'Rettet deine Serie, wenn ein Tag fehlt.',
+    name: 'Serien-Schutz',
+    beschreibung: 'Rettet deine Serie automatisch, wenn ein Lerntag fehlt.',
     kategorie: 'edelsteine',
     preis: 100,
     waehrung: 'edelsteine',
-    art: 'komfort',
+    art: 'verbrauch',
     icon: 'schild',
   },
   {
@@ -127,6 +132,7 @@ export function kaufe(id) {
   const bezahlt =
     artikel.waehrung === 'schluessel' ? zahleSchluessel(artikel.preis) : zahleEdelsteine(artikel.preis)
   if (!bezahlt) return 'zu-teuer'
+  if (artikel.id === 'streak-schutz') gibSerienSchutz(1)
   const d = { ...holeShop() }
   if (artikel.art !== 'verbrauch') {
     d.gekauft = [...d.gekauft, id]
