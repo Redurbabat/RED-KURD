@@ -2,8 +2,10 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import worker from '../sites/worker.js'
 
-function testUmgebung() {
-  return {
+function testUmgebung({ mitR2 = false } = {}) {
+  const objekte = new Map()
+  const env = {
+    R2_UPLOAD_TOKEN: 'test-geheimnis',
     ASSETS: {
       async fetch(request) {
         const url = new URL(request.url)
@@ -17,6 +19,32 @@ function testUmgebung() {
       },
     },
   }
+  if (mitR2) {
+    env.RED_KURD_DATA = {
+      async get(key) {
+        const wert = objekte.get(key)
+        if (!wert) return null
+        return {
+          key,
+          size: wert.byteLength,
+          body: wert,
+          httpEtag: '"test-etag"',
+          writeHttpMetadata(headers) {
+            headers.set('content-type', 'application/json; charset=utf-8')
+          },
+        }
+      },
+      async head(key) {
+        return this.get(key)
+      },
+      async put(key, body) {
+        const wert = new Uint8Array(await new Response(body).arrayBuffer())
+        objekte.set(key, wert)
+        return { key, size: wert.byteLength, httpEtag: '"test-etag"' }
+      },
+    }
+  }
+  return env
 }
 
 test('öffentliche Tiefenlinks erhalten die App-Hülle und absolute Vorschaubilder', async () => {
@@ -41,4 +69,41 @@ test('fehlende Nicht-HTML-Dateien werden nicht auf die App-Hülle umgeleitet', a
   )
 
   assert.equal(response.status, 404)
+})
+
+test('Cloudflare-R2-Daten haben Vorrang vor statischen Dateien', async () => {
+  const env = testUmgebung({ mitR2: true })
+  const upload = await worker.fetch(
+    new Request('https://lernen.example/__admin/r2/daten/test.json', {
+      method: 'PUT',
+      headers: {
+        authorization: 'Bearer test-geheimnis',
+        'content-type': 'application/json',
+        'content-length': '11',
+      },
+      body: '{"ok":true}',
+    }),
+    env
+  )
+  assert.equal(upload.status, 201)
+
+  const response = await worker.fetch(
+    new Request('https://lernen.example/daten/test.json'),
+    env
+  )
+  assert.equal(response.status, 200)
+  assert.equal(await response.text(), '{"ok":true}')
+  assert.equal(response.headers.get('etag'), '"test-etag"')
+})
+
+test('R2-Upload ist ohne korrektes Geheimnis gesperrt', async () => {
+  const response = await worker.fetch(
+    new Request('https://lernen.example/__admin/r2/daten/test.json', {
+      method: 'PUT',
+      headers: { 'content-length': '2' },
+      body: '{}',
+    }),
+    testUmgebung({ mitR2: true })
+  )
+  assert.equal(response.status, 401)
 })

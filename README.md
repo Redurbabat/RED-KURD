@@ -34,8 +34,9 @@ laufende Sitzungen sind in beiden Modi dieselben.
   Tages- und Wochenaufgaben, Schatztruhe, Shop (nur Kosmetik), Auszeichnungen
 - **Hêlo** – der eigene Adler als SVG-Maskottchen mit zwölf Varianten
 
-Alles bleibt lokal: kein Konto, keine Cloud, kein Tracking. Die App ist PWA-fähig
-und funktioniert offline.
+Persönliche Daten bleiben lokal: kein Konto, kein Tracking. Öffentliche
+Kursdateien können aus Cloudflare R2 geladen und für den Offline-Betrieb im
+Browser zwischengespeichert werden.
 
 ## Lokal starten
 
@@ -52,13 +53,26 @@ Optional lässt sich der Datenbank-Server für das grosse Wörterbuch starten:
 node server.js        # braucht red-kurd.db, Pfad über RED_KURD_DB
 ```
 
-Ohne diesen Server nutzt die App die statischen JSON-Daten unter `public/daten`.
+Ohne diesen Server nutzt die App die öffentlichen JSON-Daten unter `/daten`.
+
+## Speicheraufteilung
+
+- **Im Browser:** Profil, Lernstand, Serie, Einstellungen und Aufnahmen.
+- **Cloudflare:** die Web-App sowie öffentliche Kurs-, Wörterbuch- und
+  Audiodateien. Der lokale Upload ist auf 3 GiB insgesamt und 95 MiB je Datei
+  begrenzt.
+- **Nur lokal:** große Rohdatenbanken, Sicherungen und private Quelldateien
+  unter `local-data/private`.
+
+Öffentliche Daten werden lokal unter `local-data/cloudflare` vorbereitet,
+mit `npm run data:check` geprüft und mit `npm run data:upload` nach R2
+übertragen. Der Ordner selbst wird nicht in Git aufgenommen.
 
 ## Veröffentlichen
 
-Repo auf GitHub pushen → auf vercel.com „New Project" → dieses Repo wählen →
-Deploy. `vercel.json` enthält bereits die Weiterleitung für die App-Adressen
-(`/today`, `/course/…`, `/adventure/…`).
+Die öffentliche Version läuft als Cloudflare Worker mit statischen Assets und
+einem R2-Bucket für Kursdaten. Tiefenlinks wie `/today`, `/course/…` und
+`/adventure/…` werden vom Worker an die App weitergegeben.
 
 ## Aufbau
 

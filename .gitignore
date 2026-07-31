@@ -1,6 +1,8 @@
 node_modules
 dist
 tmp
+local-data/*
+!local-data/README.md
 .env
 .env.local
 upload-log.txt

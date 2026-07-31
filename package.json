@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
-    "test": "node --test"
+    "test": "node --test",
+    "data:check": "node scripts/upload-cloud-data.mjs --dry-run",
+    "data:upload": "node scripts/upload-cloud-data.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",
