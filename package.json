@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "node --test",
     "data:check": "node scripts/upload-cloud-data.mjs --dry-run",
-    "data:upload": "node scripts/upload-cloud-data.mjs"
+    "data:upload": "node scripts/upload-cloud-data.mjs",
+    "app:upload": "node scripts/upload-cloud-data.mjs dist --prefix=app --exclude=server,daten,.openai"
   },
   "dependencies": {
     "react": "^18.3.1",

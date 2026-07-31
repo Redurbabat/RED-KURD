@@ -26,20 +26,25 @@ function testUmgebung({ mitR2 = false } = {}) {
         if (!wert) return null
         return {
           key,
-          size: wert.byteLength,
-          body: wert,
+          size: wert.body.byteLength,
+          body: wert.body,
           httpEtag: '"test-etag"',
           writeHttpMetadata(headers) {
-            headers.set('content-type', 'application/json; charset=utf-8')
+            if (wert.httpMetadata?.contentType) {
+              headers.set('content-type', wert.httpMetadata.contentType)
+            }
+            if (wert.httpMetadata?.cacheControl) {
+              headers.set('cache-control', wert.httpMetadata.cacheControl)
+            }
           },
         }
       },
       async head(key) {
         return this.get(key)
       },
-      async put(key, body) {
+      async put(key, body, optionen) {
         const wert = new Uint8Array(await new Response(body).arrayBuffer())
-        objekte.set(key, wert)
+        objekte.set(key, { body: wert, httpMetadata: optionen?.httpMetadata })
         return { key, size: wert.byteLength, httpEtag: '"test-etag"' }
       },
     }
@@ -106,4 +111,33 @@ test('R2-Upload ist ohne korrektes Geheimnis gesperrt', async () => {
     testUmgebung({ mitR2: true })
   )
   assert.equal(response.status, 401)
+})
+
+test('R2 liefert die App-Hülle aus, wenn das statische Binding fehlt', async () => {
+  const env = testUmgebung({ mitR2: true })
+  const html = '<html><meta property="og:image" content="__SITE_ORIGIN__/og.png"></html>'
+  const upload = await worker.fetch(
+    new Request('https://lernen.example/__admin/r2/app/index.html', {
+      method: 'PUT',
+      headers: {
+        authorization: 'Bearer test-geheimnis',
+        'content-type': 'text/html; charset=utf-8',
+        'content-length': String(html.length),
+        'cache-control': 'no-cache',
+      },
+      body: html,
+    }),
+    env
+  )
+  assert.equal(upload.status, 201)
+
+  const response = await worker.fetch(
+    new Request('https://lernen.example/today', {
+      headers: { accept: 'text/html' },
+    }),
+    env
+  )
+  assert.equal(response.status, 200)
+  assert.match(await response.text(), /https:\/\/lernen\.example\/og\.png/)
+  assert.equal(response.headers.get('cache-control'), 'no-cache')
 })

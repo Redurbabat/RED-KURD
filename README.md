@@ -66,13 +66,18 @@ Ohne diesen Server nutzt die App die öffentlichen JSON-Daten unter `/daten`.
 
 Öffentliche Daten werden lokal unter `local-data/cloudflare` vorbereitet,
 mit `npm run data:check` geprüft und mit `npm run data:upload` nach R2
-übertragen. Der Ordner selbst wird nicht in Git aufgenommen.
+übertragen. Kurzzeitige Netzwerkfehler werden automatisch erneut versucht.
+Der Ordner selbst wird nicht in Git aufgenommen.
 
 ## Veröffentlichen
 
 Die öffentliche Version läuft als Cloudflare Worker mit statischen Assets und
 einem R2-Bucket für Kursdaten. Tiefenlinks wie `/today`, `/course/…` und
 `/adventure/…` werden vom Worker an die App weitergegeben.
+
+Nach `npm run build` können die kleinen App-Dateien mit `npm run app:upload`
+in denselben R2-Bucket geladen werden. Dabei werden Servercode, Kursdaten und
+Hosting-Metadaten automatisch ausgelassen.
 
 ## Aufbau
 

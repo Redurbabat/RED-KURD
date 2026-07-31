@@ -4,6 +4,7 @@
 
 const DATEN_PREFIX = '/daten/'
 const ADMIN_PREFIX = '/__admin/r2/'
+const APP_PREFIX = 'app/'
 const MAX_UPLOAD = 95 * 1024 * 1024
 
 function erwartetHtml(request) {
@@ -38,13 +39,8 @@ async function tokenStimmt(request, erwartet) {
   return unterschied === 0
 }
 
-async function r2Lesen(request, env) {
+async function r2ObjektAntwort(request, env, key, standardCache) {
   if (!env.RED_KURD_DATA || !['GET', 'HEAD'].includes(request.method)) return null
-  const url = new URL(request.url)
-  const rest = schluesselAusPfad(url.pathname, DATEN_PREFIX)
-  if (!rest) return null
-  const key = `daten/${rest}`
-
   const objekt =
     request.method === 'HEAD'
       ? await env.RED_KURD_DATA.head(key)
@@ -56,7 +52,7 @@ async function r2Lesen(request, env) {
   headers.set('etag', objekt.httpEtag)
   headers.set('content-length', String(objekt.size))
   if (!headers.has('cache-control')) {
-    headers.set('cache-control', 'public, max-age=3600, stale-while-revalidate=86400')
+    headers.set('cache-control', standardCache)
   }
 
   if (request.headers.get('if-none-match') === objekt.httpEtag) {
@@ -64,6 +60,45 @@ async function r2Lesen(request, env) {
   }
 
   return new Response(request.method === 'HEAD' ? null : objekt.body, { headers })
+}
+
+async function r2DatenLesen(request, env) {
+  const url = new URL(request.url)
+  const rest = schluesselAusPfad(url.pathname, DATEN_PREFIX)
+  if (!rest) return null
+  return r2ObjektAntwort(
+    request,
+    env,
+    `daten/${rest}`,
+    'public, max-age=3600, stale-while-revalidate=86400'
+  )
+}
+
+async function r2AppLesen(request, env) {
+  if (!['GET', 'HEAD'].includes(request.method)) return null
+  const url = new URL(request.url)
+  let appPfad
+  try {
+    appPfad = decodeURIComponent(url.pathname).replace(/^\/+/, '')
+  } catch {
+    return null
+  }
+  if (appPfad.includes('..') || appPfad.includes('\\')) return null
+
+  if (appPfad) {
+    const exakt = await r2ObjektAntwort(
+      request,
+      env,
+      `${APP_PREFIX}${appPfad}`,
+      'public, max-age=3600, stale-while-revalidate=86400'
+    )
+    if (exakt) return exakt
+  }
+
+  if (url.pathname === '/' || erwartetHtml(request)) {
+    return r2ObjektAntwort(request, env, `${APP_PREFIX}index.html`, 'no-cache')
+  }
+  return null
 }
 
 async function r2Hochladen(request, env) {
@@ -76,8 +111,8 @@ async function r2Hochladen(request, env) {
   if (!env.RED_KURD_DATA || !(await tokenStimmt(request, env.R2_UPLOAD_TOKEN))) {
     return new Response('Nicht erlaubt.', { status: 401 })
   }
-  if (!key.startsWith('daten/')) {
-    return new Response('Nur öffentliche Kursdaten sind erlaubt.', { status: 400 })
+  if (!key.startsWith('daten/') && !key.startsWith(APP_PREFIX)) {
+    return new Response('Nur öffentliche Kurs- und App-Dateien sind erlaubt.', { status: 400 })
   }
 
   const laenge = Number(request.headers.get('content-length'))
@@ -129,14 +164,21 @@ export default {
     const adminAntwort = await r2Hochladen(request, env)
     if (adminAntwort) return adminAntwort
 
-    const datenAntwort = await r2Lesen(request, env)
+    const datenAntwort = await r2DatenLesen(request, env)
     if (datenAntwort) return datenAntwort
 
-    let response = await env.ASSETS.fetch(request)
+    let response = env.ASSETS
+      ? await env.ASSETS.fetch(request)
+      : new Response('Nicht gefunden.', { status: 404 })
+
+    if (response.status === 404) {
+      const appAntwort = await r2AppLesen(request, env)
+      if (appAntwort) response = appAntwort
+    }
 
     if (response.status === 404 && erwartetHtml(request)) {
       const indexUrl = new URL('/index.html', request.url)
-      response = await env.ASSETS.fetch(new Request(indexUrl, request))
+      if (env.ASSETS) response = await env.ASSETS.fetch(new Request(indexUrl, request))
     }
 
     return mitOeffentlicherAdresse(response, request)
