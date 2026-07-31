@@ -7,6 +7,62 @@
   flex-shrink: 0;
 }
 
+.fp-profilkopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  margin-bottom: var(--space-5);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-large);
+  background: var(--rk-surface);
+}
+.fp-avatar {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+  border: 4px solid var(--rk-blue);
+  border-radius: 38% 38% 50% 50%;
+  background: var(--rk-blue-soft);
+  color: var(--rk-blue);
+  font-family: var(--font-head);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+}
+.fp-profiltext {
+  flex: 1;
+  min-width: 0;
+}
+.fp-profiltext h2 {
+  font-size: var(--text-2xl);
+}
+.fp-profiltext > p {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.fp-profilzahlen {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  list-style: none;
+}
+.fp-profilzahlen strong,
+.fp-profilzahlen span {
+  display: block;
+}
+.fp-profilzahlen strong {
+  color: var(--rk-blue);
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+}
+.fp-profilzahlen span {
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+}
+
 /* Der Ring erbt seine Restfarbe aus --rk-border. Auf der farbigen Hero-Karte
    ist der helle Standardwert zu schwach, deshalb hier ein dunkler Ersatz. */
 .fp-hero {
@@ -82,6 +138,68 @@
   border-top: 1px solid var(--rk-border);
 }
 
+.fp-ligatabelle {
+  margin-top: var(--space-4);
+  overflow: hidden;
+  list-style: none;
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-medium);
+}
+.fp-ligatabelle li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 68px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--rk-surface);
+}
+.fp-ligatabelle li + li {
+  border-top: 1px solid var(--rk-border);
+}
+.fp-ligatabelle li.eigen {
+  background: var(--rk-primary-soft);
+}
+.fp-liga-rang {
+  width: 24px;
+  flex-shrink: 0;
+  color: var(--rk-text-muted);
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  text-align: center;
+}
+.fp-liga-avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #102229;
+  font-family: var(--font-head);
+  font-weight: 900;
+}
+.fp-liga-avatar-lila { background: var(--rk-purple); }
+.fp-liga-avatar-blau { background: var(--rk-blue); }
+.fp-liga-avatar-pink { background: #ef78b8; }
+.fp-liga-avatar-gruen { background: var(--rk-green); }
+.fp-liga-avatar-gold { background: var(--rk-yellow); }
+.fp-liga-avatar-teal { background: var(--rk-primary); }
+.fp-liga-name {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.fp-liga-name small {
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+}
+.fp-liga-punkte {
+  flex-shrink: 0;
+  color: var(--rk-text-muted);
+  font-family: var(--font-head);
+}
+
 .fp-seite .fp-hinweis {
   margin-top: var(--space-3);
   color: var(--rk-primary-dark);
@@ -111,6 +229,21 @@
   .fp-seite .fp-hero {
     padding: var(--space-4);
     gap: var(--space-3);
+  }
+  .fp-profilkopf {
+    align-items: flex-start;
+    padding: var(--space-4);
+  }
+  .fp-avatar {
+    width: 72px;
+    height: 72px;
+    font-size: var(--text-2xl);
+  }
+  .fp-profilzahlen {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .fp-liga-name small {
+    display: none;
   }
 }
 

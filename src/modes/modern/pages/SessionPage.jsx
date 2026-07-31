@@ -106,7 +106,7 @@ export default function SessionPage() {
       <EmptyState
         variante="denken"
         titel="Heute gibt es hier keine Aufgaben."
-        text="Für diese Sitzung liessen sich keine Aufgaben zusammenstellen. Starte zuerst eine Einheit im Kurs."
+        text="Für diese Sitzung liessen sich keine Aufgaben zusammenstellen. Starte zuerst ein Kapitel im Kurs."
         aktion={() => navigiere('/today')}
         aktionText="Zurück zu Heute"
       />

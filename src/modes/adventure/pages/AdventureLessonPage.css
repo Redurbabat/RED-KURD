@@ -177,6 +177,12 @@
 .al-nr-lernen {
   background: var(--adv-blue);
 }
+.al-nr-festigen {
+  background: var(--adv-green);
+}
+.al-nr-schreiben {
+  background: var(--adv-orange);
+}
 .al-nr-hoeren {
   background: var(--adv-teal);
 }

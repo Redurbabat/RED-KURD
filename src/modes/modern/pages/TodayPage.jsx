@@ -164,12 +164,12 @@ export default function TodayPage() {
               <div className="tp-kurs-text">
                 <p className="gedaempft">{T.app.kurs}</p>
                 <p className="tp-kurs-einheit">
-                  Einheit {einheit.nr}: <strong>{einheit.name}</strong>
+                  Kapitel {einheit.nr}: <strong>{einheit.name}</strong>
                 </p>
               </div>
               <ProgressRing
                 wert={einheitProzent(einheit.id)}
-                label={`Fortschritt der Einheit ${einheit.name}`}
+                label={`Fortschritt des Kapitels ${einheit.name}`}
                 groesse={72}
               />
             </div>

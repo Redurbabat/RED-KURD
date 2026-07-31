@@ -49,6 +49,19 @@ const MODI = [
   },
 ]
 
+const SCHNELLZUGRIFFE = [
+  { id: 'set-modus', name: 'App-Modus', text: 'Modern oder Abenteuer', icon: 'welt' },
+  { id: 'set-profil', name: 'Profil & Kurs', text: 'Ziel, Variante und Tagesziel', icon: 'profil' },
+  { id: 'set-ton', name: 'Ton & Erinnerungen', text: 'Audio und tägliche Erinnerung', icon: 'glocke' },
+  { id: 'set-design', name: 'Darstellung', text: 'Dunkel, hell oder automatisch', icon: 'mond' },
+  { id: 'set-daten', name: 'Datenschutz & Daten', text: 'Lokal sichern und übertragen', icon: 'schild' },
+]
+
+function springeZu(id) {
+  const ziel = document.getElementById(id)
+  if (ziel) ziel.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 /** Eine Zeichenkette als Datei anbieten, ohne die Seite zu verlassen. */
 function ladeHerunter(inhalt, dateiname, typ) {
   const adresse = URL.createObjectURL(new Blob([inhalt], { type: typ }))
@@ -72,29 +85,51 @@ export default function SettingsPage() {
         variante="ruhig"
       />
 
+      <nav className="set-schnellmenue" aria-label="Einstellungsbereiche">
+        <p className="set-schnellmenue-label">Einstellungen</p>
+        <ul>
+          {SCHNELLZUGRIFFE.map((eintrag) => (
+            <li key={eintrag.id}>
+              <button type="button" onClick={() => springeZu(eintrag.id)}>
+                <span className="set-schnellmenue-icon">
+                  <Icon name={eintrag.icon} groesse={22} />
+                </span>
+                <span className="set-schnellmenue-text">
+                  <strong>{eintrag.name}</strong>
+                  <small>{eintrag.text}</small>
+                </span>
+                <Icon name="pfeilRechts" groesse={20} className="set-schnellmenue-pfeil" />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
       {/* Der Moduswechsel steht bewusst ganz oben — er ist die Einstellung,
           die am meisten veraendert (Designpaket, Bild 12). */}
-      <ModusKarte />
+      <div id="set-modus">
+        <ModusKarte />
+      </div>
 
-      <section className="rk-abschnitt">
+      <section className="rk-abschnitt" id="set-profil">
         <h2 className="rk-abschnitt-titel">Profil und Lernziele</h2>
         <ProfilKarte />
         <SpracheKarte />
         <TageszielKarte />
       </section>
 
-      <section className="rk-abschnitt">
+      <section className="rk-abschnitt" id="set-ton">
         <h2 className="rk-abschnitt-titel">Ton und Erinnerungen</h2>
         <AudioKarte />
         <ErinnerungsKarte />
       </section>
 
-      <section className="rk-abschnitt">
+      <section className="rk-abschnitt" id="set-design">
         <h2 className="rk-abschnitt-titel">Darstellung</h2>
         <DesignKarte />
       </section>
 
-      <section className="rk-abschnitt">
+      <section className="rk-abschnitt" id="set-daten">
         <h2 className="rk-abschnitt-titel">Datenschutz und Daten</h2>
         <DatenschutzKarte />
         <DatenKarte />
@@ -437,7 +472,7 @@ function ModusKarte() {
       >
         <p>{T.einstellungen.modusHinweis}</p>
         <p className="gedaempft set-fussnote">
-          XP, Serie, Wörter, Einheiten und deine Sterne zählen in beiden Modi gemeinsam. Du
+          XP, Serie, Wörter, Kapitel und deine Sterne zählen in beiden Modi gemeinsam. Du
           kannst hier jederzeit zurückwechseln.
         </p>
       </Modal>
@@ -600,7 +635,7 @@ function DatenKarte() {
         </p>
         <p className="gedaempft set-fussnote">
           Dein <strong>Lernstand bleibt erhalten</strong>: XP, Serie, Edelsteine, Wörter,
-          Einheiten und Sterne ändern sich dabei nicht. Nur Name, Ziel, Vorkenntnisse und
+          Kapitel und Sterne ändern sich dabei nicht. Nur Name, Ziel, Vorkenntnisse und
           Tagesziel werden neu gesetzt.
         </p>
       </Modal>

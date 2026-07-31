@@ -74,7 +74,7 @@ export const AUSZEICHNUNGEN = [
   {
     id: 'weltenbummler',
     name: 'Weltenbummler',
-    beschreibung: 'Alle Einheiten abgeschlossen.',
+    beschreibung: 'Alle Kapitel abgeschlossen.',
     icon: 'kompass',
     farbe: 'gold',
     pruefe: (s, k) => k.prozent >= 100,

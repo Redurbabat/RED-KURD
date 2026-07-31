@@ -19,7 +19,7 @@ export default function BottomNavigation({ eintraege, pfad, marken = {} }) {
             <li key={e.id}>
               <button
                 type="button"
-                className={'rk-untennav-knopf' + (aktiv ? ' aktiv' : '')}
+                className={`rk-untennav-knopf rk-nav-${e.id}${aktiv ? ' aktiv' : ''}`}
                 aria-current={aktiv ? 'page' : undefined}
                 onClick={() => navigiere(e.pfad)}
               >

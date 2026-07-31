@@ -1,5 +1,7 @@
-// Kursbaum: 10 Themen-Lektionen Deutsch–Kurmancî mit Bildern
-export const kurse = [
+// Kursbaum Deutsch–Kurmancî mit Bildern.
+import { zusaetzlicheKurse } from './kurseErweitert.js'
+
+const grundKurse = [
   { id: 'begruessung', ziel: 'Du kannst Menschen begrüßen, dich bedanken und verabschieden.', name: 'Begrüßung', symbol: '👋', woerter: [
     { de: 'Hallo', ku: 'Silav', bild: '👋' }, { de: 'Danke', ku: 'Spas', bild: '🙏' },
     { de: 'Ja', ku: 'Erê', bild: '✅' }, { de: 'Nein', ku: 'Na', bild: '❌' },
@@ -316,3 +318,5 @@ export const kurse = [
     { de: 'Verstehst du?', ku: 'Tu fêm dikî?', bild: '🧠' },
   ]},
 ]
+
+export const kurse = [...grundKurse, ...zusaetzlicheKurse]

@@ -4,9 +4,9 @@ import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
 
 const STANDARD = {
-  version: 1,
+  version: 2,
   mode: 'modern', // 'modern' | 'abenteuer'
-  theme: 'light', // 'light' | 'dark' | 'auto'
+  theme: 'dark', // 'light' | 'dark' | 'auto'
   soundEnabled: true,
   animationsEnabled: true,
   remindersEnabled: false,
@@ -17,7 +17,15 @@ let cache
 
 export function holeUi() {
   if (cache) return cache
-  cache = { ...STANDARD, ...(lies(KEYS.ui) || {}) }
+  const gespeichert = lies(KEYS.ui)
+  cache = { ...STANDARD, ...(gespeichert || {}) }
+  // Die neue, von der mobilen Referenz inspirierte Oberfläche startet im
+  // Nachtmodus. Nach dieser einmaligen Migration bleibt jede spätere Auswahl
+  // der Nutzerin oder des Nutzers unangetastet.
+  if (gespeichert && (gespeichert.version || 1) < 2) {
+    cache = { ...cache, version: 2, theme: 'dark' }
+    schreibe(KEYS.ui, cache)
+  }
   return cache
 }
 
@@ -59,7 +67,7 @@ export function anwenden() {
   wurzel.setAttribute('data-mode', ui.mode)
   wurzel.setAttribute('data-animations', ui.animationsEnabled === false ? 'off' : 'on')
   const farbe = document.querySelector('meta[name="theme-color"]')
-  if (farbe) farbe.setAttribute('content', theme === 'dark' ? '#0d1720' : '#0ea5a8')
+  if (farbe) farbe.setAttribute('content', theme === 'dark' ? '#102229' : '#0ea5a8')
 }
 
 // Aendert ein anderer Tab diese Daten, wird der Cache verworfen und beim

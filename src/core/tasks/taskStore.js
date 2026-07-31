@@ -126,7 +126,7 @@ export function holeAufgaben() {
     },
     {
       id: 'w-einheiten',
-      name: '3 Einheiten abschließen',
+      name: '3 Kapitel abschließen',
       icon: 'stern',
       stand: Math.min(wochenEinheiten(d.basis), 3),
       ziel: 3,

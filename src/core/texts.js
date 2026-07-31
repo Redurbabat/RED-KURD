@@ -65,8 +65,8 @@ export const T = {
   kurs: {
     titel: 'Dein Kurs',
     untertitel: 'Lerne Schritt für Schritt. Hêlo begleitet dich auf deinem Weg.',
-    aktuelleEinheit: 'Aktuelle Einheit',
-    alleEinheiten: 'Alle Einheiten',
+    aktuelleEinheit: 'Aktuelles Kapitel',
+    alleEinheiten: 'Alle Kapitel',
     weiter: 'Weiter',
     starten: 'Starten',
     wiederholen: 'Wiederholen',
@@ -74,8 +74,8 @@ export const T = {
     wichtigeWoerter: 'Wichtige Wörter',
     losGehts: "Los geht's",
     ersterSchritt: 'Starte mit Schritt 1',
-    merken: 'Einheit merken',
-    gemerkt: 'Einheit gemerkt',
+    merken: 'Kapitel merken',
+    gemerkt: 'Kapitel gemerkt',
     status: {
       fertig: 'Abgeschlossen',
       aktuell: 'Empfohlen',

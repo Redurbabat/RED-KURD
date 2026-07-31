@@ -27,8 +27,8 @@ import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import EmptyState, { LoadingState, ErrorState } from '../../../components/common/EmptyState.jsx'
 import './AdventureLessonPage.css'
 
-/** Die drei Schritte einer Einheit, in genau dieser Reihenfolge. */
-const SCHRITTE = ['lernen', 'hoeren', 'pruefung']
+/** Die fünf Schritte einer Einheit, in genau dieser Reihenfolge. */
+const SCHRITTE = ['lernen', 'festigen', 'schreiben', 'hoeren', 'pruefung']
 
 const XP_JE_AUFGABE = 10
 const EDELSTEINE_JE_PRUEFUNG = 2
@@ -67,7 +67,7 @@ export default function AdventureLessonPage({ unitId }) {
     gewertet.current = false
   }, [unitId])
 
-  // Nur die Mini-Prüfung zählt für den Lernstand — und das genau einmal je Durchgang.
+  // Nur die Kapitelprüfung zählt für den Lernstand — und das genau einmal je Durchgang.
   // Edelsteine gibt es ausschliesslich für eine BESTANDENE Prüfung und nur einmal
   // je Einheit; sonst liessen sie sich durch Wiederholen beliebig oft abholen.
   useEffect(() => {
@@ -190,7 +190,7 @@ export default function AdventureLessonPage({ unitId }) {
           </h1>
           <div className="al-kopf-reihe">
             <p className="al-lead">
-              {einheit.woerter.length} Wörter in drei Schritten — Hêlo begleitet dich.
+              {einheit.woerter.length} Wörter in fünf Schritten — Hêlo begleitet dich.
             </p>
             <HeloMascot variante="winken" groesse={120} className="al-helo" />
           </div>

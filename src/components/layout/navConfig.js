@@ -1,4 +1,4 @@
-// Die fuenf Bereiche des Modern-Modus und die vier des Abenteuer-Modus.
+// Die sechs Bereiche des Modern-Modus und die fünf des Abenteuer-Modus.
 import { T } from '../../core/texts.js'
 
 export const MODERN_NAV = [
@@ -7,6 +7,7 @@ export const MODERN_NAV = [
   { id: 'ueben', pfad: '/practice', name: T.nav.ueben, icon: 'ueben' },
   { id: 'entdecken', pfad: '/explore', name: T.nav.entdecken, icon: 'entdecken' },
   { id: 'fortschritt', pfad: '/progress', name: T.nav.fortschritt, icon: 'fortschritt' },
+  { id: 'einstellungen', pfad: '/settings', name: T.nav.einstellungen, icon: 'einstellungen' },
 ]
 
 // Lernen und Kultur stehen im Vordergrund — der Shop liegt im Profil.

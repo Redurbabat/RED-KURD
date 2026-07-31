@@ -3,11 +3,14 @@ import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import {
   EINHEITEN,
+  WELTEN,
   aktuelleEinheit,
+  einheitenDerWelt,
   einheitProzent,
   einheitSterne,
   einheitStatus,
   kursFortschritt,
+  weltFortschritt,
 } from '../../../core/courses/courseRepository.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
@@ -74,6 +77,36 @@ function EinheitStatusText({ status, prozent, sterne }) {
   )
 }
 
+function EinheitKarte({ einheit }) {
+  const status = einheitStatus(einheit.id)
+  const prozent = einheitProzent(einheit.id)
+  return (
+    <li>
+      <button
+        type="button"
+        className={`rk-einheit ${KLASSE_JE_STATUS[status] || ''}`}
+        onClick={() => navigiere('/course/' + einheit.id)}
+      >
+        <span className="rk-einheit-nr">{einheit.nr}</span>
+        <span className="rk-einheit-symbol" aria-hidden="true">
+          {einheit.symbol}
+        </span>
+        <span className="rk-einheit-text">
+          <strong>{einheit.name}</strong>
+          <small>
+            {einheit.lektionen.length} Lektionen · {einheit.woerter.length} Wörter
+          </small>
+        </span>
+        <EinheitStatusText
+          status={status}
+          prozent={prozent}
+          sterne={einheitSterne(einheit.id)}
+        />
+      </button>
+    </li>
+  )
+}
+
 export default function CoursePage() {
   useLernstand()
 
@@ -98,12 +131,12 @@ export default function CoursePage() {
           farbe="var(--rk-yellow)"
         />
         <div className="rk-hero-text">
-          <span className="rk-hero-etikett">A1 Grundlagen</span>
+          <span className="rk-hero-etikett">A1–A2 Lernweg</span>
           <h2>
-            Einheit {aktuell.nr} von {gesamt.gesamt}
+            Kapitel {aktuell.nr} von {gesamt.gesamt}
           </h2>
           <p>
-            {gesamt.fertig} von {gesamt.gesamt} Einheiten abgeschlossen
+            {gesamt.fertig} von {gesamt.gesamt} Kapiteln abgeschlossen
           </p>
         </div>
       </div>
@@ -117,12 +150,12 @@ export default function CoursePage() {
           <h2 id="kurs-aktuell-titel">{aktuell.name}</h2>
           <p>
             {allesFertig
-              ? 'Du hast alle Einheiten geschafft — wiederhole, worauf du Lust hast.'
+              ? 'Du hast alle Kapitel geschafft — wiederhole, worauf du Lust hast.'
               : `${aktuellProzent} % geschafft · ${aktuell.woerter.length} Wörter`}
           </p>
           <ProgressBar
             wert={aktuellProzent}
-            label={`Fortschritt in der Einheit ${aktuell.name}: ${aktuellProzent} Prozent`}
+            label={`Fortschritt im Kapitel ${aktuell.name}: ${aktuellProzent} Prozent`}
             farbe="gold"
             klein
             className="kurs-hero-balken"
@@ -132,7 +165,7 @@ export default function CoursePage() {
           art="gold"
           icon="play"
           onClick={() => navigiere('/course/' + aktuell.id)}
-          aria-label={`Einheit ${aktuell.name} öffnen`}
+          aria-label={`Kapitel ${aktuell.name} öffnen`}
         >
           {allesFertig ? T.kurs.wiederholen : T.kurs.weiter}
         </PrimaryButton>
@@ -143,42 +176,35 @@ export default function CoursePage() {
           {T.kurs.alleEinheiten}
         </h2>
 
-        <ul className="rk-einheitenliste" role="list">
-          {EINHEITEN.map((einheit) => {
-            const status = einheitStatus(einheit.id)
-            const prozent = einheitProzent(einheit.id)
+        <div className="kurs-welten">
+          {WELTEN.map((welt) => {
+            const weltStand = weltFortschritt(welt.id)
             return (
-              <li key={einheit.id}>
-                <button
-                  type="button"
-                  className={`rk-einheit ${KLASSE_JE_STATUS[status] || ''}`}
-                  onClick={() => navigiere('/course/' + einheit.id)}
-                >
-                  <span className="rk-einheit-nr">{einheit.nr}</span>
-                  <span className="rk-einheit-symbol" aria-hidden="true">
-                    {einheit.symbol}
+              <section className="kurs-welt" key={welt.id} aria-labelledby={`kurs-${welt.id}`}>
+                <header className="kurs-welt-kopf">
+                  <span className="kurs-welt-nr">{welt.nr}</span>
+                  <span className="kurs-welt-text">
+                    <strong id={`kurs-${welt.id}`}>{welt.name}</strong>
+                    <small lang="ku">{welt.untertitel}</small>
                   </span>
-                  <span className="rk-einheit-text">
-                    <strong>{einheit.name}</strong>
-                    <small>
-                      {einheit.lektionen.length} Lektionen · {einheit.woerter.length} Wörter
-                    </small>
-                  </span>
-                  <EinheitStatusText
-                    status={status}
-                    prozent={prozent}
-                    sterne={einheitSterne(einheit.id)}
-                  />
-                </button>
-              </li>
+                  <Badge ton={weltStand.prozent === 100 ? 'gruen' : 'blau'}>
+                    {weltStand.fertig}/{weltStand.gesamt}
+                  </Badge>
+                </header>
+                <ul className="rk-einheitenliste" role="list">
+                  {einheitenDerWelt(welt.id).map((einheit) => (
+                    <EinheitKarte key={einheit.id} einheit={einheit} />
+                  ))}
+                </ul>
+              </section>
             )
           })}
-        </ul>
+        </div>
 
         <p className="rk-hinweisstreifen kurs-hinweis">
           <Icon name="info" groesse={18} />
           <span>
-            „Später empfohlen“ ist nur ein Vorschlag: Du kannst jede Einheit jederzeit öffnen und
+            „Später empfohlen“ ist nur ein Vorschlag: Du kannst jedes Kapitel jederzeit öffnen und
             ausprobieren — auch die, die noch gesperrt aussehen.
           </span>
         </p>

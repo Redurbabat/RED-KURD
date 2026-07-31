@@ -3,7 +3,7 @@
 import { kurse } from '../../data/kurse.js'
 import { holeFortschritt, sterneVon } from '../progress/progressStore.js'
 
-/** Jede Einheit besteht aus drei Abschnitten. */
+/** Jede Einheit besteht aus fünf abwechslungsreichen Abschnitten. */
 export const LEKTIONS_ARTEN = [
   {
     id: 'lernen',
@@ -16,8 +16,28 @@ export const LEKTIONS_ARTEN = [
     anzahl: 10,
   },
   {
-    id: 'hoeren',
+    id: 'festigen',
     nr: 2,
+    name: 'Festigen',
+    beschreibung: 'Bedeutungen sicher erkennen und aktiv abrufen',
+    dauer: 'ca. 6 Min',
+    icon: 'gehirn',
+    arten: ['wahl-ku', 'wahl-de'],
+    anzahl: 10,
+  },
+  {
+    id: 'schreiben',
+    nr: 3,
+    name: 'Schreiben',
+    beschreibung: 'Kurmancî selbst eintippen und Sonderzeichen üben',
+    dauer: 'ca. 7 Min',
+    icon: 'stift',
+    arten: ['tippen'],
+    anzahl: 8,
+  },
+  {
+    id: 'hoeren',
+    nr: 4,
     name: 'Hören und Sprechen',
     beschreibung: 'Wörter anhören und laut nachsprechen',
     dauer: 'ca. 7 Min',
@@ -27,13 +47,13 @@ export const LEKTIONS_ARTEN = [
   },
   {
     id: 'pruefung',
-    nr: 3,
-    name: 'Mini-Prüfung',
+    nr: 5,
+    name: 'Kapitelprüfung',
     beschreibung: 'Wissen testen — ab 80 % geschafft',
-    dauer: 'ca. 3 Min',
+    dauer: 'ca. 8 Min',
     icon: 'haken',
-    arten: ['wahl-ku', 'tippen', 'hoeren'],
-    anzahl: 5,
+    arten: ['wahl-ku', 'wahl-de', 'tippen', 'bild', 'hoeren'],
+    anzahl: 10,
     pruefung: true,
   },
 ]
@@ -42,8 +62,8 @@ export const LEKTIONS_ARTEN = [
  * Der Weg führt durch eine zusammenhängende kurdische Landschaft:
  * Bergdorf → Familienhaus → Basar → Steinbrücke → Stadt → Kela → Newroz-Platz.
  * Die ersten fünf Welten folgen genau der vorgegebenen Gliederung; die beiden
- * letzten nehmen die übrigen Einheiten auf, damit kein Lerninhalt und kein
- * bereits erreichter Fortschritt verloren geht.
+ * späteren Welten vertiefen Wortschatz und Alltagssprache, ohne vorhandenen
+ * Fortschritt oder alte Einheiten umzubenennen.
  */
 export const WELTEN = [
   {
@@ -122,6 +142,28 @@ export const WELTEN = [
     farbe: 'var(--rk-earth)',
     himmel: '#e2c9a2',
     einheiten: ['farben', 'kleidung', 'verben', 'fragen', 'schule', 'saetze'],
+  },
+  {
+    id: 'w8',
+    nr: 8,
+    name: 'Alltag vertiefen',
+    untertitel: 'Rojane bi hûrgulî',
+    ort: 'Wohnviertel',
+    landschaft: 'dorf',
+    farbe: 'var(--rk-blue)',
+    himmel: '#65bde2',
+    einheiten: ['wochentage', 'wetter', 'wohnung', 'kueche', 'sport'],
+  },
+  {
+    id: 'w9',
+    nr: 9,
+    name: 'Sicher sprechen',
+    untertitel: 'Bi ewlehî biaxive',
+    ort: 'Stadtzentrum',
+    landschaft: 'kela',
+    farbe: 'var(--rk-purple)',
+    himmel: '#9a91dc',
+    einheiten: ['digital', 'restaurant', 'gespraech', 'zahlen-gross', 'notfall'],
   },
 ]
 

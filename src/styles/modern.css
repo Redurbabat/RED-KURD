@@ -110,7 +110,8 @@
   text-align: left;
   padding: var(--space-4);
   background: var(--rk-surface);
-  border: 1px solid var(--rk-border);
+  border: 3px solid var(--rk-border);
+  border-bottom-width: 5px;
   border-radius: var(--radius-medium);
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
@@ -186,13 +187,14 @@
   text-align: left;
   padding: var(--space-3) var(--space-4);
   background: var(--rk-surface);
-  border: 1px solid var(--rk-border);
+  border: 3px solid var(--rk-border);
+  border-bottom-width: 5px;
   border-radius: var(--radius-medium);
   min-height: 68px;
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
 .rk-einheit:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   border-color: var(--rk-primary);
 }
 .rk-einheit.aktuell {
@@ -257,6 +259,7 @@
   background: linear-gradient(120deg, var(--rk-primary), var(--rk-primary-dark));
   color: #fff;
   margin-bottom: var(--space-4);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.2);
 }
 .rk-hero-blau {
   background: linear-gradient(120deg, var(--rk-blue), var(--rk-blue-dark));

@@ -18,6 +18,7 @@ import Icon from '../../../components/icons/Icon.jsx'
 import Badge, { CountBadge } from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './PracticePage.css'
 
 const TRAININGS = [
@@ -61,6 +62,26 @@ const TRAININGS = [
     schwierigkeit: 'Mittel',
     schwierigkeitTon: 'gold',
     dauer: '10 Min',
+  },
+  {
+    id: 'recall',
+    name: 'Schnellwahl',
+    icon: 'blitz',
+    ton: 'gold',
+    text: 'Deutsche Begriffe aktiv auf Kurmancî abrufen',
+    schwierigkeit: 'Mittel',
+    schwierigkeitTon: 'gold',
+    dauer: '5–10 Min',
+  },
+  {
+    id: 'meaning',
+    name: 'Bedeutungen',
+    icon: 'auge',
+    ton: 'blau',
+    text: 'Kurmancî lesen und die deutsche Bedeutung erkennen',
+    schwierigkeit: 'Leicht',
+    schwierigkeitTon: 'gruen',
+    dauer: '5–10 Min',
   },
   {
     id: 'sentence-builder',
@@ -121,6 +142,18 @@ export default function PracticePage() {
     <>
       <PageHeader titel={T.ueben.titel} untertitel={T.ueben.untertitel} variante="hantel" />
 
+      <section className="pr-feature" aria-labelledby="pr-feature-titel">
+        <div className="pr-feature-text">
+          <span className="pr-feature-label">Tägliche Empfehlung</span>
+          <h2 id="pr-feature-titel">Sicherer sprechen</h2>
+          <p>Höre echte Kurmancî-Wörter, sprich sie nach und vergleiche deine Aufnahme.</p>
+          <PrimaryButton art="still" icon="mikrofon" onClick={() => navigiere('/practice/speaking')}>
+            Aussprache starten
+          </PrimaryButton>
+        </div>
+        <HeloMascot variante="winken" groesse={132} className="pr-feature-helo" dekorativ />
+      </section>
+
       <section className="rk-abschnitt" aria-labelledby="pr-mix-titel">
         <h2 className="rk-abschnitt-titel" id="pr-mix-titel">
           Empfohlene Sitzung
@@ -138,7 +171,7 @@ export default function PracticePage() {
 
       <section className="rk-abschnitt" aria-labelledby="pr-trainings-titel">
         <h2 className="rk-abschnitt-titel" id="pr-trainings-titel">
-          Alle Trainings
+          Fertigkeiten trainieren
         </h2>
 
         <ul className="rk-kachelraster pr-kachelraster">

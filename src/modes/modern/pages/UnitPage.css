@@ -21,7 +21,7 @@
   margin-top: var(--space-3);
 }
 
-/* Die drei Lernschritte */
+/* Die fünf Lernschritte */
 .unit-schritte {
   display: flex;
   flex-direction: column;

@@ -13,6 +13,7 @@ import {
   staerksteFertigkeit,
   wochenAktivitaet,
   wochenLiga,
+  wochenSumme,
   wochenMinuten,
   lernzeitText,
 } from '../../../core/progress/progressSelectors.js'
@@ -65,6 +66,25 @@ const LANGE_TAGE = {
 /** Höchste Säulenhöhe in Pixeln — passt in die 130px hohe .rk-woche. */
 const SAEULE_MAX = 74
 
+const OFFLINE_PARTNER = [
+  { name: 'Rojda', punkte: 720, farbe: 'lila' },
+  { name: 'Azad', punkte: 520, farbe: 'blau' },
+  { name: 'Dilîn', punkte: 340, farbe: 'pink' },
+  { name: 'Baran', punkte: 180, farbe: 'gruen' },
+  { name: 'Hêvî', punkte: 80, farbe: 'gold' },
+]
+
+function initiale(name) {
+  const sauber = String(name || '').trim()
+  return sauber ? sauber.charAt(0).toUpperCase() : 'H'
+}
+
+function ligaTabelle(name, punkte) {
+  return [...OFFLINE_PARTNER, { name, punkte, farbe: 'teal', eigen: true }]
+    .sort((a, b) => b.punkte - a.punkte)
+    .map((eintrag, index) => ({ ...eintrag, rang: index + 1 }))
+}
+
 function fertigkeitInfo(id) {
   return FERTIGKEITEN.find((f) => f.id === id) || FERTIGKEITEN[0]
 }
@@ -90,6 +110,9 @@ export default function ProgressPage() {
   const werte = fertigkeiten()
   const woche = wochenAktivitaet()
   const liga = wochenLiga()
+  const profil = holeProfil() || {}
+  const name = (profil.name || '').trim() || 'Hêlo'
+  const ligaZeilen = ligaTabelle(name, wochenSumme() * 10)
   const maxTag = Math.max(1, ...woche.map((t) => t.anzahl))
 
   return (
@@ -100,6 +123,34 @@ export default function ProgressPage() {
         variante="daumen"
       />
 
+      <section className="fp-profilkopf" aria-labelledby="fp-profil-name">
+        <span className="fp-avatar" aria-hidden="true">
+          {initiale(name)}
+        </span>
+        <div className="fp-profiltext">
+          <h2 id="fp-profil-name">{name}</h2>
+          <p>Lokales Profil · Deutsch → Kurmancî</p>
+          <ul className="fp-profilzahlen" role="list">
+            <li>
+              <strong>{s.serie}</strong>
+              <span>Tage Serie</span>
+            </li>
+            <li>
+              <strong>{s.xp}</strong>
+              <span>Gesamt-XP</span>
+            </li>
+            <li>
+              <strong>{s.gelernt}</strong>
+              <span>Wörter</span>
+            </li>
+            <li>
+              <strong>{kurs.gesamt}</strong>
+              <span>Kapitel</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       <section className="rk-abschnitt">
         <h2 className="rk-abschnitt-titel">Überblick</h2>
 
@@ -108,12 +159,12 @@ export default function ProgressPage() {
             <span className="rk-hero-etikett">{T.app.kurs}</span>
             <h3 className="fp-hero-zahl">{kurs.prozent} % geschafft</h3>
             <p>
-              {kurs.fertig} von {kurs.gesamt} Einheiten geschafft
+              {kurs.fertig} von {kurs.gesamt} Kapiteln geschafft
             </p>
           </div>
           <ProgressRing
             wert={kurs.prozent}
-            label={`Kursfortschritt: ${kurs.fertig} von ${kurs.gesamt} Einheiten geschafft`}
+            label={`Kursfortschritt: ${kurs.fertig} von ${kurs.gesamt} Kapiteln geschafft`}
             groesse={84}
             farbe="#ffffff"
           />
@@ -155,7 +206,7 @@ export default function ProgressPage() {
         <Card titel="Zahlen" icon="berg">
           <ul className="fp-zahlen">
             <li>
-              <StatTile icon="kurs" wert={`${kurs.fertig}/${kurs.gesamt}`} label="Einheiten geschafft" />
+              <StatTile icon="kurs" wert={`${kurs.fertig}/${kurs.gesamt}`} label="Kapitel geschafft" />
             </li>
             <li>
               <StatTile icon="buch" wert={s.gelernt} label="Wörter im System" />
@@ -268,6 +319,25 @@ export default function ProgressPage() {
             Diese persönliche Liga wird nur aus deinen lokal gelösten Aufgaben berechnet. Es gibt
             keine öffentliche Rangliste und keine Übertragung.
           </p>
+          <ol className="fp-ligatabelle">
+            {ligaZeilen.map((eintrag) => (
+              <li key={eintrag.name} className={eintrag.eigen ? 'eigen' : ''}>
+                <span className="fp-liga-rang">{eintrag.rang}</span>
+                <span className={`fp-liga-avatar fp-liga-avatar-${eintrag.farbe}`} aria-hidden="true">
+                  {initiale(eintrag.name)}
+                </span>
+                <span className="fp-liga-name">
+                  <strong>{eintrag.eigen ? `${eintrag.name} (du)` : eintrag.name}</strong>
+                  <small>{eintrag.eigen ? 'Dein echtes Wochenergebnis' : 'Offline-Trainingspartner'}</small>
+                </span>
+                <strong className="fp-liga-punkte">{eintrag.punkte} XP</strong>
+              </li>
+            ))}
+          </ol>
+          <p className="gedaempft fp-liga-lokal">
+            Die Trainingspartner sind lokale Vergleichswerte, keine echten Personen. Dadurch
+            bleibt die Liga kostenlos und privat.
+          </p>
         </Card>
       </section>
 
@@ -363,7 +433,7 @@ function Datenverwaltung() {
       setFehler(null)
       const zeilen = ankiZeilen()
       if (!zeilen) {
-        setHinweis('Es gibt noch keine Karten zum Ausgeben. Lerne zuerst eine Einheit.')
+        setHinweis('Es gibt noch keine Karten zum Ausgeben. Lerne zuerst ein Kapitel.')
         return
       }
       ladeHerunter(zeilen, 'red-kurd-anki.txt', 'text/plain;charset=utf-8')
@@ -472,7 +542,7 @@ function Datenverwaltung() {
         }
       >
         <p>
-          Der aktuelle Lernstand wird ersetzt. XP, Serie, Karten und Einheiten aus der Datei
+          Der aktuelle Lernstand wird ersetzt. XP, Serie, Karten und Kapitel aus der Datei
           gelten danach — der bisherige Stand auf diesem Gerät geht verloren.
         </p>
         {datei && <p className="gedaempft">Gewählte Datei: {datei.name}</p>}

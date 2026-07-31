@@ -1,4 +1,4 @@
-// Einheitendetail: Lernziel, wichtige Wörter und die drei Lernschritte.
+// Einheitendetail: Lernziel, wichtige Wörter und die fünf Lernschritte.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
@@ -24,11 +24,11 @@ import './UnitPage.css'
 const STATUS_TEXT = {
   fertig: `Abgeschlossen — du hast mindestens ${BESTANDEN_AB} % erreicht.`,
   aktuell: 'Empfohlen — hier geht es für dich weiter.',
-  begonnen: `Begonnen — ab ${BESTANDEN_AB} % gilt die Einheit als bestanden.`,
+  begonnen: `Begonnen — ab ${BESTANDEN_AB} % gilt das Kapitel als bestanden.`,
   gesperrt: 'Später empfohlen — du kannst sie aber jetzt schon lernen.',
 }
 
-const SCHRITT_TOENE = ['rk-ton-teal', 'rk-ton-blau', 'rk-ton-gold']
+const SCHRITT_TOENE = ['rk-ton-teal', 'rk-ton-blau', 'rk-ton-lila', 'rk-ton-orange', 'rk-ton-gold']
 
 function Sterne({ anzahl }) {
   return (
@@ -52,14 +52,14 @@ export default function UnitPage({ unitId }) {
     return (
       <>
         <PageHeader
-          titel="Einheit nicht gefunden"
-          untertitel="Diese Adresse gehört zu keiner Einheit."
+          titel="Kapitel nicht gefunden"
+          untertitel="Diese Adresse gehört zu keinem Kapitel."
           variante="denken"
           zurueck="/course"
         />
         <EmptyState
-          titel="Diese Einheit kennen wir nicht."
-          text={`Zur Kennung „${unitId}“ gibt es keine Einheit. Vielleicht hat sich ein Tippfehler in die Adresse geschlichen.`}
+          titel="Dieses Kapitel kennen wir nicht."
+          text={`Zur Kennung „${unitId}“ gibt es kein Kapitel. Vielleicht hat sich ein Tippfehler in die Adresse geschlichen.`}
           variante="denken"
           aktion={() => navigiere('/course')}
           aktionText="Zurück zum Kurs"
@@ -103,7 +103,7 @@ export default function UnitPage({ unitId }) {
           <div className="stapel-eng">
             <ProgressBar
               wert={prozent}
-              label={`Fortschritt in der Einheit ${einheit.name}: ${prozent} Prozent`}
+              label={`Fortschritt im Kapitel ${einheit.name}: ${prozent} Prozent`}
               farbe={prozent >= BESTANDEN_AB ? 'green' : 'primary'}
               zeigeWert
             />
@@ -135,7 +135,7 @@ export default function UnitPage({ unitId }) {
             ))}
           </ul>
           <p className="gedaempft unit-wort-hinweis">
-            {einheit.woerter.length} Wörter gehören zu dieser Einheit. Tippe ein Wort an, um es zu
+            {einheit.woerter.length} Wörter gehören zu diesem Kapitel. Tippe ein Wort an, um es zu
             hören.
           </p>
         </Card>
@@ -143,7 +143,7 @@ export default function UnitPage({ unitId }) {
 
       <section className="rk-abschnitt" aria-labelledby="unit-schritte-titel">
         <h2 className="rk-abschnitt-titel" id="unit-schritte-titel">
-          Die drei Schritte
+          Die fünf Schritte
         </h2>
 
         <button

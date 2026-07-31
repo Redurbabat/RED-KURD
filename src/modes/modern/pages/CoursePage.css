@@ -45,6 +45,50 @@
   gap: 2px;
 }
 
+.kurs-welten {
+  display: grid;
+  gap: var(--space-5);
+}
+.kurs-welt {
+  padding: var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-large);
+  background: var(--rk-surface-soft);
+}
+.kurs-welt-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.kurs-welt-nr {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: var(--radius-small);
+  background: var(--rk-blue);
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+  font-weight: 900;
+}
+.kurs-welt-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.kurs-welt-text strong {
+  font-family: var(--font-head);
+  font-size: var(--text-lg);
+}
+.kurs-welt-text small {
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+}
+
 /* Hinweis unter der Liste */
 .rk-hinweisstreifen.kurs-hinweis {
   display: flex;

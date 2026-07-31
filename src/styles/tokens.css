@@ -163,26 +163,37 @@
 
 /* Dunkles Design – nur Flaechen und Text drehen sich, die Marke bleibt. */
 :root[data-theme='dark'] {
-  --rk-bg: #0d1720;
-  --rk-surface: #142230;
-  --rk-surface-soft: #1b2c3c;
-  --rk-border: #263a4c;
-  --rk-border-strong: #385166;
+  --rk-bg: #102229;
+  --rk-surface: #152830;
+  --rk-surface-soft: #1d333c;
+  --rk-border: #344a54;
+  --rk-border-strong: #4b6470;
 
-  --rk-text: #eaf1f6;
-  --rk-text-muted: #adbdca;
-  --rk-text-light: #93a5b4;
+  --rk-text: #f2f7f8;
+  --rk-text-muted: #b4c2c8;
+  --rk-text-light: #7f969f;
 
-  --rk-primary: #2cc3c6;
-  --rk-primary-dark: #16a5a8;
-  --rk-primary-soft: #10333a;
-  --rk-blue-soft: #10283d;
-  --rk-green-soft: #113322;
-  --rk-yellow-soft: #33290f;
-  --rk-orange-soft: #35240f;
-  --rk-red-soft: #3a1c1c;
-  --rk-purple-soft: #241a3f;
+  --rk-primary: #20c5c7;
+  --rk-primary-dark: #42d5d7;
+  --rk-primary-soft: #113a40;
+  --rk-blue: #2bb7ed;
+  --rk-blue-dark: #50c8f4;
+  --rk-blue-soft: #123344;
+  --rk-green: #58cc02;
+  --rk-green-dark: #78dd31;
+  --rk-green-soft: #1b351b;
+  --rk-yellow: #ffc800;
+  --rk-yellow-soft: #3a3110;
+  --rk-orange: #ff9600;
+  --rk-orange-dark: #ffb53e;
+  --rk-orange-soft: #3c2810;
+  --rk-red: #ff4b4b;
+  --rk-red-dark: #ff7676;
+  --rk-red-soft: #3d1d22;
+  --rk-purple: #ce82ff;
+  --rk-purple-dark: #dca3ff;
+  --rk-purple-soft: #30203f;
 
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --shadow-floating: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 4px 0 rgba(0, 0, 0, 0.18);
+  --shadow-floating: 0 12px 30px rgba(0, 0, 0, 0.42);
 }

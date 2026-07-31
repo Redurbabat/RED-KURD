@@ -1,44 +1,7 @@
-// Erste Deutsch–Kurmancî Vokabeln (Lektion 1: Grundwortschatz)
-// Später kommen alle Wörter aus der Supabase-Datenbank.
-export const woerter = [
-  { de: "Hallo", ku: "Silav", kat: "Begrüßung" },
-  { de: "Danke", ku: "Spas", kat: "Begrüßung" },
-  { de: "Ja", ku: "Erê", kat: "Begrüßung" },
-  { de: "Nein", ku: "Na", kat: "Begrüßung" },
-  { de: "Wie geht es dir?", ku: "Tu çawa yî?", kat: "Begrüßung" },
-  { de: "Gut", ku: "Baş", kat: "Begrüßung" },
-  { de: "ich", ku: "ez", kat: "Pronomen" },
-  { de: "du", ku: "tu", kat: "Pronomen" },
-  { de: "Wasser", ku: "av", kat: "Essen & Trinken" },
-  { de: "Brot", ku: "nan", kat: "Essen & Trinken" },
-  { de: "Tee", ku: "çay", kat: "Essen & Trinken" },
-  { de: "Tag", ku: "roj", kat: "Zeit" },
-  { de: "Nacht", ku: "şev", kat: "Zeit" },
-  { de: "Jahr", ku: "sal", kat: "Zeit" },
-  { de: "Herz", ku: "dil", kat: "Körper" },
-  { de: "Auge", ku: "çav", kat: "Körper" },
-  { de: "Hand", ku: "dest", kat: "Körper" },
-  { de: "Kopf", ku: "ser", kat: "Körper" },
-  { de: "Haus", ku: "mal", kat: "Zuhause" },
-  { de: "Dorf", ku: "gund", kat: "Zuhause" },
-  { de: "Stadt", ku: "bajar", kat: "Zuhause" },
-  { de: "Frau", ku: "jin", kat: "Familie" },
-  { de: "Mann", ku: "mêr", kat: "Familie" },
-  { de: "Kind", ku: "zarok", kat: "Familie" },
-  { de: "Vater", ku: "bav", kat: "Familie" },
-  { de: "Mutter", ku: "dayik", kat: "Familie" },
-  { de: "Bruder", ku: "bira", kat: "Familie" },
-  { de: "Schwester", ku: "xwişk", kat: "Familie" },
-  { de: "Freund", ku: "heval", kat: "Familie" },
-  { de: "Buch", ku: "pirtûk", kat: "Schule" },
-  { de: "Schule", ku: "dibistan", kat: "Schule" },
-  { de: "Lehrer", ku: "mamoste", kat: "Schule" },
-  { de: "eins", ku: "yek", kat: "Zahlen" },
-  { de: "zwei", ku: "du", kat: "Zahlen" },
-  { de: "drei", ku: "sê", kat: "Zahlen" },
-  { de: "rot", ku: "sor", kat: "Farben" },
-  { de: "weiß", ku: "spî", kat: "Farben" },
-  { de: "schwarz", ku: "reş", kat: "Farben" },
-  { de: "groß", ku: "mezin", kat: "Eigenschaften" },
-  { de: "klein", ku: "biçûk", kat: "Eigenschaften" },
-];
+// Offline-Grundwortschatz: alle Kurswörter sind direkt mit der App gebündelt.
+// Das große R2-Wörterbuch erweitert diese Liste, ist aber keine Voraussetzung.
+import { kurse } from './kurse.js'
+
+export const woerter = kurse.flatMap((kurs) =>
+  kurs.woerter.map((wort) => ({ ...wort, kat: kurs.name }))
+)

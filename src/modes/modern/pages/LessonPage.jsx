@@ -1,4 +1,4 @@
-// Lektionsablauf: Übungen abspielen, Ergebnis zeigen, Mini-Prüfung werten.
+// Lektionsablauf: Übungen abspielen, Ergebnis zeigen, Kapitelprüfung werten.
 import { useEffect, useRef, useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
@@ -49,7 +49,7 @@ export default function LessonPage({ unitId, lessonId }) {
     gewertet.current = false
   }, [schluessel, unitId, lessonId])
 
-  // Eine Mini-Prüfung zählt genau einmal je Durchgang für den Lernstand.
+  // Eine Kapitelprüfung zählt genau einmal je Durchgang für den Lernstand.
   useEffect(() => {
     if (!ergebnis || !lauf.werten || gewertet.current) return
     gewertet.current = true
@@ -74,7 +74,7 @@ export default function LessonPage({ unitId, lessonId }) {
         />
         <EmptyState
           titel="Hier gibt es gerade nichts zu üben."
-          text="Vielleicht stimmt die Adresse nicht. Gehe zurück und wähle einen Schritt der Einheit."
+          text="Vielleicht stimmt die Adresse nicht. Gehe zurück und wähle einen Schritt des Kapitels."
           variante="denken"
           aktion={() => navigiere(ziel)}
           aktionText="Zurück zum Kurs"
@@ -134,7 +134,7 @@ export default function LessonPage({ unitId, lessonId }) {
   let ergebnisTitel
   if (lauf.fehlerlauf) ergebnisTitel = 'Fehler geübt!'
   else if (lauf.werten)
-    ergebnisTitel = ergebnis.prozent >= BESTANDEN_AB ? 'Mini-Prüfung bestanden!' : 'Noch nicht bestanden'
+    ergebnisTitel = ergebnis.prozent >= BESTANDEN_AB ? 'Kapitelprüfung bestanden!' : 'Noch nicht bestanden'
   else ergebnisTitel = `Schritt ${lektion.nr} geschafft!`
 
   return (
@@ -169,7 +169,7 @@ export default function LessonPage({ unitId, lessonId }) {
 
       {lauf.werten && ergebnis.prozent < BESTANDEN_AB && (
         <p className="lesson-hinweis gedaempft zentriert">
-          Ab {BESTANDEN_AB} % gilt die Einheit als bestanden — wiederhole die Prüfung, wenn du magst.
+          Ab {BESTANDEN_AB} % gilt das Kapitel als bestanden — wiederhole die Prüfung, wenn du magst.
         </p>
       )}
     </>

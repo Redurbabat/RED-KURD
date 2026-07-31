@@ -52,14 +52,16 @@ export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, mo
           <Icon name={modus === 'abenteuer' ? 'heute' : 'welt'} groesse={22} />
           <span>{modus === 'abenteuer' ? 'Modern-Modus' : 'Abenteuer-Modus'}</span>
         </button>
-        <button
-          type="button"
-          className={'rk-seitennav-knopf' + (pfad === '/settings' ? ' aktiv' : '')}
-          onClick={() => navigiere('/settings')}
-        >
-          <Icon name="einstellungen" groesse={22} />
-          <span>{T.nav.einstellungen}</span>
-        </button>
+        {!eintraege.some((eintrag) => eintrag.id === 'einstellungen') && (
+          <button
+            type="button"
+            className={'rk-seitennav-knopf' + (pfad === '/settings' ? ' aktiv' : '')}
+            onClick={() => navigiere('/settings')}
+          >
+            <Icon name="einstellungen" groesse={22} />
+            <span>{T.nav.einstellungen}</span>
+          </button>
+        )}
         <a
           className="rk-seitenleiste-link"
           href="https://github.com/Redurbabat/RED-KURD"

@@ -26,7 +26,7 @@ const TRAININGS = {
   review: {
     titel: 'Wiederholen',
     plane: () => planeWiederholung(15),
-    leer: 'Es ist gerade keine Wiederholung fällig. Lerne eine neue Einheit — die neuen Wörter kommen morgen zurück.',
+    leer: 'Es ist gerade keine Wiederholung fällig. Lerne ein neues Kapitel — die neuen Wörter kommen morgen zurück.',
   },
   hard: {
     titel: 'Schwierige Wörter',
@@ -36,6 +36,8 @@ const TRAININGS = {
   images: { titel: 'Bilder', plane: () => planeTraining('bild', 12) },
   listening: { titel: 'Hören', plane: () => planeTraining('hoeren', 12) },
   writing: { titel: 'Schreiben', plane: () => planeTraining('tippen', 12) },
+  recall: { titel: 'Schnellwahl', plane: () => planeTraining('wahl-ku', 15) },
+  meaning: { titel: 'Bedeutungen', plane: () => planeTraining('wahl-de', 15) },
 }
 
 function planeRunde(trainingId) {
@@ -152,7 +154,7 @@ export default function PracticeRunPage({ trainingId }) {
         titel="Nichts zu wiederholen — super!"
         text={
           (TRAININGS[trainingId] && TRAININGS[trainingId].leer) ||
-          'Für dieses Training liessen sich gerade keine Aufgaben zusammenstellen. Starte zuerst eine Einheit im Kurs.'
+          'Für dieses Training liessen sich gerade keine Aufgaben zusammenstellen. Starte zuerst ein Kapitel im Kurs.'
         }
         aktion={() => navigiere('/practice')}
         aktionText="Zurück zum Üben"
