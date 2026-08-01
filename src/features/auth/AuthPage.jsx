@@ -152,8 +152,9 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
 
         <p className="auth-datenschutz">
           <Icon name="schild" groesse={17} />
-          Deine E-Mail wird in Cloudflare D1 gespeichert. Dein Passwort wird nie lesbar
-          gespeichert, sondern nur als gesalzener Sicherheits-Hash.
+          Deine E-Mail sowie erfolgreiche Anmeldungen mit Zeitpunkt werden als Text in
+          Cloudflare D1 gespeichert. Dein Passwort wird nie lesbar gespeichert, sondern nur
+          als gesalzener Sicherheits-Hash.
         </p>
       </section>
     </main>

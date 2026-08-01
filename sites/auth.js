@@ -141,6 +141,16 @@ async function sitzungAnlegen(env, userId) {
   return token
 }
 
+async function loginTextSpeichern(env, userId, email, eventType, zeitpunkt) {
+  const bezeichnung = eventType === 'registrierung' ? 'REGISTRIERUNG' : 'ANMELDUNG'
+  const textRecord = `${zeitpunkt} | ${bezeichnung} | ${email}`
+  await env.DB.prepare(
+    'INSERT INTO auth_events (id, user_id, email, event_type, text_record, created_at) VALUES (?, ?, ?, ?, ?, ?)'
+  )
+    .bind(crypto.randomUUID(), userId, email, eventType, textRecord, zeitpunkt)
+    .run()
+}
+
 async function registrieren(request, env) {
   const daten = await leseJson(request)
   const email = normalisiereEmail(daten?.email)
@@ -183,6 +193,7 @@ async function registrieren(request, env) {
     throw fehler
   }
 
+  await loginTextSpeichern(env, id, email, 'registrierung', jetzt)
   const token = await sitzungAnlegen(env, id)
   return json(
     { konto: { id, email } },
@@ -213,6 +224,7 @@ async function anmelden(request, env) {
   await env.DB.prepare('UPDATE users SET last_login_at = ? WHERE id = ?')
     .bind(jetzt, konto.id)
     .run()
+  await loginTextSpeichern(env, konto.id, konto.email, 'anmeldung', jetzt)
   return json(
     { konto: { id: konto.id, email: konto.email } },
     200,

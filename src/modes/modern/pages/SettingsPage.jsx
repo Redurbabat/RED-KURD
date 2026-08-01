@@ -610,8 +610,9 @@ function DatenschutzKarte() {
         <li>
           <Icon name="haken" groesse={18} />
           <span>
-            <strong>Minimale Kontodaten:</strong> Nur E-Mail, gesalzener Passwort-Hash und
-            Sitzungsdaten liegen in Cloudflare D1. Das Passwort ist niemals lesbar gespeichert.
+            <strong>Kontodaten und Loginprotokoll:</strong> E-Mail, erfolgreiche Anmeldungen,
+            Zeitpunkt, gesalzener Passwort-Hash und Sitzungsdaten liegen in Cloudflare D1.
+            Das Passwort ist niemals lesbar gespeichert.
           </span>
         </li>
         <li>

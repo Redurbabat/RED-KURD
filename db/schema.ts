@@ -25,3 +25,14 @@ export const authSessions = sqliteTable(
     index('auth_sessions_expires_at_idx').on(table.expiresAt),
   ]
 )
+
+export const authEvents = sqliteTable('auth_events', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  email: text('email').notNull(),
+  eventType: text('event_type').notNull(),
+  textRecord: text('text_record').notNull(),
+  createdAt: text('created_at').notNull(),
+})

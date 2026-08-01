@@ -15,6 +15,7 @@ class TestD1 {
   constructor() {
     this.users = new Map()
     this.sessions = new Map()
+    this.events = []
   }
 
   prepare(sql) {
@@ -53,6 +54,11 @@ class TestD1 {
         if (sql.startsWith('INSERT INTO auth_sessions')) {
           const [id, user_id, created_at, expires_at] = werte
           db.sessions.set(id, { id, user_id, created_at, expires_at })
+          return { success: true }
+        }
+        if (sql.startsWith('INSERT INTO auth_events')) {
+          const [id, user_id, email, event_type, text_record, created_at] = werte
+          db.events.push({ id, user_id, email, event_type, text_record, created_at })
           return { success: true }
         }
         if (sql.startsWith('UPDATE users SET last_login_at')) {
@@ -120,6 +126,10 @@ test('Registrierung, Sitzung, Anmeldung und Abmeldung funktionieren zusammen', a
   const user = [...env.DB.users.values()][0]
   assert.notEqual(user.password_hash, passwort)
   assert.equal(JSON.stringify(user).includes(passwort), false)
+  assert.equal(env.DB.events.length, 1)
+  assert.equal(env.DB.events[0].event_type, 'registrierung')
+  assert.match(env.DB.events[0].text_record, /REGISTRIERUNG \| test@beispiel\.ch$/)
+  assert.equal(JSON.stringify(env.DB.events).includes(passwort), false)
 
   const setCookie = registrierung.headers.get('set-cookie')
   assert.match(setCookie, /^rk_session=/)
@@ -144,6 +154,10 @@ test('Registrierung, Sitzung, Anmeldung und Abmeldung funktionieren zusammen', a
   )
   assert.equal(login.status, 200)
   assert.match(login.headers.get('set-cookie'), /^rk_session=/)
+  assert.equal(env.DB.events.length, 2)
+  assert.equal(env.DB.events[1].event_type, 'anmeldung')
+  assert.match(env.DB.events[1].text_record, /ANMELDUNG \| test@beispiel\.ch$/)
+  assert.equal(JSON.stringify(env.DB.events).includes(passwort), false)
 
   const logout = await worker.fetch(anfrage('/api/auth/logout', {}, cookie), env)
   assert.equal(logout.status, 200)
