@@ -4,7 +4,7 @@ import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import { texte } from '../../../data/texte.js'
-import { redewendungen, kultur } from '../../../data/kultur.js'
+import { redewendungen, kulturkarten } from '../../../data/kultur.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'
@@ -109,7 +109,7 @@ function Uebersicht() {
             </span>
             <span className="ex-meta">
               <Badge ton="lila">{redewendungen.length} Redewendungen</Badge>
-              <Badge ton="blau">{kultur.length} Kultur-Themen</Badge>
+              <Badge ton="blau">{kulturkarten.length} Kulturkarten</Badge>
             </span>
           </ClickCard>
         </li>

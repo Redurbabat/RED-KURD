@@ -1,19 +1,15 @@
-// Kultur: Redewendungen zum Anhören und Merken, dazu kurze Kulturtexte.
+// Kultur: Redewendungen zum Anhören und Merken, dazu die Kulturkarten mit
+// echten Fotos — dieselben Inhalte wie im Abenteuer-Modus, hier im ruhigen
+// Gewand des Modern-Modus.
 import { useLernstand } from '../../core/store.js'
 import { merkeWort, kennstWort } from '../../core/progress/progressStore.js'
 import { spieleWort } from '../../core/audio/audioService.js'
-import { redewendungen, kultur } from '../../data/kultur.js'
+import { redewendungen, kulturkarten } from '../../data/kultur.js'
 import Card from '../../components/common/Card.jsx'
+import Badge from '../../components/common/Badge.jsx'
+import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import './CultureView.css'
-
-// Die Kultur-Titel tragen ein Symbol im Text. Fuer Screenreader trennen wir es ab.
-const SYMBOL_MUSTER = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu
-
-function teileTitel(titel) {
-  const symbol = (titel.match(SYMBOL_MUSTER) || []).join('')
-  return { symbol, text: titel.replace(SYMBOL_MUSTER, '').trim() }
-}
 
 export default function CultureView() {
   useLernstand()
@@ -78,22 +74,79 @@ export default function CultureView() {
         <h2 className="rk-abschnitt-titel" id="kult-kultur-titel">
           Kultur kennenlernen
         </h2>
+        <p className="gedaempft kult-einleitung">
+          {kulturkarten.length} Kulturkarten erklären auf Deutsch, was hinter Sprache und
+          Alltag steckt — mit echten Fotos und einem Ausdruck zum Mitlernen.
+        </p>
 
         <ul className="kult-liste" role="list">
-          {kultur.map((k) => {
-            const { symbol, text } = teileTitel(k.titel)
+          {kulturkarten.map((k) => {
+            const gemerkt = kennstWort(k.ausdruck.de, k.ausdruck.ku)
             return (
-              <li key={k.titel}>
+              <li key={k.id}>
                 <Card className="kult-karte">
-                  <h3 className="kult-titel">
-                    {symbol && (
-                      <span className="kult-symbol" aria-hidden="true">
-                        {symbol}
-                      </span>
-                    )}
-                    <span>{text}</span>
-                  </h3>
-                  <p className="kult-text">{k.text}</p>
+                  {k.foto && (
+                    <figure className="kult-foto">
+                      <img src={k.foto.src} alt={k.foto.alt} loading="lazy" />
+                    </figure>
+                  )}
+                  <div className="kult-kopfzeile">
+                    <h3 className="kult-titel">{k.titel}</h3>
+                    <Badge ton="neutral">{k.thema}</Badge>
+                  </div>
+                  <p className="kult-text" lang="de">
+                    {k.erklaerung}
+                  </p>
+
+                  <div className="kult-ausdruck">
+                    <span className="kult-marke">Ausdruck</span>
+                    <p className="kult-de" lang="de">
+                      {k.ausdruck.de}
+                    </p>
+                    <p className="kult-ku" lang="ku">
+                      {k.ausdruck.ku}
+                    </p>
+                    <span className="kult-marke">Beispiel</span>
+                    <p className="kult-de" lang="de">
+                      {k.beispiel.de}
+                    </p>
+                    <p className="kult-ku" lang="ku">
+                      {k.beispiel.ku}
+                    </p>
+                  </div>
+
+                  {k.hinweis && (
+                    <p className="kult-hinweis">
+                      <Icon name="info" groesse={16} />
+                      <span lang="de">{k.hinweis}</span>
+                    </p>
+                  )}
+
+                  <div className="reihe-umbruch kult-knoepfe">
+                    <PrimaryButton
+                      art="still"
+                      groesse="klein"
+                      icon="lautsprecher"
+                      onClick={() => spieleWort(k.ausdruck.ku)}
+                      aria-label={`${k.ausdruck.ku} anhören`}
+                    >
+                      Anhören
+                    </PrimaryButton>
+                    <PrimaryButton
+                      art={gemerkt ? 'still' : 'gruen'}
+                      groesse="klein"
+                      icon={gemerkt ? 'haken' : 'plus'}
+                      disabled={gemerkt}
+                      onClick={() => merkeWort(k.ausdruck.de, k.ausdruck.ku)}
+                      aria-label={
+                        gemerkt
+                          ? `Bereits gemerkt: ${k.ausdruck.ku}`
+                          : `Ausdruck merken: ${k.ausdruck.ku}`
+                      }
+                    >
+                      {gemerkt ? 'Gemerkt' : 'Merken'}
+                    </PrimaryButton>
+                  </div>
                 </Card>
               </li>
             )

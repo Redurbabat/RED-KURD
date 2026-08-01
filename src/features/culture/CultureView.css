@@ -44,3 +44,63 @@
 .kult-text {
   font-size: var(--text-base);
 }
+
+/* Kulturkarten mit echtem Foto und Sprachteil. */
+.kult-foto {
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-3);
+  overflow: hidden;
+  border-radius: var(--radius-medium) var(--radius-medium) 0 0;
+  border-bottom: 1px solid var(--rk-border);
+}
+.kult-foto img {
+  display: block;
+  width: 100%;
+  height: clamp(120px, 28vw, 180px);
+  object-fit: cover;
+}
+.kult-kopfzeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+.kult-ausdruck {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3);
+  margin: var(--space-3) 0;
+  border-left: 4px solid var(--rk-primary);
+  border-radius: var(--radius-small);
+  background: var(--rk-primary-soft);
+}
+.kult-marke {
+  margin-top: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.kult-marke:first-child {
+  margin-top: 0;
+}
+.kult-ausdruck .kult-de {
+  font-weight: 700;
+}
+.kult-ausdruck .kult-ku {
+  color: var(--rk-primary-dark);
+  font-weight: 800;
+}
+.kult-hinweis {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.kult-hinweis .rk-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}

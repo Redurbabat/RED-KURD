@@ -1,4 +1,7 @@
 // Redewendungen & Kultur
+// Die Kulturkarten tragen echte Fotos aus der Kapitel-Bibliothek — samt
+// Urheber und Lizenz aus kapitelFotos.js.
+import { kapitelFotos } from './kapitelFotos.js'
 export const redewendungen = [
   { ku: 'Dilop bi dilop, gol çêdibe.', de: 'Tropfen für Tropfen entsteht ein See.', sinn: 'Geduld führt zum Ziel — genau wie beim Sprachenlernen.' },
   { ku: 'Bira bira ye, bazar cuda ye.', de: 'Bruder ist Bruder, Geschäft ist Geschäft.', sinn: 'Familie und Geschäft trennt man.' },
@@ -22,6 +25,7 @@ export const kultur = [
 export const kulturkarten = [
   {
     id: 'gastfreundschaft',
+    foto: kapitelFotos.gaeste,
     titel: 'Gastfreundschaft',
     icon: 'herz',
     thema: 'Alltag',
@@ -34,6 +38,7 @@ export const kulturkarten = [
   },
   {
     id: 'cay',
+    foto: kapitelFotos.redewendungen,
     titel: 'Çay — Tee zu jedem Besuch',
     icon: 'sonne',
     thema: 'Alltag',
@@ -46,6 +51,7 @@ export const kulturkarten = [
   },
   {
     id: 'newroz',
+    foto: kapitelFotos.newroz,
     titel: 'Newroz — das Neujahrsfest',
     icon: 'flamme',
     thema: 'Fest',
@@ -58,6 +64,7 @@ export const kulturkarten = [
   },
   {
     id: 'govend',
+    foto: kapitelFotos.hochzeit,
     titel: 'Govend — der Reihentanz',
     icon: 'familie',
     thema: 'Fest',
@@ -69,6 +76,7 @@ export const kulturkarten = [
   },
   {
     id: 'dengbej',
+    foto: kapitelFotos.dengbej,
     titel: 'Dengbêj — die Sänger-Erzähler',
     icon: 'mikrofon',
     thema: 'Musik',
@@ -80,6 +88,7 @@ export const kulturkarten = [
   },
   {
     id: 'kelim',
+    foto: kapitelFotos.handwerk,
     titel: 'Kelim-Weberei',
     icon: 'rahmen',
     thema: 'Alltag',
@@ -102,6 +111,7 @@ export const kulturkarten = [
   },
   {
     id: 'gund',
+    foto: kapitelFotos.gebirge,
     titel: 'Leben im Bergdorf',
     icon: 'berg',
     thema: 'Alltag',
@@ -113,6 +123,7 @@ export const kulturkarten = [
   },
   {
     id: 'nan',
+    foto: kapitelFotos.taetigkeiten,
     titel: 'Brot und Salz',
     icon: 'teilen',
     thema: 'Alltag',
@@ -124,6 +135,7 @@ export const kulturkarten = [
   },
   {
     id: 'nav',
+    foto: kapitelFotos.namefragen,
     titel: 'Namen und Anrede',
     icon: 'profil',
     thema: 'Sprache',
@@ -146,6 +158,7 @@ export const kulturkarten = [
   },
   {
     id: 'alfabe',
+    foto: kapitelFotos.saetze,
     titel: 'Die kurdische Schrift',
     icon: 'sprache',
     thema: 'Sprache',
@@ -157,6 +170,7 @@ export const kulturkarten = [
   },
   {
     id: 'kela',
+    foto: kapitelFotos.stadt,
     titel: 'Die Kela — Zitadelle auf dem Hügel',
     icon: 'schild',
     thema: 'Geschichte',
@@ -179,6 +193,7 @@ export const kulturkarten = [
   },
   {
     id: 'muzik',
+    foto: kapitelFotos.musik,
     titel: 'Musik und Instrumente',
     icon: 'musik',
     thema: 'Musik',

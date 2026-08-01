@@ -76,6 +76,12 @@ function Kulturkarte({ karte }) {
           </Badge>
         </div>
 
+        {karte.foto && (
+          <figure className="ak-foto">
+            <img src={karte.foto.src} alt={karte.foto.alt} loading="lazy" />
+          </figure>
+        )}
+
         <h3 className="ak-titel">{karte.titel}</h3>
         <p className="ak-text" lang="de">
           {karte.erklaerung}

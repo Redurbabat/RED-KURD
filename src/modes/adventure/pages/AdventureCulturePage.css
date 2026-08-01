@@ -254,3 +254,18 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* Echtes Foto auf der Kulturkarte — gerahmt wie eine Postkarte auf Pergament. */
+.ak-foto {
+  margin: 0 0 var(--space-3);
+  overflow: hidden;
+  border: 3px solid var(--adv-parchment-edge);
+  border-radius: var(--radius-medium);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+}
+.ak-foto img {
+  display: block;
+  width: 100%;
+  height: clamp(120px, 30vw, 190px);
+  object-fit: cover;
+}
