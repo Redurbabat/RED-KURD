@@ -18,6 +18,7 @@ import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiSto
 import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.js'
 import { holeShop } from '../../../core/shop/shopStore.js'
 import { abmelden, kontoStatus } from '../../../core/auth/authApi.js'
+import { KEYS, entferne, lies } from '../../../core/storage.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'
@@ -153,22 +154,37 @@ export default function SettingsPage() {
 /* ===================== Bausteine ===================== */
 
 function KontoKarte() {
-  const [stand, setStand] = useState({ backend: true, konto: null })
+  const [stand, setStand] = useState({ backend: true, konto: null, geladen: false })
   const [fehler, setFehler] = useState('')
   const [laedt, setLaedt] = useState(false)
   const konto = stand.konto
 
   useEffect(() => {
     kontoStatus()
-      .then(setStand)
+      .then((wert) => setStand({ ...wert, geladen: true }))
       .catch(() => setFehler('Die Kontodaten konnten gerade nicht geladen werden.'))
   }, [])
+
+  // Erst urteilen, wenn die Antwort da ist — sonst blitzt die falsche Karte auf.
+  if (!stand.geladen) {
+    return (
+      <Card titel="Konto" icon="profil">
+        {fehler ? (
+          <p className="set-kontofehler" role="alert">{fehler}</p>
+        ) : (
+          <p className="gedaempft">Kontodaten werden geladen …</p>
+        )}
+      </Card>
+    )
+  }
 
   async function kontoAbmelden() {
     setLaedt(true)
     setFehler('')
     try {
       await abmelden()
+      // Wer sich abmeldet, will den Riegel wieder — die Gast-Entscheidung faellt mit.
+      entferne(KEYS.ohneKonto)
       window.location.assign('/')
     } catch (grund) {
       setFehler(grund instanceof Error ? grund.message : 'Abmelden war nicht möglich.')
@@ -184,6 +200,46 @@ function KontoKarte() {
         <p>
           Diese Ausgabe von RED-KURD läuft ohne Anmeldung: Dein gesamter Lernstand bleibt lokal
           auf diesem Gerät. Über „Fortschritt → Export“ sicherst du ihn jederzeit als Datei.
+        </p>
+      </Card>
+    )
+  }
+
+  // Server vorhanden, aber bewusst ohne Konto unterwegs: hier geht es
+  // jederzeit zurueck zur Anmeldung. Ohne die gespeicherte Entscheidung ist
+  // schlicht die Sitzung abgelaufen — das sagen wir dann auch so.
+  if (!konto && lies(KEYS.ohneKonto) !== true) {
+    return (
+      <Card titel="Konto" icon="profil">
+        <p>Deine Sitzung ist abgelaufen. Melde dich neu an, um weiterzumachen.</p>
+        <PrimaryButton art="still" breit icon="profil" onClick={() => window.location.assign('/')}>
+          Neu anmelden
+        </PrimaryButton>
+      </Card>
+    )
+  }
+
+  if (!konto) {
+    return (
+      <Card titel="Ohne Konto unterwegs" icon="profil">
+        <p>
+          Du lernst gerade ohne Konto — dein gesamter Lernstand bleibt lokal auf diesem Gerät.
+          Mit einem Konto kannst du dich später auf anderen Geräten anmelden.
+        </p>
+        <PrimaryButton
+          art="still"
+          breit
+          icon="profil"
+          onClick={() => {
+            entferne(KEYS.ohneKonto)
+            window.location.assign('/')
+          }}
+        >
+          Jetzt anmelden oder Konto erstellen
+        </PrimaryButton>
+        <p className="gedaempft set-fussnote">
+          Beim Anmelden geht nichts verloren: Dein lokaler Lernstand bleibt auf diesem Gerät
+          gespeichert.
         </p>
       </Card>
     )

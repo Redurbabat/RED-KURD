@@ -11,6 +11,9 @@ export const KEYS = {
   aufgaben: 'red-kurd-tasks-v1',
   herzen: 'red-kurd-hearts-v1',
   sprachkurse: 'red-kurd-language-courses-v1',
+  // Bewusste Entscheidung „ohne Konto lernen“ — ueberlebt das Neuladen,
+  // bleibt aber geraete-lokal (siehe NUR_LOKAL) und wandert nie in Sicherungen.
+  ohneKonto: 'red-kurd-ohne-konto-v1',
 }
 
 // Alte Schluessel aus Version 1 — werden einmalig uebernommen, nie geloescht.
@@ -64,9 +67,15 @@ export function entferne(key) {
  * Vollständige, lokale Sicherung aller bekannten App-Speicher.
  * Es werden nur RED-KURD-Schlüssel gelesen; fremde Browserdaten bleiben unberührt.
  */
+// Geraete-lokale Entscheidungen (z. B. „ohne Konto lernen") sind kein
+// Lernstand und wandern nicht in Sicherungen — sonst wuerde ein Import die
+// Anmelde-Entscheidung eines anderen Geraets uebernehmen.
+const NUR_LOKAL = new Set(['ohneKonto'])
+
 export function exportiereSpeicherstand() {
   return Object.fromEntries(
     Object.entries(KEYS)
+      .filter(([name]) => !NUR_LOKAL.has(name))
       .map(([name, key]) => [name, lies(key)])
       .filter(([, wert]) => wert !== null)
   )
@@ -80,7 +89,7 @@ export function importiereSpeicherstand(speicher) {
   if (!speicher || typeof speicher !== 'object' || Array.isArray(speicher)) return 0
   let anzahl = 0
   for (const [name, key] of Object.entries(KEYS)) {
-    if (!(name in speicher)) continue
+    if (!(name in speicher) || NUR_LOKAL.has(name)) continue
     if (schreibe(key, speicher[name])) anzahl += 1
   }
   return anzahl

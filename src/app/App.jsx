@@ -10,7 +10,7 @@ import PrimaryButton from '../components/common/PrimaryButton.jsx'
 import Onboarding from '../modes/modern/pages/Onboarding.jsx'
 import { T } from '../core/texts.js'
 import { MODERN_NAV, ABENTEUER_NAV, REDLINGO_NAV } from '../components/layout/navConfig.js'
-import { migriere } from '../core/storage.js'
+import { KEYS, entferne, lies, migriere, schreibe } from '../core/storage.js'
 import { useLernstand } from '../core/store.js'
 import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
@@ -132,13 +132,21 @@ export default function App() {
     setKonto((alt) => ({ ...alt, status: 'laedt', fehler: '' }))
     // Local-first: gibt es keinen Anmelde-Server (lokal, Vercel, offline),
     // läuft die App ohne Konto weiter — der Lernstand liegt ohnehin im Browser.
-    // Nur wenn der Server da ist, verlangt sie eine Anmeldung.
+    // Nur wenn der Server da ist, verlangt sie eine Anmeldung — es sei denn,
+    // die Nutzerin hat sich ausdrücklich für „ohne Konto lernen“ entschieden.
     const { backend, konto: wert } = await kontoStatus()
-    if (!backend) {
+    if (!backend || (!wert && lies(KEYS.ohneKonto) === true)) {
       setKonto({ status: 'lokal', wert: null, fehler: '' })
       return
     }
+    // Eine bestehende Sitzung raeumt eine liegengebliebene Gast-Entscheidung ab.
+    if (wert) entferne(KEYS.ohneKonto)
     setKonto({ status: wert ? 'angemeldet' : 'gast', wert, fehler: '' })
+  }
+
+  function ohneKontoWeiter() {
+    schreibe(KEYS.ohneKonto, true)
+    setKonto({ status: 'lokal', wert: null, fehler: '' })
   }
 
   useEffect(() => {
@@ -165,7 +173,12 @@ export default function App() {
       <AuthPage
         anfangsFehler={konto.fehler}
         onErneut={kontoPruefen}
-        onErfolg={(wert) => setKonto({ status: 'angemeldet', wert, fehler: '' })}
+        onErfolg={(wert) => {
+          // Eine echte Anmeldung hebt die „ohne Konto“-Entscheidung auf.
+          entferne(KEYS.ohneKonto)
+          setKonto({ status: 'angemeldet', wert, fehler: '' })
+        }}
+        onOhneKonto={ohneKontoWeiter}
       />
     )
   }

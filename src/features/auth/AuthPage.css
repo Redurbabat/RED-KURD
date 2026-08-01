@@ -42,6 +42,12 @@
 .auth-fehler button { text-decoration: underline; font-weight: 900; }
 .auth-datenschutz { display: flex; align-items: flex-start; gap: 9px; margin-top: 22px; color: var(--rk-text-muted); font-size: var(--text-xs); }
 .auth-datenschutz .rk-icon { margin-top: 2px; color: var(--rk-green-dark); }
+
+/* „Ohne Konto weiterlernen“ — gleichwertig sichtbar unter dem Formular. */
+.auth-gast { margin-top: 18px; }
+.auth-oder { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; color: var(--rk-text-muted); font-size: var(--text-xs); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+.auth-oder::before, .auth-oder::after { content: ''; flex: 1; height: 1px; background: var(--rk-border); }
+.auth-gast-hinweis { margin-top: 10px; color: var(--rk-text-muted); font-size: var(--text-xs); }
 .auth-laedt { grid-template-columns: 1fr; place-items: center; align-content: center; gap: 16px; color: white; }
 .auth-ladezeichen { width: 54px; height: 54px; border: 6px solid rgba(255,255,255,.18); border-top-color: var(--rk-red); border-radius: 50%; animation: auth-drehen .8s linear infinite; }
 @keyframes auth-drehen { to { transform: rotate(360deg); } }

@@ -14,7 +14,7 @@ export function AuthLoading() {
   )
 }
 
-export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
+export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut, onOhneKonto }) {
   const [modus, setModus] = useState('anmelden')
   const [email, setEmail] = useState('')
   const [passwort, setPasswort] = useState('')
@@ -149,6 +149,24 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
             {laedt ? 'Einen Moment …' : istNeu ? 'Kostenlos starten' : 'Anmelden'}
           </PrimaryButton>
         </form>
+
+        {/* Kein Konto noetig: RED-KURD ist local-first — wer mag, lernt sofort
+            los. Die Entscheidung wird gemerkt und laesst sich in den
+            Einstellungen jederzeit durch eine Anmeldung ersetzen. */}
+        {onOhneKonto && (
+          <div className="auth-gast">
+            <span className="auth-oder" aria-hidden="true">
+              oder
+            </span>
+            <PrimaryButton art="still" breit icon="download" onClick={onOhneKonto}>
+              Ohne Konto weiterlernen
+            </PrimaryButton>
+            <p className="auth-gast-hinweis">
+              Kein Konto nötig: Dein Lernstand bleibt lokal auf diesem Gerät. Anmelden kannst du
+              dich später jederzeit in den Einstellungen.
+            </p>
+          </div>
+        )}
 
         <p className="auth-datenschutz">
           <Icon name="schild" groesse={17} />
