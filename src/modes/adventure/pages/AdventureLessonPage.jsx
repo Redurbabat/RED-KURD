@@ -196,6 +196,14 @@ export default function AdventureLessonPage({ unitId }) {
           </div>
         </header>
 
+        {/* Das echte Kapitelfoto stimmt aufs Thema ein — Nachweis liegt in
+            kapitelFotos.js, angezeigt wird er auf der Kapitelseite. */}
+        {einheit.foto && (
+          <figure className="al-echtfoto">
+            <img src={einheit.foto.src} alt={einheit.foto.alt} loading="lazy" />
+          </figure>
+        )}
+
         <section className="al-lernziel" aria-labelledby="al-lernziel-titel">
           <div className="al-lernziel-kopf">
             <span className="al-lernziel-marke" aria-hidden="true">

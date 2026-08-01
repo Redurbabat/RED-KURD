@@ -238,7 +238,7 @@ export const zusaetzlicheKurse = [
       { de: 'Kohl', ku: 'kelem', bild: '🥬' },
       { de: 'Spinat', ku: 'ispanaq', bild: '🌿' },
       { de: 'Bohne', ku: 'fasûlî', bild: '🫘' },
-      { de: 'Pilz', ku: 'kundir', bild: '🍄' },
+      { de: 'Pilz', ku: 'kivark', bild: '🍄' },
     ],
   },
 ]

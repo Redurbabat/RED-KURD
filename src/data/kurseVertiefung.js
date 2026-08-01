@@ -79,7 +79,7 @@ export const vertiefungsKurse = [
       { de: 'Reihentanz', ku: 'govend', bild: '💃' },
       { de: 'Tanztuch', ku: 'destmal', bild: '🧣' },
       { de: 'Musik', ku: 'muzîk', bild: '🎶' },
-      { de: 'Trommel', ku: 'dehol', bild: '🥁' },
+      { de: 'Trommel', ku: 'dahol', bild: '🥁' },
       { de: 'Zurna (Flöte)', ku: 'zirne', bild: '🎺' },
       { de: 'Herzlichen Glückwunsch!', ku: 'Pîroz be!', bild: '🎊' },
       { de: 'einladen', ku: 'vexwendin', bild: '💌' },

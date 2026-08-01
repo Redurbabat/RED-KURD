@@ -24,7 +24,7 @@ laufende Sitzungen sind in beiden Modi dieselben.
 - **Heute** – Tagesplan, fortsetzbare Sitzung, Wiederholungen, neue Wörter,
   Sitzungsdauer (kurz / standard / intensiv), Tagesziel
 - **Kurs** – 56 Kurmancî-Kapitel und über 600 direkte Lernpaare mit je fünf Abschnitten,
-  dazu Beispielsätze und deutsche Grammatik-Notizen in den Kernkapiteln
+  dazu Beispielsätze und eine deutsche Grammatik-Notiz in jedem Kapitel
 - **Weitere Sprachen** – Englisch, Französisch, Türkisch und Spanisch mit zusammen 192 Lernpaaren
 - **Echte Fotos** – jedes Kapitel trägt ein echtes, lokal gespeichertes
   Wikimedia-Commons-Foto samt Urheber und Lizenz

@@ -9,6 +9,40 @@
   line-height: 1;
   flex-shrink: 0;
 }
+/* Aktuelles Kapitel mit echtem Foto statt Emoji — das Emoji bleibt als Ecke. */
+.kurs-hero-foto {
+  position: relative;
+  width: 92px;
+  height: 74px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid rgb(255 255 255 / 0.4);
+  border-radius: 18px;
+  box-shadow: 0 5px 0 rgb(0 0 0 / 0.22);
+}
+.kurs-hero-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.kurs-hero-foto > span {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
+  background: rgb(255 255 255 / 0.9);
+  font-size: 0.85rem;
+}
+@media (max-width: 430px) {
+  .kurs-hero-foto {
+    width: 72px;
+    height: 58px;
+  }
+}
 .kurs-hero-balken {
   margin-top: var(--space-2);
 }

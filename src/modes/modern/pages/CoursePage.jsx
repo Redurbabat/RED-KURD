@@ -154,9 +154,16 @@ export default function CoursePage() {
       </div>
 
       <section className="rk-hero rk-hero-blau kurs-aktuell" aria-labelledby="kurs-aktuell-titel">
-        <span className="kurs-hero-symbol" aria-hidden="true">
-          {aktuell.symbol}
-        </span>
+        {aktuell.foto ? (
+          <span className="kurs-hero-foto" aria-hidden="true">
+            <img src={aktuell.foto.src} alt="" />
+            <span>{aktuell.symbol}</span>
+          </span>
+        ) : (
+          <span className="kurs-hero-symbol" aria-hidden="true">
+            {aktuell.symbol}
+          </span>
+        )}
         <div className="rk-hero-text">
           <span className="rk-hero-etikett">{T.kurs.aktuelleEinheit}</span>
           <h2 id="kurs-aktuell-titel">{aktuell.name}</h2>

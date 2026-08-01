@@ -194,7 +194,7 @@ const grundKurse = [
     { de: 'Herzlich willkommen!', ku: 'Bi xêr û silamet hatî!', bild: '🤗' },
     { de: 'Bitte, tritt ein.', ku: 'Kerem bike, were hundir', bild: '🚪' },
     { de: 'Setz dich.', ku: 'Rûne', bild: '🪑' },
-    { de: 'Möchtest du Tee?', ku: 'Tu çay dixwazî?', bild: '🍵' },
+    { de: 'Möchtest du Tee?', ku: 'Tu çayê dixwazî?', bild: '🍵' },
     { de: 'Ja, gerne.', ku: 'Erê, bi kêfxweşî', bild: '👍' },
     { de: 'Nein, danke.', ku: 'Na, spas', bild: '🙅' },
     { de: 'Guten Appetit!', ku: 'Noş bî!', bild: '🍽️' },

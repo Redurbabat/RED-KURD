@@ -333,3 +333,18 @@
     transform: none;
   }
 }
+
+/* Echtes Kapitelfoto vor dem Lernziel — gerahmt wie eine Postkarte. */
+.al-echtfoto {
+  margin: 0 0 var(--space-4);
+  overflow: hidden;
+  border: 3px solid var(--adv-parchment-edge);
+  border-radius: var(--radius-large);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+}
+.al-echtfoto img {
+  display: block;
+  width: 100%;
+  height: clamp(140px, 32vw, 220px);
+  object-fit: cover;
+}
