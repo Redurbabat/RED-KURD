@@ -42,10 +42,14 @@ function FotoNachweise() {
   const [fotos, setFotos] = useState([])
 
   useEffect(() => {
-    fetch('/bilder/lernwelt/credits.json')
-      .then((antwort) => (antwort.ok ? antwort.json() : null))
-      .then((daten) => setFotos(daten?.fotos || []))
-      .catch(() => setFotos([]))
+    // Kapitel- und Wortfotos zusammen ausweisen — beide Quellen sind Wikimedia.
+    Promise.all(
+      ['/bilder/lernwelt/credits.json', '/bilder/woerter/credits.json'].map((pfad) =>
+        fetch(pfad)
+          .then((antwort) => (antwort.ok ? antwort.json() : null))
+          .catch(() => null)
+      )
+    ).then((listen) => setFotos(listen.flatMap((daten) => daten?.fotos || [])))
   }, [])
 
   return (

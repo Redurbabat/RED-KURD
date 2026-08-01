@@ -1,7 +1,7 @@
 // Der Sitzungsplaner stellt die taegliche Mischung zusammen:
 // faellige Wiederholungen zuerst, dann neue Wörter aus der aktuellen Einheit.
 import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.js'
-import { aktuelleEinheit, bildVon, holeEinheit } from '../courses/courseRepository.js'
+import { ALLE_WOERTER, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
 import { baueUebungen, mische } from './exerciseFactory.js'
 
 export const DAUERN = [
@@ -105,6 +105,25 @@ export function planeLektion(einheitId, lektionId) {
 export function planeTraining(art, anzahl = 12) {
   const faellig = faelligeKarten().map(alsWort)
   const aus = mische(faellig.length >= anzahl ? faellig : [...faellig, ...mische(aktuelleEinheit().woerter)])
-  const woerter = aus.slice(0, anzahl)
+  let woerter = aus.slice(0, anzahl)
+
+  // Beim Bildertraining zuerst die Wörter nehmen, zu denen es ein echtes Foto
+  // gibt — sonst besteht die Runde fast nur aus Emojis. Fehlen welche, füllen
+  // wir aus dem ganzen Kurs auf.
+  if (art === 'bild') {
+    const mitFoto = aus.filter((w) => fotoVon(w.ku))
+    if (mitFoto.length < anzahl) {
+      const gesehen = new Set(mitFoto.map((w) => w.ku))
+      for (const w of mische(ALLE_WOERTER)) {
+        if (mitFoto.length >= anzahl) break
+        if (w.bild && fotoVon(w.ku) && !gesehen.has(w.ku)) {
+          mitFoto.push(w)
+          gesehen.add(w.ku)
+        }
+      }
+    }
+    if (mitFoto.length >= 4) woerter = mitFoto.slice(0, anzahl)
+  }
+
   return { uebungen: baueUebungen(woerter, [art]), titel: 'Training', anzahl: woerter.length }
 }

@@ -2,6 +2,7 @@
 // Die Kulturkarten tragen echte Fotos aus der Kapitel-Bibliothek — samt
 // Urheber und Lizenz aus kapitelFotos.js.
 import { kapitelFotos } from './kapitelFotos.js'
+import { wortFotos } from './wortFotos.js'
 export const redewendungen = [
   { ku: 'Dilop bi dilop, gol çêdibe.', de: 'Tropfen für Tropfen entsteht ein See.', sinn: 'Geduld führt zum Ziel — genau wie beim Sprachenlernen.' },
   { ku: 'Bira bira ye, bazar cuda ye.', de: 'Bruder ist Bruder, Geschäft ist Geschäft.', sinn: 'Familie und Geschäft trennt man.' },
@@ -100,6 +101,7 @@ export const kulturkarten = [
   },
   {
     id: 'hinar',
+    foto: wortFotos.hinar,
     titel: 'Granatapfel und Essen',
     icon: 'edelstein',
     thema: 'Alltag',

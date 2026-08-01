@@ -10,7 +10,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { istRichtigGetippt, SKILL_JE_ART } from '../../core/session/exerciseFactory.js'
 import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.js'
-import { deutschVon, kurmanciVon } from '../../core/courses/courseRepository.js'
+import { deutschVon, fotoVon, kurmanciVon } from '../../core/courses/courseRepository.js'
 import { sitzungSpeichern, sitzungLoeschen } from '../../core/session/sessionStore.js'
 import { T } from '../../core/texts.js'
 
@@ -250,20 +250,27 @@ export default function ExercisePlayer({
           </h2>
           <HoerKnopf wort={u.frage} />
           <div className="rk-optionen rk-optionen-bild">
-            {u.optionen.map((opt) => (
-              <button
-                key={opt.bild}
-                type="button"
-                className={'rk-option rk-option-bild' + zustand(opt.bild, antwort, u.antwort)}
-                onClick={() => waehle(opt.bild)}
-                disabled={antwort !== null}
-                aria-label={`Bild ${opt.bild}`}
-              >
-                <span className="rk-option-emoji" aria-hidden="true">
-                  {opt.bild}
-                </span>
-              </button>
-            ))}
+            {u.optionen.map((opt, i) => {
+              const foto = opt.ku ? fotoVon(opt.ku) : null
+              return (
+                <button
+                  key={opt.bild}
+                  type="button"
+                  className={'rk-option rk-option-bild' + zustand(opt.bild, antwort, u.antwort)}
+                  onClick={() => waehle(opt.bild)}
+                  disabled={antwort !== null}
+                  aria-label={foto ? foto.alt : `Bildoption ${i + 1}`}
+                >
+                  {foto ? (
+                    <img className="rk-option-foto" src={foto.src} alt="" loading="lazy" />
+                  ) : (
+                    <span className="rk-option-emoji" aria-hidden="true">
+                      {opt.bild}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
           </div>
         </>
       )}
@@ -284,7 +291,11 @@ export default function ExercisePlayer({
                     würde sie verraten. */}
                 {u.w.bild && u.art === 'wahl-ku' && (
                   <span className="rk-frage-bild" aria-hidden="true">
-                    {u.w.bild}
+                    {fotoVon(u.w.ku) ? (
+                      <img src={fotoVon(u.w.ku).src} alt="" loading="lazy" />
+                    ) : (
+                      u.w.bild
+                    )}
                   </span>
                 )}
                 {u.art === 'wahl-ku' ? (

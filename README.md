@@ -29,7 +29,8 @@ laufende Sitzungen sind in beiden Modi dieselben.
   Kapiteln und zusammen 320 Lernpaaren; Sprachwechsel über die Flagge oben links
   (Kurmancî trägt die Kurdistan-Flagge)
 - **Echte Fotos** – jedes Kapitel trägt ein echtes, lokal gespeichertes
-  Wikimedia-Commons-Foto samt Urheber und Lizenz
+  Wikimedia-Commons-Foto samt Urheber und Lizenz; dazu 98 Wort-Fotos, die in
+  den Bildaufgaben die Emojis ersetzen
   (Lernen · Festigen · Schreiben · Hören und Sprechen · Kapitelprüfung),
   Lernziel, Sterne und Fortschritt
 - **Üben** – Wiederholen, Bilder, Hören, Schreiben, Schnellwahl, Bedeutungen,

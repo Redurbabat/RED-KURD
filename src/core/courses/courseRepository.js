@@ -3,6 +3,7 @@
 import { kurse } from '../../data/kurse.js'
 import { kapitelFotos } from '../../data/kapitelFotos.js'
 import { kapitelExtras } from '../../data/kapitelExtras.js'
+import { wortFotos } from '../../data/wortFotos.js'
 import { holeFortschritt, sterneVon } from '../progress/progressStore.js'
 
 /** Jede Einheit besteht aus fünf abwechslungsreichen Abschnitten. */
@@ -238,6 +239,11 @@ const KU_VON_DE = sammle('de', 'ku')
 
 export function bildVon(ku) {
   return BILD_VON_KU.get(ku)
+}
+
+/** Echtes Foto zu einem Kurswort — oder null, wenn nur das Emoji da ist. */
+export function fotoVon(ku) {
+  return wortFotos[ku] || null
 }
 
 /** Alle deutschen Bedeutungen eines Kurmancî-Worts, z. B. „Tag / Sonne". */

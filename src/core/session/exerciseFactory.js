@@ -1,5 +1,5 @@
 // Baut aus Wortlisten die einzelnen Aufgaben. Reine Logik, keine Oberflaeche.
-import { ALLE_WOERTER, bildVon } from '../courses/courseRepository.js'
+import { ALLE_WOERTER, bildVon, fotoVon } from '../courses/courseRepository.js'
 
 export function mische(liste) {
   const a = [...liste]
@@ -89,13 +89,28 @@ export function baueUebungen(woerter, arten) {
     letzteArt = art
 
     if (art === 'bild') {
+      // Hat das Zielwort ein echtes Foto, sollen auch die falschen Kacheln
+      // Fotos zeigen — sonst verrät schon die Darstellung die Lösung.
+      const zielHatFoto = !!fotoVon(w.ku)
       const falsche = []
       const gesehen = new Set([w.bild])
+      const passt = (x) =>
+        x.bild && !gesehen.has(x.bild) && x.ku !== w.ku && (!zielHatFoto || !!fotoVon(x.ku))
       for (const x of mische(alle)) {
-        if (x.bild && !gesehen.has(x.bild) && x.ku !== w.ku) {
+        if (passt(x)) {
           falsche.push(x)
           gesehen.add(x.bild)
           if (falsche.length === 3) break
+        }
+      }
+      // Zu wenig Foto-Wörter? Dann mit Emoji-Wörtern auffüllen.
+      if (zielHatFoto && falsche.length < 3) {
+        for (const x of mische(alle)) {
+          if (x.bild && !gesehen.has(x.bild) && x.ku !== w.ku) {
+            falsche.push(x)
+            gesehen.add(x.bild)
+            if (falsche.length === 3) break
+          }
         }
       }
       if (falsche.length < 3) continue
