@@ -158,7 +158,7 @@ async function registrieren(request, env) {
   if (!emailIstGueltig(email) || !passwortIstGueltig(passwort)) {
     return json(
       {
-        fehler: `Bitte gib eine gültige E-Mail und ein Passwort mit ${PASSWORT_MIN} bis ${PASSWORT_MAX} Zeichen ein.`,
+        fehler: `Bitte gib eine gültige Redmail und ein Redsword mit ${PASSWORT_MIN} bis ${PASSWORT_MAX} Zeichen ein.`,
       },
       400
     )
@@ -167,7 +167,7 @@ async function registrieren(request, env) {
   const vorhanden = await env.DB.prepare('SELECT id FROM users WHERE email = ? LIMIT 1')
     .bind(email)
     .first()
-  if (vorhanden) return json({ fehler: 'Für diese E-Mail besteht bereits ein Konto.' }, 409)
+  if (vorhanden) return json({ fehler: 'Für diese Redmail besteht bereits ein Konto.' }, 409)
 
   const id = crypto.randomUUID()
   const passwortDaten = await hashPasswort(passwort)
@@ -188,7 +188,7 @@ async function registrieren(request, env) {
       .run()
   } catch (fehler) {
     if (/unique/i.test(String(fehler?.message || fehler))) {
-      return json({ fehler: 'Für diese E-Mail besteht bereits ein Konto.' }, 409)
+      return json({ fehler: 'Für diese Redmail besteht bereits ein Konto.' }, 409)
     }
     throw fehler
   }
@@ -207,7 +207,7 @@ async function anmelden(request, env) {
   const email = normalisiereEmail(daten?.email)
   const passwort = daten?.passwort
   if (!emailIstGueltig(email) || !passwortIstGueltig(passwort)) {
-    return json({ fehler: 'E-Mail oder Passwort ist nicht richtig.' }, 401)
+    return json({ fehler: 'Redmail oder Redsword ist nicht richtig.' }, 401)
   }
 
   const konto = await env.DB.prepare(
@@ -216,7 +216,7 @@ async function anmelden(request, env) {
     .bind(email)
     .first()
   if (!konto || !(await passwortStimmt(passwort, konto))) {
-    return json({ fehler: 'E-Mail oder Passwort ist nicht richtig.' }, 401)
+    return json({ fehler: 'Redmail oder Redsword ist nicht richtig.' }, 401)
   }
 
   const jetzt = new Date().toISOString()

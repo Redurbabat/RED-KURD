@@ -39,7 +39,7 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
     ereignis.preventDefault()
     setFehler('')
     if (modus === 'registrieren' && passwort !== bestaetigung) {
-      setFehler('Die beiden Passwörter stimmen nicht überein.')
+      setFehler('Die beiden Redswords stimmen nicht überein.')
       return
     }
     setLaedt(true)
@@ -79,7 +79,7 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
           </p>
           <ul className="auth-vorteile">
             <li><Icon name="haken" groesse={18} /> Kostenlos und ohne Werbung</li>
-            <li><Icon name="schild" groesse={18} /> Passwort nur als Sicherheits-Hash gespeichert</li>
+            <li><Icon name="schild" groesse={18} /> Redsword nur als Sicherheits-Hash gespeichert</li>
             <li><Icon name="download" groesse={18} /> Lernfortschritt bleibt lokal auf deinem Gerät</li>
           </ul>
         </div>
@@ -109,19 +109,19 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
 
         <form className="auth-formular" onSubmit={senden}>
           <label className="auth-feld">
-            <span>E-Mail-Adresse</span>
+            <span>Redmail</span>
             <span className="auth-eingabe">
               <Icon name="profil" groesse={19} />
-              <input ref={emailRef} type="email" name="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@beispiel.ch" maxLength={254} required />
+              <input ref={emailRef} type="email" name="email" autoComplete="email" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="deine@email.ch" maxLength={254} required />
             </span>
           </label>
 
           <label className="auth-feld">
-            <span>Passwort</span>
+            <span>Redsword</span>
             <span className="auth-eingabe">
               <Icon name="schloss" groesse={19} />
-              <input type={anzeigen ? 'text' : 'password'} name="password" autoComplete={istNeu ? 'new-password' : 'current-password'} value={passwort} onChange={(e) => setPasswort(e.target.value)} placeholder={istNeu ? 'Mindestens 10 Zeichen' : 'Dein Passwort'} minLength={10} maxLength={128} required />
-              <button type="button" className="auth-passwort-zeigen" aria-label={anzeigen ? 'Passwort verbergen' : 'Passwort anzeigen'} aria-pressed={anzeigen} onClick={() => setAnzeigen((wert) => !wert)}>
+              <input type={anzeigen ? 'text' : 'password'} name="password" autoComplete={istNeu ? 'new-password' : 'current-password'} value={passwort} onChange={(e) => setPasswort(e.target.value)} placeholder={istNeu ? 'Mindestens 10 Zeichen' : 'Dein Redsword'} minLength={10} maxLength={128} required />
+              <button type="button" className="auth-passwort-zeigen" aria-label={anzeigen ? 'Redsword verbergen' : 'Redsword anzeigen'} aria-pressed={anzeigen} onClick={() => setAnzeigen((wert) => !wert)}>
                 <Icon name="auge" groesse={20} />
               </button>
             </span>
@@ -129,10 +129,10 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
 
           {istNeu && (
             <label className="auth-feld">
-              <span>Passwort wiederholen</span>
+              <span>Redsword wiederholen</span>
               <span className="auth-eingabe">
                 <Icon name="schild" groesse={19} />
-                <input type={anzeigen ? 'text' : 'password'} name="password-confirmation" autoComplete="new-password" value={bestaetigung} onChange={(e) => setBestaetigung(e.target.value)} placeholder="Passwort noch einmal" minLength={10} maxLength={128} required />
+                <input type={anzeigen ? 'text' : 'password'} name="password-confirmation" autoComplete="new-password" value={bestaetigung} onChange={(e) => setBestaetigung(e.target.value)} placeholder="Redsword noch einmal" minLength={10} maxLength={128} required />
               </span>
             </label>
           )}
@@ -152,8 +152,8 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut }) {
 
         <p className="auth-datenschutz">
           <Icon name="schild" groesse={17} />
-          Deine E-Mail sowie erfolgreiche Anmeldungen mit Zeitpunkt werden als Text in
-          Cloudflare D1 gespeichert. Dein Passwort wird nie lesbar gespeichert, sondern nur
+          Deine Redmail sowie erfolgreiche Anmeldungen mit Zeitpunkt werden als Text in
+          Cloudflare D1 gespeichert. Dein Redsword wird nie lesbar gespeichert, sondern nur
           als gesalzener Sicherheits-Hash.
         </p>
       </section>

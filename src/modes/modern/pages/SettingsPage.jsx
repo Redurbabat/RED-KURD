@@ -56,7 +56,7 @@ const MODI = [
 ]
 
 const SCHNELLZUGRIFFE = [
-  { id: 'set-konto', name: 'Mein Konto', text: 'E-Mail und Abmeldung', icon: 'profil' },
+  { id: 'set-konto', name: 'Mein Konto', text: 'Redmail und Abmeldung', icon: 'profil' },
   { id: 'set-modus', name: 'App-Modus', text: 'Modern, Abenteuer oder Redlingo', icon: 'welt' },
   { id: 'set-profil', name: 'Profil & Kurs', text: 'Ziel, Variante und Tagesziel', icon: 'profil' },
   { id: 'set-ton', name: 'Ton & Erinnerungen', text: 'Audio und tägliche Erinnerung', icon: 'glocke' },
@@ -182,7 +182,7 @@ function KontoKarte() {
           <Icon name="profil" groesse={24} />
         </span>
         <span>
-          <small>E-Mail-Adresse</small>
+          <small>Redmail</small>
           <strong>{konto?.email || (fehler ? 'Nicht verfügbar' : 'Wird geladen …')}</strong>
         </span>
       </div>
@@ -192,7 +192,7 @@ function KontoKarte() {
       </PrimaryButton>
       <p className="gedaempft set-fussnote">
         Nach der Abmeldung bleibt dein Lernstand auf diesem Gerät gespeichert. Für den nächsten
-        Zugriff meldest du dich wieder mit deiner E-Mail und deinem Passwort an.
+        Zugriff meldest du dich wieder mit deiner Redmail und deinem Redsword an.
       </p>
     </Card>
   )
@@ -610,9 +610,9 @@ function DatenschutzKarte() {
         <li>
           <Icon name="haken" groesse={18} />
           <span>
-            <strong>Kontodaten und Loginprotokoll:</strong> E-Mail, erfolgreiche Anmeldungen,
-            Zeitpunkt, gesalzener Passwort-Hash und Sitzungsdaten liegen in Cloudflare D1.
-            Das Passwort ist niemals lesbar gespeichert.
+            <strong>Kontodaten und Loginprotokoll:</strong> Redmail, erfolgreiche Anmeldungen,
+            Zeitpunkt, gesalzener Redsword-Hash und Sitzungsdaten liegen in Cloudflare D1.
+            Das Redsword ist niemals lesbar gespeichert.
           </span>
         </li>
         <li>
