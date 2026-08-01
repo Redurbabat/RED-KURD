@@ -80,11 +80,35 @@ export async function sucheKurdishTech(q) {
   return ergebnisse
 }
 
+/** Die geprüften Beispielsätze der Kapitel — offline immer verfügbar. */
+async function lokalePaare() {
+  // Spät geladen, damit staticData keine harte Abhängigkeit zum Kursbaum hat.
+  const { EINHEITEN } = await import('../courses/courseRepository.js')
+  return EINHEITEN.flatMap((e) => e.saetze || []).map((s) => ({
+    satz: s.ku,
+    uebersetzung: s.de,
+  }))
+}
+
 export async function zufallsPaare(anzahl) {
-  const d = await ladeStatisch()
-  const deu = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'deu')
-  const eng = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'eng')
-  const quelle = deu.length >= anzahl ? deu : deu.concat(eng)
-  const gemischt = [...quelle].sort(() => Math.random() - 0.5).slice(0, anzahl)
-  return gemischt.map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
+  // Etwa die Hälfte kommt aus den eigenen Kapiteln — so lassen sich die
+  // gelernten Sätze wirklich üben. Der Rest kommt aus dem großen Satzpaket;
+  // fehlt es (offline, kein R2), tragen die Kapitelsätze allein.
+  const lokal = [...(await lokalePaare())].sort(() => Math.random() - 0.5)
+  let fern = []
+  try {
+    const d = await ladeStatisch()
+    const deu = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'deu')
+    const eng = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'eng')
+    const quelle = deu.length >= anzahl ? deu : deu.concat(eng)
+    fern = [...quelle]
+      .sort(() => Math.random() - 0.5)
+      .map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
+  } catch {
+    /* ohne Satzpaket üben wir mit den Kapitelsätzen */
+  }
+  const halb = Math.min(lokal.length, Math.ceil(anzahl / 2))
+  const auswahl = lokal.slice(0, halb).concat(fern.slice(0, anzahl - halb))
+  if (auswahl.length < anzahl) auswahl.push(...lokal.slice(halb, halb + (anzahl - auswahl.length)))
+  return auswahl.sort(() => Math.random() - 0.5).slice(0, anzahl)
 }

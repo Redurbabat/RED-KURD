@@ -110,4 +110,5 @@ Fortschrittsbalken.
 - Tatoeba-Sätze: CC BY 2.0 FR (Quellenangabe nötig)
 - FreeDict-Wörterbücher: freie Lizenzen (GPL u.a.)
 - Wiktionary-Daten (kaikki.org): CC BY-SA / GFDL
-- Aussprache-Aufnahmen: Lingua Libre, CC BY-SA
+- Aussprache-Aufnahmen: Lingua Libre, CC BY-SA — 325 echte Muttersprachler-Aufnahmen
+  lokal in der App (240 Kurswörter), Rest über die Computerstimme

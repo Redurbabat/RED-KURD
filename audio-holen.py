@@ -14,14 +14,28 @@ KAIKKI = os.path.join(BASIS, "..", "github lernen", "sprachdaten", "wiktionary",
 def log(m): print(m, flush=True)
 
 # Kurswoerter aus kurse.js ziehen (fuer Priorisierung)
-kursdatei = open(os.path.join(BASIS, "src", "data", "kurse.js"), encoding="utf-8").read()
+kursdatei = ""
+for name in ("kurse.js", "kurseErweitert.js", "kurseVertiefung.js"):
+    kursdatei += open(os.path.join(BASIS, "src", "data", name), encoding="utf-8").read()
 kurswoerter = set(w.lower() for w in re.findall(r"ku: '([^']+)'", kursdatei))
 log(f"{len(kurswoerter)} Kurswoerter")
 
 index = {}
 
+def transkodiert(url):
+    """Wikimedia haelt fuer WAV/OGG fertige MP3-Transkodierungen bereit —
+    ein Bruchteil der Groesse bei gleicher Aufnahme."""
+    m = re.match(r"(https://upload\.wikimedia\.org/wikipedia/commons)/(.+/([^/]+\.(?:wav|ogg)))$", url, re.I)
+    if not m: return None
+    return f"{m.group(1)}/transcoded/{m.group(2)}/{m.group(3)}.mp3"
+
 def lade(url, wort):
     if wort in index: return
+    klein = transkodiert(url)
+    if klein:
+        url, urspruenglich = klein, url
+    else:
+        urspruenglich = None
     ext = ".mp3" if ".mp3" in url.lower() else ".wav" if ".wav" in url.lower() else ".ogg"
     sicher = re.sub(r"[^a-zA-Z0-9êîûşç_-]", "_", wort)
     datei = sicher + ext
@@ -37,12 +51,24 @@ def lade(url, wort):
             except Exception as e:
                 if "429" in str(e) and versuch < 2:
                     log(f"  warte 30s (Ratenbremse) bei {wort}..."); time.sleep(30); continue
+                # Transkodierung fehlt? Dann eben das Original.
+                if urspruenglich and versuch == 0:
+                    url = urspruenglich
+                    ext2 = ".wav" if ".wav" in url.lower() else ".ogg"
+                    datei = sicher + ext2; pfad = os.path.join(ZIEL, datei)
+                    urspruenglich = None
+                    continue
                 log(f"  FEHLER {wort}: {e}"); time.sleep(3); return
     index[wort] = datei
 
 # 1. Aus kaikki
 log("1/2 Wiktionary-Audios...")
-for zeile in open(KAIKKI, encoding="utf-8"):
+zeilen = []
+if os.path.exists(KAIKKI):
+    zeilen = open(KAIKKI, encoding="utf-8")
+else:
+    log("  kaikki-Datei nicht vorhanden — Schritt uebersprungen")
+for zeile in zeilen:
     try: e = json.loads(zeile)
     except: continue
     wort = (e.get("word") or "").lower()
@@ -68,7 +94,7 @@ for kategorie in ["Lingua Libre pronunciation-kur", "Lingua Libre pronunciation-
             "generator": "categorymembers",
             "gcmtitle": "Category:" + kategorie,
             "gcmtype": "file", "gcmlimit": "500",
-            "prop": "imageinfo", "iiprop": "url",
+            "prop": "imageinfo", "iiprop": "url|size",
         }
         if fortsetzung: params["gcmcontinue"] = fortsetzung
         url = API + "?" + urllib.parse.urlencode(params)
@@ -85,6 +111,8 @@ for kategorie in ["Lingua Libre pronunciation-kur", "Lingua Libre pronunciation-
             if wort in gefunden or " " in wort or len(wort) > 25: continue
             info = seite.get("imageinfo", [])
             if info and info[0].get("url"):
+                # Grosse WAV-Dateien meiden — die App soll schlank bleiben.
+                if (info[0].get("size") or 0) > 400_000: continue
                 gefunden[wort] = info[0]["url"]
         time.sleep(1)
         fortsetzung = daten.get("continue", {}).get("gcmcontinue", "")
@@ -98,7 +126,7 @@ log(f"  {len(erste)} Kurswort-Audios, {len(rest)} weitere")
 for w, u in erste:
     lade(u, w)
 for w, u in rest:
-    if len(index) >= 350: break
+    if len(index) >= len(erste) + 80: break
     lade(u, w)
 
 # Index mit vorhandenem Stand und Dateien auf der Platte zusammenfuehren
