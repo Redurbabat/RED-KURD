@@ -84,6 +84,16 @@ const TRAININGS = [
     dauer: '5–10 Min',
   },
   {
+    id: 'grammar',
+    name: 'Grammatik',
+    icon: 'gehirn',
+    ton: 'lila',
+    text: 'Regeln aus den Kapiteln lesen und anwenden',
+    schwierigkeit: 'Mittel',
+    schwierigkeitTon: 'gold',
+    dauer: '5–10 Min',
+  },
+  {
     id: 'sentence-builder',
     name: 'Satzbau',
     icon: 'puzzle',

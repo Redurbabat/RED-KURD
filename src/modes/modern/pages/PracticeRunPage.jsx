@@ -14,6 +14,7 @@ import { baueUebungen } from '../../../core/session/exerciseFactory.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import SentenceBuilder from '../../../features/sentence-builder/SentenceBuilder.jsx'
+import GrammarTrainer from '../../../features/grammar/GrammarTrainer.jsx'
 import PronunciationStudio from '../../../features/speaking/PronunciationStudio.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.jsx'
@@ -97,6 +98,21 @@ export default function PracticeRunPage({ trainingId }) {
           zurueckText="Zum Üben"
         />
         <PronunciationStudio />
+      </>
+    )
+  }
+
+  if (trainingId === 'grammar') {
+    return (
+      <>
+        <PageHeader
+          titel="Grammatik"
+          untertitel="Eine Regel lesen, dann zwei Fragen dazu beantworten."
+          variante="buch"
+          zurueck="/practice"
+          zurueckText="Zum Üben"
+        />
+        <GrammarTrainer />
       </>
     )
   }

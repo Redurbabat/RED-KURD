@@ -1,0 +1,131 @@
+/* Grammatik-Training: Regel lesen, dann Fragen beantworten. Präfix „gt-". */
+
+.gt-spiel {
+  display: grid;
+  gap: var(--space-3);
+}
+.gt-zeile {
+  font-size: var(--text-sm);
+}
+
+/* Beispielzeile der Regelkarte — anklickbar zum Anhören. */
+.gt-beispiel {
+  display: grid;
+  gap: 4px;
+  padding: var(--space-3);
+  border-left: 4px solid var(--rk-primary);
+  border-radius: var(--radius-small);
+  background: var(--rk-primary-soft);
+}
+.gt-beispiel-ton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  justify-self: start;
+  color: var(--rk-primary-dark);
+  text-align: left;
+}
+.gt-beispiel-ton strong {
+  overflow-wrap: anywhere;
+}
+
+/* Antwortmöglichkeiten */
+.gt-optionen {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+.gt-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  background: var(--rk-surface);
+  border: 2px solid var(--rk-border);
+  border-bottom-width: 4px;
+  border-radius: var(--radius-medium);
+  font-weight: 700;
+  transition: border-color var(--motion-fast) ease, transform var(--motion-fast) ease;
+}
+.gt-option:hover:not(:disabled) {
+  border-color: var(--rk-primary);
+  transform: translateY(-1px);
+}
+.gt-option:focus-visible {
+  outline: 3px solid var(--rk-yellow);
+  outline-offset: 2px;
+}
+.gt-option-buchstabe {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+  font-weight: 800;
+}
+.gt-option-text {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.gt-option.richtig {
+  background: var(--rk-green-soft);
+  border-color: var(--rk-green);
+  color: var(--rk-green-dark);
+}
+.gt-option.richtig .gt-option-buchstabe {
+  background: var(--rk-green);
+  color: #fff;
+}
+.gt-option.falsch {
+  background: var(--rk-red-soft);
+  border-color: var(--rk-red);
+  color: var(--rk-red-dark);
+}
+.gt-option.falsch .gt-option-buchstabe {
+  background: var(--rk-red);
+  color: #fff;
+}
+.gt-option.blass {
+  opacity: 0.55;
+}
+
+/* Rückmeldung mit der Regel-Begründung */
+.gt-feedback {
+  display: grid;
+  gap: 4px;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-medium);
+}
+.gt-feedback.richtig {
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.gt-feedback.falsch {
+  background: var(--rk-red-soft);
+  color: var(--rk-red-dark);
+}
+.gt-feedback p {
+  color: var(--rk-text);
+  font-size: var(--text-sm);
+}
+
+/* Abschluss */
+.gt-ende {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+}
+.gt-ende-zahl {
+  font-family: var(--font-head);
+  font-size: var(--text-xl);
+}
