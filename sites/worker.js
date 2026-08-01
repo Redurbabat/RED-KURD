@@ -176,14 +176,14 @@ export default {
       ? await env.ASSETS.fetch(request)
       : new Response('Nicht gefunden.', { status: 404 })
 
+    if (response.status === 404 && erwartetHtml(request) && env.ASSETS) {
+      const indexUrl = new URL('/index.html', request.url)
+      response = await env.ASSETS.fetch(new Request(indexUrl, request))
+    }
+
     if (response.status === 404) {
       const appAntwort = await r2AppLesen(request, env)
       if (appAntwort) response = appAntwort
-    }
-
-    if (response.status === 404 && erwartetHtml(request)) {
-      const indexUrl = new URL('/index.html', request.url)
-      if (env.ASSETS) response = await env.ASSETS.fetch(new Request(indexUrl, request))
     }
 
     return mitOeffentlicherAdresse(response, request)

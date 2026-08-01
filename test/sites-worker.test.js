@@ -130,6 +130,7 @@ test('R2 liefert die App-Hülle aus, wenn das statische Binding fehlt', async ()
     env
   )
   assert.equal(upload.status, 201)
+  delete env.ASSETS
 
   const response = await worker.fetch(
     new Request('https://lernen.example/today', {
@@ -140,4 +141,31 @@ test('R2 liefert die App-Hülle aus, wenn das statische Binding fehlt', async ()
   assert.equal(response.status, 200)
   assert.match(await response.text(), /https:\/\/lernen\.example\/og\.png/)
   assert.equal(response.headers.get('cache-control'), 'no-cache')
+})
+
+test('die aktuelle statische App hat bei Tiefenlinks Vorrang vor einer alten R2-Kopie', async () => {
+  const env = testUmgebung({ mitR2: true })
+  const veraltet = '<html><body>alte-r2-app</body></html>'
+  const upload = await worker.fetch(
+    new Request('https://lernen.example/__admin/r2/app/index.html', {
+      method: 'PUT',
+      headers: {
+        authorization: 'Bearer test-geheimnis',
+        'content-type': 'text/html; charset=utf-8',
+        'content-length': String(veraltet.length),
+      },
+      body: veraltet,
+    }),
+    env
+  )
+  assert.equal(upload.status, 201)
+
+  const response = await worker.fetch(
+    new Request('https://lernen.example/login', { headers: { accept: 'text/html' } }),
+    env
+  )
+  const html = await response.text()
+  assert.equal(response.status, 200)
+  assert.doesNotMatch(html, /alte-r2-app/)
+  assert.match(html, /https:\/\/lernen\.example\/og\.png/)
 })
