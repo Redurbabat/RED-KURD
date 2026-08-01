@@ -7,6 +7,7 @@ import { SPRACHKURSE } from '../../../data/sprachkurse.js'
 import { kursStand } from '../../../core/courses/languageCourseStore.js'
 import { kursFortschritt } from '../../../core/courses/courseRepository.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
+import FlagIcon from '../../../components/common/FlagIcon.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
@@ -130,7 +131,7 @@ export default function LanguagesPage() {
             <img src={KURMANCÎ.foto} alt={KURMANCÎ.fotoAlt} />
             <span className="sprachen-kurs-verlauf" />
             <span className="sprachen-kurs-inhalt">
-              <span className="sprachen-kurs-flagge" aria-hidden="true">{KURMANCÎ.flagge}</span>
+              <span className="sprachen-kurs-flagge" aria-hidden="true"><FlagIcon sprache="kurmanci" breite={34} /></span>
               <span className="sprachen-kurs-text">
                 <strong>{KURMANCÎ.name}</strong>
                 <small>{KURMANCÎ.beschreibung}</small>
@@ -159,7 +160,7 @@ export default function LanguagesPage() {
                 <img src={KURS_FOTOS[index]} alt="" />
                 <span className="sprachen-kurs-verlauf" />
                 <span className="sprachen-kurs-inhalt">
-                  <span className="sprachen-kurs-flagge" aria-hidden="true">{kurs.flagge}</span>
+                  <span className="sprachen-kurs-flagge" aria-hidden="true"><FlagIcon sprache={kurs.id} breite={34} /></span>
                   <span className="sprachen-kurs-text">
                     <strong>{kurs.name}</strong>
                     <small lang={kurs.locale}>{kurs.eigenname}</small>

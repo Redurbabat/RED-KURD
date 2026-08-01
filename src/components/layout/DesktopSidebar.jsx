@@ -1,5 +1,6 @@
 // Seitenleiste am Desktop: Logo oben, Bereiche in der Mitte, Profil unten.
 import Icon from '../icons/Icon.jsx'
+import LanguageSwitch from './LanguageSwitch.jsx'
 import { navigiere } from '../../app/router.jsx'
 import { istAktiv } from './navConfig.js'
 import { T } from '../../core/texts.js'
@@ -21,6 +22,8 @@ export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, mo
           <small>{T.app.claim}</small>
         </span>
       </button>
+
+      <LanguageSwitch className="rk-seiten-sprachwahl" />
 
       <nav className="rk-seitennav" aria-label={T.nav.hauptnavigation}>
         <ul>

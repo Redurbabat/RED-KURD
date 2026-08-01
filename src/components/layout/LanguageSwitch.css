@@ -1,0 +1,102 @@
+/* Sprachwahl mit Flagge oben links. */
+.rk-sprachwahl {
+  position: relative;
+}
+.rk-sprachwahl-knopf {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-small);
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+}
+.rk-sprachwahl-knopf:focus-visible {
+  outline: 3px solid var(--rk-yellow);
+  outline-offset: 2px;
+}
+.rk-sprachwahl-pfeil {
+  color: var(--rk-text-muted);
+}
+.rk-flagge {
+  display: block;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15);
+}
+
+.rk-sprachwahl-menue {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 60;
+  min-width: 240px;
+  padding: var(--space-2);
+  list-style: none;
+  border-radius: var(--radius-medium);
+  border: 1px solid var(--rk-border-strong);
+  background: var(--rk-surface);
+  box-shadow: var(--shadow-floating);
+}
+.rk-sprachwahl-eintrag {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  text-align: left;
+}
+.rk-sprachwahl-eintrag:hover,
+.rk-sprachwahl-eintrag:focus-visible {
+  background: var(--rk-surface-soft);
+}
+.rk-sprachwahl-eintrag:focus-visible {
+  outline: 3px solid var(--rk-yellow);
+  outline-offset: -3px;
+}
+.rk-sprachwahl-eintrag.aktiv {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.rk-sprachwahl-name {
+  flex: 1;
+  display: grid;
+  min-width: 0;
+}
+.rk-sprachwahl-name small {
+  color: var(--rk-text-muted);
+  font-size: var(--text-xs);
+}
+
+/* Im dunklen Abenteuer-Kopf bleibt der Knopf auf dunkler Fläche lesbar. */
+.rk-kopfleiste.abenteuer .rk-sprachwahl-knopf {
+  background: var(--adv-surface);
+  border-color: var(--adv-border);
+}
+.rk-kopfleiste.abenteuer .rk-sprachwahl-menue {
+  background: var(--adv-parchment);
+  border-color: var(--adv-parchment-edge);
+}
+.rk-kopfleiste.abenteuer .rk-sprachwahl-eintrag {
+  color: var(--adv-ink);
+}
+.rk-kopfleiste.abenteuer .rk-sprachwahl-eintrag:hover,
+.rk-kopfleiste.abenteuer .rk-sprachwahl-eintrag:focus-visible {
+  background: var(--adv-parchment-dark);
+}
+.rk-kopfleiste.abenteuer .rk-sprachwahl-name small {
+  color: var(--adv-ink-muted);
+}
+
+/* In der Desktop-Seitenleiste sitzt die Sprachwahl unter der Marke. */
+.rk-seiten-sprachwahl {
+  margin: var(--space-2) 0 var(--space-3);
+}
+.rk-seiten-sprachwahl .rk-sprachwahl-knopf {
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 var(--space-3);
+}

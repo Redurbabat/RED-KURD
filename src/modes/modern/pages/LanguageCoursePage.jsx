@@ -4,6 +4,7 @@ import { holeSprachkurs } from '../../../data/sprachkurse.js'
 import { kapitelStand, kursStand } from '../../../core/courses/languageCourseStore.js'
 import { spieleText, klickGefuehl } from '../../../core/audio/audioService.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
+import FlagIcon from '../../../components/common/FlagIcon.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
@@ -34,7 +35,7 @@ export default function LanguageCoursePage({ languageId }) {
       </button>
 
       <PageHeader
-        titel={`${kurs.flagge} ${kurs.name}`}
+        titel={kurs.name}
         untertitel={`${kurs.beschreibung}. Alle Inhalte funktionieren ohne Konto und speichern nur auf diesem Gerät.`}
         variante="buch"
       />
@@ -44,7 +45,7 @@ export default function LanguageCoursePage({ languageId }) {
         style={{ '--kurs-farbe': kurs.farbe }}
         aria-labelledby="sprachkurs-kopf-titel"
       >
-        <div className="sprachkurs-kopf-kugel" aria-hidden="true">{kurs.flagge}</div>
+        <div className="sprachkurs-kopf-kugel" aria-hidden="true"><FlagIcon sprache={kurs.id} breite={40} /></div>
         <div className="sprachkurs-kopf-text">
           <p className="rk-hero-etikett">Deutsch → {kurs.eigenname}</p>
           <h2 id="sprachkurs-kopf-titel">{stand.fertig} von {stand.gesamt} Kapiteln</h2>

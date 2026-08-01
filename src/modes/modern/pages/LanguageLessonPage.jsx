@@ -5,6 +5,7 @@ import { holeSprachkurs, holeSprachkapitel } from '../../../data/sprachkurse.js'
 import { kapitelAbschliessen } from '../../../core/courses/languageCourseStore.js'
 import { gibXp } from '../../../core/progress/progressStore.js'
 import { spieleText, klickGefuehl } from '../../../core/audio/audioService.js'
+import FlagIcon from '../../../components/common/FlagIcon.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
@@ -92,7 +93,7 @@ export default function LanguageLessonPage({ languageId, chapterId }) {
         <div className={`sprachlektion-ergebnis-kugel ${bestanden ? 'bestanden' : ''}`}>
           <Icon name={bestanden ? 'krone' : 'wiederholen'} groesse={58} />
         </div>
-        <p className="rk-hero-etikett">{kurs.flagge} {kurs.name}</p>
+        <p className="rk-hero-etikett"><FlagIcon sprache={kurs.id} breite={20} /> {kurs.name}</p>
         <h1>{bestanden ? 'Kapitel geschafft!' : 'Fast geschafft!'}</h1>
         <p>{richtig} von {fragen.length} Antworten waren richtig · {prozent} %</p>
         <ProgressBar wert={prozent} label={`Ergebnis: ${prozent} Prozent`} farbe={bestanden ? 'green' : 'gold'} />
@@ -144,7 +145,7 @@ export default function LanguageLessonPage({ languageId, chapterId }) {
             klein
           />
         </div>
-        <span className="sprachlektion-flagge" aria-hidden="true">{kurs.flagge}</span>
+        <span className="sprachlektion-flagge" aria-hidden="true"><FlagIcon sprache={kurs.id} breite={28} /></span>
       </header>
 
       {phase === 'lernen' ? (

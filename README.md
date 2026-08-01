@@ -25,7 +25,9 @@ laufende Sitzungen sind in beiden Modi dieselben.
   Sitzungsdauer (kurz / standard / intensiv), Tagesziel
 - **Kurs** – 56 Kurmancî-Kapitel und über 600 direkte Lernpaare mit je fünf Abschnitten,
   dazu Beispielsätze und eine deutsche Grammatik-Notiz in jedem Kapitel
-- **Weitere Sprachen** – Englisch, Französisch, Türkisch und Spanisch mit zusammen 192 Lernpaaren
+- **Weitere Sprachen** – Englisch, Französisch, Türkisch und Spanisch mit je zehn
+  Kapiteln und zusammen 320 Lernpaaren; Sprachwechsel über die Flagge oben links
+  (Kurmancî trägt die Kurdistan-Flagge)
 - **Echte Fotos** – jedes Kapitel trägt ein echtes, lokal gespeichertes
   Wikimedia-Commons-Foto samt Urheber und Lizenz
   (Lernen · Festigen · Schreiben · Hören und Sprechen · Kapitelprüfung),

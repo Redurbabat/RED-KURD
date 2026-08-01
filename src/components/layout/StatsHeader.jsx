@@ -2,6 +2,7 @@
 // Statistik-Leiste mit senkrechten Trennern — wie in der Design-Vorlage.
 import Icon from '../icons/Icon.jsx'
 import HeloMascot from '../mascot/HeloMascot.jsx'
+import LanguageSwitch from './LanguageSwitch.jsx'
 import { navigiere } from '../../app/router.jsx'
 import { statistik } from '../../core/progress/progressSelectors.js'
 import { T } from '../../core/texts.js'
@@ -35,6 +36,7 @@ export default function StatsHeader({ modus = 'modern' }) {
       }`}
     >
       <div className="rk-kopf-zeile">
+        <LanguageSwitch />
         <button
           type="button"
           className="rk-marke-klein"

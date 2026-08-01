@@ -3,9 +3,9 @@
 
 const FOTOS = {
   begruessung: {
-    src: '/bilder/lernwelt/landschaft.jpg',
-    alt: 'Akrê mit Häusern und Bergen in Kurdistan',
-    quelle: 'landschaft',
+    src: '/bilder/kapitel/begruessung.jpg',
+    alt: 'Zwei Hände greifen einander — Gruß und Freundschaft',
+    quelle: 'begruessung',
   },
   menschen: {
     src: '/bilder/lernwelt/schule.jpg',
@@ -31,6 +31,26 @@ const FOTOS = {
     src: '/bilder/lernwelt/kueche.jpg',
     alt: 'Echte Aufnahme einer eingerichteten Küche',
     quelle: 'kueche',
+  },
+  zahlen: {
+    src: '/bilder/kapitel/zahlen.jpg',
+    alt: 'Holzbausteine mit Zahlen',
+    quelle: 'zahlen',
+  },
+  farben: {
+    src: '/bilder/kapitel/farben.jpg',
+    alt: 'Bunte Wolle in vielen Farben',
+    quelle: 'farben',
+  },
+  wetter: {
+    src: '/bilder/kapitel/wetter.jpg',
+    alt: 'Regenbogen über einer Landschaft',
+    quelle: 'wetter',
+  },
+  einkaufen: {
+    src: '/bilder/kapitel/einkaufen.jpg',
+    alt: 'Basar in Hewlêr (Erbil)',
+    quelle: 'einkaufen',
   },
 }
 
@@ -71,6 +91,30 @@ const KAPITEL_META = [
     ziel: 'Über Zeit, Schule, Arbeit und Freizeit sprechen',
     symbol: '☀️',
   },
+  {
+    id: 'zahlen',
+    name: 'Zahlen',
+    ziel: 'Bis acht zählen und Mengen benennen',
+    symbol: '🔢',
+  },
+  {
+    id: 'farben',
+    name: 'Farben & Größen',
+    ziel: 'Dinge mit Farben und Eigenschaften beschreiben',
+    symbol: '🎨',
+  },
+  {
+    id: 'wetter',
+    name: 'Wetter',
+    ziel: 'Über Sonne, Regen und Temperaturen sprechen',
+    symbol: '🌦️',
+  },
+  {
+    id: 'einkaufen',
+    name: 'Einkaufen',
+    ziel: 'Preise verstehen und auf dem Markt einkaufen',
+    symbol: '🛒',
+  },
 ]
 
 const DEUTSCH = {
@@ -80,6 +124,10 @@ const DEUTSCH = {
   zuhause: ['Haus', 'Zimmer', 'Küche', 'Badezimmer', 'Tür', 'Fenster', 'Tisch', 'Stuhl'],
   unterwegs: ['Straße', 'Zug', 'Bahnhof', 'Fahrkarte', 'links', 'rechts', 'wo?', 'Hilfe'],
   alltag: ['heute', 'morgen', 'Arbeit', 'Schule', 'Zeit', 'Musik', 'Sport', 'müde'],
+  zahlen: ['eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht'],
+  farben: ['rot', 'blau', 'grün', 'gelb', 'schwarz', 'weiß', 'groß', 'klein'],
+  wetter: ['Sonne', 'Regen', 'Schnee', 'Wind', 'warm', 'kalt', 'Wolke', 'schön'],
+  einkaufen: ['Geld', 'Preis', 'billig', 'teuer', 'kaufen', 'Markt', 'Laden', 'bezahlen'],
 }
 
 const EMOJIS = {
@@ -89,6 +137,10 @@ const EMOJIS = {
   zuhause: ['🏠', '🛏️', '🍳', '🛁', '🚪', '🪟', '🪑', '🪑'],
   unterwegs: ['🛣️', '🚆', '🚉', '🎫', '⬅️', '➡️', '❓', '🆘'],
   alltag: ['📅', '🌄', '💼', '🏫', '🕐', '🎵', '⚽', '😴'],
+  zahlen: ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣'],
+  farben: ['🔴', '🔵', '🟢', '🟡', '⚫', '⚪', '🐘', '🐜'],
+  wetter: ['☀️', '🌧️', '❄️', '💨', '🌡️', '🥶', '☁️', '🌈'],
+  einkaufen: ['💶', '🏷️', '👍', '💎', '🛍️', '🧺', '🏪', '💳'],
 }
 
 const INHALTE = {
@@ -99,6 +151,10 @@ const INHALTE = {
     zuhause: ['house', 'room', 'kitchen', 'bathroom', 'door', 'window', 'table', 'chair'],
     unterwegs: ['street', 'train', 'station', 'ticket', 'left', 'right', 'where?', 'help'],
     alltag: ['today', 'tomorrow', 'work', 'school', 'time', 'music', 'sport', 'tired'],
+    zahlen: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight'],
+    farben: ['red', 'blue', 'green', 'yellow', 'black', 'white', 'big', 'small'],
+    wetter: ['sun', 'rain', 'snow', 'wind', 'warm', 'cold', 'cloud', 'beautiful'],
+    einkaufen: ['money', 'price', 'cheap', 'expensive', 'to buy', 'market', 'shop', 'to pay'],
   },
   franzoesisch: {
     begruessung: ['salut', 'bonjour', 'bonsoir', 'au revoir', "s'il vous plaît", 'merci', 'oui', 'non'],
@@ -107,6 +163,10 @@ const INHALTE = {
     zuhause: ['maison', 'chambre', 'cuisine', 'salle de bains', 'porte', 'fenêtre', 'table', 'chaise'],
     unterwegs: ['rue', 'train', 'gare', 'billet', 'gauche', 'droite', 'où ?', "à l'aide"],
     alltag: ["aujourd'hui", 'demain', 'travail', 'école', 'temps', 'musique', 'sport', 'fatigué'],
+    zahlen: ['un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit'],
+    farben: ['rouge', 'bleu', 'vert', 'jaune', 'noir', 'blanc', 'grand', 'petit'],
+    wetter: ['soleil', 'pluie', 'neige', 'vent', 'chaud', 'froid', 'nuage', 'beau'],
+    einkaufen: ['argent', 'prix', 'bon marché', 'cher', 'acheter', 'marché', 'magasin', 'payer'],
   },
   tuerkisch: {
     begruessung: ['merhaba', 'günaydın', 'iyi akşamlar', 'hoşça kal', 'lütfen', 'teşekkürler', 'evet', 'hayır'],
@@ -115,6 +175,10 @@ const INHALTE = {
     zuhause: ['ev', 'oda', 'mutfak', 'banyo', 'kapı', 'pencere', 'masa', 'sandalye'],
     unterwegs: ['sokak', 'tren', 'istasyon', 'bilet', 'sol', 'sağ', 'nerede?', 'yardım'],
     alltag: ['bugün', 'yarın', 'iş', 'okul', 'zaman', 'müzik', 'spor', 'yorgun'],
+    zahlen: ['bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz'],
+    farben: ['kırmızı', 'mavi', 'yeşil', 'sarı', 'siyah', 'beyaz', 'büyük', 'küçük'],
+    wetter: ['güneş', 'yağmur', 'kar', 'rüzgar', 'sıcak', 'soğuk', 'bulut', 'güzel'],
+    einkaufen: ['para', 'fiyat', 'ucuz', 'pahalı', 'satın almak', 'pazar', 'dükkan', 'ödemek'],
   },
   spanisch: {
     begruessung: ['hola', 'buenos días', 'buenas tardes', 'adiós', 'por favor', 'gracias', 'sí', 'no'],
@@ -123,6 +187,10 @@ const INHALTE = {
     zuhause: ['casa', 'habitación', 'cocina', 'baño', 'puerta', 'ventana', 'mesa', 'silla'],
     unterwegs: ['calle', 'tren', 'estación', 'billete', 'izquierda', 'derecha', '¿dónde?', 'ayuda'],
     alltag: ['hoy', 'mañana', 'trabajo', 'escuela', 'tiempo', 'música', 'deporte', 'cansado'],
+    zahlen: ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho'],
+    farben: ['rojo', 'azul', 'verde', 'amarillo', 'negro', 'blanco', 'grande', 'pequeño'],
+    wetter: ['sol', 'lluvia', 'nieve', 'viento', 'cálido', 'frío', 'nube', 'bonito'],
+    einkaufen: ['dinero', 'precio', 'barato', 'caro', 'comprar', 'mercado', 'tienda', 'pagar'],
   },
 }
 
