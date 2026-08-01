@@ -16,7 +16,7 @@ import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
 import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
-import { holeKonto } from '../core/auth/authApi.js'
+import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
 
 import '../styles/tokens.css'
@@ -130,16 +130,15 @@ export default function App() {
 
   async function kontoPruefen() {
     setKonto((alt) => ({ ...alt, status: 'laedt', fehler: '' }))
-    try {
-      const wert = await holeKonto()
-      setKonto({ status: wert ? 'angemeldet' : 'gast', wert, fehler: '' })
-    } catch (grund) {
-      setKonto({
-        status: 'gast',
-        wert: null,
-        fehler: grund instanceof Error ? grund.message : 'Die Anmeldung ist gerade nicht verfügbar.',
-      })
+    // Local-first: gibt es keinen Anmelde-Server (lokal, Vercel, offline),
+    // läuft die App ohne Konto weiter — der Lernstand liegt ohnehin im Browser.
+    // Nur wenn der Server da ist, verlangt sie eine Anmeldung.
+    const { backend, konto: wert } = await kontoStatus()
+    if (!backend) {
+      setKonto({ status: 'lokal', wert: null, fehler: '' })
+      return
     }
+    setKonto({ status: wert ? 'angemeldet' : 'gast', wert, fehler: '' })
   }
 
   useEffect(() => {
@@ -161,7 +160,7 @@ export default function App() {
 
   if (konto.status === 'laedt') return <AuthLoading />
 
-  if (konto.status !== 'angemeldet') {
+  if (konto.status === 'gast') {
     return (
       <AuthPage
         anfangsFehler={konto.fehler}

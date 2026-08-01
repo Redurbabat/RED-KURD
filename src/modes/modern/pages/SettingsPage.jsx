@@ -17,7 +17,7 @@ import {
 import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiStore.js'
 import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.js'
 import { holeShop } from '../../../core/shop/shopStore.js'
-import { abmelden, holeKonto } from '../../../core/auth/authApi.js'
+import { abmelden, kontoStatus } from '../../../core/auth/authApi.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'
@@ -153,13 +153,14 @@ export default function SettingsPage() {
 /* ===================== Bausteine ===================== */
 
 function KontoKarte() {
-  const [konto, setKonto] = useState(null)
+  const [stand, setStand] = useState({ backend: true, konto: null })
   const [fehler, setFehler] = useState('')
   const [laedt, setLaedt] = useState(false)
+  const konto = stand.konto
 
   useEffect(() => {
-    holeKonto()
-      .then(setKonto)
+    kontoStatus()
+      .then(setStand)
       .catch(() => setFehler('Die Kontodaten konnten gerade nicht geladen werden.'))
   }, [])
 
@@ -173,6 +174,19 @@ function KontoKarte() {
       setFehler(grund instanceof Error ? grund.message : 'Abmelden war nicht möglich.')
       setLaedt(false)
     }
+  }
+
+  // Ohne Anmelde-Server (lokal, Vercel, offline) gibt es kein Konto —
+  // der Lernstand liegt dann vollstaendig im Browser.
+  if (!stand.backend) {
+    return (
+      <Card titel="Konto" icon="profil">
+        <p>
+          Diese Ausgabe von RED-KURD läuft ohne Anmeldung: Dein gesamter Lernstand bleibt lokal
+          auf diesem Gerät. Über „Fortschritt → Export“ sicherst du ihn jederzeit als Datei.
+        </p>
+      </Card>
+    )
   }
 
   return (

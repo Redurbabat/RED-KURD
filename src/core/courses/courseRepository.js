@@ -1,6 +1,8 @@
 // Kursdaten: Einheiten, Lektionen und Welten — die gemeinsame Quelle fuer
 // Modern-Modus (Einheitenliste) und Abenteuer-Modus (Weltkarte).
 import { kurse } from '../../data/kurse.js'
+import { kapitelFotos } from '../../data/kapitelFotos.js'
+import { kapitelExtras } from '../../data/kapitelExtras.js'
 import { holeFortschritt, sterneVon } from '../progress/progressStore.js'
 
 /** Jede Einheit besteht aus fünf abwechslungsreichen Abschnitten. */
@@ -165,6 +167,17 @@ export const WELTEN = [
     himmel: '#9a91dc',
     einheiten: ['digital', 'restaurant', 'gespraech', 'zahlen-gross', 'notfall'],
   },
+  {
+    id: 'w10',
+    nr: 10,
+    name: 'Berge und Feste',
+    untertitel: 'Çiya û cejn',
+    ort: 'Zozan (Hochweide)',
+    landschaft: 'hochland',
+    farbe: 'var(--rk-kurd-green)',
+    himmel: '#bcd7e4',
+    einheiten: ['jahreszeiten', 'gebirge', 'hochzeit', 'handwerk', 'meinung', 'alltagssaetze'],
+  },
 ]
 
 /** Reihenfolge der Einheiten = Reihenfolge in den Welten. */
@@ -192,6 +205,12 @@ export const EINHEITEN = sortiereEinheiten().map((k, i) => ({
   ...k,
   nr: i + 1,
   weltId: WELT_VON_EINHEIT.get(k.id) || null,
+  // Jedes Kapitel bekommt sein echtes, lokal gespeichertes Lernfoto samt
+  // Quellenangabe — ein in der Einheit gesetztes Foto hat Vorrang.
+  foto: k.foto || kapitelFotos[k.id] || null,
+  // Beispielsätze und Grammatik-Notiz: direkt am Kapitel oder aus den Extras.
+  saetze: k.saetze || kapitelExtras[k.id]?.saetze || null,
+  grammatik: k.grammatik || kapitelExtras[k.id]?.grammatik || null,
   lektionen: LEKTIONS_ARTEN.map((l) => ({ ...l, einheitId: k.id, id: `${k.id}-${l.id}` })),
 }))
 

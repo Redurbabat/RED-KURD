@@ -32,6 +32,29 @@ export async function holeKonto() {
   return daten?.konto || null
 }
 
+/**
+ * Konto und Umgebung in einem Schritt: RED-KURD ist local-first, deshalb
+ * blockiert ein fehlender Anmelde-Server die App nicht. Nur wenn der Server
+ * antwortet (Cloudflare-Betrieb), verlangt die App eine Anmeldung.
+ * @returns {{backend: boolean, konto: object|null}}
+ */
+export async function kontoStatus() {
+  let ergebnis
+  try {
+    ergebnis = await api('/api/auth/me')
+  } catch {
+    // Kein Netz oder kein Server: lokal weiterlernen.
+    return { backend: false, konto: null }
+  }
+  const { response, daten } = ergebnis
+  // 404/405: dieser Betrieb (z. B. Vercel oder `vite preview`) hat gar keinen
+  // Anmelde-Server — dann gibt es auch nichts anzumelden.
+  if (response.status === 404 || response.status === 405) return { backend: false, konto: null }
+  if (response.status === 401) return { backend: true, konto: null }
+  if (!response.ok) return { backend: false, konto: null }
+  return { backend: true, konto: daten?.konto || null }
+}
+
 async function kontoSenden(pfad, email, passwort) {
   const { response, daten } = await api(pfad, {
     method: 'POST',

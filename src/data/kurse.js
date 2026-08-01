@@ -1,5 +1,6 @@
 // Kursbaum Deutsch–Kurmancî mit Bildern.
 import { zusaetzlicheKurse } from './kurseErweitert.js'
+import { vertiefungsKurse } from './kurseVertiefung.js'
 
 const grundKurse = [
   { id: 'begruessung', ziel: 'Du kannst Menschen begrüßen, dich bedanken und verabschieden.', name: 'Begrüßung', symbol: '👋', woerter: [
@@ -336,7 +337,7 @@ const KURS_FOTOS = {
   gemuese: { src: '/bilder/lernwelt/gemuese.jpg', alt: 'Auswahl frischer Früchte und Gemüsesorten' },
 }
 
-export const kurse = [...grundKurse, ...zusaetzlicheKurse].map((kurs) => ({
+export const kurse = [...grundKurse, ...zusaetzlicheKurse, ...vertiefungsKurse].map((kurs) => ({
   ...kurs,
   foto: KURS_FOTOS[kurs.id] || null,
 }))

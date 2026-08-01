@@ -8,3 +8,6 @@ local-data/*
 upload-log.txt
 auto-hochladen.bat
 auf-github-hochladen.bat
+
+# Foto-Nachweis-Cache des Kurationsskripts
+scripts/fotocache/

@@ -236,6 +236,9 @@
 .rk-einheit-text strong {
   display: block;
   font-family: var(--font-head);
+  /* Lange Einzelwörter wie „Wegbeschreibung" trennen statt überzulaufen. */
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 .rk-einheit-text small {
   display: block;

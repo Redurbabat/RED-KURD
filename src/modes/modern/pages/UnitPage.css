@@ -37,6 +37,15 @@
   color: #fff;
   font-size: var(--text-xs);
   backdrop-filter: blur(9px);
+  max-width: calc(100% - 2 * var(--space-3));
+}
+/* Urheber- und Lizenzlinks bleiben im dunklen Schild lesbar. */
+.unit-echtfoto figcaption a {
+  color: #fff;
+  text-decoration: underline;
+}
+.unit-echtfoto figcaption span {
+  overflow-wrap: anywhere;
 }
 
 /* Wortliste: Kurmancî-Chip zum Anhören, deutsche Bedeutung daneben */
@@ -117,4 +126,51 @@
 }
 .unit-gemerkt .rk-icon {
   flex-shrink: 0;
+}
+
+/* Beispielsätze: deutscher Satz zuerst, Kurmancî darunter, Anhören daneben. */
+.unit-saetze {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+}
+.unit-satz {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  border: 1px solid var(--rk-border);
+}
+.unit-satz-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.unit-satz-de {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.unit-satz-ku {
+  color: var(--rk-primary-dark);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.unit-satz .rk-tonknopf {
+  flex-shrink: 0;
+}
+
+/* Grammatik-Notiz: ein Beispiel unter der Erklärung. */
+.unit-grammatik-beispiel {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3);
+  border-left: 4px solid var(--rk-primary);
+  border-radius: var(--radius-small);
+  background: var(--rk-primary-soft);
+}
+.unit-grammatik-beispiel strong {
+  overflow-wrap: anywhere;
 }

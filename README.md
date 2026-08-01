@@ -23,9 +23,11 @@ laufende Sitzungen sind in beiden Modi dieselben.
 
 - **Heute** – Tagesplan, fortsetzbare Sitzung, Wiederholungen, neue Wörter,
   Sitzungsdauer (kurz / standard / intensiv), Tagesziel
-- **Kurs** – 50 Kurmancî-Kapitel und 524 direkte Lernpaare mit je fünf Abschnitten
+- **Kurs** – 56 Kurmancî-Kapitel und über 600 direkte Lernpaare mit je fünf Abschnitten,
+  dazu Beispielsätze und deutsche Grammatik-Notizen in den Kernkapiteln
 - **Weitere Sprachen** – Englisch, Französisch, Türkisch und Spanisch mit zusammen 192 Lernpaaren
-- **Echte Fotos** – lokal gespeicherte Wikimedia-Commons-Fotos samt Quellen und Lizenzen
+- **Echte Fotos** – jedes Kapitel trägt ein echtes, lokal gespeichertes
+  Wikimedia-Commons-Foto samt Urheber und Lizenz
   (Lernen · Festigen · Schreiben · Hören und Sprechen · Kapitelprüfung),
   Lernziel, Sterne und Fortschritt
 - **Üben** – Wiederholen, Bilder, Hören, Schreiben, Schnellwahl, Bedeutungen,
@@ -34,7 +36,7 @@ laufende Sitzungen sind in beiden Modi dieselben.
   (Latein ↔ arabische Schrift), Redewendungen & Kultur
 - **Fortschritt** – Fertigkeiten (Erkennen, Abrufen, Schreiben, Hören),
   Wochenaktivität, Lernzeit, Export/Import, Anki-Export
-- **Abenteuer** – neun Welten mit gezeichneten Landschaften, Weltkarte mit Pfad,
+- **Abenteuer** – zehn Welten mit gezeichneten Landschaften, Weltkarte mit Pfad,
   Tages- und Wochenaufgaben, Schatztruhe, Shop (nur Kosmetik), Auszeichnungen
 - **Hêlo** – der eigene Adler als SVG-Maskottchen mit zwölf Varianten
 
@@ -97,7 +99,7 @@ Fortschrittsbalken.
 
 ## Fahrplan
 
-1. ✅ Zwei Modi, neun Welten, gemeinsame Lern-Engine, responsives Design
+1. ✅ Zwei Modi, zehn Welten, gemeinsame Lern-Engine, responsives Design
 2. ⬜ Grosse Wörterbuch-Datenbank direkt anbinden (455.000+ Einträge)
 3. ⬜ Mehr Lesetexte und Hörmaterial mit Muttersprachler-Aufnahmen
 4. ⬜ Weitere kurdische Varianten (Soranî, Zazakî) und Englisch

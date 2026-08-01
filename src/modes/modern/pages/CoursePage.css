@@ -135,6 +135,17 @@
   .rk-einheitenliste .rk-einheit {
     flex-wrap: wrap;
   }
+  /* Auf sehr schmalen Geräten wird das Foto kleiner, damit neben Nummer und
+     Foto genug Platz für den Kapitelnamen bleibt. */
+  .kurs-einheit-foto {
+    width: 56px;
+    height: 48px;
+  }
+  .kurs-einheit-foto > span {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+  }
   .rk-einheit .kurs-status {
     flex-basis: 100%;
     max-width: none;

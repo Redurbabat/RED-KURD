@@ -99,7 +99,24 @@ export default function UnitPage({ unitId }) {
           <img src={einheit.foto.src} alt={einheit.foto.alt} />
           <figcaption>
             <Icon name="bild" groesse={17} />
-            Echtes Lernfoto aus Wikimedia Commons · lokal gespeichert
+            {einheit.foto.urheber ? (
+              <span>
+                Echtes Lernfoto ·{' '}
+                <a href={einheit.foto.quelle} target="_blank" rel="noreferrer">
+                  Wikimedia Commons
+                </a>{' '}
+                · {einheit.foto.urheber} ·{' '}
+                {einheit.foto.lizenzUrl ? (
+                  <a href={einheit.foto.lizenzUrl} target="_blank" rel="noreferrer">
+                    {einheit.foto.lizenz}
+                  </a>
+                ) : (
+                  einheit.foto.lizenz
+                )}
+              </span>
+            ) : (
+              <span>Echtes Lernfoto aus Wikimedia Commons · lokal gespeichert</span>
+            )}
           </figcaption>
         </figure>
       )}
@@ -149,6 +166,49 @@ export default function UnitPage({ unitId }) {
             hören.
           </p>
         </Card>
+
+        {einheit.saetze && einheit.saetze.length > 0 && (
+          <Card titel="Beispielsätze" icon="sprechblase">
+            <ul className="unit-saetze" role="list">
+              {einheit.saetze.map((satz) => (
+                <li key={satz.ku} className="unit-satz">
+                  <span className="unit-satz-text">
+                    <span lang="de" className="unit-satz-de">
+                      {satz.de}
+                    </span>
+                    <span lang="ku" className="unit-satz-ku">
+                      {satz.ku}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    className="rk-tonknopf"
+                    onClick={() => spieleWort(satz.ku)}
+                    aria-label={`${satz.ku} anhören`}
+                  >
+                    <Icon name="lautsprecher" groesse={18} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        )}
+
+        {einheit.grammatik && (
+          <Card titel={`Gut zu wissen: ${einheit.grammatik.titel}`} icon="gehirn">
+            <div className="stapel-eng">
+              <p lang="de">{einheit.grammatik.text}</p>
+              {einheit.grammatik.beispiel && (
+                <p className="unit-grammatik-beispiel">
+                  <strong lang="ku">{einheit.grammatik.beispiel.ku}</strong>
+                  <span lang="de" className="gedaempft">
+                    {einheit.grammatik.beispiel.de}
+                  </span>
+                </p>
+              )}
+            </div>
+          </Card>
+        )}
       </section>
 
       <section className="rk-abschnitt" aria-labelledby="unit-schritte-titel">
