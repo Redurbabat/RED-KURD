@@ -51,7 +51,12 @@ export async function kontoStatus() {
   // Anmelde-Server — dann gibt es auch nichts anzumelden.
   if (response.status === 404 || response.status === 405) return { backend: false, konto: null }
   if (response.status === 401) return { backend: true, konto: null }
-  if (!response.ok) return { backend: false, konto: null }
+  // Andere Fehlerantworten: Kommt eine JSON-Antwort, ist der Anmelde-Server da
+  // und nur gestoert (Deploy, Datenbank, Rate-Limit) — dann bleibt der Riegel,
+  // sonst wuerde ein einzelner 500er die App fuer alle oeffnen. Antwortet
+  // dagegen ein reiner Statik-Server (HTML oder Text, wie `vite preview` mit
+  // seinem 500 auf unbekannte /api-Pfade), gibt es gar nichts anzumelden.
+  if (!response.ok) return { backend: daten !== null, konto: null }
   return { backend: true, konto: daten?.konto || null }
 }
 

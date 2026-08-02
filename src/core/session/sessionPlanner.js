@@ -1,7 +1,7 @@
 // Der Sitzungsplaner stellt die taegliche Mischung zusammen:
 // faellige Wiederholungen zuerst, dann neue Wörter aus der aktuellen Einheit.
 import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.js'
-import { ALLE_WOERTER, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
+import { EINHEITEN, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
 import { baueUebungen, mische } from './exerciseFactory.js'
 
 export const DAUERN = [
@@ -102,19 +102,31 @@ export function planeLektion(einheitId, lektionId) {
 }
 
 /** Gezieltes Training einer einzelnen Fertigkeit. */
+/**
+ * Alle Wörter bis einschließlich der aktuellen Einheit — der Stoff, den die
+ * Lernende schon gesehen hat oder gerade sieht.
+ */
+function erreichterWortschatz() {
+  const jetzt = aktuelleEinheit()
+  const bis = EINHEITEN.findIndex((e) => e.id === jetzt.id)
+  return EINHEITEN.slice(0, bis >= 0 ? bis + 1 : EINHEITEN.length).flatMap((e) => e.woerter)
+}
+
 export function planeTraining(art, anzahl = 12) {
   const faellig = faelligeKarten().map(alsWort)
   const aus = mische(faellig.length >= anzahl ? faellig : [...faellig, ...mische(aktuelleEinheit().woerter)])
   let woerter = aus.slice(0, anzahl)
 
-  // Beim Bildertraining zuerst die Wörter nehmen, zu denen es ein echtes Foto
-  // gibt — sonst besteht die Runde fast nur aus Emojis. Fehlen welche, füllen
-  // wir aus dem ganzen Kurs auf.
+  // Beim Bildertraining bevorzugen wir Wörter mit echtem Foto — aber nur aus
+  // dem Stoff, den die Lernende schon erreicht hat. Sonst entstünden
+  // Wiederholkarten für nie gelernte Wörter, die danach die Tagessitzung füllen.
   if (art === 'bild') {
-    const mitFoto = aus.filter((w) => fotoVon(w.ku))
+    const erreicht = erreichterWortschatz()
+    const erlaubt = new Set(erreicht.map((w) => w.ku))
+    const mitFoto = aus.filter((w) => fotoVon(w.ku) && erlaubt.has(w.ku))
     if (mitFoto.length < anzahl) {
       const gesehen = new Set(mitFoto.map((w) => w.ku))
-      for (const w of mische(ALLE_WOERTER)) {
+      for (const w of mische(erreicht)) {
         if (mitFoto.length >= anzahl) break
         if (w.bild && fotoVon(w.ku) && !gesehen.has(w.ku)) {
           mitFoto.push(w)
@@ -122,6 +134,8 @@ export function planeTraining(art, anzahl = 12) {
         }
       }
     }
+    // Zu wenige Foto-Wörter im erreichten Bereich? Dann bleibt es bei der
+    // ursprünglichen Auswahl — Emoji-Kacheln sind besser als fremder Stoff.
     if (mitFoto.length >= 4) woerter = mitFoto.slice(0, anzahl)
   }
 

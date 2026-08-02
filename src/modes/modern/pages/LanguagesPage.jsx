@@ -44,7 +44,11 @@ function FotoNachweise() {
   useEffect(() => {
     // Kapitel- und Wortfotos zusammen ausweisen — beide Quellen sind Wikimedia.
     Promise.all(
-      ['/bilder/lernwelt/credits.json', '/bilder/woerter/credits.json'].map((pfad) =>
+      [
+        '/bilder/lernwelt/credits.json',
+        '/bilder/kapitel/credits.json',
+        '/bilder/woerter/credits.json',
+      ].map((pfad) =>
         fetch(pfad)
           .then((antwort) => (antwort.ok ? antwort.json() : null))
           .catch(() => null)

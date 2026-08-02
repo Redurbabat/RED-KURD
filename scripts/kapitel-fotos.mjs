@@ -272,6 +272,13 @@ for (const kapitel of KAPITEL) {
 }
 
 // Generierte Datendatei — die App liest Fotos und Nachweise von hier.
+// Ein misslungener Lauf darf die vorhandenen Nachweise nicht loeschen.
+if (probleme.length) {
+  console.error(`\nAbbruch: ${probleme.length} Kapitel ohne Foto — Datendatei bleibt unveraendert.`)
+  for (const p of probleme) console.error('  ! ' + p)
+  process.exit(1)
+}
+
 const inhalt =
   '// GENERIERT von scripts/kapitel-fotos.mjs — nicht von Hand bearbeiten.\n' +
   '// Echte Fotos aus Wikimedia Commons, lokal gespeichert, mit Quellenangabe.\n' +
@@ -279,6 +286,10 @@ const inhalt =
   JSON.stringify(Object.fromEntries(eintraege.map((e) => [e.id, e])), null, 2) +
   '\n'
 await writeFile(DATEN, inhalt)
+await writeFile(
+  resolve(ZIEL, 'credits.json'),
+  JSON.stringify({ quelle: 'Wikimedia Commons', fotos: eintraege }, null, 2) + '\n'
+)
 
 console.log(`\n${eintraege.length} Kapitel mit Foto, ${probleme.length} Probleme.`)
 for (const p of probleme) console.log('  ! ' + p)

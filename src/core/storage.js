@@ -95,6 +95,40 @@ export function importiereSpeicherstand(speicher) {
   return anzahl
 }
 
+/**
+ * Umbenannte Lernpaare: alte Kartenschluessel muessen mitwandern, sonst
+ * uebt ein bestehender Lernstand fuer immer eine Schreibweise, die der Kurs
+ * nicht mehr kennt — und beide Formen koennen zugleich als Antwort erscheinen.
+ * Schluessel ist `de|ku` ohne den Skill-Teil.
+ */
+const UMBENANNT = {
+  'Pilz|kundir': 'Pilz|kivark',
+  'Möchtest du Tee?|Tu çay dixwazî?': 'Möchtest du Tee?|Tu çayê dixwazî?',
+}
+
+/** Karten auf die aktuellen Schreibweisen umschreiben, Stufe und Faelligkeit behalten. */
+export function migriereKarten(karten) {
+  if (!karten || typeof karten !== 'object') return { karten, geaendert: 0 }
+  const neu = {}
+  let geaendert = 0
+  for (const [schluessel, wert] of Object.entries(karten)) {
+    const teile = schluessel.split('|')
+    const paar = teile.slice(0, 2).join('|')
+    const ziel = UMBENANNT[paar]
+    if (!ziel) {
+      neu[schluessel] = wert
+      continue
+    }
+    const neuerSchluessel = [ziel, ...teile.slice(2)].join('|')
+    // Gibt es die neue Karte schon, gewinnt der weiter fortgeschrittene Stand.
+    const vorhanden = neu[neuerSchluessel]
+    neu[neuerSchluessel] =
+      vorhanden && (vorhanden.stufe || 0) >= (wert.stufe || 0) ? vorhanden : wert
+    geaendert += 1
+  }
+  return { karten: neu, geaendert }
+}
+
 // ===== Migration =====
 // Laeuft genau einmal beim Start. Alte Daten werden kopiert, nicht verschoben —
 // so geht beim Wechsel zurueck auf eine aeltere Version nichts verloren.
@@ -103,6 +137,13 @@ let migriert = false
 export function migriere() {
   if (migriert || !verfuegbar()) return
   migriert = true
+
+  // 0. Umbenannte Lernpaare: Karten auf die aktuelle Schreibweise heben.
+  const stand = lies(KEYS.fortschritt)
+  if (stand && stand.karten) {
+    const { karten, geaendert } = migriereKarten(stand.karten)
+    if (geaendert) schreibe(KEYS.fortschritt, { ...stand, karten })
+  }
 
   // 1. Lernfortschritt v1 -> v2
   if (lies(KEYS.fortschritt) === null) {

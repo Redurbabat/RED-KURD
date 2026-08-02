@@ -8,10 +8,14 @@ import {
 } from '../src/core/courses/courseRepository.js'
 import { planeLektion } from '../src/core/session/sessionPlanner.js'
 
-test('der erweiterte Kurs enthält 50 Kapitel und 524 direkte Lernpaare', () => {
-  assert.equal(EINHEITEN.length, 50)
-  assert.equal(ALLE_WOERTER.length, 524)
+test('der Kurs waechst nur, er schrumpft nie', () => {
+  // Untergrenzen statt Fixwerte: neue Kapitel sollen den Test nicht brechen,
+  // ein versehentlicher Verlust von Inhalten dagegen schon.
+  assert.ok(EINHEITEN.length >= 56, `nur ${EINHEITEN.length} Kapitel`)
+  assert.ok(ALLE_WOERTER.length >= 596, `nur ${ALLE_WOERTER.length} Lernpaare`)
   assert.equal(LEKTIONS_ARTEN.length, 5)
+  // Jedes Kapitel liegt in genau einer Welt.
+  assert.equal(EINHEITEN.filter((e) => !e.weltId).length, 0)
 })
 
 test('Kennungen, Wortpaare und Weltzuordnungen sind eindeutig', () => {

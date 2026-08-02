@@ -278,6 +278,13 @@ for (const wort of WOERTER) {
   await warten(3000)
 }
 
+// Ein misslungener Lauf darf die vorhandenen Nachweise nicht loeschen.
+if (probleme.length) {
+  console.error(`\nAbbruch: ${probleme.length} Woerter ohne Foto — Datendatei bleibt unveraendert.`)
+  for (const p of probleme) console.error('  ! ' + p)
+  process.exit(1)
+}
+
 const inhalt =
   '// GENERIERT von scripts/wort-fotos.mjs — nicht von Hand bearbeiten.\n' +
   '// Echte Fotos für einzelne Kurswörter (Wikimedia Commons, lokal gespeichert).\n' +
