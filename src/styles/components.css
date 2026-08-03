@@ -954,7 +954,8 @@
   border: 1.5px solid var(--rk-border);
   border-radius: var(--radius-small);
   background: var(--rk-surface);
-  font-size: var(--text-base);
+  /* Nie unter 16 px, sonst zoomt iOS-Safari beim Tippen in die Seite. */
+  font-size: max(16px, var(--text-base));
   font-weight: 600;
 }
 .rk-feld:focus {

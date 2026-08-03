@@ -63,6 +63,14 @@ select {
   color: inherit;
 }
 
+/* iOS-Safari zoomt in jedes Eingabefeld unter 16 px hinein — deshalb haben
+   Eingaben nie weniger, egal was die Umgebung vorgibt. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
+}
+
 button {
   cursor: pointer;
   background: none;
