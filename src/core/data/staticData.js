@@ -1,12 +1,30 @@
 // Online-Modus ohne lokalen Server: durchsucht die statischen JSON-Daten
 let daten = null
 
+async function holeJson(pfad) {
+  const r = await fetch(pfad)
+  // Ohne diese Pruefung wuerde eine Fehlerseite als JSON geparst und der
+  // kaputte Zustand dauerhaft im Modul-Cache landen.
+  if (!r.ok) throw new Error(`${pfad}: ${r.status}`)
+  return r.json()
+}
+
+/** Unverzerrtes Mischen (Fisher-Yates) — sort(Math.random) bevorzugt Positionen. */
+function mischen(liste) {
+  const a = [...liste]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export async function ladeStatisch() {
   if (daten) return daten
   const [woerter, wiki, beispiele] = await Promise.all([
-    fetch('/daten/woerter.json').then(r => r.json()),
-    fetch('/daten/wiki.json').then(r => r.json()),
-    fetch('/daten/beispiele.json').then(r => r.json()),
+    holeJson('/daten/woerter.json'),
+    holeJson('/daten/wiki.json'),
+    holeJson('/daten/beispiele.json'),
   ])
   daten = { woerter, wiki, beispiele }
   return daten
@@ -54,7 +72,7 @@ export async function sucheKurdishTech(q) {
   for (const ordner of Object.keys(KT_SPRACHEN)) {
     try {
       if (!ktIndex[ordner]) {
-        ktIndex[ordner] = await fetch(`/daten/kt/${ordner}/index.json`).then(r => r.json())
+        ktIndex[ordner] = await holeJson(`/daten/kt/${ordner}/index.json`)
       }
       const buchstabe = s[0]
       const dateien = (ktIndex[ordner].letters[buchstabe] || [])
@@ -62,7 +80,7 @@ export async function sucheKurdishTech(q) {
       for (const e of dateien) {
         const pfad = `${ordner}/${e.file}`
         if (!ktChunks[pfad]) {
-          ktChunks[pfad] = await fetch(`/daten/kt/${pfad}`).then(r => r.json())
+          ktChunks[pfad] = await holeJson(`/daten/kt/${pfad}`)
         }
         for (const w of ktChunks[pfad]) {
           if (w.word && w.word.toLowerCase().startsWith(s)) {
@@ -94,21 +112,20 @@ export async function zufallsPaare(anzahl) {
   // Etwa die Hälfte kommt aus den eigenen Kapiteln — so lassen sich die
   // gelernten Sätze wirklich üben. Der Rest kommt aus dem großen Satzpaket;
   // fehlt es (offline, kein R2), tragen die Kapitelsätze allein.
-  const lokal = [...(await lokalePaare())].sort(() => Math.random() - 0.5)
+  const lokal = mischen(await lokalePaare())
   let fern = []
   try {
     const d = await ladeStatisch()
+    // Nur echte deutsche Uebersetzungen: Der fruehere Englisch-Fallback
+    // zeigte englische Tatoeba-Saetze als vermeintlich deutschen Text an.
+    // Fehlen deutsche Paare, tragen unten die Kapitelsaetze allein.
     const deu = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'deu')
-    const eng = d.beispiele.filter(([sl, , tl]) => sl === 'kmr' && tl === 'eng')
-    const quelle = deu.length >= anzahl ? deu : deu.concat(eng)
-    fern = [...quelle]
-      .sort(() => Math.random() - 0.5)
-      .map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
+    fern = mischen(deu).map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
   } catch {
     /* ohne Satzpaket üben wir mit den Kapitelsätzen */
   }
   const halb = Math.min(lokal.length, Math.ceil(anzahl / 2))
   const auswahl = lokal.slice(0, halb).concat(fern.slice(0, anzahl - halb))
   if (auswahl.length < anzahl) auswahl.push(...lokal.slice(halb, halb + (anzahl - auswahl.length)))
-  return auswahl.sort(() => Math.random() - 0.5).slice(0, anzahl)
+  return mischen(auswahl).slice(0, anzahl)
 }
