@@ -733,7 +733,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  min-height: 42px;
+  min-height: var(--touch-min);
   padding: var(--space-2);
   border-radius: var(--radius-pill);
   font-weight: 800;
@@ -1191,6 +1191,22 @@
   background: var(--rk-red-soft);
   border: 1px solid #f5c6c8;
   color: var(--rk-red-dark);
+}
+/* Dunkles Design: die hartkodierten Hellmodus-Toene waeren hier unlesbar
+   (dunkelgruen auf dunkelgruen) — gerade die Antwort-Rueckmeldung muss sitzen. */
+:root[data-theme='dark'] .rk-rueckmeldung.gut {
+  border-color: #2f5c31;
+  color: var(--rk-green-dark);
+}
+:root[data-theme='dark'] .rk-rueckmeldung.schlecht {
+  border-color: #6d3238;
+}
+:root[data-theme='dark'] .rk-badge-gold {
+  color: var(--rk-yellow);
+  border-color: #5a4a15;
+}
+:root[data-theme='dark'] .rk-chip-gold {
+  color: var(--rk-yellow);
 }
 .rk-rueckmeldung-xp {
   font-weight: 800;

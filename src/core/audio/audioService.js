@@ -56,8 +56,14 @@ let audioIndex = null
 async function ladeAudioIndex() {
   if (audioIndex) return audioIndex
   try {
-    audioIndex = await fetch('/audio/index.json').then(r => r.json())
-  } catch { audioIndex = {} }
+    const r = await fetch('/audio/index.json')
+    // Fehlversuch nicht dauerhaft merken — nach kurzem Netzaussetzer soll der
+    // naechste Aufruf wieder echte Stimmen finden.
+    if (!r.ok) return {}
+    audioIndex = await r.json()
+  } catch {
+    return {}
+  }
   return audioIndex
 }
 
@@ -72,8 +78,13 @@ export async function spieleWort(wort) {
   const idx = await ladeAudioIndex()
   const datei = idx[wort.toLowerCase()]
   if (datei) {
-    new Audio('/audio/kmr/' + datei).play()
-    return 'muttersprachler'
+    try {
+      await new Audio('/audio/kmr/' + datei).play()
+      return 'muttersprachler'
+    } catch {
+      // iOS kann Wiedergabe ohne Nutzergeste blockieren oder die Datei fehlt —
+      // dann wenigstens die Computerstimme statt kommentarloser Stille.
+    }
   }
   sprich(wort)
   return 'tts'

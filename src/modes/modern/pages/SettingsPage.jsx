@@ -28,8 +28,8 @@ import { ErrorState } from '../../../components/common/EmptyState.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import './SettingsPage.css'
 
-/** Speicherschlüssel des Profils — wird beim Neustart des Onboardings entfernt. */
-const PROFIL_SCHLUESSEL = 'red-kurd-profile-v2'
+/** Alt-Schlüssel des v1-Profils — nur beim bewussten Onboarding-Neustart relevant. */
+const ALT_PROFIL_SCHLUESSEL = 'red-kurd-profil-v1'
 
 const DESIGNS = [
   { id: 'light', name: 'Hell', beschreibung: 'Heller Hintergrund, dunkle Schrift', icon: 'sonne' },
@@ -739,11 +739,11 @@ function DatenKarte() {
 
   function onboardingNeu() {
     setFrageOffen(false)
-    try {
-      localStorage.removeItem(PROFIL_SCHLUESSEL)
-    } catch {
-      /* Privater Modus — dann bleibt das Profil bestehen. */
-    }
+    entferne(KEYS.profil)
+    // Auch das v1-Profil muss weg: Die Migration wuerde es beim Neustart sonst
+    // sofort wiederherstellen und das Onboarding erschiene nie. Das ist ein
+    // bewusster Nutzerwunsch — der Lernstand selbst bleibt unberuehrt.
+    entferne(ALT_PROFIL_SCHLUESSEL)
     window.location.assign('/')
   }
 

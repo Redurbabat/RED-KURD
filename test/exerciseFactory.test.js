@@ -82,6 +82,47 @@ test('Bildaufgaben zeigen vier verschiedene Kacheln inklusive der richtigen', ()
   }
 })
 
+// ===== Homonyme und Synonyme =====
+
+test('bei Homonymen erscheint keine zweite richtige Bedeutung als Option', () => {
+  // „roj" heisst Tag UND Sonne — „Sonne" darf nie als falsche Option stehen,
+  // wenn nach der Bedeutung von „roj" (Antwort „Tag") gefragt wird.
+  for (let i = 0; i < 25; i++) {
+    for (const u of baueUebungen([{ de: 'Tag', ku: 'roj' }], ['wahl-de'])) {
+      assert.ok(!u.optionen.includes('Sonne'), '„Sonne" ist auch richtig fuer „roj"')
+    }
+    for (const u of baueUebungen([{ de: 'rechts', ku: 'rast' }], ['wahl-de'])) {
+      assert.ok(!u.optionen.includes('richtig'), '„richtig" ist auch richtig fuer „rast"')
+    }
+  }
+})
+
+test('bei Synonymen erscheint keine zweite richtige Uebersetzung als Option', () => {
+  // „Ich verstehe nicht." hat zwei Kurmancî-Formen — keine davon darf als
+  // falsche Option neben der anderen stehen (auch nicht mit anderem Punkt).
+  for (let i = 0; i < 25; i++) {
+    for (const u of baueUebungen([{ de: 'Ich verstehe nicht.', ku: 'Ez fêm nakim' }], ['wahl-ku'])) {
+      assert.ok(!u.optionen.includes('Ez fêm nakim.'), 'Punkt-Variante ist auch richtig')
+    }
+  }
+})
+
+test('keine zwei Optionen sind nach Tipp-Normalisierung gleich', () => {
+  for (let i = 0; i < 10; i++) {
+    for (const u of baueUebungen(WOERTER, ['wahl-ku', 'wahl-de'])) {
+      for (let a = 0; a < u.optionen.length; a++) {
+        for (let b = a + 1; b < u.optionen.length; b++) {
+          assert.equal(
+            istRichtigGetippt(u.optionen[a], u.optionen[b]),
+            false,
+            `Optionen „${u.optionen[a]}" und „${u.optionen[b]}" sind praktisch gleich`
+          )
+        }
+      }
+    }
+  }
+})
+
 // ===== faire Tipp-Bewertung =====
 
 test('Gross-/Kleinschreibung und Leerzeichen sind egal', () => {

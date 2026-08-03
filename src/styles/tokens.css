@@ -3,6 +3,10 @@
    Modern- und Abenteuer-Modus nutzen dieselben Tokens. */
 
 :root {
+  /* Sagt dem Browser das aktive Farbschema — sonst zeigt iOS in der dunklen
+     App eine helle Tastatur, helle Selects und helle Scrollbalken. */
+  color-scheme: light;
+
   /* --- Primaerfarben --- */
   --rk-primary: #0ea5a8;
   --rk-primary-dark: #087f83;
@@ -163,6 +167,8 @@
 
 /* Dunkles Design – nur Flaechen und Text drehen sich, die Marke bleibt. */
 :root[data-theme='dark'] {
+  color-scheme: dark;
+
   --rk-bg: #102229;
   --rk-surface: #152830;
   --rk-surface-soft: #1d333c;

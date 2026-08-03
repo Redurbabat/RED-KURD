@@ -225,6 +225,8 @@ export default function DictionaryView() {
           className="rk-feld"
           type="search"
           autoComplete="off"
+          autoCapitalize="off"
+          spellCheck={false}
           value={suche}
           placeholder={T.entdecken.suchePlatzhalter}
           onChange={(e) => setSuche(e.target.value)}
