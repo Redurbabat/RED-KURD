@@ -53,7 +53,9 @@ if (wurzel) {
   )
 }
 
-// App offline-faehig machen (nur im fertigen Build, nicht beim Entwickeln)
-if ('serviceWorker' in navigator && !location.host.includes('localhost')) {
+// App offline-faehig machen — nur im fertigen Build. Die fruehere
+// localhost-Heuristik registrierte den Worker auch beim Entwickeln ueber
+// eine LAN-IP (iPhone-Test) und vergiftete den Cache mit Dev-Antworten.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   navigator.serviceWorker.register('/sw.js').catch(() => {})
 }
