@@ -11,9 +11,16 @@ const BEISPIELE = [
   ...Array.from({ length: 12 }, (_, i) => ['kmr', `Hevok ${i}.`, 'eng', `English sentence ${i}.`]),
 ]
 
+const WOERTER = [
+  ['kmr', 'çawa', 'deu', 'wie'],
+  ['kmr', 'şêr', 'deu', 'Löwe'],
+  ['deu', 'Käse', 'kmr', 'penîr'],
+  ['kmr', 'nan', 'deu', 'Brot'],
+]
+
 globalThis.fetch = async (pfad) => {
   const daten = {
-    '/daten/woerter.json': [],
+    '/daten/woerter.json': WOERTER,
     '/daten/wiki.json': [],
     '/daten/beispiele.json': BEISPIELE,
   }
@@ -21,9 +28,32 @@ globalThis.fetch = async (pfad) => {
   return { ok: true, status: 200, json: async () => daten[pfad] }
 }
 
-const { zufallsPaare, beispieleStatisch, statischeAnzahl } = await import(
+const { zufallsPaare, beispieleStatisch, statischeAnzahl, sucheStatisch } = await import(
   '../src/core/data/staticData.js'
 )
+
+test('die Suche toleriert fehlende kurdische Sonderzeichen', async () => {
+  const { woerter } = await sucheStatisch('cawa')
+  assert.equal(woerter.length, 1)
+  assert.equal(woerter[0].wort, 'çawa')
+  const loewe = await sucheStatisch('ser')
+  assert.ok(loewe.woerter.some((w) => w.wort === 'şêr'))
+})
+
+test('die Suche toleriert fehlende deutsche Umlaute — in beide Richtungen', async () => {
+  const { woerter } = await sucheStatisch('kase')
+  assert.equal(woerter.length, 1)
+  assert.equal(woerter[0].wort, 'Käse')
+  const loewe = await sucheStatisch('löwe')
+  assert.ok(loewe.woerter.some((w) => w.uebersetzung === 'Löwe'))
+})
+
+test('exakte Schreibweise findet natuerlich weiterhin', async () => {
+  const { woerter } = await sucheStatisch('çawa')
+  assert.equal(woerter.length, 1)
+  const brot = await sucheStatisch('nan')
+  assert.equal(brot.woerter[0].uebersetzung, 'Brot')
+})
 
 test('zufallsPaare liefert niemals englische Saetze als deutsche', async () => {
   for (let lauf = 0; lauf < 5; lauf++) {
@@ -54,5 +84,5 @@ test('beispieleStatisch findet Saetze unabhaengig von der Schreibung', async () 
 })
 
 test('statischeAnzahl meldet die echten Bestandsgroessen', async () => {
-  assert.deepEqual(await statischeAnzahl(), { woerter: 0, beispiele: BEISPIELE.length })
+  assert.deepEqual(await statischeAnzahl(), { woerter: WOERTER.length, beispiele: BEISPIELE.length })
 })

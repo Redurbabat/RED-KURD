@@ -1,4 +1,6 @@
 // Online-Modus ohne lokalen Server: durchsucht die statischen JSON-Daten
+import { sucheNormal } from '../schrift/normalisierung.js'
+
 let daten = null
 
 async function holeJson(pfad) {
@@ -32,13 +34,14 @@ export async function ladeStatisch() {
 
 export async function sucheStatisch(q) {
   const d = await ladeStatisch()
-  const s = q.toLowerCase()
+  // Tolerant suchen: „cawa" findet „çawa", „kase" findet „Käse".
+  const s = sucheNormal(q)
   const woerter = d.woerter
-    .filter(([, wort, , ueb]) => wort.toLowerCase().startsWith(s) || ueb.toLowerCase().startsWith(s))
+    .filter(([, wort, , ueb]) => sucheNormal(wort).startsWith(s) || sucheNormal(ueb).startsWith(s))
     .slice(0, 60)
     .map(([lang, wort, ziel_lang, uebersetzung]) => ({ lang, wort, ziel_lang, uebersetzung, quelle: 'online' }))
   const wiki = d.wiki
-    .filter(([, wort]) => wort.toLowerCase().startsWith(s))
+    .filter(([, wort]) => sucheNormal(wort).startsWith(s))
     .slice(0, 15)
     .map(([lang, wort, wortart, ipa, bedeutungen, formen]) => ({ lang, wort, wortart, ipa, bedeutungen, formen }))
   let kt = []
@@ -48,9 +51,9 @@ export async function sucheStatisch(q) {
 
 export async function beispieleStatisch(wort) {
   const d = await ladeStatisch()
-  const s = wort.toLowerCase()
+  const s = sucheNormal(wort)
   return d.beispiele
-    .filter(([, satz]) => satz.toLowerCase().includes(s))
+    .filter(([, satz]) => sucheNormal(satz).includes(s))
     .slice(0, 15)
     .map(([, satz, , uebersetzung]) => ({ satz, uebersetzung }))
 }
