@@ -12,6 +12,10 @@ export const T = {
   nav: {
     heute: 'Heute',
     kurs: 'Kurs',
+    kurse: 'Kurse',
+    start: 'Start',
+    lernpfad: 'Lernpfad',
+    kultur: 'Kultur',
     ueben: 'Üben',
     entdecken: 'Entdecken',
     fortschritt: 'Fortschritt',
@@ -132,6 +136,7 @@ export const T = {
     modusHinweis: 'Nur die Oberfläche ändert sich. Dein Lernstand bleibt gleich.',
     zuAbenteuer: 'In Abenteuer-Modus wechseln',
     zuModern: 'In Modern-Modus wechseln',
+    zuRedlingo: 'In Redlingo-Modus wechseln',
   },
 
   uebung: {

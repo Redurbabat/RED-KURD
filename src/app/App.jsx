@@ -100,7 +100,7 @@ function Rahmen() {
           frage === 'abenteuer'
             ? T.einstellungen.zuAbenteuer
             : frage === 'redlingo'
-              ? 'Zu Redlingo wechseln?'
+              ? T.einstellungen.zuRedlingo
               : T.einstellungen.zuModern
         }
         schliessen={() => setFrage(null)}
