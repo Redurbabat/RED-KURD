@@ -236,3 +236,19 @@ button,
     transform: translateY(12px) scale(0.985);
   }
 }
+
+/* --- Notfall-Ansicht, falls die App beim Zeichnen abstürzt --- */
+.start-fehler {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  max-width: 32rem;
+  margin: 0 auto;
+}
