@@ -556,9 +556,12 @@
   position: relative;
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
-.rk-karte-klick:hover {
-  border-color: var(--rk-primary);
-  transform: translateY(-2px);
+/* Nur mit echter Maus — auf Touch bliebe der Schwebezustand haengen. */
+@media (hover: hover) {
+  .rk-karte-klick:hover {
+    border-color: var(--rk-primary);
+    transform: translateY(-2px);
+  }
 }
 .rk-karte-pfeil {
   position: absolute;
@@ -901,13 +904,21 @@
 .rk-modal {
   width: 100%;
   max-width: 560px;
+  /* dvh: 90vh laeuft in iOS-Safari unter die dynamische Adressleiste. */
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  /* Haelt das Wischen im Modal — der Hintergrund scrollt sonst mit. */
+  overscroll-behavior: contain;
   background: var(--rk-surface);
   border-radius: var(--radius-large) var(--radius-large) 0 0;
   padding: var(--space-5) var(--space-4);
   padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
   box-shadow: var(--shadow-floating);
+}
+/* Breite Variante fuer inhaltsreiche Dialoge (Modal-Prop `breit`). */
+.rk-modal-breit {
+  max-width: 760px;
 }
 .rk-modal-kopf {
   display: flex;

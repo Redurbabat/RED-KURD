@@ -542,9 +542,12 @@
   border: 1px solid var(--adv-border);
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
-.adv-weltkachel:hover {
-  transform: translateY(-2px);
-  border-color: var(--adv-teal);
+/* Nur mit echter Maus — auf Touch bliebe der Schwebezustand haengen. */
+@media (hover: hover) {
+  .adv-weltkachel:hover {
+    transform: translateY(-2px);
+    border-color: var(--adv-teal);
+  }
 }
 .adv-weltkachel.gesperrt {
   opacity: 0.62;

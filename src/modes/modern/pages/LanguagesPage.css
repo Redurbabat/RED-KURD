@@ -176,13 +176,16 @@
 .sprachen-kurs-inhalt > .rk-icon {
   color: #fff;
 }
-.sprachen-kurskarte:hover {
-  border-color: var(--kurs-farbe);
-  transform: perspective(900px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
-  box-shadow: 0 12px 0 color-mix(in srgb, var(--kurs-farbe) 44%, #07151a), 0 22px 34px rgb(0 0 0 / 0.25);
-}
-.sprachen-kurskarte:hover > img {
-  transform: scale(1.055);
+/* Nur mit echter Maus — auf Touch bliebe der 3D-Kippzustand haengen. */
+@media (hover: hover) {
+  .sprachen-kurskarte:hover {
+    border-color: var(--kurs-farbe);
+    transform: perspective(900px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
+    box-shadow: 0 12px 0 color-mix(in srgb, var(--kurs-farbe) 44%, #07151a), 0 22px 34px rgb(0 0 0 / 0.25);
+  }
+  .sprachen-kurskarte:hover > img {
+    transform: scale(1.055);
+  }
 }
 
 .sprachen-nachweise {
