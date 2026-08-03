@@ -57,6 +57,22 @@ test('kaputtes JSON zerstoert nichts — es kommt der Ersatzwert', () => {
   assert.deepEqual(lies(KEYS.fortschritt, { xp: 0 }), { xp: 0 })
 })
 
+test('kaputte Rohdaten werden als Backup gesichert, bevor sie jemand ueberschreibt', () => {
+  const speicher = frischerSpeicher()
+  speicher.daten.set(KEYS.fortschritt, '{"xp":250,"karten"KAPUTT')
+  lies(KEYS.fortschritt)
+  assert.equal(speicher.getItem(`${KEYS.fortschritt}-defekt`), '{"xp":250,"karten"KAPUTT')
+})
+
+test('ein bestehendes Defekt-Backup wird nicht von neuer Korruption ueberschrieben', () => {
+  const speicher = frischerSpeicher()
+  speicher.daten.set(KEYS.fortschritt, 'ERSTE-KORRUPTION')
+  lies(KEYS.fortschritt)
+  speicher.daten.set(KEYS.fortschritt, 'ZWEITE-KORRUPTION')
+  lies(KEYS.fortschritt)
+  assert.equal(speicher.getItem(`${KEYS.fortschritt}-defekt`), 'ERSTE-KORRUPTION')
+})
+
 test('ohne localStorage laeuft die App weiter, nur ohne Sicherung', () => {
   globalThis.localStorage = undefined
   assert.equal(lies('x', 'ersatz'), 'ersatz')
@@ -95,6 +111,18 @@ test('die geraete-lokale Entscheidung „ohne Konto" wandert nie in Sicherungen'
   schreibe(KEYS.ohneKonto, true)
   schreibe(KEYS.profil, { name: 'Delal' })
   assert.deepEqual(exportiereSpeicherstand(), { profil: { name: 'Delal' } })
+})
+
+test('die laufende Sitzung bleibt geraete-lokal: kein Export, kein Import', () => {
+  frischerSpeicher()
+  schreibe(KEYS.sitzung, { index: 3, uebungen: [1, 2, 3, 4] })
+  schreibe(KEYS.profil, { name: 'Delal' })
+  assert.deepEqual(exportiereSpeicherstand(), { profil: { name: 'Delal' } })
+
+  frischerSpeicher()
+  const anzahl = importiereSpeicherstand({ sitzung: { index: 1, uebungen: [1] }, profil: { name: 'Baran' } })
+  assert.equal(anzahl, 1)
+  assert.equal(lies(KEYS.sitzung), null)
 })
 
 test('der Import schreibt bekannte Bereiche und zaehlt sie', () => {
