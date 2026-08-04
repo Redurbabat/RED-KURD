@@ -176,6 +176,8 @@ export const T = {
   allgemein: {
     laden: 'Wird geladen …',
     fehler: 'Etwas hat nicht geklappt.',
+    speicherProblem:
+      'Dein Fortschritt kann gerade nicht gespeichert werden — der Speicher ist voll oder du lernst im privaten Modus. Sichere deinen Lernstand über Fortschritt → Export, sobald es wieder geht.',
     nochmal: 'Nochmal versuchen',
     zurueck: 'Zurück',
     schliessen: 'Schließen',

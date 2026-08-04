@@ -62,13 +62,44 @@ function sichereDefekt(key, roh) {
   }
 }
 
+// ===== Sichtbares Speicherversagen =====
+// Scheitert das Schreiben (Speicher voll, privater Modus), zeigt die UI
+// sonst Fortschritt, der beim naechsten Neuladen weg ist. Deshalb wird der
+// erste Fehlschlag genau einmal gemeldet, damit die App warnen kann.
+let problemGemeldet = false
+let problemHoerer = null
+
+/** Einen Melder fuer Speicherprobleme anmelden; liefert die Abmeldung. */
+export function beiSpeicherproblem(fn) {
+  problemHoerer = fn
+  // War das Problem schon vor der Anmeldung da, sofort nachreichen.
+  if (problemGemeldet && fn) fn()
+  return () => {
+    if (problemHoerer === fn) problemHoerer = null
+  }
+}
+
+function meldeProblem() {
+  if (problemGemeldet) return
+  problemGemeldet = true
+  try {
+    problemHoerer?.()
+  } catch {
+    /* ein defekter Hoerer aendert nichts am Speicherproblem */
+  }
+}
+
 export function schreibe(key, wert) {
-  if (!verfuegbar()) return false
+  if (!verfuegbar()) {
+    meldeProblem()
+    return false
+  }
   try {
     localStorage.setItem(key, JSON.stringify(wert))
     return true
   } catch {
     // Speicher voll oder privater Modus — die App laeuft weiter, nur ohne Sicherung.
+    meldeProblem()
     return false
   }
 }

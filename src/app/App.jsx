@@ -10,7 +10,7 @@ import PrimaryButton from '../components/common/PrimaryButton.jsx'
 import Onboarding from '../modes/modern/pages/Onboarding.jsx'
 import { T } from '../core/texts.js'
 import { MODERN_NAV, ABENTEUER_NAV, REDLINGO_NAV } from '../components/layout/navConfig.js'
-import { KEYS, entferne, lies, migriere, schreibe } from '../core/storage.js'
+import { KEYS, beiSpeicherproblem, entferne, lies, migriere, schreibe } from '../core/storage.js'
 import { useLernstand } from '../core/store.js'
 import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
@@ -33,6 +33,10 @@ function Rahmen() {
   useLernstand()
   const { pfad } = useRoute()
   const [frage, setFrage] = useState(null)
+  // Scheitert das Speichern (voll/privater Modus), muss die Lernende das
+  // erfahren — sonst zeigt die App Fortschritt, der beim Neuladen weg ist.
+  const [speicherProblem, setSpeicherProblem] = useState(false)
+  useEffect(() => beiSpeicherproblem(() => setSpeicherProblem(true)), [])
   const modus = istAbenteuerPfad(pfad)
     ? 'abenteuer'
     : istRedlingoPfad(pfad)
@@ -92,6 +96,11 @@ function Rahmen() {
       ohneNav={ohneNav}
       aside={mitZusatz && !nichtZusatz ? <SideColumn modus={modus} /> : null}
     >
+      {speicherProblem && (
+        <p className="rk-fehler" role="alert">
+          {T.allgemein.speicherProblem}
+        </p>
+      )}
       <AppRouter />
 
       <Modal

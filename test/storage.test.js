@@ -86,6 +86,27 @@ test('voller Speicher (QuotaExceeded) laesst schreibe still scheitern', () => {
   assert.equal(schreibe(KEYS.fortschritt, { xp: 10 }), false)
 })
 
+test('der erste Schreibfehler wird genau einmal gemeldet', async () => {
+  const speicher = frischerSpeicher()
+  const modul = await frischesModul()
+  let meldungen = 0
+  modul.beiSpeicherproblem(() => (meldungen += 1))
+  speicher.kaputt = true
+  modul.schreibe(modul.KEYS.fortschritt, { xp: 1 })
+  modul.schreibe(modul.KEYS.profil, { name: 'x' })
+  assert.equal(meldungen, 1, 'jede weitere Meldung waere Laerm')
+})
+
+test('wer sich nach dem Problem anmeldet, bekommt es sofort nachgereicht', async () => {
+  const speicher = frischerSpeicher()
+  const modul = await frischesModul()
+  speicher.kaputt = true
+  modul.schreibe(modul.KEYS.fortschritt, { xp: 1 })
+  let gemeldet = false
+  modul.beiSpeicherproblem(() => (gemeldet = true))
+  assert.equal(gemeldet, true)
+})
+
 test('entferne loescht genau einen Schluessel', () => {
   frischerSpeicher()
   schreibe(KEYS.ui, { mode: 'modern' })
