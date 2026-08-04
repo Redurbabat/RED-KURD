@@ -59,3 +59,10 @@ if (wurzel) {
 if ('serviceWorker' in navigator && import.meta.env.PROD) {
   navigator.serviceWorker.register('/sw.js').catch(() => {})
 }
+
+// Den Browser bitten, den lokalen Speicher dauerhaft zu behalten — Safari
+// raeumt Website-Daten sonst nach sieben Tagen ohne Besuch ab (ITP) und der
+// gesamte Lernstand waere weg. Eine Ablehnung ist still und folgenlos.
+if (navigator.storage?.persist) {
+  navigator.storage.persist().catch(() => {})
+}
