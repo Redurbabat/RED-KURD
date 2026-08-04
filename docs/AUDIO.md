@@ -28,6 +28,20 @@ gescheiterter Abruf des Audio-Index wird nicht mehr dauerhaft gemerkt.
    von der Commons-API mitnehmen (`audio-lizenzen.json`) und die App eine
    Quellen-Ansicht zeigen — bei den Fotos ist genau das bereits vorbildlich
    gelöst (`wortFotos.js` speichert Urheber + Lizenz).
+
+   **Konkretes Rezept** (braucht Netzzugang zu commons.wikimedia.org —
+   aus der Cloud-Umgebung derzeit nicht erreichbar, lokal ausführen):
+   1. Wie in `audio-holen.py` Schritt 2 die Kategorien
+      `Lingua Libre pronunciation-kur`/`-kmr` per `generator=categorymembers`
+      listen — der Dateititel `LL-Q36163 (kur)-<Sprecher>-<wort>.wav`
+      enthält Sprecher und Wort; das sind nur wenige API-Seiten.
+   2. Für die Titel gebündelt (50 je Anfrage)
+      `prop=imageinfo&iiprop=extmetadata` abrufen: `Artist`,
+      `LicenseShortName`, `LicenseUrl`.
+   3. Als `public/audio/lizenzen.json` speichern
+      (`wort → { sprecher, lizenz, quelleUrl }`) und in der App neben den
+      Fotoquellen anzeigen. Der Integritätstest (`test/audioIndex.test.js`)
+      kann dann zusätzlich prüfen, dass jede Aufnahme einen Nachweis hat.
 2. **Index bereinigen:** `index.json` enthält Müll-Schlüssel
    (`.find`, `_gulan` u. a.) durch die Dateinamen-Sanitisierung in
    `audio-holen.py`; verschiedene Wörter können auf denselben Dateinamen
