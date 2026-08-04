@@ -21,6 +21,7 @@ import {
   exportiereAlles,
   ankiZeilen,
   setzeFortschritt,
+  istLernstand,
 } from '../../../core/progress/progressStore.js'
 import { importiereSpeicherstand } from '../../../core/storage.js'
 import { kursFortschritt } from '../../../core/courses/courseRepository.js'
@@ -472,7 +473,9 @@ function Datenverwaltung() {
     leser.onload = () => {
       try {
         const daten = JSON.parse(String(leser.result))
-        if (!daten || typeof daten !== 'object' || !daten.fortschritt) {
+        // Formpruefung vor dem Schreiben: Ein kaputter oder fremder Inhalt
+        // darf den echten Lernstand niemals ueberschreiben.
+        if (!daten || typeof daten !== 'object' || !istLernstand(daten.fortschritt)) {
           throw new Error('kein Lernstand')
         }
         if (daten.speicher) importiereSpeicherstand(daten.speicher)

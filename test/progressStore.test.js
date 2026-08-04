@@ -28,6 +28,7 @@ const {
   gibXp,
   holeFortschritt,
   holeTageszielBelohnung,
+  istLernstand,
   karteBewerten,
   kennstWort,
   level,
@@ -218,12 +219,24 @@ test('eine Welt-Truhe laesst sich genau einmal oeffnen', () => {
 
 // ===== Export =====
 
-test('exportiereAlles liefert gueltiges JSON ohne die laufende Sitzung', () => {
+test('exportiereAlles liefert gueltiges JSON ohne Sitzung und ohne Doppelung', () => {
   setzeFortschritt({ xp: 42 })
   const daten = JSON.parse(exportiereAlles())
   assert.equal(daten.app, 'RED-KURD')
   assert.equal(daten.fortschritt.xp, 42)
   assert.ok(!('sitzung' in daten.speicher), 'die Sitzung bleibt geraete-lokal')
+  assert.ok(!('fortschritt' in daten.speicher), 'der Fortschritt steht nur einmal in der Datei')
+})
+
+test('istLernstand erkennt echte Lernstaende und weist Muell ab', () => {
+  assert.equal(istLernstand({ xp: 10, karten: {} }), true)
+  assert.equal(istLernstand({ einheiten: { begruessung: 80 } }), true)
+  assert.equal(istLernstand({ version: 2 }), false, 'kein bekanntes Lernfeld')
+  assert.equal(istLernstand(null), false)
+  assert.equal(istLernstand('xp: 10'), false)
+  assert.equal(istLernstand([{ xp: 10 }]), false)
+  assert.equal(istLernstand({ xp: 10, karten: 'kaputt' }), false, 'karten muss ein Objekt sein')
+  assert.equal(istLernstand({ serie: 3, tage: [1, 2] }), false, 'tage darf keine Liste sein')
 })
 
 test('ankiZeilen exportiert jedes Wortpaar genau einmal mit Tab', () => {
