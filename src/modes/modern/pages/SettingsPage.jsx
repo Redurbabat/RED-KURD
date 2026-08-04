@@ -192,7 +192,7 @@ function KontoKarte() {
     }
   }
 
-  // Ohne Anmelde-Server (lokal, Vercel, offline) gibt es kein Konto —
+  // Ohne Anmelde-Server (lokal, statischer Host, offline) gibt es kein Konto —
   // der Lernstand liegt dann vollstaendig im Browser.
   if (!stand.backend) {
     return (

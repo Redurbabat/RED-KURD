@@ -118,8 +118,8 @@ Mit ✅ markierte Punkte wurden auf diesem Branch bereits behoben.
   Index bereinigt und testgesichert. **Offen: Lizenzlücke** — CC-BY-SA-
   Aufnahmen ohne gespeicherte Urheber/Lizenz (bei Fotos vorbildlich gelöst!).
 - **Bundle/Assets**: ✅ Code-Splitting aktiv (Start 404 statt 612 kB).
-  Offen: 20 MB unoptimierte Bilder, og.png 2,35 MB,
-  `__SITE_ORIGIN__`-Platzhalter bleibt auf Vercel unersetzt.
+  ✅ Bilder auf 14 MB verkleinert, og.png 348 kB. Deployment laeuft
+  ueber Cloudflare (Worker ersetzt `__SITE_ORIGIN__` zur Laufzeit).
 - **Schriften deklariert, aber nie geladen** (Nunito/Baloo 2/Noto Naskh
   Arabic ohne @font-face) — alles fällt still auf Systemschrift zurück.
 - ~~AuthPage ohne Safe-Area~~ ✅ behoben (env()-Insets).
@@ -169,8 +169,9 @@ Noch offen (Reihenfolge):
    Angaben von der Commons-API mitnehmen.
 2. **Stilles Speicherversagen sichtbar machen**: Stores werten den
    Rückgabewert von `schreibe()` aus und warnen einmalig auf Deutsch.
-3. **Bilder optimieren** (20 MB → mobile Größen, og.png < 300 kB) und
-   `__SITE_ORIGIN__` beim Build ersetzen (Vercel-Vorschauen).
+3. ~~Bilder optimieren~~ ✅ erledigt (14 MB, og.png 348 kB);
+   `__SITE_ORIGIN__` ersetzt der Cloudflare-Worker, optional SITE_ORIGIN
+   beim Build.
 4. **Import validieren** (Grundprüfung + Rückgabewert auswerten) und den
    doppelten Fortschritt aus der Exportdatei nehmen.
 5. **Safari-ITP-Schutz**: `navigator.storage.persist()` anfragen und/oder

@@ -10,16 +10,12 @@ await copyFile(
   new URL('../dist/server/auth.js', import.meta.url)
 )
 
-// __SITE_ORIGIN__ (og:image/twitter:image) ersetzt normalerweise der
-// Cloudflare-Worker zur Laufzeit. Statische Hosts wie Vercel liefern den
-// Platzhalter sonst woertlich aus — kaputte Link-Vorschauen. Ist SITE_ORIGIN
-// (oder Vercels produktive URL) beim Build bekannt, ersetzen wir schon hier;
-// ohne Angabe bleibt der Platzhalter fuer den Worker stehen.
-const origin =
-  process.env.SITE_ORIGIN ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : '')
+// __SITE_ORIGIN__ (og:image/twitter:image) ersetzt im Normalfall der
+// Cloudflare-Worker zur Laufzeit — er ist das Deployment-Ziel der App.
+// Fuer Sonderfaelle (Vorschau auf einem rein statischen Host) kann
+// SITE_ORIGIN den Platzhalter schon beim Build ersetzen; ohne Angabe
+// bleibt er fuer den Worker stehen.
+const origin = process.env.SITE_ORIGIN || ''
 if (origin) {
   const indexUrl = new URL('../dist/index.html', import.meta.url)
   const html = await readFile(indexUrl, 'utf8')

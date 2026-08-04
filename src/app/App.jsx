@@ -139,7 +139,7 @@ export default function App() {
 
   async function kontoPruefen() {
     setKonto((alt) => ({ ...alt, status: 'laedt', fehler: '' }))
-    // Local-first: gibt es keinen Anmelde-Server (lokal, Vercel, offline),
+    // Local-first: gibt es keinen Anmelde-Server (lokal, statischer Host, offline),
     // läuft die App ohne Konto weiter — der Lernstand liegt ohnehin im Browser.
     // Nur wenn der Server da ist, verlangt sie eine Anmeldung — es sei denn,
     // die Nutzerin hat sich ausdrücklich für „ohne Konto lernen“ entschieden.

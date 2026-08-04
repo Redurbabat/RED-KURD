@@ -111,7 +111,21 @@ if (!TROCKEN && (!BASIS || !TOKEN)) {
   throw new Error('RED_KURD_SITE_URL und RED_KURD_UPLOAD_TOKEN müssen gesetzt sein.')
 }
 
-const dateien = await dateienUnter(QUELLE)
+// Der Quellordner liegt bewusst nicht in Git — in einem frischen Klon soll
+// die Pruefung das freundlich sagen statt mit einem Stacktrace abzubrechen.
+let dateien = []
+try {
+  dateien = await dateienUnter(QUELLE)
+} catch (fehler) {
+  if (fehler.code === 'ENOENT') {
+    console.log(
+      `Kein Cloud-Datenordner unter ${QUELLE} — nichts zu pruefen.\n` +
+        'Oeffentliche Daten dort ablegen (siehe docs/CLOUDFLARE-R2.md), dann erneut ausfuehren.'
+    )
+    process.exit(0)
+  }
+  throw fehler
+}
 const eintraege = await Promise.all(
   dateien.map(async (pfad) => ({ pfad, info: await stat(pfad), key: schluessel(pfad) }))
 )
