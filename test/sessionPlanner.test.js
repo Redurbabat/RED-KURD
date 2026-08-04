@@ -90,6 +90,44 @@ test('planeTraining uebt ausschliesslich die gewuenschte Art', () => {
   for (const u of plan.uebungen) assert.equal(u.art, 'tippen')
 })
 
+test('planeTraining laesst skill-fremde faellige Karten draussen', () => {
+  // Eine „erkennen"-Karte in einem Tipp-Training wuerde die falsche Karte
+  // bewerten — die faellige Karte selbst bliebe fuer immer faellig.
+  setzeFortschritt({ karten: faelligeKartenAus(15, 'erkennen') })
+  const plan = planeTraining('tippen', 6)
+  for (const u of plan.uebungen) {
+    assert.notEqual(u.w.skill, 'erkennen', `${u.w.de} kam aus einer erkennen-Karte`)
+  }
+})
+
+test('die gemeldeten Zahlen passen exakt zu den gebauten Uebungen', () => {
+  for (const [karten, dauerId] of [
+    [faelligeKartenAus(30), 'kurz'],
+    [faelligeKartenAus(5), 'standard'],
+    [{}, 'intensiv'],
+  ]) {
+    setzeFortschritt({ karten })
+    const plan = planeSitzung(dauerId)
+    assert.equal(
+      plan.uebungen.length,
+      plan.wiederholungen + plan.neueWoerter,
+      'wiederholungen + neueWoerter muss die Uebungszahl ergeben'
+    )
+    assert.ok(plan.uebungen.length <= plan.dauer.aufgaben)
+  }
+})
+
+test('dasselbe Wortpaar steht nur einmal in einer Wiederholung — egal wie viele Fertigkeiten faellig sind', () => {
+  const wort = EINHEITEN[0].woerter[0]
+  const karten = {}
+  for (const skill of ['erkennen', 'abrufen', 'schreiben', 'hoeren']) {
+    karten[`${wort.de}|${wort.ku}|${skill}`] = { stufe: 1, faellig: '2020-01-01' }
+  }
+  setzeFortschritt({ karten })
+  const plan = planeWiederholung(10)
+  assert.equal(plan.anzahl, 1)
+})
+
 test('die Einheit einer Lektion existiert wirklich im Kurs', () => {
   setzeFortschritt({})
   const plan = planeSitzung('standard')

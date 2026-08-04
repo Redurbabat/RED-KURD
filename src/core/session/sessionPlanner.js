@@ -2,7 +2,7 @@
 // faellige Wiederholungen zuerst, dann neue Wörter aus der aktuellen Einheit.
 import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.js'
 import { EINHEITEN, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
-import { baueUebungen, mische } from './exerciseFactory.js'
+import { SKILL_JE_ART, baueUebungen, mische } from './exerciseFactory.js'
 
 export const DAUERN = [
   { id: 'kurz', name: 'Kurz', dauer: 'ca. 5 Min', minuten: 5, aufgaben: 8 },
@@ -24,11 +24,16 @@ function alsWort(karte) {
   return { de: karte.de, ku: karte.ku, bild: bildVon(karte.ku), skill: karte.skill }
 }
 
-/** Karten, die dasselbe Wortpaar in mehreren Fertigkeiten haben, nur einmal nehmen. */
-function ohneDoppelte(karten) {
+/**
+ * Dasselbe Wortpaar nur einmal je Sitzung — egal mit welcher Fertigkeit.
+ * (Der Schluessel darf den Skill NICHT enthalten: faellige Karten sind pro
+ * de|ku|skill ohnehin einmalig, mit Skill im Schluessel waere das ein No-op
+ * und „Silav" koennte viermal in derselben Wiederholung stehen.)
+ */
+function ohneDoppelte(woerter) {
   const gesehen = new Set()
-  return karten.filter((k) => {
-    const key = `${k.de}|${k.ku}|${k.skill || ''}`
+  return woerter.filter((w) => {
+    const key = `${w.de}|${w.ku}`
     if (gesehen.has(key)) return false
     gesehen.add(key)
     return true
@@ -50,11 +55,24 @@ export function planeSitzung(dauerId = 'standard') {
   const anteil = rueckstand ? 0.8 : 0.6
   const nWdh = Math.min(faellig.length, Math.ceil(anzahl * anteil))
 
-  const wdhWoerter = ohneDoppelte(mische(faellig).slice(0, nWdh).map(alsWort))
-  const nNeu = Math.max(anzahl - wdhWoerter.length, rueckstand ? 2 : 3)
-  const neueWoerter = mische(einheit.woerter).slice(0, nNeu)
+  const wdhWoerter = ohneDoppelte(mische(faellig).map(alsWort)).slice(0, nWdh)
 
-  const uebungen = mische([...baueUebungen(wdhWoerter), ...baueUebungen(neueWoerter)]).slice(0, anzahl)
+  // Neue Woerter fuellen den Rest — ein Mindestmass neuen Stoffs ist auch bei
+  // Rueckstand garantiert. Was schon als Wiederholung drin ist, kommt nicht
+  // noch einmal als „neu" dazu.
+  const schonDrin = new Set(wdhWoerter.map((w) => `${w.de}|${w.ku}`))
+  const nNeu = Math.max(anzahl - wdhWoerter.length, rueckstand ? 2 : 3)
+  const neueWoerter = mische(einheit.woerter)
+    .filter((w) => !schonDrin.has(`${w.de}|${w.ku}`))
+    .slice(0, nNeu)
+
+  // Erst begrenzen, dann bauen: Ein Zuschnitt NACH dem Mischen wuerde
+  // zufaellig auch faellige Wiederholungen wegwerfen, waehrend die
+  // gemeldeten Zahlen noch vom vollen Plan erzaehlen.
+  const wdhFinal = wdhWoerter.slice(0, Math.max(0, anzahl - neueWoerter.length))
+  const wdhUebungen = baueUebungen(wdhFinal)
+  const neuUebungen = baueUebungen(neueWoerter)
+  const uebungen = mische([...wdhUebungen, ...neuUebungen])
 
   const hoerAufgaben = uebungen.filter((u) => u.art === 'hoeren').length
   const schreibAufgaben = uebungen.filter((u) => u.art === 'tippen').length
@@ -64,8 +82,8 @@ export function planeSitzung(dauerId = 'standard') {
     titel: 'Heutige Mischung',
     dauer,
     einheit,
-    wiederholungen: wdhWoerter.length,
-    neueWoerter: neueWoerter.length,
+    wiederholungen: wdhUebungen.length,
+    neueWoerter: neuUebungen.length,
     hoerAufgaben,
     schreibAufgaben,
     rueckstand,
@@ -113,7 +131,13 @@ function erreichterWortschatz() {
 }
 
 export function planeTraining(art, anzahl = 12) {
-  const faellig = faelligeKarten().map(alsWort)
+  // Nur faellige Karten, deren Fertigkeit zur Trainingsart passt: Eine
+  // „erkennen"-Karte in einem Tipp-Training wuerde die Karte „…|schreiben"
+  // bewerten — die faellige Karte selbst bliebe fuer immer faellig.
+  const passenderSkill = SKILL_JE_ART[art]
+  const faellig = faelligeKarten()
+    .filter((k) => !k.skill || k.skill === 'gemischt' || k.skill === passenderSkill)
+    .map(alsWort)
   const aus = mische(faellig.length >= anzahl ? faellig : [...faellig, ...mische(aktuelleEinheit().woerter)])
   let woerter = aus.slice(0, anzahl)
 
