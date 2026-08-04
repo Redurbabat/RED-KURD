@@ -11,6 +11,8 @@ export const KEYS = {
   aufgaben: 'red-kurd-tasks-v1',
   herzen: 'red-kurd-hearts-v1',
   sprachkurse: 'red-kurd-language-courses-v1',
+  // Aktiver App-Bereich (Sprache lernen / Code lernen / AI-Sprache).
+  appBereich: 'red-kurd-active-app-mode-v1',
   // Bewusste Entscheidung „ohne Konto lernen“ — ueberlebt das Neuladen,
   // bleibt aber geraete-lokal (siehe NUR_LOKAL) und wandert nie in Sicherungen.
   ohneKonto: 'red-kurd-ohne-konto-v1',
