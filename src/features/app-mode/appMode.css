@@ -720,3 +720,90 @@
   font-size: var(--text-sm);
   white-space: nowrap;
 }
+
+/* ===== Gemeinsame Wochenübersicht auf der App-Auswahl ===== */
+
+.woche-uebersicht {
+  padding: var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+}
+.woche-uebersicht h2 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+}
+.woche-tage {
+  list-style: none;
+  display: flex;
+  gap: var(--space-1);
+  justify-content: space-between;
+}
+.woche-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.woche-tag-punkt {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--rk-border);
+  color: transparent;
+}
+.woche-tag.aktiv .woche-tag-punkt {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.woche-tag.heute .woche-tag-punkt {
+  box-shadow: 0 0 0 2px var(--rk-primary);
+}
+.woche-tag-name {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-tag.heute .woche-tag-name {
+  color: var(--rk-text);
+  font-weight: 700;
+}
+.woche-zusammenfassung {
+  margin-top: var(--space-3);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-apps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.woche-app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  border-left: 4px solid var(--rk-border-strong);
+  font-size: var(--text-sm);
+}
+.woche-app.bereich-language { border-left-color: var(--rk-primary); }
+.woche-app.bereich-code { border-left-color: var(--rk-purple); }
+.woche-app.bereich-prompting { border-left-color: var(--rk-red); }
+.woche-app.bereich-electro { border-left-color: var(--rk-yellow); }
+.woche-app-wert {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.woche-app-tage {
+  color: var(--rk-text-muted);
+  font-weight: 400;
+}

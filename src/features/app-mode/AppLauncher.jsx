@@ -3,6 +3,7 @@
 // Erscheint beim allerersten Start und jederzeit ueber „Apps" im Umschalter.
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Wochenuebersicht from './Wochenuebersicht.jsx'
 import { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.js'
 import './appMode.css'
 
@@ -37,6 +38,8 @@ export default function AppLauncher({ oeffnen }) {
         <h1>Deine kostenlose lokale Lernwelt.</h1>
         <p className="app-launcher-text">Wähle, was du lernen möchtest.</p>
       </header>
+
+      <Wochenuebersicht />
 
       <div className="app-launcher-karten">
         {APP_MODE_LISTE.map((mode) => (

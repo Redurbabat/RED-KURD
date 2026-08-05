@@ -445,6 +445,18 @@ const SCHRITTE = {
       richtig: 0,
       erklaerung: 'gap regelt die Lücken in Flex- und Grid-Layouts.',
     },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Stell die beiden Knöpfe SELBST nebeneinander — mit Abstand dazwischen.',
+      startText: '<style>\n.reihe {\n\n}\n</style>\n<div class="reihe"><button>Ja</button><button>Nein</button></div>',
+      checks: [
+        { id: 'flex', text: 'display: flex ist gesetzt', pruefe: (c) => /display\s*:\s*flex/i.test(c) },
+        { id: 'gap', text: 'gap sorgt für Abstand', pruefe: (c) => /gap\s*:\s*\d/i.test(c) },
+      ],
+      musterloesung:
+        '<style>\n.reihe {\n  display: flex;\n  gap: 12px;\n}\n</style>\n<div class="reihe"><button>Ja</button><button>Nein</button></div>',
+      tipp: 'display: flex; und gap: 12px; in die .reihe-Regel.',
+    },
   ],
 
   'css-5': [
@@ -717,6 +729,33 @@ const SCHRITTE = {
       code: true,
       richtig: 0,
       erklaerung: 'Es gibt viele Ereignisse: click, input, submit …',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib den Klick-Lauscher SELBST — beim Klick soll im Absatz dein eigener Text erscheinen. Probier ihn danach in der Vorschau aus!',
+      skript: true,
+      huelle:
+        '<button id="knopf" type="button">Klick mich</button>\n<p id="antwort"></p>\n<script>{{code}}</script>',
+      checks: [
+        {
+          id: 'knopf',
+          text: "Den Knopf holen: document.querySelector('#knopf')",
+          pruefe: (c) => /document\.querySelector\(\s*['"]#knopf['"]\s*\)/.test(c),
+        },
+        {
+          id: 'lauscher',
+          text: "addEventListener('click', …) hängt daran",
+          pruefe: (c) => /\.addEventListener\(\s*['"]click['"]/.test(c),
+        },
+        {
+          id: 'antwort',
+          text: 'Im Inneren wird ein Text gesetzt',
+          pruefe: (c) => /\.textContent\s*=\s*['"][^'"]+['"]/.test(c),
+        },
+      ],
+      musterloesung:
+        "document.querySelector('#knopf').addEventListener('click', () => { document.querySelector('#antwort').textContent = 'Spas!'; });",
+      tipp: "querySelector('#knopf').addEventListener('click', () => { … })",
     },
   ],
 

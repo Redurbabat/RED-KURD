@@ -10,6 +10,7 @@ import * as schule from '../../core/elektro/schuleStore.js'
 import { FORMELN, SICHERHEITSREGELN } from '../../core/elektro/formeln.js'
 import { gerundet, istBestanden } from '../../core/elektro/notenRechnung.js'
 import { electroLessons } from './data/electroLessons.js'
+import { electroPraxisAufgaben } from './data/electroPraxis.js'
 import { electroLernstand } from './electroProgressStore.js'
 
 /** Eine Formel je Tag — dieselbe für alle, wechselt täglich. */
@@ -30,6 +31,9 @@ export default function ElektroHeute({ zumBereich }) {
   const offeneWochen = schule.offeneWochen()
   const lernen = schule.pruefungen().filter((p) => p.status === 'Am Lernen').length
   const formel = formelDesTages(heuteWert)
+  const offeneRechenaufgaben = electroPraxisAufgaben.filter(
+    (a) => !electroLernstand.istErledigt(a.id)
+  ).length
   const naechsteLektion =
     electroLessons.find((l) => electroLernstand.statusFuer(electroLessons)[l.id] === 'current') || null
   const regelHeute = SICHERHEITSREGELN[(new Date(`${heuteWert}T00:00:00`).getDate() || 1) % 5]
@@ -110,6 +114,18 @@ export default function ElektroHeute({ zumBereich }) {
         </p>
         <PrimaryButton art="still" icon="fortschritt" onClick={() => zumBereich('formeln')}>
           Zum Rechner
+        </PrimaryButton>
+      </Card>
+
+      <Card titel="Rechnen üben" icon="stift">
+        <p className="el-gross">
+          <strong>{offeneRechenaufgaben}</strong> von {electroPraxisAufgaben.length} Aufgaben offen
+        </p>
+        <p className="el-meta">
+          Ohm, Leistung, Reihen- und Parallelschaltung — mit Sofort-Prüfung.
+        </p>
+        <PrimaryButton art="still" icon="play" onClick={() => zumBereich('lernen')}>
+          Aufgaben öffnen
         </PrimaryButton>
       </Card>
 

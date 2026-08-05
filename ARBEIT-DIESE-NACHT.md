@@ -481,9 +481,28 @@ Test besteht darauf, dass **jede** Lektion Schritte hat:
   schönen Nebenbefunds, dass spätere Lektionen korrekt gesperrt bleiben,
   bis die davor fertig sind.
 
+## Nachtrag 17: Gemeinsame Woche, mehr Rechenaufgaben, mehr „Jetzt du"
+
+- **Deine Woche** steht jetzt auf der App-Auswahl: sieben Tagespunkte
+  (heute hervorgehoben), „X von 7 Tagen gelernt", die Reihe am Stück und
+  darunter je App ihre eigene Zahl in ihrer eigenen Farbe.
+  **Bewusst keine Gesamtsumme**: Die Sprach-App zählt gelöste Aufgaben,
+  die anderen XP — das zu addieren wäre eine erfundene Zahl. Ein Tag gilt
+  als aktiv, sobald in irgendeiner App etwas passiert ist; die Reihe
+  bricht nicht schon am Morgen, weil heute noch nichts los war.
+- **Fünf neue Elektro-Rechenaufgaben** (10 gesamt): Reihenschaltung
+  (Gesamtwiderstand und Strom in mA), Parallelschaltung (zwei gleiche
+  und zwei verschiedene mit R = R1·R2 ÷ (R1+R2)) und „Was kostet der
+  Boiler?" von der Leistung zur Kilowattstunde.
+- **Rechnen üben** ist jetzt auch vom Elektro-Dashboard einen Fingertipp
+  entfernt — mit Zähler, wie viele Aufgaben noch offen sind.
+- **Zwei neue „Jetzt du"-Schritte**: Flexbox-Reihe selbst schreiben
+  (css-4, mit vorbereitetem Gerüst) und den Klick-Lauscher selbst tippen
+  (js-2) — der eigene Code läuft danach wirklich in der Vorschau.
+- 10 neue Tests (304 gesamt). E2E: 20 Prüfungen grün — Wochenübersicht
+  leer und gefüllt, Einheiten getrennt, Parallelschaltung gelöst
+  (falsches Ergebnis bleibt offen), „Jetzt du" mit Live-Vorschau.
+
 ## Offene nächste Schritte
-- mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
-- mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
-  Code: kleine JS-Aufgaben)
-- gemeinsame Wochenübersicht über alle Bereiche
+- weitere Mitmach-Aufgaben (kleine JS-Aufgaben im Code-Bereich)
