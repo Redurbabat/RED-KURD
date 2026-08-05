@@ -12,11 +12,23 @@ const ICONS = {
 }
 
 /**
- * @param {{activeMode:string, onChangeMode:(mode:string)=>void}} props
+ * @param {{activeMode:string, onChangeMode:(mode:string)=>void,
+ *          onOpenLauncher?:()=>void}} props
  */
-export default function AppModeSwitcher({ activeMode, onChangeMode }) {
+export default function AppModeSwitcher({ activeMode, onChangeMode, onOpenLauncher }) {
   return (
     <nav className="app-umschalter" aria-label="App-Bereich wechseln">
+      {onOpenLauncher && (
+        <button
+          type="button"
+          className="app-umschalter-knopf app-umschalter-apps"
+          aria-label="Zur App-Auswahl"
+          onClick={onOpenLauncher}
+        >
+          <Icon name="pfeilLinks" groesse={18} />
+          <span>Apps</span>
+        </button>
+      )}
       {APP_MODE_LISTE.map((mode) => {
         const aktiv = mode === activeMode
         return (

@@ -12,7 +12,10 @@ export const KEYS = {
   herzen: 'red-kurd-hearts-v1',
   sprachkurse: 'red-kurd-language-courses-v1',
   // Aktiver App-Bereich (Sprache lernen / Code lernen / AI-Sprache).
+  // appBereich ist der alte Schluessel — er wird weiter beschrieben, damit
+  // ein Ruecksprung auf eine aeltere App-Version nichts verliert.
   appBereich: 'red-kurd-active-app-mode-v1',
+  appAktiv: 'red-kurd-active-app-v1',
   // Lernstand der neuen Bereiche — getrennt vom Sprach-Lernstand.
   codeFortschritt: 'red-kurd-code-progress-v1',
   promptingFortschritt: 'red-kurd-prompting-progress-v1',

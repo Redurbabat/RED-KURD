@@ -324,6 +324,39 @@ Wunsch: „Ich sollte auch selber schreiben, nicht nur klicken."
   eigener Text erscheint in der Vorschau, eigener JS-Gruß („Rojbaş!")
   läuft, Lektionen weiterhin mit +10 XP abschließbar.
 
+## Nachtrag 12: Multi-App-System — App-Auswahl, harte Trennung, App-Identitäten
+
+Korrektur-Auftrag: „Code lernen soll sich wie eine EIGENE App anfühlen —
+mehrere Apps in einer Website, jede öffnet sich getrennt."
+
+- **App-Auswahl (Launcher)**: Beim allerersten Start fragt RED-KURD
+  „Welche App möchtest du öffnen?" — vier Karten (Sprache lernen 🌍,
+  Code lernen, AI-Sprache, Elektro-Lehre), jede mit Symbol,
+  Beschreibung, eigener Farbe und großem Öffnen-Knopf. Während die
+  Auswahl offen ist, ist KEINE App sichtbar.
+- **Harte Trennung bestätigt und getestet**: Die aktive App füllt den
+  ganzen Bildschirm; die Sprach-App (inkl. ihrer Navigation und
+  Kopfleiste) wird in den anderen Apps gar nicht erst gerendert —
+  nichts überlappt, nichts steht untereinander.
+- **„← Apps"**: In jeder App führt der Apps-Knopf im Umschalter zurück
+  zur Auswahl; die Schnell-Chips (Sprache | Code | AI | Elektro)
+  bleiben für den direkten Wechsel.
+- **Neuer Speicher-Schlüssel** `red-kurd-active-app-v1` (Werte
+  language/code/prompting/electro, Standard language). Der alte
+  Schlüssel `red-kurd-active-app-mode-v1` wird beim Lesen übernommen
+  und beim Speichern weiter mitgeschrieben — ein Rücksprung auf eine
+  ältere Version verliert nichts.
+- **App-Identitäten**: Sprache grün/türkis, Code blau/violett,
+  AI-Sprache rot/orange, Elektro gold — in Auswahl und Umschalter.
+- 1 neuer Test + erweiterte Storage-Tests (255 gesamt). E2E: alle
+  6 Akzeptanztests des Auftrags grün (36 Prüfungen) — Auswahl, Nur-Code,
+  Nur-Sprache, Nur-AI, Reload-Persistenz, Mobile-Regeln (44-px-Buttons,
+  keine horizontale Scroll-Leiste).
+- Struktur: statt des vorgeschlagenen src/apps/-Umbaus wurde passend in
+  die bestehende Struktur integriert (src/features/app-mode/ trägt
+  Launcher + Umschalter + Speicher; die Apps liegen in src/features/*
+  bzw. src/modes für Sprache) — kein riskanter Großumzug.
+
 ## Offene nächste Schritte
 
 - mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)

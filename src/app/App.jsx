@@ -19,9 +19,10 @@ import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
 import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
+import AppLauncher from '../features/app-mode/AppLauncher.jsx'
 import AppModeSwitcher from '../features/app-mode/AppModeSwitcher.jsx'
 import { APP_MODES } from '../features/app-mode/appModes.js'
-import { loadAppMode, saveAppMode } from '../features/app-mode/appModeStorage.js'
+import { hatGespeicherteApp, loadAppMode, saveAppMode } from '../features/app-mode/appModeStorage.js'
 import { LoadingState } from '../components/common/EmptyState.jsx'
 
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
@@ -149,12 +150,16 @@ function Rahmen() {
 export default function App() {
   const [eingerichtet, setEingerichtet] = useState(() => istEingerichtet())
   const [konto, setKonto] = useState({ status: 'laedt', wert: null, fehler: '' })
-  // Der aktive App-Bereich (Sprache/Code/AI) — ueberlebt das Neuladen.
+  // Der aktive App-Bereich (Sprache/Code/AI/Elektro) — ueberlebt das Neuladen.
   const [activeMode, setActiveMode] = useState(() => loadAppMode())
+  // Beim allerersten Start zeigt RED-KURD die App-Auswahl; danach oeffnet
+  // sich direkt die zuletzt genutzte App. „Apps" holt die Auswahl zurueck.
+  const [launcherOffen, setLauncherOffen] = useState(() => !hatGespeicherteApp())
 
   function handleModeChange(nextMode) {
     setActiveMode(nextMode)
     saveAppMode(nextMode)
+    setLauncherOffen(false)
   }
 
   // Die anderen Bereiche im Leerlauf nachladen, damit der Service Worker sie
@@ -232,12 +237,22 @@ export default function App() {
     return <Onboarding fertig={() => setEingerichtet(true)} />
   }
 
-  // Genau ein Bereich ist sichtbar. Der Sprachbereich ist die bisherige App
+  // Die App-Auswahl ist eine eigene Vollbild-Seite — waehrend sie offen ist,
+  // ist keine der Apps sichtbar.
+  if (launcherOffen) {
+    return <AppLauncher oeffnen={handleModeChange} />
+  }
+
+  // Genau EINE App ist sichtbar. Der Sprachbereich ist die bisherige App
   // mit Router und Huelle — an ihr aendert sich nichts, sie wird nur bei
   // Bedarf ein- und ausgeblendet.
   return (
     <div className="app-bereiche">
-      <AppModeSwitcher activeMode={activeMode} onChangeMode={handleModeChange} />
+      <AppModeSwitcher
+        activeMode={activeMode}
+        onChangeMode={handleModeChange}
+        onOpenLauncher={() => setLauncherOffen(true)}
+      />
 
       {activeMode === APP_MODES.LANGUAGE && (
         <RouterProvider>
