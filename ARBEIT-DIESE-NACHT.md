@@ -179,6 +179,23 @@ die sich direkt dort öffnet wie eine normale Tastatur, aber für Code."
   Löschen + ⏎), alle Checks grün, +20 XP; Tasten ≥ 44 px, keine
   horizontale Scrollbar, Umschalten in beide Richtungen.
 
+## Nachtrag 6: Fokus-Fehler behoben — Tastatur klappte nach jedem Buchstaben zu
+
+Gemeldet: „Wenn ich etwas schreibe, geht nach jedem Buchstaben die
+Tastatur wieder weg."
+
+- Ursache: Die Fokusfalle in `Modal.jsx` lief bei **jedem Neu-Zeichnen**
+  neu (weil sie von der bei jedem Render neuen `schliessen`-Funktion
+  abhing) — jeder Tastendruck riss so den Fokus aus dem Eingabefeld auf
+  den Schließen-Knopf, und auf dem iPhone klappte die Tastatur zu.
+  Betroffen waren alle Eingabefelder in Modalen: Praxis-Aufgaben UND
+  die Notizfelder der Übungen.
+- Fix: Der Effekt hängt nur noch am Auf/Zu des Modals; die aktuelle
+  `schliessen`-Funktion kommt aus einem Ref.
+- E2E-Nachweis (vorher rot, nachher grün): „abcdef" tippen → alle
+  Buchstaben kommen an, Fokus bleibt im Feld — mit Gerätetastatur, mit
+  Code-Tastatur und im Übungs-Notizfeld.
+
 ## Offene nächste Schritte
 
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
