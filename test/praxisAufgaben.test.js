@@ -80,6 +80,21 @@ test('HTML-Pruefungen erkennen echte Loesungen, nicht nur Schluesselwoerter im K
   assert.equal(ohneButton, false)
 })
 
+test('Formular-Pruefung verlangt, dass for und id wirklich zusammenpassen', () => {
+  const formular = codePraxisAufgaben.find((a) => a.id === 'praxis-formular')
+  const verbunden = formular.checks.find((c) => c.id === 'verbunden')
+  assert.equal(
+    verbunden.pruefe('<label for="name">Name</label>\n<input id="name" type="text" />'),
+    true
+  )
+  assert.equal(
+    verbunden.pruefe('<label for="name">Name</label>\n<input id="mail" type="text" />'),
+    false,
+    'for und id passen nicht zusammen'
+  )
+  assert.equal(verbunden.pruefe('<input id="name" />'), false, 'ohne Label kein Treffer')
+})
+
 test('HTML-Pruefungen tolerieren schlaue Anfuehrungszeichen (iOS-Tastatur)', () => {
   const button = codePraxisAufgaben.find((a) => a.id === 'praxis-button')
   const mitSchlauenZeichen = button.checks.every((c) =>

@@ -102,7 +102,7 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
               id="praxis-eingabe"
               ref={feldRef}
               className={`rk-feld ${aufgabe.art === 'html' ? 'praxis-code' : ''}`}
-              rows={aufgabe.art === 'html' ? 8 : 7}
+              rows={aufgabe.art === 'html' ? 6 : 7}
               value={wert}
               spellCheck={aufgabe.art !== 'html'}
               autoCapitalize={aufgabe.art === 'html' ? 'off' : 'sentences'}
@@ -114,6 +114,18 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
               onChange={(e) => setWert(e.target.value)}
               onBlur={wertSichern}
             />
+            {aufgabe.art === 'html' && (
+              <div>
+                <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
+                {/* Sandbox ohne Rechte: reines Anzeigen, keine Skripte, keine Links. */}
+                <iframe
+                  className="praxis-vorschau"
+                  title="Live-Vorschau deines Codes"
+                  sandbox=""
+                  srcDoc={wert}
+                />
+              </div>
+            )}
             {aufgabe.art === 'html' && !tastaturOffen && tastaturArt === 'code' && (
               <p className="praxis-hinweis">
                 Tippe ins Feld — die Code-Tastatur öffnet sich direkt darunter.
@@ -145,14 +157,6 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
               </button>
             )}
           </>
-        )}
-
-        {aufgabe.art === 'html' && (
-          <div>
-            <p className="rk-feld-label">Live-Vorschau</p>
-            {/* Sandbox ohne Rechte: reines Anzeigen, keine Skripte, keine Links. */}
-            <iframe className="praxis-vorschau" title="Live-Vorschau deines Codes" sandbox="" srcDoc={wert} />
-          </div>
         )}
 
         <ul className="praxis-checks" aria-label="Prüfliste">

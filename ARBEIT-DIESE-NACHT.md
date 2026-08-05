@@ -215,6 +215,35 @@ Tastatur wieder weg."
   Listen-Aufgabe komplett nur mit den neuen Tastatur-Bausteinen gelöst
   (+20 XP).
 
+## Nachtrag 8: Mitmachen nach oben, Ergebnis direkt unterm Code, 5 neue Bau-Aufgaben
+
+Wunsch: „Mehr Mitmachen — selber bauen und direkt darunter das Ergebnis
+live sehen. Und die Aufgaben sollen oben stehen."
+
+- **Aufgaben zuerst**: In allen drei Bereichen steht die
+  Mitmach-Sektion jetzt ganz oben auf der Seite — Code („Mitmachen:
+  direkt bauen"), Elektro („Rechnen: direkt prüfen"), AI-Sprache
+  („Mitmachen: mit Prüfliste schreiben"). Lernpfade/Lektionen folgen
+  darunter.
+- **Ergebnis direkt unterm Code**: Im Aufgabenfenster kommt die
+  Live-Vorschau („dein Ergebnis") jetzt unmittelbar unter dem
+  Eingabefeld — die Code-Tastatur sitzt darunter. Beim Tippen sieht man
+  Code und Ergebnis gleichzeitig.
+- **5 neue Bau-Aufgaben** (13 gesamt im Code-Bereich):
+  Bild mit Alt-Text (die Vorschau zeigt den Alt-Text — der Sinn von alt
+  wird sichtbar), kleines Formular (for/id müssen wirklich
+  zusammenpassen — die Prüfung gleicht beide ab), Vokabel-Tabelle
+  (Kurdisch|Deutsch), Farben als CSS-Variablen (das
+  Dunkelmodus-Muster der App zum Anfassen) und als Abschluss-Projekt
+  „Deine eigene Seite" (header/main/footer + Liste + Button).
+- Die Code-Tastatur kann alles davon: 8 neue Bausteine
+  (img, table, tr, th, td, label, input …) — jetzt 31 Bausteine.
+- 1 neuer gezielter Test (247 gesamt; die Musterlösungs-/Startcode-Tests
+  decken die 5 neuen Aufgaben automatisch mit ab). E2E: Mitmachen ist in
+  allen drei Bereichen die erste Sektion, die Vorschau steht direkt
+  unter dem Feld, die Bild-Aufgabe wurde gelöst; alle früheren
+  E2E-Suiten (Praxis, Tastatur, Fokus) weiter grün.
+
 ## Offene nächste Schritte
 
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;

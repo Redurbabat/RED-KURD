@@ -85,35 +85,6 @@ export default function ElectroLearningHome() {
         </div>
       </header>
 
-      {naechste && (
-        <Card titel="Heute lernen" icon="heute">
-          <p className="el-heute">
-            <strong>{naechste.title}</strong> — {naechste.description}{' '}
-            <span className="el-meta">
-              (<Icon name="uhr" groesse={14} /> ca. {naechste.durationMinutes} Min)
-            </span>
-          </p>
-        </Card>
-      )}
-
-      {electroGruppen.map((gruppe) => (
-        <section key={gruppe} className="bereich-abschnitt" aria-label={gruppe}>
-          <h2>{gruppe}</h2>
-          <div className="bereich-raster">
-            {electroLessons
-              .filter((l) => l.gruppe === gruppe)
-              .map((lesson) => (
-                <ElectroLessonCard
-                  key={lesson.id}
-                  lesson={lesson}
-                  status={status[lesson.id]}
-                  onOeffnen={() => setAktiveLektion(lesson)}
-                />
-              ))}
-          </div>
-        </section>
-      ))}
-
       <section className="bereich-abschnitt" aria-labelledby="el-praxis-titel">
         <h2 id="el-praxis-titel">Rechnen: direkt prüfen</h2>
         <p className="el-text">
@@ -144,6 +115,35 @@ export default function ElectroLearningHome() {
           ))}
         </div>
       </section>
+
+      {naechste && (
+        <Card titel="Heute lernen" icon="heute">
+          <p className="el-heute">
+            <strong>{naechste.title}</strong> — {naechste.description}{' '}
+            <span className="el-meta">
+              (<Icon name="uhr" groesse={14} /> ca. {naechste.durationMinutes} Min)
+            </span>
+          </p>
+        </Card>
+      )}
+
+      {electroGruppen.map((gruppe) => (
+        <section key={gruppe} className="bereich-abschnitt" aria-label={gruppe}>
+          <h2>{gruppe}</h2>
+          <div className="bereich-raster">
+            {electroLessons
+              .filter((l) => l.gruppe === gruppe)
+              .map((lesson) => (
+                <ElectroLessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  status={status[lesson.id]}
+                  onOeffnen={() => setAktiveLektion(lesson)}
+                />
+              ))}
+          </div>
+        </section>
+      ))}
 
       <section className="bereich-abschnitt" aria-labelledby="el-uebungen-titel">
         <h2 id="el-uebungen-titel">Übungen</h2>
