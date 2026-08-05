@@ -86,9 +86,20 @@ Inzwischen ebenfalls fertig:
   XP 0→10, Reihe 1 Tag, Reload behält alles; Fehlerbuch-Eintrag
   überlebt den Reload.
 
+## Nachtrag 2 (gleiche Nacht, dritter Teil)
+
+- **Übungen sind interaktiv**: „Übung öffnen“ zeigt die Aufgabe im Modal
+  mit einem Notizfeld für die eigene Lösung (wird lokal gespeichert, auch
+  beim Schließen ohne Abschluss). „Als erledigt markieren · +15 XP“ —
+  einmal je Übung. Der Zähler „Offene Übungen“ ist jetzt echt.
+- **Tagesziel**: beide Bereiche zeigen „Tagesziel: X/30 XP“ mit Balken
+  und „— geschafft!“ ab 30 XP.
+- 2 weitere Tests (224 gesamt); E2E: Übung öffnen → Notiz → abschließen
+  → XP 15, Offene 6→5, Tagesziel 15/30; Reload behält Notiz und Status.
+
 ## Offene nächste Schritte
 
-- Übungen interaktiv machen (Eingabe + Prüfung)
-- Tagesziel für die neuen Bereiche
-- Bereichs-Lernstand in Export/Import prüfen (läuft schon über KEYS mit)
+- Bereichs-Lernstand in Export/Import aufnehmen (KEYS sind registriert,
+  Export nimmt sie automatisch mit)
 - Elektro-Lehre als vierter Bereich
+- automatische Prüfung einzelner Übungen (z. B. Noten-Durchschnitt)

@@ -1,9 +1,14 @@
 // Startseite des Bereichs „Code lernen": Dashboard, Lernpfade, Uebungen.
 // XP, Reihe und Fortschritt kommen aus dem echten, gespeicherten Lernstand.
+import { useState } from 'react'
 import { useLernstand } from '../../core/store.js'
 import Badge from '../../components/common/Badge.jsx'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
+import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import ProgressBar from '../../components/common/ProgressBar.jsx'
+import UebungModal from '../app-mode/UebungModal.jsx'
+import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import CodeLearningPath from './CodeLearningPath.jsx'
 import CodeLearningProgress from './CodeLearningProgress.jsx'
 import Fehlerbuch from './Fehlerbuch.jsx'
@@ -26,9 +31,12 @@ function naechsteLektionen(anzahl = 3) {
 
 export default function CodeLearningHome() {
   useLernstand()
+  const [aktiveUebung, setAktiveUebung] = useState(null)
   const heute = naechsteLektionen(3)
   const alleLektionen = codeLearningPaths.flatMap((p) => p.lessons)
   const gesamt = codeLernstand.fortschrittProzent(alleLektionen)
+  const offeneUebungen = codeExercises.filter((u) => !codeLernstand.istErledigt(u.id)).length
+  const xpHeute = codeLernstand.xpHeute()
 
   return (
     <div className="bereich-seite bereich-code">
@@ -42,7 +50,7 @@ export default function CodeLearningHome() {
           <span className="bereich-wert">
             <Icon name="blitz" groesse={16} />
             <span>
-              XP heute: <strong>{codeLernstand.xpHeute()}</strong>
+              XP heute: <strong>{xpHeute}</strong>
             </span>
           </span>
           <span className="bereich-wert">
@@ -57,7 +65,7 @@ export default function CodeLearningHome() {
           <span className="bereich-wert">
             <Icon name="stift" groesse={16} />
             <span>
-              Offene Übungen: <strong>{codeExercises.length}</strong>
+              Offene Übungen: <strong>{offeneUebungen}</strong>
             </span>
           </span>
           <span className="bereich-wert">
@@ -66,6 +74,14 @@ export default function CodeLearningHome() {
               Gesamt: <strong>{gesamt} %</strong>
             </span>
           </span>
+        </div>
+
+        <div className="bereich-tagesziel">
+          <span className="bereich-tagesziel-text">
+            Tagesziel: {Math.min(xpHeute, TAGESZIEL_XP)}/{TAGESZIEL_XP} XP
+            {xpHeute >= TAGESZIEL_XP ? ' — geschafft!' : ''}
+          </span>
+          <ProgressBar wert={xpHeute} max={TAGESZIEL_XP} label="Tagesziel" klein />
         </div>
       </header>
 
@@ -103,14 +119,22 @@ export default function CodeLearningHome() {
             <Card key={uebung.id} className="cl-uebung">
               <div className="cl-uebung-kopf">
                 <h3>{uebung.title}</h3>
-                <Badge ton="lila">{uebung.topic}</Badge>
+                {codeLernstand.istErledigt(uebung.id) ? (
+                  <Badge ton="gruen" icon="haken">
+                    Erledigt
+                  </Badge>
+                ) : (
+                  <Badge ton="lila">{uebung.topic}</Badge>
+                )}
               </div>
               <p className="cl-pfad-text">{uebung.description}</p>
-              <p className="cl-uebung-aufgabe">{uebung.task}</p>
               <p className="cl-uebung-meta">
                 <Icon name="uhr" groesse={14} /> ca. {uebung.estimatedMinutes} Min ·{' '}
                 {uebung.difficulty}
               </p>
+              <PrimaryButton art="still" icon="stift" onClick={() => setAktiveUebung(uebung)}>
+                {codeLernstand.istErledigt(uebung.id) ? 'Ansehen' : 'Übung öffnen'}
+              </PrimaryButton>
             </Card>
           ))}
         </div>
@@ -120,6 +144,13 @@ export default function CodeLearningHome() {
         <h2 id="cl-fehlerbuch-titel">Fehlerbuch</h2>
         <Fehlerbuch />
       </section>
+
+      <UebungModal
+        key={aktiveUebung?.id || 'leer'}
+        uebung={aktiveUebung}
+        lernstand={codeLernstand}
+        schliessen={() => setAktiveUebung(null)}
+      />
     </div>
   )
 }
