@@ -357,11 +357,218 @@ mehrere Apps in einer Website, jede öffnet sich getrennt."
   Launcher + Umschalter + Speicher; die Apps liegen in src/features/*
   bzw. src/modes für Sprache) — kein riskanter Großumzug.
 
-## Offene nächste Schritte
+## Nachtrag 13: Abenteuer ist eine ANSICHT, keine App
 
-- mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
-- interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
-- Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
-- mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
-  Code: kleine JS-Aufgaben)
-- gemeinsame Wochenübersicht über alle Bereiche
+Korrektur-Auftrag: „Abenteuer ist keine eigene App — es ist eine Ansicht
+innerhalb von Sprache lernen."
+
+- **Prüfung**: Launcher, Umschalter, appModes und App-Speicher kannten
+  Abenteuer nie als App — die Struktur war korrekt (Ansichten leben in
+  `red-kurd-ui-v1` → mode modern/abenteuer/redlingo, getrennt vom
+  App-Schlüssel, ein gemeinsamer Lernstand).
+- **Neu: Ansichts-Umschalter oben in der Sprach-App**
+  („Ansicht: Modern | Abenteuer | Redlingo") — nur dort sichtbar, auf
+  Übungs-/Lektionsseiten ausgeblendet. Wechsel sofort, gleicher
+  Lernstand, globale App bleibt „language".
+- **Absicherung im Speicher**: Sollte je `activeApp="adventure"` (oder
+  „abenteuer") gespeichert sein, migriert die App zu
+  `activeApp="language"` + Ansicht „abenteuer" — und ein solcher Wert
+  lässt sich nicht mehr als App speichern.
+- **Launcher-Texte** nach Auftrag: „Deine kostenlose lokale Lernwelt." /
+  „Wähle, was du lernen möchtest." / Sprache-Karte mit Zusatz „Mit
+  Modern-Ansicht und Abenteuer-Ansicht." / Fußzeile „Kostenlos · lokal ·
+  ohne Konto".
+- **Doku klargestellt** (README, ARCHITEKTUR): „Abenteuer ist kein
+  eigener App-Bereich, sondern die spielerische Ansicht der
+  Sprache-lernen-App." AUFGABEN.md enthielt nichts Falsches.
+- 2 neue Tests (257 gesamt). E2E: 23 Ansicht-Prüfungen grün (Launcher
+  genau 4 Apps, Umschalter, Abenteuer-Wechsel + Reload, Migration,
+  Code-App ohne Abenteuer-Inhalte) + die 36 Multi-App-Prüfungen weiter
+  grün.
+
+## Nachtrag 14: Elektro-Lehre wird eine echte App (Phase 3)
+
+Aus der Karte mit Lektionen ist eine App mit eigener Navigation geworden:
+**Heute · Noten · Prüfung · Bericht · Formeln · Lernen**.
+
+- **Heute**: nächste Prüfung mit Countdown („noch 3 Tage"), Notenschnitt
+  mit Ampel, offene Berichtsheft-Wochen, Formel des Tages, Regel des
+  Tages aus den fünf Sicherheitsregeln.
+- **Noten**: acht Fächer als Startbestand (Elektrotechnik, Mathematik,
+  Deutsch, Allgemeinbildung, Berufskunde, Zeichnen/Schema,
+  Werkstatt/Praxis, Sicherheit), eigene Fächer ergänzbar. Noten mit
+  Thema, **Gewicht** und Datum; gewichteter Schnitt, beste/schlechteste
+  Note, Trend und der **Ziel-Rechner**: „Zielnote 5 → nächste Prüfung
+  mindestens 6" (und ehrlich „mit einer Prüfung nicht mehr erreichbar",
+  wenn es rechnerisch nicht geht).
+- **Notenskala umschaltbar**: Schweiz (6 = beste) oder Deutschland
+  (1 = beste). Alle Rechnungen fragen die Skala — bestanden, beste Note
+  und Trend drehen sich mit.
+- **Prüfungen**: Titel, Fach, Datum, Themen, Stand (Nicht begonnen · Am
+  Lernen · Wiederholen · Bereit · Erledigt), sortiert nach Datum.
+- **Berichtsheft**: Woche, Zeitraum, Tätigkeiten, Gelerntes, Status
+  (Offen · Geschrieben · Kontrolliert · Abgegeben), neueste oben.
+- **Formeln & Rechner**: Ohmsches Gesetz (alle drei Richtungen),
+  Leistung, Energie + Stromkosten, Spannungsfall (Wechsel-/Drehstrom,
+  Kupfer/Aluminium, in Volt und Prozent), Formelsammlung und die fünf
+  Sicherheitsregeln in der richtigen Reihenfolge.
+- **Lernen**: die bisherigen Lektionen, Rechen-Aufgaben und Übungen —
+  unverändert, nur ohne doppelten Kopf.
+- Technik: reine Rechenlogik in `src/core/elektro/` (notenRechnung.js,
+  formeln.js), Speicher in `schuleStore.js` über den neuen Schlüssel
+  `red-kurd-electro-school-v1` — wandert automatisch in Export/Import.
+- 20 neue Tests (277 gesamt): Gewichtung, Ziel-Rechner in beide
+  Skalen-Richtungen, Trend, Spannungsfall gegen Handrechnung, kaputter
+  Speicherstand. E2E: 30 Prüfungen grün — Note eintragen (auch „5,5"
+  mit Komma), ungültige Note abgelehnt, Countdown, Berichtsheft,
+  Live-Rechner, alles nach Reload noch da, mobil ohne Scroll-Leiste.
+
+## Nachtrag 15: AI-Sprache wird eine Werkstatt (Phase 5)
+
+Auch die AI-Sprache hat jetzt eine eigene Navigation:
+**Heute · Auftrag · Bug-Report · PR prüfen · Lernen** — und drei
+Werkzeuge, mit denen man wirklich arbeitet statt nur liest.
+
+- **Auftrag-Baukasten**: Fünf Felder (Ziel · Ort · Nicht erlaubt ·
+  Prüfung · Arbeitsweise) — beim Tippen entsteht darunter **live der
+  fertige Claude-Code-Auftrag** mit sauberen Überschriften; mehrzeilige
+  Felder werden automatisch zur Aufzählung. Ein Knopf kopiert alles in
+  die Zwischenablage.
+- **Ehrliche Prüfliste**: Sie verlangt ein Ziel mit Substanz (≥ 30
+  Zeichen), Ort, mindestens ein Verbot und eine Prüfung — und sie
+  erkennt leere Wörter: „Mach die Seite besser" fällt durch, mit
+  Begründung.
+- **Bug-Report-Generator**: Was passiert · Erwartet · Nachstellen ·
+  Gerät · Fehlermeldung. Die Schritte werden automatisch nummeriert;
+  ein einzelner Schritt zählt nicht als Anleitung.
+- **PR prüfen**: acht Fragen zum Abhaken mit ehrlicher Empfehlung.
+  Tests/Build und die Verbote sind **Ausschlusskriterien** — fehlen
+  sie, sagt die App „Zurückgeben" statt „fast fertig".
+- Angefangene Texte und Haken überleben das Neuladen (neuer Schlüssel
+  `red-kurd-prompting-workshop-v1`, wandert in Export/Import mit).
+- Logik in `src/core/prompting/promptBaukasten.js` (rein, testbar),
+  Speicher in `werkstattStore.js`.
+- 13 neue Tests (290 gesamt). E2E: 26 Prüfungen grün — Live-Text,
+  „besser"-Erkennung, Kopieren in die Zwischenablage, nummerierte
+  Schritte, Merge-Empfehlung in drei Stufen, Reload-Persistenz, mobil.
+
+## Nachtrag 16: Sicherung über alle vier Apps + der Rest wird interaktiv
+
+**Phase 7 — die Sicherung ist bewiesen.** Ein neuer Rundlauf-Test macht
+den Ernstfall durch: in allen vier Apps etwas tun → exportieren → Gerät
+komplett leeren → importieren → prüfen, ob wirklich alles zurückkommt.
+Zurück sind: Sprach-Lernstand und Profil, Code-Lektion und Fehlerbuch,
+AI-Lektion samt angefangenem Auftrag und PR-Haken, Elektro-Lektion mit
+Note, Prüfung und Berichtsheft-Woche. Dazu drei Sicherheitsnetze:
+- Die XP der vier Apps bleiben getrennt — keine App zählt für die andere.
+- Gerätelokale Werte (Anmelde-Entscheidung, laufende Sitzung) wandern
+  bewusst NICHT in die Sicherung.
+- Eine fremde oder kaputte Datei überschreibt garantiert nichts.
+
+**Der Code-Bereich ist jetzt vollständig interaktiv.** Auch TypeScript,
+GitHub, VS Code und die Mini-Projekte laufen im Schritt-Player — der
+Test besteht darauf, dass **jede** Lektion Schritte hat:
+- TypeScript: Funktionen mit Typen, string[], interface, Rückgabetypen —
+  Bau-Schritte ohne Vorschau (es gibt nichts anzuzeigen), Editor bleibt.
+- GitHub: Commit-Nachrichten, Branch → PR → Merge als Reihenfolge-Aufgabe,
+  Issues und „closes #12".
+- VS Code: Strg+P, Projekt-Suche, Terminal-Befehle in der richtigen
+  Reihenfolge, Prettier und Format on Save.
+- Mini-Projekte: Filmkarte bauen (mit Vorschau) und selbst schreiben,
+  Notenrechner mit abgesichertem Randfall (läuft wirklich),
+  Bottom-Navigation, Visitenkarten-Seite als „Jetzt du".
+- 4 neue Tests (294 gesamt). E2E: 14 Prüfungen grün — inklusive des
+  schönen Nebenbefunds, dass spätere Lektionen korrekt gesperrt bleiben,
+  bis die davor fertig sind.
+
+## Nachtrag 17: Gemeinsame Woche, mehr Rechenaufgaben, mehr „Jetzt du"
+
+- **Deine Woche** steht jetzt auf der App-Auswahl: sieben Tagespunkte
+  (heute hervorgehoben), „X von 7 Tagen gelernt", die Reihe am Stück und
+  darunter je App ihre eigene Zahl in ihrer eigenen Farbe.
+  **Bewusst keine Gesamtsumme**: Die Sprach-App zählt gelöste Aufgaben,
+  die anderen XP — das zu addieren wäre eine erfundene Zahl. Ein Tag gilt
+  als aktiv, sobald in irgendeiner App etwas passiert ist; die Reihe
+  bricht nicht schon am Morgen, weil heute noch nichts los war.
+- **Fünf neue Elektro-Rechenaufgaben** (10 gesamt): Reihenschaltung
+  (Gesamtwiderstand und Strom in mA), Parallelschaltung (zwei gleiche
+  und zwei verschiedene mit R = R1·R2 ÷ (R1+R2)) und „Was kostet der
+  Boiler?" von der Leistung zur Kilowattstunde.
+- **Rechnen üben** ist jetzt auch vom Elektro-Dashboard einen Fingertipp
+  entfernt — mit Zähler, wie viele Aufgaben noch offen sind.
+- **Zwei neue „Jetzt du"-Schritte**: Flexbox-Reihe selbst schreiben
+  (css-4, mit vorbereitetem Gerüst) und den Klick-Lauscher selbst tippen
+  (js-2) — der eigene Code läuft danach wirklich in der Vorschau.
+- 10 neue Tests (304 gesamt). E2E: 20 Prüfungen grün — Wochenübersicht
+  leer und gefüllt, Einheiten getrennt, Parallelschaltung gelöst
+  (falsches Ergebnis bleibt offen), „Jetzt du" mit Live-Vorschau.
+
+## Nachtrag 18: Die Wegkarte — Lernpfade als Knoten mit Wegpunkten
+
+- Jeder Lernpfad lässt sich jetzt auf zwei Arten anschauen: **Liste**
+  (nüchtern, wie bisher) oder **Wegkarte** — die Lektionen liegen als
+  Knoten im Zickzack auf einem Pfad, verbunden durch eine Linie.
+- Der Zustand ist auf einen Blick zu sehen: fertige Knoten grün mit
+  Haken (auch die Linie dahin wird grün), der aktuelle violett mit
+  Leuchtring, gesperrte mit Schloss und ausgegraut — und wirklich nicht
+  anklickbar. Offene tragen ihre Nummer.
+- Antippen öffnet dieselbe Lektion wie aus der Liste, also den
+  Schritt-Player. Nur die Darstellung ist neu, nichts an der Logik.
+- E2E: 15 Prüfungen grün — Umschalten in beide Richtungen, neun
+  Wegpunkte, zwei fertige, genau ein aktueller, gesperrte deaktiviert,
+  Zickzack-Anordnung, Öffnen führt in den Player, Touchflächen und keine
+  horizontale Scroll-Leiste.
+- Kleinigkeit nebenbei: In der Wochenübersicht hieß es „1 Tage" — jetzt
+  „1 Tag".
+
+## Nachtrag 19: JavaScript-Mitmach-Aufgaben und die Wegkarte überall
+
+- **Vier neue JavaScript-Aufgaben** im Code-Bereich (17 Mitmach-Aufgaben
+  gesamt) — und **dein eigener Code läuft wirklich**:
+  - *Text mit JavaScript ändern*: Element holen, textContent setzen.
+  - *Einen Klick verarbeiten*: Lauscher anhängen — in der Vorschau
+    tatsächlich drückbar.
+  - *Einen Zähler bauen*: Variable, Klick, Anzeige zusammen. Dreimal
+    klicken heißt in der Vorschau wirklich „3".
+  - *Eine Liste aus Daten bauen*: aus einem Array per Schleife eine
+    echte HTML-Liste.
+  - Dafür kennt PraxisAufgabe jetzt `huelle` (das Gerüst mit `{{code}}`)
+    und `skript`. Die Sandbox bleibt ohne `allow-same-origin` — kein
+    Zugriff auf Speicher, Cookies oder die App. Ein Test stellt sicher,
+    dass reines HTML eine JavaScript-Aufgabe nie besteht.
+- **Die Wegkarte gilt jetzt für alle Apps**: Der Baustein liegt als
+  `LernpfadKarte` in `src/features/app-mode/` und wird in Code lernen
+  (je Lernpfad), Elektro-Lehre (je Gruppe) und AI-Sprache genutzt —
+  überall mit dem Umschalter Liste/Wegkarte.
+- 2 neue Tests (306 gesamt). E2E: 18 Prüfungen grün — vier neue
+  Aufgaben da, Zähler in der Vorschau geklickt und hochgezählt,
+  +20 XP, HTML besteht die JS-Aufgabe nicht, Wegkarte in Elektro und
+  AI-Sprache samt gesperrten Knoten.
+
+## Nachtrag 20: Zwölf Grundübungen — der Einstieg ganz von vorn
+
+Wunsch: „mehr Grundübungen für den Code-Bereich."
+
+- **Neuer erster Abschnitt „Grundübungen: Schritt für Schritt"** — steht
+  ganz oben, mit Zähler („3 von 12 geschafft"). Die größeren Aufgaben
+  („Mitmachen: direkt bauen") folgen darunter.
+- **Eine Sache pro Übung**, aufeinander aufbauend:
+  1. Eine Überschrift schreiben · 2. Zwei Absätze · 3. Ein Wort
+  hervorheben (strong INNERHALB des Absatzes) · 4. Dem Text eine Farbe
+  geben (die erste CSS-Regel) · 5. Die Seite einfärben (body) ·
+  6. Text mittig stellen · 7. Größer schreiben (mindestens 18 px —
+  die iPhone-Regel) · 8. Einen Rahmen ziehen · 9. Luft schaffen
+  (padding) · 10. Runde Ecken — aus dem Kasten wird eine Karte ·
+  11. Deine erste JavaScript-Zeile · 12. Rechnen mit Variablen.
+  Die Übungen 8–10 bauen aufeinander auf: derselbe Kasten wird Schritt
+  für Schritt zur Karte.
+- Die Prüfungen sind ehrlich streng: leere Absätze zählen nicht, eine
+  Schriftgröße unter 18 px besteht nicht, und bei „hervorheben" muss das
+  strong wirklich im Absatz stehen.
+- E2E: 19 Prüfungen grün — Abschnitt steht oben, Zähler zählt hoch,
+  Farbe wirkt wirklich (per Browser gemessen), „Hallo!" erscheint aus
+  eigenem JavaScript, 7 + 5 wird wirklich gerechnet.
+
+## Offene nächste Schritte
+- Wegkarte auch in der Sprach-App, falls sie sich bewährt
+- weitere Lektionsinhalte nach Bedarf

@@ -18,13 +18,14 @@ test('jede Schritte-Sammlung gehoert zu einer echten Lektion', () => {
   }
 })
 
-test('HTML-, CSS- und JavaScript-Pfad sind komplett interaktiv', () => {
-  for (const pfadId of ['html', 'css', 'javascript']) {
-    const pfad = codeLearningPaths.find((p) => p.id === pfadId)
+test('JEDE Lektion im Code-Bereich ist interaktiv', () => {
+  const ohneSchritte = []
+  for (const pfad of codeLearningPaths) {
     for (const lektion of pfad.lessons) {
-      assert.ok(holeSchritte(lektion.id), `${lektion.id}: Schritte fehlen`)
+      if (!holeSchritte(lektion.id)) ohneSchritte.push(`${pfad.id}/${lektion.id}`)
     }
   }
+  assert.deepEqual(ohneSchritte, [], 'diese Lektionen haben noch keine Schritte')
 })
 
 test('Bau- und Schreib-Schritte mit Huelle/Skript sind stimmig', () => {

@@ -74,6 +74,23 @@ test('ein alter Speicherstand wird uebernommen, nie geloescht', () => {
   assert.equal(lies(KEYS.appBereich), 'electro')
 })
 
+test('ein alter „adventure"-Wert wird zur Sprach-App mit Abenteuer-Ansicht', () => {
+  // Abenteuer ist KEINE App — ein solcher Altwert darf weder eine eigene
+  // App oeffnen noch die App-Auswahl erzwingen.
+  globalThis.localStorage.removeItem(KEYS.appAktiv)
+  globalThis.localStorage.setItem(KEYS.appBereich, JSON.stringify('adventure'))
+  assert.equal(hatGespeicherteApp(), true)
+  assert.equal(loadAppMode(), APP_MODES.LANGUAGE)
+  assert.equal(lies(KEYS.appAktiv), 'language')
+  assert.equal(lies(KEYS.appBereich), 'language')
+  assert.equal(lies(KEYS.ui).mode, 'abenteuer')
+})
+
+test('„adventure" laesst sich nicht als App speichern', () => {
+  assert.equal(saveAppMode('adventure'), false)
+  assert.equal(saveAppMode('abenteuer'), false)
+})
+
 test('jeder Bereich hat ein deutsches Etikett', () => {
   for (const mode of APP_MODE_LISTE) {
     assert.ok(APP_MODE_LABELS[mode], `Etikett fuer ${mode} fehlt`)

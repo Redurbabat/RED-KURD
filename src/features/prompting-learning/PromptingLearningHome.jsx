@@ -9,6 +9,7 @@ import Icon from '../../components/icons/Icon.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
 import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
+import LernpfadKarte from '../app-mode/LernpfadKarte.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import PromptLessonCard from './PromptLessonCard.jsx'
@@ -19,11 +20,18 @@ import { promptPraxisAufgaben } from './data/promptPraxis.js'
 import { promptLernstand } from './promptProgressStore.js'
 import './promptingLearning.css'
 
-export default function PromptingLearningHome() {
+/**
+ * Der Lernbereich der AI-Sprache (Lektionen, Mitmachen, Training).
+ * @param {{ohneKopf?:boolean}} props — innerhalb der App-Hülle trägt
+ *   PromptingApp bereits Titel und Kennzahlen.
+ */
+export default function PromptingLearningHome({ ohneKopf = false }) {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
   const [aktivePraxis, setAktivePraxis] = useState(null)
+  // Zwei Darstellungen derselben Lektionen: Liste oder Wegkarte.
+  const [alsKarte, setAlsKarte] = useState(false)
 
   const status = promptLernstand.statusFuer(promptLessons)
   const gesamt = promptLernstand.fortschrittProzent(promptLessons)
@@ -37,7 +45,8 @@ export default function PromptingLearningHome() {
   }
 
   return (
-    <div className="bereich-seite bereich-prompting">
+    <div className={ohneKopf ? 'pl-lernen' : 'bereich-seite bereich-prompting'}>
+      {!ohneKopf && (
       <header className="bereich-kopf">
         <h1>
           <span aria-hidden="true">🤖</span> AI-Sprache lernen
@@ -82,6 +91,7 @@ export default function PromptingLearningHome() {
           <ProgressBar wert={xpHeute} max={TAGESZIEL_XP} label="Tagesziel" klein />
         </div>
       </header>
+      )}
 
       <section className="bereich-abschnitt" aria-labelledby="pl-praxis-titel">
         <h2 id="pl-praxis-titel">Mitmachen: mit Prüfliste schreiben</h2>
@@ -128,16 +138,38 @@ export default function PromptingLearningHome() {
 
       <section className="bereich-abschnitt" aria-labelledby="pl-lektionen-titel">
         <h2 id="pl-lektionen-titel">Lektionen</h2>
-        <div className="bereich-raster">
-          {promptLessons.map((lesson) => (
-            <PromptLessonCard
-              key={lesson.id}
-              lesson={lesson}
-              status={status[lesson.id]}
-              onOeffnen={() => setAktiveLektion(lesson)}
-            />
-          ))}
+        <div className="pfad-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
+          <button
+            type="button"
+            className={`pfad-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+            aria-pressed={!alsKarte}
+            onClick={() => setAlsKarte(false)}
+          >
+            Liste
+          </button>
+          <button
+            type="button"
+            className={`pfad-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+            aria-pressed={alsKarte}
+            onClick={() => setAlsKarte(true)}
+          >
+            Wegkarte
+          </button>
         </div>
+        {alsKarte ? (
+          <LernpfadKarte lessons={promptLessons} status={status} oeffnen={setAktiveLektion} />
+        ) : (
+          <div className="bereich-raster">
+            {promptLessons.map((lesson) => (
+              <PromptLessonCard
+                key={lesson.id}
+                lesson={lesson}
+                status={status[lesson.id]}
+                onOeffnen={() => setAktiveLektion(lesson)}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="bereich-abschnitt" aria-labelledby="pl-training-titel">

@@ -10,6 +10,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
 import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
+import LernpfadKarte from '../app-mode/LernpfadKarte.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import ElectroLessonCard from './ElectroLessonCard.jsx'
 import { electroGruppen, electroLessons } from './data/electroLessons.js'
@@ -18,11 +19,18 @@ import { electroPraxisAufgaben } from './data/electroPraxis.js'
 import { electroLernstand } from './electroProgressStore.js'
 import './electroLearning.css'
 
-export default function ElectroLearningHome() {
+/**
+ * Der Lernbereich der Elektro-App (Lektionen, Rechnen, Übungen).
+ * @param {{ohneKopf?:boolean}} props — innerhalb der App-Hülle trägt
+ *   ElectroApp bereits Titel und Kennzahlen; dann bleibt der Kopf hier weg.
+ */
+export default function ElectroLearningHome({ ohneKopf = false }) {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
   const [aktivePraxis, setAktivePraxis] = useState(null)
+  // Zwei Darstellungen derselben Lektionen: Liste oder Wegkarte.
+  const [alsKarte, setAlsKarte] = useState(false)
 
   const status = electroLernstand.statusFuer(electroLessons)
   const gesamt = electroLernstand.fortschrittProzent(electroLessons)
@@ -36,7 +44,8 @@ export default function ElectroLearningHome() {
   }
 
   return (
-    <div className="bereich-seite bereich-electro">
+    <div className={ohneKopf ? 'el-lernen' : 'bereich-seite bereich-electro'}>
+      {!ohneKopf && (
       <header className="bereich-kopf">
         <h1>
           <span aria-hidden="true">⚡</span> Elektro-Lehre
@@ -84,6 +93,7 @@ export default function ElectroLearningHome() {
           <ProgressBar wert={xpHeute} max={TAGESZIEL_XP} label="Tagesziel" klein />
         </div>
       </header>
+      )}
 
       <section className="bereich-abschnitt" aria-labelledby="el-praxis-titel">
         <h2 id="el-praxis-titel">Rechnen: direkt prüfen</h2>
@@ -127,9 +137,35 @@ export default function ElectroLearningHome() {
         </Card>
       )}
 
+      <div className="pfad-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
+        <button
+          type="button"
+          className={`pfad-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+          aria-pressed={!alsKarte}
+          onClick={() => setAlsKarte(false)}
+        >
+          Liste
+        </button>
+        <button
+          type="button"
+          className={`pfad-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+          aria-pressed={alsKarte}
+          onClick={() => setAlsKarte(true)}
+        >
+          Wegkarte
+        </button>
+      </div>
+
       {electroGruppen.map((gruppe) => (
         <section key={gruppe} className="bereich-abschnitt" aria-label={gruppe}>
           <h2>{gruppe}</h2>
+          {alsKarte ? (
+            <LernpfadKarte
+              lessons={electroLessons.filter((l) => l.gruppe === gruppe)}
+              status={status}
+              oeffnen={setAktiveLektion}
+            />
+          ) : (
           <div className="bereich-raster">
             {electroLessons
               .filter((l) => l.gruppe === gruppe)
@@ -142,6 +178,7 @@ export default function ElectroLearningHome() {
                 />
               ))}
           </div>
+          )}
         </section>
       ))}
 

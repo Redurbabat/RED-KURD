@@ -83,6 +83,36 @@
   }
 }
 
+/* ===== Ansichts-Umschalter der Sprach-App (Modern/Abenteuer/Redlingo) ===== */
+
+.ansicht-umschalter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--rk-surface);
+  border-bottom: 1.5px solid var(--rk-border);
+}
+.ansicht-umschalter-wort {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid transparent;
+  color: var(--rk-text-muted);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf.aktiv {
+  color: var(--rk-primary-dark);
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+
 /* ===== App-Auswahl (Launcher): mehrere Apps in einer Website ===== */
 
 .app-launcher {
@@ -143,6 +173,17 @@
   color: var(--rk-text-muted);
   font-size: var(--text-sm);
   margin-top: 2px;
+}
+.app-launcher-zusatz {
+  color: var(--rk-primary-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.app-launcher-fuss {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+  text-align: center;
 }
 /* Jede App traegt ihre Identitaet schon in der Auswahl. */
 .app-launcher-karte.bereich-language {
@@ -678,4 +719,200 @@
   color: var(--rk-text-muted);
   font-size: var(--text-sm);
   white-space: nowrap;
+}
+
+/* ===== Gemeinsame Wochenübersicht auf der App-Auswahl ===== */
+
+.woche-uebersicht {
+  padding: var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+}
+.woche-uebersicht h2 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+}
+.woche-tage {
+  list-style: none;
+  display: flex;
+  gap: var(--space-1);
+  justify-content: space-between;
+}
+.woche-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.woche-tag-punkt {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--rk-border);
+  color: transparent;
+}
+.woche-tag.aktiv .woche-tag-punkt {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.woche-tag.heute .woche-tag-punkt {
+  box-shadow: 0 0 0 2px var(--rk-primary);
+}
+.woche-tag-name {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-tag.heute .woche-tag-name {
+  color: var(--rk-text);
+  font-weight: 700;
+}
+.woche-zusammenfassung {
+  margin-top: var(--space-3);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-apps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.woche-app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  border-left: 4px solid var(--rk-border-strong);
+  font-size: var(--text-sm);
+}
+.woche-app.bereich-language { border-left-color: var(--rk-primary); }
+.woche-app.bereich-code { border-left-color: var(--rk-purple); }
+.woche-app.bereich-prompting { border-left-color: var(--rk-red); }
+.woche-app.bereich-electro { border-left-color: var(--rk-yellow); }
+.woche-app-wert {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.woche-app-tage {
+  color: var(--rk-text-muted);
+  font-weight: 400;
+}
+
+/* ===== Wegkarte: Lektionen als Knoten auf einem Pfad ===== */
+
+.pfad-ansicht-wahl {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+}
+.pfad-ansicht-knopf {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+.pfad-ansicht-knopf.aktiv {
+  color: var(--rk-purple-dark);
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
+}
+
+.pfadkarte {
+  list-style: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+}
+.pfadkarte-punkt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 72px;
+}
+/* Abwechselnd links und rechts — daraus entsteht der Zickzack-Weg. */
+.pfadkarte-punkt.links {
+  padding-left: 8px;
+}
+.pfadkarte-punkt.rechts {
+  padding-left: 72px;
+}
+/* Die Linie verbindet diesen Knoten mit dem darüber. */
+.pfadkarte-linie {
+  position: absolute;
+  left: 36px;
+  top: -12px;
+  width: 2px;
+  height: 28px;
+  background: var(--rk-border-strong);
+}
+.pfadkarte-punkt.rechts .pfadkarte-linie {
+  left: 100px;
+}
+.pfadkarte-punkt:first-child .pfadkarte-linie {
+  display: none;
+}
+.pfadkarte-punkt.done .pfadkarte-linie {
+  background: var(--rk-green);
+}
+.pfadkarte-knoten {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--rk-border-strong);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+}
+.pfadkarte-nummer {
+  font-weight: 800;
+  font-size: var(--text-base);
+}
+.pfadkarte-punkt.done .pfadkarte-knoten {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.pfadkarte-punkt.current .pfadkarte-knoten {
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+  box-shadow: 0 0 0 5px var(--rk-purple-soft);
+}
+.pfadkarte-punkt.locked .pfadkarte-knoten {
+  opacity: 0.55;
+}
+.pfadkarte-knoten:disabled {
+  cursor: not-allowed;
+}
+.pfadkarte-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pfadkarte-punkt.locked .pfadkarte-text {
+  color: var(--rk-text-light);
+}
+.pfadkarte-meta {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
 }

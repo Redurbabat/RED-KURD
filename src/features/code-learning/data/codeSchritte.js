@@ -445,6 +445,18 @@ const SCHRITTE = {
       richtig: 0,
       erklaerung: 'gap regelt die Lücken in Flex- und Grid-Layouts.',
     },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Stell die beiden Knöpfe SELBST nebeneinander — mit Abstand dazwischen.',
+      startText: '<style>\n.reihe {\n\n}\n</style>\n<div class="reihe"><button>Ja</button><button>Nein</button></div>',
+      checks: [
+        { id: 'flex', text: 'display: flex ist gesetzt', pruefe: (c) => /display\s*:\s*flex/i.test(c) },
+        { id: 'gap', text: 'gap sorgt für Abstand', pruefe: (c) => /gap\s*:\s*\d/i.test(c) },
+      ],
+      musterloesung:
+        '<style>\n.reihe {\n  display: flex;\n  gap: 12px;\n}\n</style>\n<div class="reihe"><button>Ja</button><button>Nein</button></div>',
+      tipp: 'display: flex; und gap: 12px; in die .reihe-Regel.',
+    },
   ],
 
   'css-5': [
@@ -717,6 +729,33 @@ const SCHRITTE = {
       code: true,
       richtig: 0,
       erklaerung: 'Es gibt viele Ereignisse: click, input, submit …',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib den Klick-Lauscher SELBST — beim Klick soll im Absatz dein eigener Text erscheinen. Probier ihn danach in der Vorschau aus!',
+      skript: true,
+      huelle:
+        '<button id="knopf" type="button">Klick mich</button>\n<p id="antwort"></p>\n<script>{{code}}</script>',
+      checks: [
+        {
+          id: 'knopf',
+          text: "Den Knopf holen: document.querySelector('#knopf')",
+          pruefe: (c) => /document\.querySelector\(\s*['"]#knopf['"]\s*\)/.test(c),
+        },
+        {
+          id: 'lauscher',
+          text: "addEventListener('click', …) hängt daran",
+          pruefe: (c) => /\.addEventListener\(\s*['"]click['"]/.test(c),
+        },
+        {
+          id: 'antwort',
+          text: 'Im Inneren wird ein Text gesetzt',
+          pruefe: (c) => /\.textContent\s*=\s*['"][^'"]+['"]/.test(c),
+        },
+      ],
+      musterloesung:
+        "document.querySelector('#knopf').addEventListener('click', () => { document.querySelector('#antwort').textContent = 'Spas!'; });",
+      tipp: "querySelector('#knopf').addEventListener('click', () => { … })",
     },
   ],
 
@@ -1004,6 +1043,537 @@ const SCHRITTE = {
     },
   ],
 }
+
+// ===== TypeScript, GitHub, VS Code und die Mini-Projekte =====
+// Hier gibt es nichts anzuzeigen (kein HTML), deshalb `vorschau: false` —
+// gebaut wird trotzdem, nur ohne Vorschau-Rahmen.
+
+Object.assign(SCHRITTE, {
+  'ts-1': [
+    {
+      art: 'wahl',
+      frage: 'Was ist TypeScript?',
+      optionen: [
+        'JavaScript mit Typangaben — Fehler fallen beim Schreiben auf',
+        'Eine ganz andere Sprache, die der Browser direkt versteht',
+        'Ein Design-Werkzeug',
+      ],
+      richtig: 0,
+      erklaerung: 'Der Browser bekommt am Ende normales JavaScript.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Schreib eine Funktion, die einen Namen als Text erwartet.',
+      vorschau: false,
+      bausteine: ['(name: string)', 'function begruesse', ' { return `Silav, ${name}!` }'],
+      loesung: 'function begruesse(name: string) { return `Silav, ${name}!` }',
+      tipp: 'Erst function und Name, dann die Klammer mit dem Typ.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wann merkst du mit TypeScript einen Fehler?',
+      optionen: ['Schon beim Schreiben im Editor', 'Erst wenn ein Nutzer sich beschwert', 'Nie'],
+      richtig: 0,
+      erklaerung: 'Genau das ist der Gewinn: Fehler vor dem Nutzer.',
+    },
+  ],
+
+  'ts-2': [
+    {
+      art: 'wahl',
+      frage: 'Welcher Typ passt zu „wahr oder falsch"?',
+      optionen: ['boolean', 'string', 'number'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'string ist Text, number eine Zahl, boolean wahr/falsch.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Lege eine Liste von Texten an — zum Beispiel deine Sprachen.',
+      vorschau: false,
+      bausteine: [": string[] = ['Kurmancî', 'Deutsch']", 'const sprachen'],
+      loesung: "const sprachen: string[] = ['Kurmancî', 'Deutsch']",
+    },
+    {
+      art: 'wahl',
+      frage: 'Was bedeutet string[]?',
+      optionen: ['Eine Liste von Texten', 'Ein einzelner Buchstabe', 'Ein Text mit Klammern'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Die eckigen Klammern machen aus dem Typ eine Liste.',
+    },
+  ],
+
+  'ts-3': [
+    {
+      art: 'wahl',
+      frage: 'Wozu dient ein interface?',
+      optionen: [
+        'Es beschreibt die Form eines Objekts: welche Felder es hat',
+        'Es zeichnet die Oberfläche',
+        'Es startet die App',
+      ],
+      richtig: 0,
+      erklaerung: 'Ein Interface ist der Bauplan deiner Daten.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Beschreibe eine Lektion: id und title sind Texte, durationMinutes eine Zahl.',
+      vorschau: false,
+      bausteine: [
+        ' title: string;',
+        'interface Lektion {',
+        ' id: string;',
+        ' durationMinutes: number; }',
+      ],
+      loesung: 'interface Lektion { id: string; title: string; durationMinutes: number; }',
+      tipp: 'Erst öffnen, dann id, title, durationMinutes.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was macht das Fragezeichen in beispiel?: string',
+      optionen: ['Das Feld ist optional', 'Das Feld ist Pflicht', 'Das Feld ist geheim'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Optional heißt: Es darf fehlen — du musst das im Code bedenken.',
+    },
+  ],
+
+  'ts-4': [
+    {
+      art: 'wahl',
+      frage: 'Was steht hinter der Klammer einer Funktion?',
+      optionen: ['Der Rückgabetyp', 'Der Name', 'Der Dateiname'],
+      richtig: 0,
+      erklaerung: 'function xp(karten: number): number — hinten steht, was herauskommt.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Schreib eine Funktion mit Parameter- UND Rückgabetyp: aus Karten werden XP.',
+      vorschau: false,
+      bausteine: ['(karten: number)', ': number', 'function xp', ' { return karten * 10 }'],
+      loesung: 'function xp(karten: number): number { return karten * 10 }',
+      tipp: 'Name, Parameter, Rückgabetyp, dann der Rumpf.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Warum lohnt sich der Rückgabetyp?',
+      optionen: [
+        'Niemand kann das Ergebnis versehentlich falsch weiterverwenden',
+        'Der Code läuft schneller',
+        'Die Datei wird kleiner',
+      ],
+      richtig: 0,
+      erklaerung: 'Typen sind Absprachen — der Editor hält sie durch.',
+    },
+  ],
+
+  'github-1': [
+    {
+      art: 'wahl',
+      frage: 'Was ist ein Repository?',
+      optionen: [
+        'Der Ordner eines Projekts samt seiner ganzen Geschichte',
+        'Ein einzelner Ordner ohne Verlauf',
+        'Ein Chat-Programm',
+      ],
+      richtig: 0,
+      erklaerung: 'Jede Änderung ist nachlesbar — das ist der Kern von Git.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wofür ist die Datei README.md da?',
+      optionen: [
+        'Sie erklärt, was das Projekt ist und wie man es startet',
+        'Sie enthält den Programmcode',
+        'Sie löscht alte Dateien',
+      ],
+      richtig: 0,
+      erklaerung: 'Sie ist das Erste, was jemand liest — auch du in einem Jahr.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was bedeutet „clonen"?',
+      optionen: [
+        'Eine Kopie des Projekts auf den eigenen Rechner holen',
+        'Das Projekt löschen',
+        'Eine neue Datei anlegen',
+      ],
+      richtig: 0,
+      erklaerung: 'git clone holt Code UND Geschichte.',
+    },
+  ],
+
+  'github-2': [
+    {
+      art: 'wahl',
+      frage: 'Was ist ein Commit?',
+      optionen: [
+        'Ein gespeicherter Schnappschuss mit einer Nachricht, warum',
+        'Ein gelöschter Ordner',
+        'Ein Programm zum Testen',
+      ],
+      richtig: 0,
+      erklaerung: 'Ein Commit = eine Änderung + ein Satz, warum.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Welche Commit-Nachricht ist gut?',
+      optionen: ['„Buttons auf 44px vergrößert"', '„Fixes"', '„asdf"'],
+      richtig: 0,
+      erklaerung: 'Die Nachricht erklärt das WARUM — den Code sieht man ohnehin.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Setz die drei Schritte in die richtige Reihenfolge: ändern, prüfen, committen.',
+      vorschau: false,
+      bausteine: ['2. npm test ausführen · ', '3. committen mit klarer Nachricht', '1. Änderung machen · '],
+      loesung: '1. Änderung machen · 2. npm test ausführen · 3. committen mit klarer Nachricht',
+      tipp: 'Erst arbeiten, dann prüfen, dann sichern.',
+    },
+  ],
+
+  'github-3': [
+    {
+      art: 'wahl',
+      frage: 'Was ist ein Branch?',
+      optionen: [
+        'Ein Nebengleis zum Bauen, ohne main zu gefährden',
+        'Ein gelöschtes Projekt',
+        'Ein anderer Computer',
+      ],
+      richtig: 0,
+      erklaerung: 'RED-KURD arbeitet genau so: nie direkt auf main.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wozu dient ein Pull Request?',
+      optionen: [
+        'Er zeigt jede geänderte Zeile und bittet um Übernahme',
+        'Er löscht den Branch sofort',
+        'Er startet die App',
+      ],
+      richtig: 0,
+      erklaerung: 'Im PR sieht man den Unterschied — Zeile für Zeile.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Bring den Ablauf in die richtige Reihenfolge.',
+      vorschau: false,
+      bausteine: [' → Pull Request öffnen', 'Branch anlegen', ' → im Branch arbeiten', ' → nach Prüfung mergen'],
+      loesung: 'Branch anlegen → im Branch arbeiten → Pull Request öffnen → nach Prüfung mergen',
+      tipp: 'Anlegen, arbeiten, zeigen, übernehmen.',
+    },
+  ],
+
+  'github-4': [
+    {
+      art: 'wahl',
+      frage: 'Was ist ein Issue?',
+      optionen: [
+        'Eine Notizkarte am Projekt: Fehler, Wunsch oder Idee mit Nummer',
+        'Ein Programmierfehler im Code',
+        'Ein gelöschter Branch',
+      ],
+      richtig: 0,
+      erklaerung: 'So geht kein Thema im Chat verloren.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was bewirkt „closes #12" in einem PR?',
+      optionen: [
+        'Wird der PR übernommen, schließt sich Issue 12 automatisch',
+        'Es löscht Issue 12 sofort',
+        'Es sperrt das Projekt',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Issue und PR bleiben so automatisch synchron.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue die drei Teile eines guten Fehler-Issues zusammen.',
+      vorschau: false,
+      bausteine: ['Was passiert · ', 'Wie nachstellen', 'Was war erwartet · '],
+      loesung: 'Was passiert · Was war erwartet · Wie nachstellen',
+    },
+  ],
+
+  'vscode-1': [
+    {
+      art: 'wahl',
+      frage: 'Was macht Strg+P (Mac: Cmd+P)?',
+      optionen: [
+        'Zu einer Datei springen, indem man ihren Namen tippt',
+        'Die Datei drucken',
+        'Das Programm schließen',
+      ],
+      richtig: 0,
+      erklaerung: 'Der schnellste Weg durch ein fremdes Projekt.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wo findest du im Editor die Dateien eines Projekts?',
+      optionen: ['Im Datei-Baum links', 'Ganz unten rechts', 'Gar nicht'],
+      richtig: 0,
+      erklaerung: 'Links der Baum, Mitte der Code, unten die Meldungen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was sind Tabs im Editor?',
+      optionen: [
+        'Mehrere offene Dateien nebeneinander — wie im Browser',
+        'Eine Art Kommentar',
+        'Der Name des Projekts',
+      ],
+      richtig: 0,
+      erklaerung: 'So arbeitest du an mehreren Dateien gleichzeitig.',
+    },
+  ],
+
+  'vscode-2': [
+    {
+      art: 'wahl',
+      frage: 'Welche Tastenkombination sucht im GANZEN Projekt?',
+      optionen: ['Strg+Shift+F', 'Strg+F', 'Strg+S'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Strg+F sucht nur in der offenen Datei.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Welche Frage beantwortet die Projekt-Suche am besten?',
+      optionen: [
+        '„Wo wird das benutzt?"',
+        '„Wie ist das Wetter?"',
+        '„Wie groß ist die Datei?"',
+      ],
+      richtig: 0,
+      erklaerung: 'Beim Lesen fremden Codes die wichtigste Frage überhaupt.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Worauf musst du beim Ersetzen achten?',
+      optionen: [
+        'Erst anschauen, was alles getroffen wird',
+        'Immer sofort alles ersetzen',
+        'Die Datei vorher löschen',
+      ],
+      richtig: 0,
+      erklaerung: 'Ein unbedachtes „Alle ersetzen" macht viel Arbeit kaputt.',
+    },
+  ],
+
+  'vscode-3': [
+    {
+      art: 'wahl',
+      frage: 'Womit startest du die App bei RED-KURD?',
+      optionen: ['npm run dev', 'npm delete', 'npm start app jetzt'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'npm install einmalig, npm run dev zum Starten, npm test zum Prüfen.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Bring die drei Befehle in die sinnvolle Reihenfolge.',
+      vorschau: false,
+      bausteine: [' npm run dev', 'npm install', ' npm test'],
+      loesung: 'npm install npm run dev npm test',
+      tipp: 'Erst Pakete holen, dann starten, dann prüfen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Rote Schrift im Terminal bedeutet …',
+      optionen: [
+        'eine Fehlermeldung, die meist Datei und Zeile nennt',
+        'dass der Computer kaputt ist',
+        'dass alles gut ist',
+      ],
+      richtig: 0,
+      erklaerung: 'Fehlermeldungen lesen lohnt sich immer.',
+    },
+  ],
+
+  'vscode-4': [
+    {
+      art: 'wahl',
+      frage: 'Was macht Prettier?',
+      optionen: [
+        'Es formatiert den Code automatisch ordentlich',
+        'Es sucht Bilder',
+        'Es lädt die App hoch',
+      ],
+      richtig: 0,
+      erklaerung: 'Nie wieder von Hand einrücken.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Welche Einstellung lohnt sich am meisten?',
+      optionen: ['Format on Save', 'Schriftart ändern', 'Zeilennummern ausblenden'],
+      richtig: 0,
+      erklaerung: 'Beim Speichern sieht der Code automatisch gut aus.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wie viele Erweiterungen brauchst du am Anfang?',
+      optionen: [
+        'Zwei bis drei gute reichen',
+        'So viele wie möglich',
+        'Gar keine, Erweiterungen sind schlecht',
+      ],
+      richtig: 0,
+      erklaerung: 'Zu viele machen den Editor langsam und unübersichtlich.',
+    },
+  ],
+
+  'mini-1': [
+    {
+      art: 'wahl',
+      frage: 'Woraus besteht eine Karte in fast jeder App?',
+      optionen: [
+        'Bild, Überschrift, Text und ein Knopf',
+        'Nur einem großen Bild',
+        'Nur einer Tabelle',
+      ],
+      richtig: 0,
+      erklaerung: 'Karten sind das Grundmuster moderner Oberflächen.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine Filmkarte: Überschrift, Bewertung und ein Merken-Knopf.',
+      bausteine: [
+        '<p>★ 8,5</p>',
+        '<article class="karte">',
+        '<h3>Der Film</h3>',
+        '<button type="button">Merken</button></article>',
+      ],
+      loesung:
+        '<article class="karte"><h3>Der Film</h3><p>★ 8,5</p><button type="button">Merken</button></article>',
+      tipp: 'Erst die Karte öffnen, dann Titel, Bewertung, Knopf.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Bau deine eigene Karte — mit Überschrift, einem Absatz und einem Knopf.',
+      checks: [
+        { id: 'h3', text: 'Eine Überschrift (h2 oder h3)', pruefe: (c) => /<h[23][\s>][\s\S]*<\/h[23]>/i.test(c) },
+        { id: 'p', text: 'Ein Absatz mit Text', pruefe: (c) => /<p[^>]*>\s*[^<\s][\s\S]*?<\/p>/i.test(c) },
+        { id: 'button', text: 'Ein Button mit Beschriftung', pruefe: (c) => /<button[^>]*>\s*[^<\s][\s\S]*?<\/button>/i.test(c) },
+      ],
+      musterloesung: '<h3>Mein Film</h3>\n<p>★ 9,0</p>\n<button type="button">Merken</button>',
+      tipp: 'Die Bausteine liegen alle auf der <>-Ebene der Code-Tastatur.',
+    },
+  ],
+
+  'mini-2': [
+    {
+      art: 'wahl',
+      frage: 'Wie rechnest du einen Durchschnitt?',
+      optionen: [
+        'Alles zusammenzählen, dann durch die Anzahl teilen',
+        'Die größte Zahl nehmen',
+        'Die Zahlen aneinanderhängen',
+      ],
+      richtig: 0,
+      erklaerung: 'Summe ÷ Anzahl — der Klassiker.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was passiert bei einer LEEREN Liste?',
+      optionen: [
+        'Teilen durch null geht schief — man muss den Fall abfangen',
+        'Es kommt automatisch 0 heraus',
+        'Der Computer stürzt ab',
+      ],
+      richtig: 0,
+      erklaerung: 'Erst der Normalfall, dann die Randfälle.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Sichere den Randfall ab: bei leerer Liste gleich 0 zurückgeben.',
+      skript: true,
+      huelle: '<p id="aus"></p>\n<script>{{code}}</script>',
+      bausteine: [
+        ' if (noten.length === 0) return 0;',
+        'function schnitt(noten) {',
+        ' return noten.reduce((a, b) => a + b, 0) / noten.length; }',
+        " document.querySelector('#aus').textContent = schnitt([]) + ' (leere Liste)';",
+      ],
+      loesung:
+        "function schnitt(noten) { if (noten.length === 0) return 0; return noten.reduce((a, b) => a + b, 0) / noten.length; } document.querySelector('#aus').textContent = schnitt([]) + ' (leere Liste)';",
+      tipp: 'Funktion öffnen, Randfall zuerst, dann rechnen, dann anzeigen.',
+    },
+  ],
+
+  'mini-3': [
+    {
+      art: 'wahl',
+      frage: 'Was hält eine Navigation unten am Bildschirm fest?',
+      optionen: ['position: fixed', 'display: none', 'color: blue'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'fixed + bottom: 0 klebt die Leiste ans Fenster.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine Bottom-Navigation: fest unten, Knöpfe nebeneinander, 44 Pixel hoch.',
+      bausteine: [
+        '.untennav button { flex: 1; min-height: 44px; }',
+        '<style>',
+        '.untennav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; }',
+        '</style>',
+        '<nav class="untennav"><button>Heute</button><button>Üben</button></nav>',
+      ],
+      loesung:
+        '<style>.untennav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; }.untennav button { flex: 1; min-height: 44px; }</style><nav class="untennav"><button>Heute</button><button>Üben</button></nav>',
+      tipp: 'style öffnen, Leiste, Knöpfe, style schließen, dann das nav.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was fehlt am iPhone noch, damit die Leiste nicht am Home-Balken klebt?',
+      optionen: [
+        'padding-bottom mit env(safe-area-inset-bottom)',
+        'Eine größere Schrift',
+        'Ein zweites nav',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Die Schutzzone gehört zu jeder festen Leiste unten.',
+    },
+  ],
+
+  'mini-4': [
+    {
+      art: 'wahl',
+      frage: 'Wie gehst du eine ganze Seite am besten an?',
+      optionen: [
+        'Von außen nach innen: erst die Bereiche, dann den Inhalt',
+        'Alles auf einmal schreiben',
+        'Mit den Farben anfangen',
+      ],
+      richtig: 0,
+      erklaerung: 'Erst das Gerüst — dann füllst du es.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue das Gerüst deiner Visitenkarten-Seite.',
+      bausteine: ['<main>Über mich</main>', '<header><h1>Redur</h1></header>', '<footer>2026</footer>'],
+      loesung: '<header><h1>Redur</h1></header><main>Über mich</main><footer>2026</footer>',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib deine eigene Visitenkarten-Seite — Kopf mit Überschrift, ein main mit Absatz und Liste, ein footer.',
+      checks: [
+        { id: 'header', text: 'Ein <header> mit Überschrift', pruefe: (c) => /<header[\s>][\s\S]*<h1[\s>]/i.test(c) },
+        { id: 'main', text: 'Genau ein <main>', pruefe: (c) => (c.match(/<main[\s>]/gi) || []).length === 1 },
+        { id: 'liste', text: 'Eine Liste mit mindestens zwei Einträgen', pruefe: (c) => /<ul[\s>]/i.test(c) && (c.match(/<li[\s>]/gi) || []).length >= 2 },
+        { id: 'footer', text: 'Ein <footer>', pruefe: (c) => /<footer[\s>]/i.test(c) },
+      ],
+      musterloesung:
+        '<header>\n  <h1>Redur</h1>\n</header>\n<main>\n  <p>Ich lerne Code.</p>\n  <ul>\n    <li>Kurmancî</li>\n    <li>Deutsch</li>\n  </ul>\n</main>\n<footer>2026</footer>',
+      tipp: 'Erst header, main, footer — dann main füllen.',
+    },
+  ],
+})
 
 // iOS macht aus geraden Anfuehrungszeichen gern „schlaue" — fuer die
 // Schreib-Schritte zaehlen beide gleich (wie bei den Mitmach-Aufgaben).

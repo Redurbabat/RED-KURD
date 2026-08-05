@@ -10,6 +10,9 @@ Sicherung ist jederzeit über Export/Import möglich.
 
 ## Zwei Oberflächen, ein Lernstand
 
+Abenteuer ist kein eigener App-Bereich, sondern die spielerische Ansicht
+der Sprache-lernen-App — beide Ansichten teilen denselben Lernstand.
+
 | Modern | Abenteuer |
 |---|---|
 | Klare, ruhige Lernoberfläche | Spielerische Lernreise mit Weltkarte |

@@ -1,8 +1,14 @@
 # RED-KURD – Architektur
 
-Die App hat **zwei Oberflächen** (Modern und Abenteuer) und **einen** Lernstand.
-Ein Moduswechsel ändert nur die Darstellung — XP, Serie, Karten, Sitzungen,
-Einheiten und Fertigkeiten bleiben identisch.
+RED-KURD ist eine Website mit mehreren Apps: **Sprache lernen**,
+**Code lernen**, **AI-Sprache** und **Elektro-Lehre** (App-Auswahl und
+Umschalter in `src/features/app-mode/`). Sichtbar ist immer genau eine App.
+
+Die Sprach-App hat **drei Ansichten** (Modern, Abenteuer, Redlingo) und
+**einen** Lernstand. Abenteuer ist kein eigener App-Bereich, sondern die
+spielerische Ansicht der Sprache-lernen-App. Ein Ansichtswechsel ändert nur
+die Darstellung — XP, Serie, Karten, Sitzungen, Einheiten und Fertigkeiten
+bleiben identisch.
 
 ```
 src/

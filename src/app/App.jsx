@@ -19,6 +19,7 @@ import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
 import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
+import AnsichtSwitcher from '../features/app-mode/AnsichtSwitcher.jsx'
 import AppLauncher from '../features/app-mode/AppLauncher.jsx'
 import AppModeSwitcher from '../features/app-mode/AppModeSwitcher.jsx'
 import { APP_MODES } from '../features/app-mode/appModes.js'
@@ -27,11 +28,11 @@ import { LoadingState } from '../components/common/EmptyState.jsx'
 
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
 const ladeCode = () => import('../features/code-learning/CodeLearningHome.jsx')
-const ladePrompting = () => import('../features/prompting-learning/PromptingLearningHome.jsx')
-const ladeElectro = () => import('../features/electro-learning/ElectroLearningHome.jsx')
+const ladePrompting = () => import('../features/prompting-learning/PromptingApp.jsx')
+const ladeElectro = () => import('../features/electro-learning/ElectroApp.jsx')
 const CodeLearningHome = lazy(ladeCode)
-const PromptingLearningHome = lazy(ladePrompting)
-const ElectroLearningHome = lazy(ladeElectro)
+const PromptingApp = lazy(ladePrompting)
+const ElectroApp = lazy(ladeElectro)
 
 import '../styles/tokens.css'
 import '../styles/global.css'
@@ -256,6 +257,9 @@ export default function App() {
 
       {activeMode === APP_MODES.LANGUAGE && (
         <RouterProvider>
+          {/* Modern/Abenteuer/Redlingo sind ANSICHTEN der Sprach-App —
+              keine eigenen Apps. Der Wechsel lebt deshalb nur hier. */}
+          <AnsichtSwitcher />
           <Rahmen />
         </RouterProvider>
       )}
@@ -263,8 +267,8 @@ export default function App() {
       {activeMode !== APP_MODES.LANGUAGE && (
         <Suspense fallback={<LoadingState />}>
           {activeMode === APP_MODES.CODE && <CodeLearningHome />}
-          {activeMode === APP_MODES.PROMPTING && <PromptingLearningHome />}
-          {activeMode === APP_MODES.ELECTRO && <ElectroLearningHome />}
+          {activeMode === APP_MODES.PROMPTING && <PromptingApp />}
+          {activeMode === APP_MODES.ELECTRO && <ElectroApp />}
         </Suspense>
       )}
     </div>

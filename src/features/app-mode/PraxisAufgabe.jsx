@@ -117,12 +117,16 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
             {aufgabe.art === 'html' && (
               <div>
                 <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
-                {/* Sandbox ohne Rechte: reines Anzeigen, keine Skripte, keine Links. */}
+                {/* Sandbox normal ohne jede Rechte. allow-scripts gibt es nur
+                    bei Aufgaben mit skript:true (JavaScript-Aufgaben) — dort
+                    laeuft der eigene Code in einem Rahmen OHNE
+                    allow-same-origin: kein Zugriff auf Speicher, Cookies oder
+                    die App selbst. */}
                 <iframe
                   className="praxis-vorschau"
                   title="Live-Vorschau deines Codes"
-                  sandbox=""
-                  srcDoc={wert}
+                  sandbox={aufgabe.skript ? 'allow-scripts' : ''}
+                  srcDoc={aufgabe.huelle ? aufgabe.huelle.replace('{{code}}', wert) : wert}
                 />
               </div>
             )}
