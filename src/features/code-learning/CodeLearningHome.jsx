@@ -6,6 +6,7 @@ import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import CodeLearningPath from './CodeLearningPath.jsx'
 import CodeLearningProgress from './CodeLearningProgress.jsx'
+import Fehlerbuch from './Fehlerbuch.jsx'
 import { codeLearningPaths } from './data/codeLessons.js'
 import { codeExercises } from './data/codeExercises.js'
 import { codeLernstand } from './codeProgressStore.js'
@@ -117,13 +118,7 @@ export default function CodeLearningHome() {
 
       <section className="bereich-abschnitt" aria-labelledby="cl-fehlerbuch-titel">
         <h2 id="cl-fehlerbuch-titel">Fehlerbuch</h2>
-        <Card>
-          <p className="cl-pfad-text">
-            Speichere Fehler, Lösungen und was du daraus gelernt hast. Das Fehlerbuch wird als
-            Nächstes gebaut — deine Einträge bleiben dann lokal auf deinem Gerät.
-          </p>
-          <Badge ton="gold">Bald verfügbar</Badge>
-        </Card>
+        <Fehlerbuch />
       </section>
     </div>
   )

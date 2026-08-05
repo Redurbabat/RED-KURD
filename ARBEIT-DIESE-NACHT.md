@@ -65,11 +65,30 @@ Sprachbereich etwas zusätzlicher Abstand, weil Umschalter und Kopfleiste
 beide die Notch-Polsterung tragen. Im Browser ist alles exakt; behoben
 wird das, wenn der Umschalter später in die Kopfleiste integriert wird.
 
+## Nachtrag (gleiche Nacht, zweiter Teil)
+
+Inzwischen ebenfalls fertig:
+
+- **Lektionen sind anklickbar und haben echte Inhalte**: alle 25
+  Code-Lektionen und 9 Prompting-Lektionen mit deutschen Erklärungen,
+  Beispiel (Code bzw. Beispiel-Prompt) und Merksatz — geöffnet in einem
+  Modal mit „Lektion abschließen · +10 XP“.
+- **XP und Fortschritt werden wirklich gespeichert**:
+  `red-kurd-code-progress-v1` und `red-kurd-prompting-progress-v1`
+  (erledigte Lektionen, XP, Tagesserie). Der Status jeder Lektion
+  (done/current/open/locked) wird daraus abgeleitet — XP gibt es je
+  Lektion genau einmal. Baustein:
+  `src/core/lernbereiche/bereichsLernstand.js`.
+- **Fehlerbuch gebaut**: eigene Einträge mit Titel, Fehlerbeschreibung
+  und Lösung, lokal unter `red-kurd-fehlerbuch-v1`, löschbar, neueste
+  oben.
+- 15 weitere Tests (222 gesamt), E2E geprüft: Lektion abschließen →
+  XP 0→10, Reihe 1 Tag, Reload behält alles; Fehlerbuch-Eintrag
+  überlebt den Reload.
+
 ## Offene nächste Schritte
 
-- echte Lektionen anklickbar machen (Inhalte je Lektion)
-- XP und Fortschritt der neuen Bereiche wirklich speichern
-  (eigene Schlüssel, z. B. `red-kurd-code-progress-v1`)
 - Übungen interaktiv machen (Eingabe + Prüfung)
-- Fehlerbuch bauen (lokale Einträge)
+- Tagesziel für die neuen Bereiche
+- Bereichs-Lernstand in Export/Import prüfen (läuft schon über KEYS mit)
 - Elektro-Lehre als vierter Bereich
