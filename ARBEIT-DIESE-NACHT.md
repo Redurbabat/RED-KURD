@@ -503,6 +503,24 @@ Test besteht darauf, dass **jede** Lektion Schritte hat:
   leer und gefüllt, Einheiten getrennt, Parallelschaltung gelöst
   (falsches Ergebnis bleibt offen), „Jetzt du" mit Live-Vorschau.
 
+## Nachtrag 18: Die Wegkarte — Lernpfade als Knoten mit Wegpunkten
+
+- Jeder Lernpfad lässt sich jetzt auf zwei Arten anschauen: **Liste**
+  (nüchtern, wie bisher) oder **Wegkarte** — die Lektionen liegen als
+  Knoten im Zickzack auf einem Pfad, verbunden durch eine Linie.
+- Der Zustand ist auf einen Blick zu sehen: fertige Knoten grün mit
+  Haken (auch die Linie dahin wird grün), der aktuelle violett mit
+  Leuchtring, gesperrte mit Schloss und ausgegraut — und wirklich nicht
+  anklickbar. Offene tragen ihre Nummer.
+- Antippen öffnet dieselbe Lektion wie aus der Liste, also den
+  Schritt-Player. Nur die Darstellung ist neu, nichts an der Logik.
+- E2E: 15 Prüfungen grün — Umschalten in beide Richtungen, neun
+  Wegpunkte, zwei fertige, genau ein aktueller, gesperrte deaktiviert,
+  Zickzack-Anordnung, Öffnen führt in den Player, Touchflächen und keine
+  horizontale Scroll-Leiste.
+- Kleinigkeit nebenbei: In der Wochenübersicht hieß es „1 Tage" — jetzt
+  „1 Tag".
+
 ## Offene nächste Schritte
-- Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - weitere Mitmach-Aufgaben (kleine JS-Aufgaben im Code-Bereich)
+- Wegkarte auch für die anderen Apps, falls sie sich bewährt

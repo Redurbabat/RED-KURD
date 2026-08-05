@@ -7,6 +7,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import LektionPlayer from '../app-mode/LektionPlayer.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'
+import CodeLernpfadKarte from './CodeLernpfadKarte.jsx'
 import { codeLernstand } from './codeProgressStore.js'
 import { holeSchritte } from './data/codeSchritte.js'
 
@@ -17,6 +18,8 @@ import { holeSchritte } from './data/codeSchritte.js'
 export default function CodeLearningPath({ path }) {
   const [offen, setOffen] = useState(false)
   const [aktiveLektion, setAktiveLektion] = useState(null)
+  // Zwei Darstellungen derselben Lektionen: nüchterne Liste oder Wegkarte.
+  const [alsKarte, setAlsKarte] = useState(false)
 
   const status = codeLernstand.statusFuer(path.lessons)
   const fortschritt = codeLernstand.fortschrittProzent(path.lessons)
@@ -56,16 +59,45 @@ export default function CodeLearningPath({ path }) {
       </div>
 
       {offen && (
-        <ul className="cl-lektionen">
-          {path.lessons.map((lesson) => (
-            <CodeLessonCard
-              key={lesson.id}
-              lesson={lesson}
-              status={status[lesson.id]}
-              onOeffnen={() => setAktiveLektion(lesson)}
+        <>
+          <div className="cl-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
+            <button
+              type="button"
+              className={`cl-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+              aria-pressed={!alsKarte}
+              onClick={() => setAlsKarte(false)}
+            >
+              Liste
+            </button>
+            <button
+              type="button"
+              className={`cl-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+              aria-pressed={alsKarte}
+              onClick={() => setAlsKarte(true)}
+            >
+              Wegkarte
+            </button>
+          </div>
+
+          {alsKarte ? (
+            <CodeLernpfadKarte
+              lessons={path.lessons}
+              status={status}
+              oeffnen={setAktiveLektion}
             />
-          ))}
-        </ul>
+          ) : (
+            <ul className="cl-lektionen">
+              {path.lessons.map((lesson) => (
+                <CodeLessonCard
+                  key={lesson.id}
+                  lesson={lesson}
+                  status={status[lesson.id]}
+                  onOeffnen={() => setAktiveLektion(lesson)}
+                />
+              ))}
+            </ul>
+          )}
+        </>
       )}
 
       {/* Lektionen mit interaktiven Schritten oeffnen den Player (wie Mimo,

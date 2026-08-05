@@ -83,7 +83,10 @@ export default function Wochenuebersicht() {
               <span className="woche-app-name">{app.name}</span>
               <span className="woche-app-wert">
                 {app.summe} {app.einheit}
-                <span className="woche-app-tage"> · {app.aktiveTage} Tage</span>
+                <span className="woche-app-tage">
+                  {' '}
+                  · {app.aktiveTage} {app.aktiveTage === 1 ? 'Tag' : 'Tage'}
+                </span>
               </span>
             </li>
           ))}
