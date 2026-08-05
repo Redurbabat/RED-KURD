@@ -273,9 +273,38 @@ die Ergebnisse direkt sehen."
   Bau-Schritt per Chips gelöst, Vorschau zeigt „Silav!" schon während
   des Bauens, Abschluss speichert +10 XP.
 
+## Nachtrag 10: CSS und JavaScript ebenfalls interaktiv — und JS läuft wirklich
+
+- **Alle 27 Lektionen der drei Hauptpfade sind jetzt interaktiv**:
+  HTML (31 Schritte), CSS (27) und JavaScript (27) — insgesamt
+  85 Schritte, davon 26 Bau-Schritte.
+- **CSS-Bau-Schritte mit sichtbarem Ergebnis**: roten Absatz färben,
+  Karte mit padding, App-Button gestalten, Flexbox-Reihe, Media Query,
+  Grid-Raster, Drück-Animation (in der Vorschau ausprobierbar!),
+  klebende Kopfzeile (in der Vorschau scrollbar!), dunkle Karte mit
+  CSS-Variablen.
+- **JavaScript-Bau-Schritte werden wirklich AUSGEFÜHRT**: Die Vorschau
+  erlaubt Skripte nur hier — der Code besteht ausschließlich aus
+  unseren kuratierten Bausteinen (nie freie Eingabe), und ohne
+  allow-same-origin bleibt der Rahmen ohne Zugriff auf Speicher und
+  Cookies. Ergebnis: „Silav ji JavaScript!" erscheint, weil DEIN
+  zusammengesetzter Code läuft; beim Klick-Schritt reagiert der Knopf
+  in der Vorschau tatsächlich; Variablen rechnen (15 XP), if zeigt die
+  Tagesziel-Meldung, die Schleife baut eine echte Liste, die Funktion
+  begrüßt Zilan, JSON.stringify zeigt den Text.
+- Player kann jetzt optional eine „Hülle" um den gebauten Code legen
+  (z. B. der leere Absatz plus script-Tag) — der Lernende baut nur die
+  spannende Zeile.
+- Layout-Fix: Inhalte im Player werden nie mehr zusammengedrückt
+  (flex-shrink), bei Platzmangel scrollt der Bereich.
+- 1 neuer Test (252 gesamt) — Hülle/Skript-Regeln; die Tiefensuche
+  prüft auch alle 17 neuen Bau-Schritte. E2E: CSS-Absatz ist wirklich
+  rot (getComputedStyle), JS-Code läuft, Klick in der Vorschau wirkt,
+  css-1 und js-1 abgeschlossen.
+
 ## Offene nächste Schritte
 
-- interaktive Schritte für CSS- und JavaScript-Pfad (Muster steht)
+- interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
   Code: kleine JS-Aufgaben)

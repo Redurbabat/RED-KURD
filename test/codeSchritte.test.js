@@ -18,10 +18,25 @@ test('jede Schritte-Sammlung gehoert zu einer echten Lektion', () => {
   }
 })
 
-test('der ganze HTML-Pfad hat interaktive Schritte', () => {
-  const htmlPfad = codeLearningPaths.find((p) => p.id === 'html')
-  for (const lektion of htmlPfad.lessons) {
-    assert.ok(holeSchritte(lektion.id), `${lektion.id}: Schritte fehlen`)
+test('HTML-, CSS- und JavaScript-Pfad sind komplett interaktiv', () => {
+  for (const pfadId of ['html', 'css', 'javascript']) {
+    const pfad = codeLearningPaths.find((p) => p.id === pfadId)
+    for (const lektion of pfad.lessons) {
+      assert.ok(holeSchritte(lektion.id), `${lektion.id}: Schritte fehlen`)
+    }
+  }
+})
+
+test('Bau-Schritte mit Huelle/Skript sind stimmig', () => {
+  for (const [id, schritte] of Object.entries(alleSchritte)) {
+    for (const s of schritte.filter((x) => x.art === 'bauen')) {
+      if (s.huelle) {
+        assert.ok(s.huelle.includes('{{code}}'), `${id}: Huelle ohne {{code}}`)
+      }
+      if (s.skript) {
+        assert.ok(s.huelle && s.huelle.includes('<script>'), `${id}: skript ohne <script>-Huelle`)
+      }
+    }
   }
 })
 

@@ -251,6 +251,643 @@ const SCHRITTE = {
     },
   ],
 
+  'css-1': [
+    {
+      art: 'wahl',
+      frage: 'Welche Sprache ist für Farben und Schriften zuständig?',
+      optionen: ['CSS', 'HTML', 'JavaScript'],
+      richtig: 0,
+      erklaerung: 'HTML baut das Gerüst, CSS macht es schön, JavaScript macht es lebendig.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Färbe einen Absatz: erst der style-Block mit der Regel, dann der Absatz.',
+      bausteine: ['<p>Silav!</p>', '<style>', '</style>', 'p { color: crimson; }'],
+      loesung: '<style>p { color: crimson; }</style><p>Silav!</p>',
+      tipp: 'style öffnen, Regel, style schließen — dann der Absatz.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wie ist eine CSS-Regel aufgebaut?',
+      optionen: ['selektor { eigenschaft: wert; }', 'wert = eigenschaft', '<regel>…</regel>'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Wen? (Selektor) — was? (Eigenschaft) — wie? (Wert).',
+    },
+  ],
+
+  'css-2': [
+    {
+      art: 'wahl',
+      frage: 'Was ist padding?',
+      optionen: [
+        'Der Innenabstand — Luft ZWISCHEN Rand und Inhalt',
+        'Der Außenabstand zum Nachbarn',
+        'Die Randfarbe',
+      ],
+      richtig: 0,
+      erklaerung: 'padding = innen, margin = außen.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Gib der Karte Luft: eine Klasse mit padding und Hintergrundfarbe.',
+      bausteine: [
+        '<div class="karte">Silav!</div>',
+        '.karte { padding: 24px; background: #e3f5f6; }',
+        '<style>',
+        '</style>',
+      ],
+      loesung: '<style>.karte { padding: 24px; background: #e3f5f6; }</style><div class="karte">Silav!</div>',
+      tipp: 'Erst der style-Block, dann die Karte.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Der Text klebt am Rand seiner Karte. Was fehlt?',
+      optionen: ['padding', 'margin', 'color'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Innen-Luft = padding.',
+    },
+  ],
+
+  'css-3': [
+    {
+      art: 'wahl',
+      frage: 'Wie hoch muss ein Button für Finger mindestens sein?',
+      optionen: ['44 Pixel', '20 Pixel', '8 Pixel'],
+      richtig: 0,
+      erklaerung: 'Die 44-px-Regel — gilt in RED-KURD für jeden Knopf.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Mach aus dem grauen Standard-Button einen echten App-Button.',
+      bausteine: [
+        '<button type="button">Speichern</button>',
+        'button { min-height: 44px; border-radius: 12px; background: #0ea5a8; color: white; border: none; padding: 0 20px; }',
+        '</style>',
+        '<style>',
+      ],
+      loesung:
+        '<style>button { min-height: 44px; border-radius: 12px; background: #0ea5a8; color: white; border: none; padding: 0 20px; }</style><button type="button">Speichern</button>',
+      tipp: 'style öffnen, Regel, style schließen, Button.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Woran erkennt man einen guten Touch-Button?',
+      optionen: [
+        'Groß genug für den Finger und mit klarer Beschriftung',
+        'Möglichst klein, damit mehr aufs Display passt',
+        'Nur ein Symbol, nie Text',
+      ],
+      richtig: 0,
+      erklaerung: 'Große Fläche + klarer Text = weniger Fehltipper.',
+    },
+  ],
+
+  'css-4': [
+    {
+      art: 'wahl',
+      frage: 'Was macht display: flex mit den Kindern eines Elements?',
+      optionen: ['Es stellt sie in eine Reihe', 'Es versteckt sie', 'Es macht sie fett'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Flexbox ordnet Kinder in einer Reihe (oder Spalte) an.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Stelle zwei Buttons nebeneinander — mit Abstand dazwischen.',
+      bausteine: [
+        '<div class="reihe"><button>Ja</button><button>Nein</button></div>',
+        '.reihe { display: flex; gap: 12px; }',
+        '<style>',
+        '</style>',
+      ],
+      loesung:
+        '<style>.reihe { display: flex; gap: 12px; }</style><div class="reihe"><button>Ja</button><button>Nein</button></div>',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wofür ist gap da?',
+      optionen: [
+        'Abstand ZWISCHEN den Elementen — ohne margin-Tricks',
+        'Die Schriftgröße',
+        'Der Zoom-Faktor',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'gap regelt die Lücken in Flex- und Grid-Layouts.',
+    },
+  ],
+
+  'css-5': [
+    {
+      art: 'wahl',
+      frage: 'Was bedeutet „Mobile zuerst"?',
+      optionen: [
+        'Erst fürs Handy gestalten, dann für große Bildschirme erweitern',
+        'Die Handy-Version kommt irgendwann später',
+        'Nur eine App im App-Store zählt',
+      ],
+      richtig: 0,
+      erklaerung: 'Genau so ist RED-KURD gebaut: iPhone zuerst.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Welche Regel gilt NUR ab 700 Pixel Breite?',
+      optionen: ['@media (min-width: 700px) { … }', '@media (max-width: 700px) { … }', 'width: 700px;'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'min-width: „ab dieser Breite aufwärts".',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine Grundregel plus eine Zusatzregel, die ab 100 px Breite fett macht — die Vorschau ist breiter, also siehst du beides wirken.',
+      bausteine: [
+        'p { color: teal; }',
+        '</style>',
+        '@media (min-width: 100px) { p { font-weight: bold; } }',
+        '<style>',
+        '<p>Silav!</p>',
+      ],
+      loesung:
+        '<style>p { color: teal; }@media (min-width: 100px) { p { font-weight: bold; } }</style><p>Silav!</p>',
+      tipp: 'style öffnen, Grundregel, media-Regel, style schließen, Absatz.',
+    },
+  ],
+
+  'css-6': [
+    {
+      art: 'wahl',
+      frage: 'Wofür ist Grid besser als Flexbox?',
+      optionen: [
+        'Für Raster aus Zeilen UND Spalten gleichzeitig',
+        'Für eine einzelne Reihe',
+        'Für Töne und Musik',
+      ],
+      richtig: 0,
+      erklaerung: 'Flex = eine Richtung, Grid = beide Richtungen.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue ein Karten-Raster mit zwei Spalten — vier Knöpfe füllen es.',
+      bausteine: [
+        '.raster { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }',
+        '<div class="raster"><button>1</button><button>2</button><button>3</button><button>4</button></div>',
+        '</style>',
+        '<style>',
+      ],
+      loesung:
+        '<style>.raster { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }</style><div class="raster"><button>1</button><button>2</button><button>3</button><button>4</button></div>',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was bedeutet 1fr?',
+      optionen: ['Ein Anteil des freien Platzes', 'Ein Pixel', 'Ein Prozent'],
+      code: true,
+      richtig: 0,
+      erklaerung: '1fr 1fr = zwei gleich breite Spalten, egal wie breit der Schirm ist.',
+    },
+  ],
+
+  'css-7': [
+    {
+      art: 'wahl',
+      frage: 'Was macht transition?',
+      optionen: [
+        'Änderungen gleiten weich statt hart umzuspringen',
+        'Es lädt die Seite neu',
+        'Es übersetzt Texte',
+      ],
+      richtig: 0,
+      erklaerung: '150 ms weiches Gleiten fühlt sich hochwertig an.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Ein Button, der beim Drücken weich absinkt. Drück ihn danach in der Vorschau!',
+      bausteine: [
+        'button:active { transform: translateY(2px); }',
+        '<button type="button">Drück mich</button>',
+        'button { transition: transform 150ms ease; min-height: 44px; }',
+        '<style>',
+        '</style>',
+      ],
+      loesung:
+        '<style>button { transition: transform 150ms ease; min-height: 44px; }button:active { transform: translateY(2px); }</style><button type="button">Drück mich</button>',
+      tipp: 'style öffnen, Grundregel, :active-Regel, style schließen, Button.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wofür ist prefers-reduced-motion?',
+      optionen: [
+        'Menschen, die weniger Bewegung eingestellt haben, bekommen Ruhe',
+        'Es macht Animationen schneller',
+        'Es spart Akku beim Laden',
+      ],
+      richtig: 0,
+      erklaerung: 'Gute Apps respektieren diese Einstellung — RED-KURD auch.',
+    },
+  ],
+
+  'css-8': [
+    {
+      art: 'wahl',
+      frage: 'Was klebt IMMER am Fenster, egal wie weit man rollt?',
+      optionen: ['position: fixed', 'position: sticky', 'position: static'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'sticky klebt erst, wenn es beim Rollen an seiner Kante ankommt.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine Kopfzeile, die beim Rollen oben kleben bleibt — roll danach in der Vorschau!',
+      bausteine: [
+        '.kopf { position: sticky; top: 0; background: #0ea5a8; color: white; padding: 8px; }',
+        '<div class="kopf">Kopfzeile</div>',
+        '<p>Zeile 1<br>Zeile 2<br>Zeile 3<br>Zeile 4<br>Zeile 5<br>Zeile 6<br>Zeile 7<br>Zeile 8<br>Zeile 9<br>Zeile 10</p>',
+        '</style>',
+        '<style>',
+      ],
+      loesung:
+        '<style>.kopf { position: sticky; top: 0; background: #0ea5a8; color: white; padding: 8px; }</style><div class="kopf">Kopfzeile</div><p>Zeile 1<br>Zeile 2<br>Zeile 3<br>Zeile 4<br>Zeile 5<br>Zeile 6<br>Zeile 7<br>Zeile 8<br>Zeile 9<br>Zeile 10</p>',
+      tipp: 'style, Regel, style zu — dann Kopfzeile, dann der lange Inhalt.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Eine fixe Leiste unten am iPhone braucht zusätzlich …',
+      optionen: [
+        'padding-bottom mit env(safe-area-inset-bottom)',
+        'mehr Werbung',
+        'position: static',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Sonst kollidiert sie mit dem Home-Balken.',
+    },
+  ],
+
+  'css-9': [
+    {
+      art: 'wahl',
+      frage: 'Wozu sind CSS-Variablen gut?',
+      optionen: [
+        'Einen Wert einmal anlegen und überall benutzen',
+        'Sie machen die Seite schneller',
+        'Sie ersetzen HTML',
+      ],
+      richtig: 0,
+      erklaerung: 'Farbe an EINER Stelle ändern — die ganze App zieht mit.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine dunkle Karte, deren Farben aus Variablen kommen.',
+      bausteine: [
+        ':root { --flaeche: #10222b; --schrift: #ffffff; }',
+        '.karte { background: var(--flaeche); color: var(--schrift); padding: 16px; border-radius: 12px; }',
+        '<div class="karte">Silav!</div>',
+        '</style>',
+        '<style>',
+      ],
+      loesung:
+        '<style>:root { --flaeche: #10222b; --schrift: #ffffff; }.karte { background: var(--flaeche); color: var(--schrift); padding: 16px; border-radius: 12px; }</style><div class="karte">Silav!</div>',
+      tipp: 'style öffnen, Variablen anlegen, Karte gestalten, style zu, Karte.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wie funktioniert ein Dunkelmodus mit Variablen?',
+      optionen: [
+        'Dieselben Variablen bekommen im Dunkeln einfach andere Werte',
+        'Man schreibt jede Regel doppelt',
+        'Das geht mit CSS nicht',
+      ],
+      richtig: 0,
+      erklaerung: 'Genau so macht es RED-KURD in tokens.css.',
+    },
+  ],
+
+  'js-1': [
+    {
+      art: 'wahl',
+      frage: 'Was ist die Aufgabe von JavaScript?',
+      optionen: [
+        'Verhalten: auf Klicks reagieren und die Seite verändern',
+        'Nur Farben und Schriften',
+        'Nur Überschriften und Absätze',
+      ],
+      richtig: 0,
+      erklaerung: 'HTML = Gerüst, CSS = Aussehen, JavaScript = Verhalten.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wo läuft das JavaScript einer Webseite?',
+      optionen: ['Im Browser — direkt auf deinem Gerät', 'Nur auf einem Server', 'Im Router'],
+      richtig: 0,
+      erklaerung: 'Deshalb funktioniert RED-KURD auch offline.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Dein erstes JavaScript: Schreib einen Gruß in den leeren Absatz. Die Vorschau führt deinen Code wirklich aus!',
+      skript: true,
+      huelle: '<p id="gruss"></p>\n<script>{{code}}</script>',
+      bausteine: [".textContent", "document.querySelector('#gruss')", " = 'Silav ji JavaScript!';"],
+      loesung: "document.querySelector('#gruss').textContent = 'Silav ji JavaScript!';",
+      tipp: 'Element holen, dann .textContent, dann der neue Wert.',
+    },
+  ],
+
+  'js-2': [
+    {
+      art: 'wahl',
+      frage: 'Was macht addEventListener("click", …)?',
+      optionen: [
+        'Es führt Code aus, sobald das Element angeklickt wird',
+        'Es klickt selbst auf den Knopf',
+        'Es löscht den Knopf',
+      ],
+      richtig: 0,
+      erklaerung: 'Ereignis „click" → deine Funktion läuft.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Verdrahte den Knopf: Beim Klick soll „Spas!" erscheinen. Tippe danach in der Vorschau auf den Knopf!',
+      skript: true,
+      huelle:
+        '<button id="knopf" type="button">Klick mich</button>\n<p id="antwort"></p>\n<script>{{code}}</script>',
+      bausteine: [
+        ".addEventListener('click', () => {",
+        "document.querySelector('#knopf')",
+        " document.querySelector('#antwort').textContent = 'Spas!';",
+        ' });',
+      ],
+      loesung:
+        "document.querySelector('#knopf').addEventListener('click', () => { document.querySelector('#antwort').textContent = 'Spas!'; });",
+      tipp: 'Knopf holen, Lauscher anhängen, im Inneren die Antwort setzen, schließen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was ist "click" in diesem Code?',
+      optionen: ['Der Name des Ereignisses', 'Eine Farbe', 'Ein CSS-Selektor'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Es gibt viele Ereignisse: click, input, submit …',
+    },
+  ],
+
+  'js-3': [
+    {
+      art: 'wahl',
+      frage: 'Womit legst du eine Variable an, die sich noch ändern darf?',
+      optionen: ['let', 'const', 'fest'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'let darf sich ändern, const bleibt bei seinem Wert.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was bedeutet const?',
+      optionen: [
+        'Der Wert wird nicht neu zugewiesen',
+        'Die Variable ist unsichtbar',
+        'Die Variable ist eine Zahl',
+      ],
+      richtig: 0,
+      erklaerung: 'Erst const versuchen — nur bei Bedarf let.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Rechne mit einer Variablen: 10 XP, dann +5 — und zeig das Ergebnis an.',
+      skript: true,
+      huelle: '<p id="punkte"></p>\n<script>{{code}}</script>',
+      bausteine: [
+        " punkte = punkte + 5;",
+        'let punkte = 10;',
+        " document.querySelector('#punkte').textContent = punkte + ' XP';",
+      ],
+      loesung:
+        "let punkte = 10; punkte = punkte + 5; document.querySelector('#punkte').textContent = punkte + ' XP';",
+      tipp: 'Anlegen, erhöhen, anzeigen — die Vorschau zeigt 15 XP.',
+    },
+  ],
+
+  'js-4': [
+    {
+      art: 'wahl',
+      frage: 'Was prüft ein if?',
+      optionen: [
+        'Eine Bedingung — der Code läuft nur, wenn sie stimmt',
+        'Die Internetverbindung',
+        'Die Rechtschreibung',
+      ],
+      richtig: 0,
+      erklaerung: 'if (bedingung) { … } — sonst passiert nichts.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Zeig die Erfolgsmeldung nur, wenn das Tagesziel (30 XP) erreicht ist.',
+      skript: true,
+      huelle: '<p id="meldung"></p>\n<script>{{code}}</script>',
+      bausteine: [
+        ' if (xp >= 30) {',
+        'const xp = 35;',
+        " document.querySelector('#meldung').textContent = 'Tagesziel geschafft!';",
+        ' }',
+      ],
+      loesung:
+        "const xp = 35; if (xp >= 30) { document.querySelector('#meldung').textContent = 'Tagesziel geschafft!'; }",
+      tipp: 'Wert anlegen, if öffnen, Meldung setzen, if schließen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Welches Zeichen heißt „größer oder gleich"?',
+      optionen: ['>=', '=>', '=='],
+      code: true,
+      richtig: 0,
+      erklaerung: '=> ist etwas anderes: eine Pfeilfunktion!',
+    },
+  ],
+
+  'js-5': [
+    {
+      art: 'wahl',
+      frage: 'Wie sieht eine Liste (Array) in JavaScript aus?',
+      optionen: ["['Silav', 'Spas']", '{Silav, Spas}', '"Silav, Spas"'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Eckige Klammern, Einträge mit Komma.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue aus einer Wortliste automatisch eine HTML-Liste — ein Eintrag je Wort.',
+      skript: true,
+      huelle: '<ul id="liste"></ul>\n<script>{{code}}</script>',
+      bausteine: [
+        ' for (const wort of woerter) {',
+        "const woerter = ['Silav', 'Spas', 'Baş'];",
+        " document.querySelector('#liste').innerHTML += '<li>' + wort + '</li>';",
+        ' }',
+      ],
+      loesung:
+        "const woerter = ['Silav', 'Spas', 'Baş']; for (const wort of woerter) { document.querySelector('#liste').innerHTML += '<li>' + wort + '</li>'; }",
+      tipp: 'Liste anlegen, Schleife öffnen, Eintrag anhängen, Schleife schließen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Wie oft läuft for (const wort of woerter)?',
+      optionen: ['Einmal je Eintrag der Liste', 'Genau einmal', 'Endlos'],
+      richtig: 0,
+      erklaerung: 'Drei Wörter → drei Durchläufe.',
+    },
+  ],
+
+  'js-6': [
+    {
+      art: 'wahl',
+      frage: 'Was ist eine Funktion?',
+      optionen: [
+        'Ein benanntes Stück Code, das man wiederverwenden kann',
+        'Eine CSS-Regel',
+        'Ein HTML-Element',
+      ],
+      richtig: 0,
+      erklaerung: 'Einmal schreiben, überall aufrufen.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Baue eine Begrüßungs-Funktion und rufe sie mit dem Namen Zilan auf.',
+      skript: true,
+      huelle: '<p id="aus"></p>\n<script>{{code}}</script>',
+      bausteine: [
+        " return 'Silav, ' + name + '!';",
+        'function begruesse(name) {',
+        ' }',
+        " document.querySelector('#aus').textContent = begruesse('Zilan');",
+      ],
+      loesung:
+        "function begruesse(name) { return 'Silav, ' + name + '!'; } document.querySelector('#aus').textContent = begruesse('Zilan');",
+      tipp: 'Funktion öffnen, return, Funktion schließen, aufrufen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was macht return?',
+      optionen: [
+        'Es gibt das Ergebnis der Funktion zurück',
+        'Es lädt die Seite neu',
+        'Es druckt die Seite',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Ohne return kommt undefined heraus.',
+    },
+  ],
+
+  'js-7': [
+    {
+      art: 'wahl',
+      frage: 'Was liefert document.querySelector("#status")?',
+      optionen: [
+        'Das Element mit der id status — zum Weiterarbeiten',
+        'Eine neue Seite',
+        'Eine Zahl',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Holen → dann textContent, style oder classList ändern.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Hole das Status-Element, ändere seinen Text auf „erledigt" und färbe ihn grün.',
+      skript: true,
+      huelle: '<p id="status">offen</p>\n<script>{{code}}</script>',
+      bausteine: [
+        " el.textContent = 'erledigt';",
+        "const el = document.querySelector('#status');",
+        " el.style.color = 'green';",
+      ],
+      loesung:
+        "const el = document.querySelector('#status'); el.textContent = 'erledigt'; el.style.color = 'green';",
+      tipp: 'Erst holen, dann Text, dann Farbe.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was macht classList.add("geschafft")?',
+      optionen: [
+        'Es hängt dem Element die CSS-Klasse geschafft an',
+        'Es legt eine neue Datei an',
+        'Es addiert Zahlen',
+      ],
+      code: true,
+      richtig: 0,
+      erklaerung: 'So schaltet JavaScript Zustände um, die CSS dann gestaltet.',
+    },
+  ],
+
+  'js-8': [
+    {
+      art: 'wahl',
+      frage: 'Überlebt localStorage das Neuladen der Seite?',
+      optionen: [
+        'Ja — genau so merkt sich RED-KURD deinen Lernstand',
+        'Nein, alles ist danach weg',
+        'Nur fünf Minuten lang',
+      ],
+      richtig: 0,
+      erklaerung: 'Lokal im Browser, ohne Konto, ohne Server.',
+    },
+    {
+      art: 'bauen',
+      auftrag: 'Objekte speichert man als Text: Wandle den Lernstand mit JSON.stringify um und zeig ihn an.',
+      skript: true,
+      huelle: '<pre id="aus"></pre>\n<script>{{code}}</script>',
+      bausteine: [
+        ' const text = JSON.stringify(stand);',
+        'const stand = { xp: 120, tage: 3 };',
+        " document.querySelector('#aus').textContent = text;",
+      ],
+      loesung:
+        "const stand = { xp: 120, tage: 3 }; const text = JSON.stringify(stand); document.querySelector('#aus').textContent = text;",
+      tipp: 'Objekt anlegen, in Text verwandeln, anzeigen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Beim Lesen ist noch nichts gespeichert. Was macht guter Code?',
+      optionen: [
+        'Er rechnet mit einem Startwert weiter',
+        'Er stürzt ab',
+        'Er lädt die Seite endlos neu',
+      ],
+      richtig: 0,
+      erklaerung: 'roh ? JSON.parse(roh) : { xp: 0 } — Fehlen ist der Normalfall.',
+    },
+  ],
+
+  'js-9': [
+    {
+      art: 'wahl',
+      frage: 'Etwas funktioniert nicht. Was ist der erste Schritt?',
+      optionen: [
+        'Nachsehen: die Fehlermeldung lesen oder den Wert loggen',
+        'Raten und Zeilen löschen',
+        'Alles neu schreiben',
+      ],
+      richtig: 0,
+      erklaerung: 'Nicht raten — nachsehen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Was verrät dir eine rote Fehlermeldung fast immer?',
+      optionen: ['Datei und Zeile des Problems', 'Das Wetter', 'Nichts Nützliches'],
+      richtig: 0,
+      erklaerung: 'Deshalb: immer erst die Meldung lesen.',
+    },
+    {
+      art: 'wahl',
+      frage: 'Der Profi-Trick, um mehrere Werte gleichzeitig zu loggen?',
+      optionen: ['console.log({ name, punkte })', 'console.log()', 'console.log;'],
+      code: true,
+      richtig: 0,
+      erklaerung: 'Die geschweiften Klammern zeigen Namen UND Wert.',
+    },
+  ],
+
   'html-9': [
     {
       art: 'wahl',

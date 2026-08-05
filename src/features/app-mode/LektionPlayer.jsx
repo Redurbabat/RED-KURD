@@ -158,14 +158,26 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
               ))}
             </div>
 
-            <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
-            {/* Sandbox ohne Rechte: reines Anzeigen, keine Skripte, keine Links. */}
-            <iframe
-              className="praxis-vorschau lp-vorschau"
-              title="Live-Vorschau deines Codes"
-              sandbox=""
-              srcDoc={zusammengebaut}
-            />
+            {schritt.vorschau !== false && (
+              <>
+                <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
+                {/* Sandbox: normal ohne jede Rechte. allow-scripts gibt es NUR
+                    fuer Bau-Schritte mit skript:true — dort besteht der Code
+                    ausschliesslich aus unseren eigenen, kuratierten Bausteinen
+                    (nie freie Eingabe), und ohne allow-same-origin bleibt der
+                    Rahmen ohne Zugriff auf Speicher und Cookies. */}
+                <iframe
+                  className="praxis-vorschau lp-vorschau"
+                  title="Live-Vorschau deines Codes"
+                  sandbox={schritt.skript ? 'allow-scripts' : ''}
+                  srcDoc={
+                    schritt.huelle
+                      ? schritt.huelle.replace('{{code}}', zusammengebaut)
+                      : zusammengebaut
+                  }
+                />
+              </>
+            )}
 
             <div className="lp-werkzeuge">
               <button

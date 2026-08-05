@@ -303,6 +303,10 @@
   flex-direction: column;
   gap: var(--space-3);
 }
+/* Kinder nie zusammendruecken — bei Platzmangel scrollt der Bereich. */
+.lp-inhalt > * {
+  flex-shrink: 0;
+}
 .lp-frage {
   font-size: var(--text-lg);
   font-weight: 600;
