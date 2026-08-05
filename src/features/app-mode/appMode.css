@@ -83,6 +83,36 @@
   }
 }
 
+/* ===== Ansichts-Umschalter der Sprach-App (Modern/Abenteuer/Redlingo) ===== */
+
+.ansicht-umschalter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--rk-surface);
+  border-bottom: 1.5px solid var(--rk-border);
+}
+.ansicht-umschalter-wort {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid transparent;
+  color: var(--rk-text-muted);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf.aktiv {
+  color: var(--rk-primary-dark);
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+
 /* ===== App-Auswahl (Launcher): mehrere Apps in einer Website ===== */
 
 .app-launcher {
@@ -143,6 +173,17 @@
   color: var(--rk-text-muted);
   font-size: var(--text-sm);
   margin-top: 2px;
+}
+.app-launcher-zusatz {
+  color: var(--rk-primary-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.app-launcher-fuss {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+  text-align: center;
 }
 /* Jede App traegt ihre Identitaet schon in der Auswahl. */
 .app-launcher-karte.bereich-language {

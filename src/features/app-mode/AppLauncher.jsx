@@ -9,15 +9,16 @@ import './appMode.css'
 const KARTEN = {
   [APP_MODES.LANGUAGE]: {
     icon: 'sprache',
-    beschreibung: 'Kurdisch und weitere Sprachen: Kurse, Vokabeln, Grammatik, Aussprache.',
+    beschreibung: 'Kurmancî, Deutsch, Englisch, Türkisch, Französisch und Spanisch lernen.',
+    zusatz: 'Mit Modern-Ansicht und Abenteuer-Ansicht.',
   },
   [APP_MODES.CODE]: {
     icon: 'puzzle',
-    beschreibung: 'HTML, CSS, JavaScript, TypeScript, GitHub und VS Code — Schritt für Schritt.',
+    beschreibung: 'HTML, CSS, JavaScript, TypeScript, GitHub und VS Code Schritt für Schritt lernen.',
   },
   [APP_MODES.PROMPTING]: {
     icon: 'sprechblase',
-    beschreibung: 'Prompts schreiben, Claude Code steuern und bessere Aufgaben geben.',
+    beschreibung: 'Lerne, wie du ChatGPT, Claude und Claude Code klare Aufgaben gibst.',
   },
   [APP_MODES.ELECTRO]: {
     icon: 'blitz',
@@ -33,10 +34,8 @@ export default function AppLauncher({ oeffnen }) {
     <div className="app-launcher">
       <header className="app-launcher-kopf">
         <p className="app-launcher-marke">RED-KURD</p>
-        <h1>Welche App möchtest du öffnen?</h1>
-        <p className="app-launcher-text">
-          Mehrere Apps in einer Website — jede öffnet sich getrennt.
-        </p>
+        <h1>Deine kostenlose lokale Lernwelt.</h1>
+        <p className="app-launcher-text">Wähle, was du lernen möchtest.</p>
       </header>
 
       <div className="app-launcher-karten">
@@ -48,6 +47,7 @@ export default function AppLauncher({ oeffnen }) {
             <div className="app-launcher-inhalt">
               <h2>{APP_MODE_LABELS[mode]}</h2>
               <p>{KARTEN[mode].beschreibung}</p>
+              {KARTEN[mode].zusatz && <p className="app-launcher-zusatz">{KARTEN[mode].zusatz}</p>}
             </div>
             <PrimaryButton icon="pfeilRechts" onClick={() => oeffnen(mode)}>
               Öffnen
@@ -55,6 +55,10 @@ export default function AppLauncher({ oeffnen }) {
           </section>
         ))}
       </div>
+
+      <p className="app-launcher-fuss">
+        Kostenlos · lokal · ohne Konto — dein Lernstand bleibt auf deinem Gerät.
+      </p>
     </div>
   )
 }

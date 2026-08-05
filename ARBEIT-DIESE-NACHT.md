@@ -357,8 +357,40 @@ mehrere Apps in einer Website, jede öffnet sich getrennt."
   Launcher + Umschalter + Speicher; die Apps liegen in src/features/*
   bzw. src/modes für Sprache) — kein riskanter Großumzug.
 
+## Nachtrag 13: Abenteuer ist eine ANSICHT, keine App
+
+Korrektur-Auftrag: „Abenteuer ist keine eigene App — es ist eine Ansicht
+innerhalb von Sprache lernen."
+
+- **Prüfung**: Launcher, Umschalter, appModes und App-Speicher kannten
+  Abenteuer nie als App — die Struktur war korrekt (Ansichten leben in
+  `red-kurd-ui-v1` → mode modern/abenteuer/redlingo, getrennt vom
+  App-Schlüssel, ein gemeinsamer Lernstand).
+- **Neu: Ansichts-Umschalter oben in der Sprach-App**
+  („Ansicht: Modern | Abenteuer | Redlingo") — nur dort sichtbar, auf
+  Übungs-/Lektionsseiten ausgeblendet. Wechsel sofort, gleicher
+  Lernstand, globale App bleibt „language".
+- **Absicherung im Speicher**: Sollte je `activeApp="adventure"` (oder
+  „abenteuer") gespeichert sein, migriert die App zu
+  `activeApp="language"` + Ansicht „abenteuer" — und ein solcher Wert
+  lässt sich nicht mehr als App speichern.
+- **Launcher-Texte** nach Auftrag: „Deine kostenlose lokale Lernwelt." /
+  „Wähle, was du lernen möchtest." / Sprache-Karte mit Zusatz „Mit
+  Modern-Ansicht und Abenteuer-Ansicht." / Fußzeile „Kostenlos · lokal ·
+  ohne Konto".
+- **Doku klargestellt** (README, ARCHITEKTUR): „Abenteuer ist kein
+  eigener App-Bereich, sondern die spielerische Ansicht der
+  Sprache-lernen-App." AUFGABEN.md enthielt nichts Falsches.
+- 2 neue Tests (257 gesamt). E2E: 23 Ansicht-Prüfungen grün (Launcher
+  genau 4 Apps, Umschalter, Abenteuer-Wechsel + Reload, Migration,
+  Code-App ohne Abenteuer-Inhalte) + die 36 Multi-App-Prüfungen weiter
+  grün.
+
 ## Offene nächste Schritte
 
+- Elektro-Lehre-MVP ausbauen (Fächer, Noten, Prüfungen, Berichtsheft,
+  Formel-Rechner — Phase 3 des Auftrags)
+- AI-Sprache interaktiver (Auftrag-Baukasten, Bug-Report-Generator)
 - mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
 - interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau

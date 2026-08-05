@@ -19,6 +19,7 @@ import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
 import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
+import AnsichtSwitcher from '../features/app-mode/AnsichtSwitcher.jsx'
 import AppLauncher from '../features/app-mode/AppLauncher.jsx'
 import AppModeSwitcher from '../features/app-mode/AppModeSwitcher.jsx'
 import { APP_MODES } from '../features/app-mode/appModes.js'
@@ -256,6 +257,9 @@ export default function App() {
 
       {activeMode === APP_MODES.LANGUAGE && (
         <RouterProvider>
+          {/* Modern/Abenteuer/Redlingo sind ANSICHTEN der Sprach-App —
+              keine eigenen Apps. Der Wechsel lebt deshalb nur hier. */}
+          <AnsichtSwitcher />
           <Rahmen />
         </RouterProvider>
       )}
