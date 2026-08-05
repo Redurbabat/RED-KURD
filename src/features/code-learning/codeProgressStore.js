@@ -1,0 +1,7 @@
+// Der echte Lernstand des Bereichs „Code lernen" — eigener Schluessel,
+// gleiche Regeln wie alle Bereiche (erledigt, XP, Serie).
+import { KEYS } from '../../core/storage.js'
+import { erstelleBereichsLernstand } from '../../core/lernbereiche/bereichsLernstand.js'
+
+export const codeLernstand = erstelleBereichsLernstand(KEYS.codeFortschritt)
+export { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.js'

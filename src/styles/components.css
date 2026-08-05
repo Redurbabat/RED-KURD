@@ -556,9 +556,12 @@
   position: relative;
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
-.rk-karte-klick:hover {
-  border-color: var(--rk-primary);
-  transform: translateY(-2px);
+/* Nur mit echter Maus — auf Touch bliebe der Schwebezustand haengen. */
+@media (hover: hover) {
+  .rk-karte-klick:hover {
+    border-color: var(--rk-primary);
+    transform: translateY(-2px);
+  }
 }
 .rk-karte-pfeil {
   position: absolute;
@@ -733,7 +736,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0;
-  min-height: 42px;
+  min-height: var(--touch-min);
   padding: var(--space-2);
   border-radius: var(--radius-pill);
   font-weight: 800;
@@ -901,13 +904,21 @@
 .rk-modal {
   width: 100%;
   max-width: 560px;
+  /* dvh: 90vh laeuft in iOS-Safari unter die dynamische Adressleiste. */
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  /* Haelt das Wischen im Modal — der Hintergrund scrollt sonst mit. */
+  overscroll-behavior: contain;
   background: var(--rk-surface);
   border-radius: var(--radius-large) var(--radius-large) 0 0;
   padding: var(--space-5) var(--space-4);
   padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom, 0px));
   box-shadow: var(--shadow-floating);
+}
+/* Breite Variante fuer inhaltsreiche Dialoge (Modal-Prop `breit`). */
+.rk-modal-breit {
+  max-width: 760px;
 }
 .rk-modal-kopf {
   display: flex;
@@ -954,7 +965,8 @@
   border: 1.5px solid var(--rk-border);
   border-radius: var(--radius-small);
   background: var(--rk-surface);
-  font-size: var(--text-base);
+  /* Nie unter 16 px, sonst zoomt iOS-Safari beim Tippen in die Seite. */
+  font-size: max(16px, var(--text-base));
   font-weight: 600;
 }
 .rk-feld:focus {
@@ -1190,6 +1202,22 @@
   background: var(--rk-red-soft);
   border: 1px solid #f5c6c8;
   color: var(--rk-red-dark);
+}
+/* Dunkles Design: die hartkodierten Hellmodus-Toene waeren hier unlesbar
+   (dunkelgruen auf dunkelgruen) — gerade die Antwort-Rueckmeldung muss sitzen. */
+:root[data-theme='dark'] .rk-rueckmeldung.gut {
+  border-color: #2f5c31;
+  color: var(--rk-green-dark);
+}
+:root[data-theme='dark'] .rk-rueckmeldung.schlecht {
+  border-color: #6d3238;
+}
+:root[data-theme='dark'] .rk-badge-gold {
+  color: var(--rk-yellow);
+  border-color: #5a4a15;
+}
+:root[data-theme='dark'] .rk-chip-gold {
+  color: var(--rk-yellow);
 }
 .rk-rueckmeldung-xp {
   font-weight: 800;

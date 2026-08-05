@@ -1,0 +1,58 @@
+// Uebungen des Bereichs „AI-Sprache": echte Auftraege selbst formulieren.
+
+export const promptExercises = [
+  {
+    id: 'puebung-mobile-nav',
+    title: 'Auftrag: mobile Navigation',
+    topic: 'Claude Code',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 12,
+    description: 'Formuliere einen kompletten Auftrag für eine Bottom-Navigation.',
+    task: 'Schreibe einen Auftrag: Was gebaut wird, für welches Gerät, welche Dateien erlaubt sind, Mindestgröße der Knöpfe und wie geprüft wird.',
+  },
+  {
+    id: 'puebung-mediathek',
+    title: 'Auftrag: Mediathek-Seite',
+    topic: 'Claude Code',
+    difficulty: 'Mittel',
+    estimatedMinutes: 15,
+    description: 'Ein Auftrag für eine Filmliste mit Suchfeld und Karten.',
+    task: 'Beschreibe eine Seite mit Suchfeld oben und Filmkarten darunter. Lege fest: mobile zuerst, keine neuen Abhängigkeiten, bestehendes Design nutzen.',
+  },
+  {
+    id: 'puebung-bugreport',
+    title: 'Bug-Report schreiben',
+    topic: 'Fehler melden',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 10,
+    description: 'Ein Fehlerbericht, mit dem jemand sofort arbeiten kann.',
+    task: 'Wähle einen echten Fehler und schreibe: Was passiert? Was war erwartet? Schritte zum Nachstellen? Gerät/Browser? Screenshot oder Meldung?',
+  },
+  {
+    id: 'puebung-tests',
+    title: 'Tests verlangen',
+    topic: 'Qualität',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 8,
+    description: 'Sage der KI, wie sie beweisen soll, dass es funktioniert.',
+    task: 'Ergänze einen Auftrag um einen Prüfteil: welche Befehle laufen sollen (z. B. npm test, npm run build) und was du als Beleg sehen willst.',
+  },
+  {
+    id: 'puebung-verbote',
+    title: 'Verbote definieren',
+    topic: 'Sicherheit',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 8,
+    description: 'Schütze deine App vor ungewollten Änderungen.',
+    task: 'Schreibe fünf klare Verbote für einen Auftrag, z. B.: nichts löschen, keine neuen Pakete, Speicherformat nicht ändern, main nicht anfassen.',
+  },
+  {
+    id: 'puebung-verbessern',
+    title: 'Schlechten Prompt verbessern',
+    topic: 'Grundlagen',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 10,
+    description: 'Aus „Mach die App schöner“ einen brauchbaren Auftrag machen.',
+    task: 'Nimm den Prompt „Mach die App schöner und schneller“ und schreibe ihn neu: konkretes Ziel, betroffene Seiten, Grenzen, Prüfschritte.',
+  },
+]

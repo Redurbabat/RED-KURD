@@ -1,5 +1,11 @@
 // Baut aus Wortlisten die einzelnen Aufgaben. Reine Logik, keine Oberflaeche.
-import { ALLE_WOERTER, bildVon, fotoVon } from '../courses/courseRepository.js'
+import {
+  ALLE_WOERTER,
+  alleDeutschVon,
+  alleKurmanciVon,
+  bildVon,
+  fotoVon,
+} from '../courses/courseRepository.js'
 
 export function mische(liste) {
   const a = [...liste]
@@ -43,17 +49,25 @@ const ARTEN_JE_SKILL = {
 
 /**
  * Baut die falschen Antwortmöglichkeiten.
- * Wichtig: Wörter, deren Text mit der richtigen Antwort übereinstimmt, fliegen
- * raus — sonst steht die richtige Antwort zweimal da und ein Treffer auf die
- * zweite zählt als Fehler. (Beispiel: „roj" heisst Tag UND Sonne.)
+ * Zwei Fallen bei Homonymen und Synonymen:
+ * 1. „roj" heisst Tag UND Sonne — fragt die Aufgabe „roj" mit Antwort „Tag",
+ *    darf „Sonne" nicht als falsche Option erscheinen, sonst wird eine
+ *    objektiv richtige Wahl als Fehler gewertet. Deshalb sind ALLE
+ *    Übersetzungen des Frageworts tabu (`ausgeschlossen`).
+ * 2. „Ez fêm nakim" und „Ez fêm nakim." unterscheiden sich nur im Punkt —
+ *    Optionen, die nach Tipp-Normalisierung mit der Antwort übereinstimmen,
+ *    fliegen ebenfalls raus.
  */
-function falscheOptionen(alle, richtig, feld, anzahl = 3) {
-  const gesehen = new Set([richtig])
+function falscheOptionen(alle, richtig, feld, ausgeschlossen = [], anzahl = 3) {
+  const tabu = new Set([richtig, ...ausgeschlossen])
   const aus = []
   for (const x of mische(alle)) {
     const wert = x[feld]
-    if (!wert || gesehen.has(wert)) continue
-    gesehen.add(wert)
+    if (!wert || tabu.has(wert)) continue
+    // Auch untereinander duerfen Optionen nicht praktisch gleich sein —
+    // „Baran dibare" und „Baran dibare." saehen sonst wie ein Duplikat aus.
+    if ([richtig, ...aus].some((r) => istRichtigGetippt(wert, r))) continue
+    tabu.add(wert)
     aus.push(wert)
     if (aus.length === anzahl) break
   }
@@ -122,7 +136,7 @@ export function baueUebungen(woerter, arten) {
         w,
       })
     } else if (art === 'hoeren' || art === 'wahl-de') {
-      const falsche = falscheOptionen(alle, w.de, 'de')
+      const falsche = falscheOptionen(alle, w.de, 'de', alleDeutschVon(w.ku))
       if (falsche.length < 3) continue
       uebungen.push({
         art,
@@ -134,7 +148,7 @@ export function baueUebungen(woerter, arten) {
     } else if (art === 'tippen') {
       uebungen.push({ art, frage: w.de, antwort: w.ku, w })
     } else {
-      const falsche = falscheOptionen(alle, w.ku, 'ku')
+      const falsche = falscheOptionen(alle, w.ku, 'ku', alleKurmanciVon(w.de))
       if (falsche.length < 3) continue
       uebungen.push({
         art,

@@ -252,6 +252,18 @@ export function deutschVon(ku) {
   return treffer ? treffer.join(' / ') : undefined
 }
 
+/**
+ * Rohlisten fuer die Aufgaben-Fabrik: Bei Homonymen („roj" = Tag UND Sonne)
+ * darf keine der weiteren richtigen Bedeutungen als falsche Option erscheinen.
+ */
+export function alleDeutschVon(ku) {
+  return DE_VON_KU.get(ku) || []
+}
+
+export function alleKurmanciVon(de) {
+  return KU_VON_DE.get(de) || []
+}
+
 export function kurmanciVon(de) {
   const treffer = KU_VON_DE.get(de)
   return treffer ? treffer.join(' / ') : undefined

@@ -1,0 +1,90 @@
+/* ===== Bereich „AI-Sprache" — rot/oranger Akzent, ruhig und klar ===== */
+
+.bereich-prompting h1 {
+  color: var(--rk-orange-dark);
+}
+
+.pl-text {
+  color: var(--rk-text-muted);
+}
+
+.pl-heute {
+  line-height: 1.6;
+}
+
+.pl-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Lektionen (anklickbare Karten) --- */
+.pl-lektion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+}
+.pl-lektion:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.pl-lektion-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pl-lektion-titel {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.pl-lektion-status {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.pl-lektion.status-done .pl-lektion-status {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.pl-lektion.status-current .pl-lektion-status {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-orange);
+  background: var(--rk-orange-soft);
+}
+.pl-lektion.status-locked {
+  opacity: 0.65;
+}
+
+/* --- Uebungen --- */
+.pl-uebung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pl-uebung-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.pl-uebung-aufgabe {
+  padding: var(--space-3);
+  border-left: 3px solid var(--rk-orange);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-sm);
+}

@@ -1,0 +1,226 @@
+/* ===== Bereich „Code lernen" — blau/violetter Akzent, ruhig und klar ===== */
+
+.bereich-code h1 {
+  color: var(--rk-blue-dark);
+}
+
+/* --- Heute lernen --- */
+.cl-heute {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cl-heute li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+}
+.cl-heute-text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- Lernpfad-Karte --- */
+.cl-pfad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.cl-pfad-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.cl-pfad-symbol {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  border-radius: var(--radius-medium);
+  background: var(--rk-blue-soft);
+  border: 1px solid var(--rk-border);
+}
+.cl-pfad-titel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.cl-pfad-text {
+  color: var(--rk-text-muted);
+}
+.cl-pfad-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.cl-pfad-anzahl {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Lektionsliste --- */
+.cl-lektionen {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  border-top: 1px solid var(--rk-border);
+  padding-top: var(--space-3);
+}
+.cl-lektion-knopf {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: var(--space-3);
+  min-height: var(--touch-min);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-small);
+  text-align: left;
+  font-weight: 600;
+}
+.cl-lektion-knopf:disabled {
+  cursor: not-allowed;
+}
+.cl-lektion.status-current .cl-lektion-knopf,
+.cl-lektion.status-done .cl-lektion-knopf,
+.cl-lektion.status-open .cl-lektion-knopf {
+  cursor: pointer;
+}
+.cl-lektion-status {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.cl-lektion.status-done .cl-lektion-status {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.cl-lektion.status-current .cl-lektion-knopf {
+  background: var(--rk-blue-soft);
+}
+.cl-lektion.status-current .cl-lektion-status {
+  color: var(--rk-blue-dark);
+  border-color: var(--rk-blue);
+}
+.cl-lektion.status-locked {
+  opacity: 0.65;
+}
+.cl-lektion-titel {
+  flex: 1;
+  min-width: 0;
+}
+.cl-lektion-dauer {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+/* --- Fortschritts-Ueberblick --- */
+.cl-fortschritt {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.cl-fortschritt-name {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 800;
+}
+
+/* --- Uebungen --- */
+.cl-uebung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cl-uebung-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.cl-uebung-aufgabe {
+  padding: var(--space-3);
+  border-left: 3px solid var(--rk-blue);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-sm);
+}
+.cl-uebung-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Fehlerbuch --- */
+.cl-fehlerbuch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.cl-fehlerbuch-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cl-fehlerbuch-form .rk-feld {
+  resize: vertical;
+}
+.cl-fehlerbuch-hinweis {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.cl-fehlerbuch-liste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.cl-fehlerbuch-eintrag {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.cl-fehlerbuch-kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.cl-fehlerbuch-loesung {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+  font-size: var(--text-sm);
+}
+.cl-fehlerbuch-loesung .rk-icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+}

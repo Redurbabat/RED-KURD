@@ -124,6 +124,34 @@ export function wochenSumme() {
   return wochenAktivitaet().reduce((s, t) => s + t.anzahl, 0)
 }
 
+/** Der Montag der laufenden Kalenderwoche als 'JJJJ-MM-TT'. */
+export function wochenStartTag() {
+  const d = new Date()
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7))
+  return tagVon(d)
+}
+
+// Die Wochenaufgaben beginnen montags bei null. Das rollierende 7-Tage-
+// Fenster von wochenSumme() enthielte Montag frueh noch die ganze Vorwoche —
+// die Belohnung waere sofort wieder „geschafft" und doppelt abholbar.
+function summeSeitMontag(feld) {
+  const start = wochenStartTag()
+  const d = holeFortschritt()
+  return Object.entries(d.tage || {})
+    .filter(([datum]) => datum >= start)
+    .reduce((summe, [, eintrag]) => summe + (eintrag[feld] || 0), 0)
+}
+
+/** Geloeste Aufgaben seit Montag — Grundlage der Wochenaufgaben. */
+export function wochenSummeSeitMontag() {
+  return summeSeitMontag('aufgaben')
+}
+
+/** Lernminuten seit Montag — Grundlage der Wochenaufgaben. */
+export function wochenMinutenSeitMontag() {
+  return Math.round(summeSeitMontag('sekunden') / 60)
+}
+
 /** Persönliche Liga ohne Server, Konto oder andere Lernende. */
 export function wochenLiga() {
   return ligaFuerAufgaben(wochenSumme())

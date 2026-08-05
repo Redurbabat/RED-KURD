@@ -2,21 +2,19 @@
 // abgeleitet — es gibt keine zweite Zaehlung, die auseinanderlaufen koennte.
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { heute, tagVon } from '../progress/scheduler.js'
+import { heute } from '../progress/scheduler.js'
 import { gibXp, gibEdelsteine, gibSchluessel, holeFortschritt } from '../progress/progressStore.js'
-import { tagesStatistik, wochenSumme, wochenMinuten } from '../progress/progressSelectors.js'
+import {
+  tagesStatistik,
+  wochenMinutenSeitMontag,
+  wochenStartTag,
+  wochenSummeSeitMontag,
+} from '../progress/progressSelectors.js'
 import { kursFortschritt } from '../courses/courseRepository.js'
 
 const STANDARD = { version: 1, abgeholt: {}, tag: null, wochenStart: null, basis: {} }
 
 let cache
-
-function wochenStart() {
-  const d = new Date()
-  const tag = (d.getDay() + 6) % 7 // Montag = 0
-  d.setDate(d.getDate() - tag)
-  return tagVon(d)
-}
 
 function laden() {
   if (cache) return cache
@@ -38,7 +36,7 @@ function sichern(d, still = false) {
 /** Beim Tageswechsel werden die Belohnungsmarken zurueckgesetzt. */
 function pruefeTag(d) {
   const t = heute()
-  const w = wochenStart()
+  const w = wochenStartTag()
   let neu = d
   if (d.tag !== t) {
     neu = { ...neu, tag: t, abgeholt: { ...neu.abgeholt } }
@@ -112,7 +110,7 @@ export function holeAufgaben() {
       id: 'w-100',
       name: '100 Wörter wiederholen',
       icon: 'wiederholen',
-      stand: Math.min(wochenSumme(), 100),
+      stand: Math.min(wochenSummeSeitMontag(), 100),
       ziel: 100,
       belohnung: { xp: 100, edelsteine: 5 },
     },
@@ -120,7 +118,7 @@ export function holeAufgaben() {
       id: 'w-zeit',
       name: '60 Minuten lernen',
       icon: 'uhr',
-      stand: Math.min(wochenMinuten(), 60),
+      stand: Math.min(wochenMinutenSeitMontag(), 60),
       ziel: 60,
       belohnung: { xp: 120, edelsteine: 5 },
     },

@@ -16,7 +16,9 @@ import './WorldMapPage.css'
 // blau, Welt 3 gold, Welt 4 lila. Ab Welt 6 wiederholt sich die Reihe.
 const TOENE = ['green', 'blue', 'gold', 'purple', 'orange']
 
-const SPERRGRUND = 'Öffnet sich, wenn die Hälfte der vorigen Welt geschafft ist'
+// Ehrlich zur echten Regel: Einheiten schalten sich der Reihe nach frei,
+// eine Welt oeffnet sich also erst mit der letzten Einheit der vorigen Welt.
+const SPERRGRUND = 'Öffnet sich, wenn die vorige Welt geschafft ist'
 
 function statusText(status) {
   if (status === 'fertig') return T.abenteuer.abgeschlossen

@@ -1,0 +1,171 @@
+/* ===== App-Umschalter: Sprache lernen · Code lernen · AI-Sprache ===== */
+
+.app-umschalter {
+  display: flex;
+  gap: var(--space-1);
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  /* Der Umschalter ist das oberste Element — er traegt die Notch-Polsterung. */
+  padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+  background: var(--rk-surface);
+  border-bottom: 2px solid var(--rk-border);
+}
+
+.app-umschalter-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  color: var(--rk-text-muted);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.app-umschalter-knopf.aktiv {
+  color: var(--rk-text);
+  background: var(--rk-surface-soft);
+  border-color: var(--rk-border-strong);
+}
+
+/* Jeder Bereich traegt seine Farbe — aber nur als Akzent, nicht als Laerm. */
+.app-umschalter-knopf.bereich-language.aktiv {
+  color: var(--rk-primary-dark);
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+.app-umschalter-knopf.bereich-code.aktiv {
+  color: var(--rk-blue-dark);
+  border-color: var(--rk-blue);
+  background: var(--rk-blue-soft);
+}
+.app-umschalter-knopf.bereich-prompting.aktiv {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-orange);
+  background: var(--rk-orange-soft);
+}
+
+/* Schmale Bildschirme: „Sprache | Code | AI" statt der langen Namen. */
+.app-umschalter-kurz {
+  display: none;
+}
+@media (max-width: 560px) {
+  .app-umschalter {
+    gap: var(--space-1);
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  .app-umschalter-knopf {
+    flex: 1;
+    padding: var(--space-2) var(--space-2);
+  }
+  .app-umschalter-lang {
+    display: none;
+  }
+  .app-umschalter-kurz {
+    display: inline;
+  }
+}
+
+/* ===== Gemeinsame Huelle der neuen Bereiche (Code, AI-Sprache) ===== */
+
+.bereich-seite {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px) + var(--space-6));
+}
+
+.bereich-kopf {
+  margin-bottom: var(--space-5);
+}
+.bereich-kopf h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.bereich-kopf p {
+  margin-top: var(--space-2);
+  color: var(--rk-text-muted);
+  max-width: 46rem;
+}
+
+/* Statistik-Zeile: XP heute, Reihe, offene Uebungen. */
+.bereich-werte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 var(--space-5);
+}
+.bereich-wert {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.bereich-wert strong {
+  color: var(--rk-text);
+}
+
+.bereich-abschnitt {
+  margin-top: var(--space-6);
+}
+.bereich-abschnitt > h2 {
+  margin-bottom: var(--space-3);
+}
+
+/* Kartenraster: mobil untereinander, ab Tablet zweispaltig. */
+.bereich-raster {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+@media (min-width: 720px) {
+  .bereich-raster {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ===== Geoeffnete Lektion (Modal) ===== */
+
+.lektion-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lektion-beispiel {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rk-border);
+  border-left: 3px solid var(--rk-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.lektion-merke {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-yellow-soft);
+  color: var(--rk-text);
+}
+.lektion-merke .rk-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}

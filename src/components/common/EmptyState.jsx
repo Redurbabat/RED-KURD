@@ -2,6 +2,7 @@
 import HeloMascot from '../mascot/HeloMascot.jsx'
 import PrimaryButton from './PrimaryButton.jsx'
 import Icon from '../icons/Icon.jsx'
+import { T } from '../../core/texts.js'
 
 export default function EmptyState({ titel, text, variante = 'ruhig', aktion, aktionText, className = '' }) {
   return (
@@ -18,7 +19,7 @@ export default function EmptyState({ titel, text, variante = 'ruhig', aktion, ak
   )
 }
 
-export function LoadingState({ text = 'Wird geladen …' }) {
+export function LoadingState({ text = T.allgemein.laden }) {
   return (
     <div className="rk-laden" role="status" aria-live="polite">
       <span className="rk-spinner" aria-hidden="true" />
@@ -27,7 +28,7 @@ export function LoadingState({ text = 'Wird geladen …' }) {
   )
 }
 
-export function ErrorState({ titel = 'Etwas hat nicht geklappt.', text, nochmal }) {
+export function ErrorState({ titel = T.allgemein.fehler, text, nochmal }) {
   return (
     <div className="rk-fehler" role="alert">
       <Icon name="warnung" groesse={28} />

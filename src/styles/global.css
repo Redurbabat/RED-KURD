@@ -63,6 +63,14 @@ select {
   color: inherit;
 }
 
+/* iOS-Safari zoomt in jedes Eingabefeld unter 16 px hinein — deshalb haben
+   Eingaben nie weniger, egal was die Umgebung vorgibt. */
+input,
+textarea,
+select {
+  font-size: max(16px, 1em);
+}
+
 button {
   cursor: pointer;
   background: none;
@@ -235,4 +243,20 @@ button,
     opacity: 0;
     transform: translateY(12px) scale(0.985);
   }
+}
+
+/* --- Notfall-Ansicht, falls die App beim Zeichnen abstürzt --- */
+.start-fehler {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  max-width: 32rem;
+  margin: 0 auto;
 }
