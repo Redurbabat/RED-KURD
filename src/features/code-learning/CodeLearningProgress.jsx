@@ -1,7 +1,8 @@
-// Fortschritts-Ueberblick: jeder Lernpfad mit seinem Prozentwert.
+// Fortschritts-Ueberblick: jeder Lernpfad mit seinem echten Prozentwert.
 import Card from '../../components/common/Card.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { codeLearningPaths } from './data/codeLessons.js'
+import { codeLernstand } from './codeProgressStore.js'
 
 export default function CodeLearningProgress() {
   return (
@@ -12,7 +13,12 @@ export default function CodeLearningProgress() {
             <span className="cl-fortschritt-name">
               <span aria-hidden="true">{pfad.icon}</span> {pfad.title}
             </span>
-            <ProgressBar wert={pfad.progress} label={`Fortschritt ${pfad.title}`} zeigeWert klein />
+            <ProgressBar
+              wert={codeLernstand.fortschrittProzent(pfad.lessons)}
+              label={`Fortschritt ${pfad.title}`}
+              zeigeWert
+              klein
+            />
           </li>
         ))}
       </ul>

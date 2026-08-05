@@ -20,16 +20,29 @@
   font-size: var(--text-sm);
 }
 
-/* --- Lektionen --- */
+/* --- Lektionen (anklickbare Karten) --- */
 .pl-lektion {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+}
+.pl-lektion:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 .pl-lektion-kopf {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+}
+.pl-lektion-titel {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--rk-text);
 }
 .pl-lektion-status {
   display: grid;

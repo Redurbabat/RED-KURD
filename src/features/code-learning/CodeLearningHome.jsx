@@ -1,19 +1,33 @@
 // Startseite des Bereichs „Code lernen": Dashboard, Lernpfade, Uebungen.
-// XP/Reihe sind bewusst noch Beispielwerte — die Speicherung kommt spaeter.
+// XP, Reihe und Fortschritt kommen aus dem echten, gespeicherten Lernstand.
+import { useLernstand } from '../../core/store.js'
 import Badge from '../../components/common/Badge.jsx'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import CodeLearningPath from './CodeLearningPath.jsx'
 import CodeLearningProgress from './CodeLearningProgress.jsx'
-import { codeLearningPaths, naechsteLektionen } from './data/codeLessons.js'
+import { codeLearningPaths } from './data/codeLessons.js'
 import { codeExercises } from './data/codeExercises.js'
+import { codeLernstand } from './codeProgressStore.js'
 import './codeLearning.css'
 
+/** Die naechste offene Lektion je Pfad — fuer „Heute lernen". */
+function naechsteLektionen(anzahl = 3) {
+  const aus = []
+  for (const pfad of codeLearningPaths) {
+    const status = codeLernstand.statusFuer(pfad.lessons)
+    const lektion = pfad.lessons.find((l) => status[l.id] === 'current')
+    if (lektion) aus.push({ pfad, lektion })
+    if (aus.length === anzahl) break
+  }
+  return aus
+}
+
 export default function CodeLearningHome() {
+  useLernstand()
   const heute = naechsteLektionen(3)
-  const gesamt = Math.round(
-    codeLearningPaths.reduce((summe, pfad) => summe + pfad.progress, 0) / codeLearningPaths.length
-  )
+  const alleLektionen = codeLearningPaths.flatMap((p) => p.lessons)
+  const gesamt = codeLernstand.fortschrittProzent(alleLektionen)
 
   return (
     <div className="bereich-seite bereich-code">
@@ -27,13 +41,16 @@ export default function CodeLearningHome() {
           <span className="bereich-wert">
             <Icon name="blitz" groesse={16} />
             <span>
-              XP heute: <strong>40</strong>
+              XP heute: <strong>{codeLernstand.xpHeute()}</strong>
             </span>
           </span>
           <span className="bereich-wert">
             <Icon name="flamme" groesse={16} />
             <span>
-              Reihe: <strong>3 Tage</strong>
+              Reihe:{' '}
+              <strong>
+                {codeLernstand.serie()} {codeLernstand.serie() === 1 ? 'Tag' : 'Tage'}
+              </strong>
             </span>
           </span>
           <span className="bereich-wert">

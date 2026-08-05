@@ -66,45 +66,37 @@ test('jeder Bereich hat ein deutsches Etikett', () => {
 
 // ===== Code-lernen-Daten =====
 
-const { codeLearningPaths, naechsteLektionen, holeCodePfad } = await import(
+const { codeLearningPaths, holeCodePfad } = await import(
   '../src/features/code-learning/data/codeLessons.js'
 )
 const { codeExercises } = await import('../src/features/code-learning/data/codeExercises.js')
 
-const GUELTIGE_STATUS = new Set(['done', 'current', 'open', 'locked'])
-
-test('jeder Code-Lernpfad ist vollstaendig und in sich stimmig', () => {
+test('jeder Code-Lernpfad ist vollstaendig und traegt echte Inhalte', () => {
   const pfadIds = codeLearningPaths.map((p) => p.id)
   assert.equal(new Set(pfadIds).size, pfadIds.length, 'Pfad-Ids sind einmalig')
   assert.ok(codeLearningPaths.length >= 7, 'mindestens sieben Lernpfade')
 
   for (const pfad of codeLearningPaths) {
     assert.ok(pfad.title && pfad.description && pfad.level && pfad.icon, pfad.id)
-    assert.ok(pfad.progress >= 0 && pfad.progress <= 100, `${pfad.id}: Fortschritt 0-100`)
     assert.ok(pfad.lessons.length >= 3, `${pfad.id}: mindestens drei Lektionen`)
     for (const lektion of pfad.lessons) {
-      assert.ok(GUELTIGE_STATUS.has(lektion.status), `${lektion.id}: Status ${lektion.status}`)
       assert.ok(lektion.durationMinutes > 0, `${lektion.id}: Dauer fehlt`)
       assert.ok(lektion.title, `${lektion.id}: Titel fehlt`)
+      assert.ok(
+        Array.isArray(lektion.inhalt) && lektion.inhalt.length >= 2,
+        `${lektion.id}: Inhalt fehlt`
+      )
+      assert.ok(lektion.merke, `${lektion.id}: Merksatz fehlt`)
+      assert.ok(!('status' in lektion), `${lektion.id}: Status kommt aus dem Lernstand, nicht aus den Daten`)
     }
-    const aktuelle = pfad.lessons.filter((l) => l.status === 'current')
-    assert.ok(aktuelle.length <= 1, `${pfad.id}: hoechstens eine aktuelle Lektion`)
   }
+  assert.equal(holeCodePfad('gibt-es-nicht'), null)
+  assert.equal(holeCodePfad('html').id, 'html')
 })
 
 test('alle Lektions-Ids sind ueber alle Pfade hinweg einmalig', () => {
   const ids = codeLearningPaths.flatMap((p) => p.lessons.map((l) => l.id))
   assert.equal(new Set(ids).size, ids.length)
-})
-
-test('naechsteLektionen liefert Startpunkte fuer Heute lernen', () => {
-  const heute = naechsteLektionen(3)
-  assert.equal(heute.length, 3)
-  for (const { pfad, lektion } of heute) {
-    assert.ok(holeCodePfad(pfad.id))
-    assert.ok(['current', 'open'].includes(lektion.status))
-  }
-  assert.equal(holeCodePfad('gibt-es-nicht'), null)
 })
 
 test('jede Code-Uebung traegt alle Pflichtfelder', () => {
@@ -119,23 +111,25 @@ test('jede Code-Uebung traegt alle Pflichtfelder', () => {
 
 // ===== Prompting-Daten =====
 
-const { promptLessons, naechstePromptLektion } = await import(
+const { promptLessons } = await import(
   '../src/features/prompting-learning/data/promptLessons.js'
 )
 const { promptExercises } = await import(
   '../src/features/prompting-learning/data/promptExercises.js'
 )
 
-test('die Prompting-Lektionen sind vollstaendig und einmalig', () => {
+test('die Prompting-Lektionen sind vollstaendig und traegen echte Inhalte', () => {
   const ids = promptLessons.map((l) => l.id)
   assert.equal(new Set(ids).size, ids.length)
   assert.ok(promptLessons.length >= 9, 'mindestens neun Lektionen')
   for (const l of promptLessons) {
     assert.ok(l.title && l.description, l.id)
-    assert.ok(GUELTIGE_STATUS.has(l.status), l.id)
     assert.ok(l.durationMinutes > 0, l.id)
+    assert.ok(Array.isArray(l.inhalt) && l.inhalt.length >= 2, `${l.id}: Inhalt fehlt`)
+    assert.ok(l.beispiel, `${l.id}: Beispiel fehlt`)
+    assert.ok(l.merke, `${l.id}: Merksatz fehlt`)
+    assert.ok(!('status' in l), `${l.id}: Status kommt aus dem Lernstand`)
   }
-  assert.ok(naechstePromptLektion(), 'es gibt immer eine naechste Lektion')
 })
 
 test('jede Prompting-Uebung traegt alle Pflichtfelder', () => {

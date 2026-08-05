@@ -79,13 +79,24 @@
   border-top: 1px solid var(--rk-border);
   padding-top: var(--space-3);
 }
-.cl-lektion {
+.cl-lektion-knopf {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: var(--space-3);
   min-height: var(--touch-min);
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-small);
+  text-align: left;
+  font-weight: 600;
+}
+.cl-lektion-knopf:disabled {
+  cursor: not-allowed;
+}
+.cl-lektion.status-current .cl-lektion-knopf,
+.cl-lektion.status-done .cl-lektion-knopf,
+.cl-lektion.status-open .cl-lektion-knopf {
+  cursor: pointer;
 }
 .cl-lektion-status {
   display: grid;
@@ -102,7 +113,7 @@
   border-color: var(--rk-green);
   background: var(--rk-green-soft);
 }
-.cl-lektion.status-current {
+.cl-lektion.status-current .cl-lektion-knopf {
   background: var(--rk-blue-soft);
 }
 .cl-lektion.status-current .cl-lektion-status {

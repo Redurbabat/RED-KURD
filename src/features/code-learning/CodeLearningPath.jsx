@@ -1,17 +1,29 @@
-// Ein Lernpfad als Karte: Kopf, Fortschritt, aufklappbare Lektionsliste.
+// Ein Lernpfad als Karte: Kopf, echter Fortschritt, aufklappbare Lektionen.
+// Der Status jeder Lektion kommt aus dem gespeicherten Lernstand.
 import { useState } from 'react'
 import Badge from '../../components/common/Badge.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
+import LektionModal from '../app-mode/LektionModal.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'
+import { codeLernstand } from './codeProgressStore.js'
 
 /**
  * @param {{path:{id:string,title:string,icon:string,description:string,
- *          level:string,progress:number,lessons:Array}}} props
+ *          level:string,lessons:Array}}} props
  */
 export default function CodeLearningPath({ path }) {
   const [offen, setOffen] = useState(false)
-  const begonnen = path.progress > 0
+  const [aktiveLektion, setAktiveLektion] = useState(null)
+
+  const status = codeLernstand.statusFuer(path.lessons)
+  const fortschritt = codeLernstand.fortschrittProzent(path.lessons)
+  const begonnen = fortschritt > 0
+
+  function abschliessen() {
+    if (aktiveLektion) codeLernstand.schliesseAb(aktiveLektion.id)
+    setAktiveLektion(null)
+  }
 
   return (
     <section className="rk-karte cl-pfad">
@@ -27,12 +39,7 @@ export default function CodeLearningPath({ path }) {
 
       <p className="cl-pfad-text">{path.description}</p>
 
-      <ProgressBar
-        wert={path.progress}
-        label={`Fortschritt ${path.title}`}
-        zeigeWert
-        klein
-      />
+      <ProgressBar wert={fortschritt} label={`Fortschritt ${path.title}`} zeigeWert klein />
 
       <div className="cl-pfad-fuss">
         <PrimaryButton
@@ -49,10 +56,22 @@ export default function CodeLearningPath({ path }) {
       {offen && (
         <ul className="cl-lektionen">
           {path.lessons.map((lesson) => (
-            <CodeLessonCard key={lesson.id} lesson={lesson} />
+            <CodeLessonCard
+              key={lesson.id}
+              lesson={lesson}
+              status={status[lesson.id]}
+              onOeffnen={() => setAktiveLektion(lesson)}
+            />
           ))}
         </ul>
       )}
+
+      <LektionModal
+        lektion={aktiveLektion}
+        erledigt={aktiveLektion ? codeLernstand.istErledigt(aktiveLektion.id) : false}
+        schliessen={() => setAktiveLektion(null)}
+        abschliessen={abschliessen}
+      />
     </section>
   )
 }

@@ -1,17 +1,29 @@
 // Startseite des Bereichs „AI-Sprache": klare Auftraege an KIs lernen.
-// XP/Reihe sind bewusst noch Beispielwerte — die Speicherung kommt spaeter.
+// XP, Reihe und Fortschritt kommen aus dem echten, gespeicherten Lernstand.
+import { useState } from 'react'
+import { useLernstand } from '../../core/store.js'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
+import LektionModal from '../app-mode/LektionModal.jsx'
 import PromptLessonCard from './PromptLessonCard.jsx'
 import PromptTrainingCard from './PromptTrainingCard.jsx'
-import { naechstePromptLektion, promptLessons } from './data/promptLessons.js'
+import { promptLessons } from './data/promptLessons.js'
 import { promptExercises } from './data/promptExercises.js'
+import { promptLernstand } from './promptProgressStore.js'
 import './promptingLearning.css'
 
 export default function PromptingLearningHome() {
-  const naechste = naechstePromptLektion()
-  const erledigt = promptLessons.filter((l) => l.status === 'done').length
-  const gesamt = Math.round((erledigt / promptLessons.length) * 100)
+  useLernstand()
+  const [aktiveLektion, setAktiveLektion] = useState(null)
+
+  const status = promptLernstand.statusFuer(promptLessons)
+  const gesamt = promptLernstand.fortschrittProzent(promptLessons)
+  const naechste = promptLessons.find((l) => status[l.id] === 'current') || null
+
+  function abschliessen() {
+    if (aktiveLektion) promptLernstand.schliesseAb(aktiveLektion.id)
+    setAktiveLektion(null)
+  }
 
   return (
     <div className="bereich-seite bereich-prompting">
@@ -25,13 +37,16 @@ export default function PromptingLearningHome() {
           <span className="bereich-wert">
             <Icon name="blitz" groesse={16} />
             <span>
-              XP heute: <strong>40</strong>
+              XP heute: <strong>{promptLernstand.xpHeute()}</strong>
             </span>
           </span>
           <span className="bereich-wert">
             <Icon name="flamme" groesse={16} />
             <span>
-              Reihe: <strong>3 Tage</strong>
+              Reihe:{' '}
+              <strong>
+                {promptLernstand.serie()} {promptLernstand.serie() === 1 ? 'Tag' : 'Tage'}
+              </strong>
             </span>
           </span>
           <span className="bereich-wert">
@@ -64,7 +79,12 @@ export default function PromptingLearningHome() {
         <h2 id="pl-lektionen-titel">Lektionen</h2>
         <div className="bereich-raster">
           {promptLessons.map((lesson) => (
-            <PromptLessonCard key={lesson.id} lesson={lesson} />
+            <PromptLessonCard
+              key={lesson.id}
+              lesson={lesson}
+              status={status[lesson.id]}
+              onOeffnen={() => setAktiveLektion(lesson)}
+            />
           ))}
         </div>
       </section>
@@ -77,6 +97,13 @@ export default function PromptingLearningHome() {
           ))}
         </div>
       </section>
+
+      <LektionModal
+        lektion={aktiveLektion}
+        erledigt={aktiveLektion ? promptLernstand.istErledigt(aktiveLektion.id) : false}
+        schliessen={() => setAktiveLektion(null)}
+        abschliessen={abschliessen}
+      />
     </div>
   )
 }
