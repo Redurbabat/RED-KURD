@@ -12,6 +12,12 @@ const FOKUSSIERBAR =
 export default function Modal({ offen, titel, schliessen, fussleiste, children, breit = false }) {
   const kasten = useRef(null)
   const vorher = useRef(null)
+  // schliessen ist bei jedem Render eine neue Funktion. Der Fokus-Effekt darf
+  // deshalb NUR von `offen` abhaengen — sonst laeuft er bei jedem Tastendruck
+  // neu, reisst den Fokus aus dem Eingabefeld und die Handy-Tastatur klappt
+  // nach jedem Buchstaben zu. Die aktuelle Funktion kommt aus dem Ref.
+  const schliessenRef = useRef(schliessen)
+  schliessenRef.current = schliessen
 
   useEffect(() => {
     if (!offen) return undefined
@@ -22,7 +28,7 @@ export default function Modal({ offen, titel, schliessen, fussleiste, children, 
     function taste(e) {
       if (e.key === 'Escape') {
         e.preventDefault()
-        schliessen()
+        schliessenRef.current()
         return
       }
       if (e.key !== 'Tab' || !kasten.current) return
@@ -47,7 +53,7 @@ export default function Modal({ offen, titel, schliessen, fussleiste, children, 
       document.body.style.overflow = alteBreite
       if (vorher.current && vorher.current.focus) vorher.current.focus()
     }
-  }, [offen, schliessen])
+  }, [offen])
 
   if (!offen) return null
 

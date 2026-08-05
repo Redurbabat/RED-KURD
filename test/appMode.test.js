@@ -22,7 +22,7 @@ globalThis.localStorage = new SpeicherAttrappe()
 const { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } = await import(
   '../src/features/app-mode/appModes.js'
 )
-const { isValidAppMode, loadAppMode, saveAppMode } = await import(
+const { hatGespeicherteApp, isValidAppMode, loadAppMode, saveAppMode } = await import(
   '../src/features/app-mode/appModeStorage.js'
 )
 const { KEYS, lies } = await import('../src/core/storage.js')
@@ -31,7 +31,9 @@ const { KEYS, lies } = await import('../src/core/storage.js')
 
 test('ohne gespeicherten Wert startet die App im Sprachbereich', () => {
   globalThis.localStorage.removeItem(KEYS.appBereich)
+  globalThis.localStorage.removeItem(KEYS.appAktiv)
   assert.equal(loadAppMode(), APP_MODES.LANGUAGE)
+  assert.equal(hatGespeicherteApp(), false)
 })
 
 test('speichern und laden sind ein Paar — fuer jeden Bereich', () => {
@@ -43,16 +45,33 @@ test('speichern und laden sind ein Paar — fuer jeden Bereich', () => {
 
 test('ungueltige Werte werden ignoriert und fallen auf Sprache zurueck', () => {
   assert.equal(saveAppMode('spielhalle'), false)
+  globalThis.localStorage.setItem(KEYS.appAktiv, JSON.stringify('spielhalle'))
   globalThis.localStorage.setItem(KEYS.appBereich, JSON.stringify('spielhalle'))
   assert.equal(loadAppMode(), APP_MODES.LANGUAGE)
+  globalThis.localStorage.setItem(KEYS.appAktiv, '{kaputt')
   globalThis.localStorage.setItem(KEYS.appBereich, '{kaputt')
   assert.equal(loadAppMode(), APP_MODES.LANGUAGE)
 })
 
-test('der gespeicherte Schluessel ist der vereinbarte', () => {
+test('die gespeicherten Schluessel sind die vereinbarten — beide werden geschrieben', () => {
   assert.equal(KEYS.appBereich, 'red-kurd-active-app-mode-v1')
+  assert.equal(KEYS.appAktiv, 'red-kurd-active-app-v1')
   saveAppMode(APP_MODES.CODE)
+  assert.equal(lies(KEYS.appAktiv), 'code')
+  // Der alte Schluessel wird weiter mitgeschrieben — ein Ruecksprung auf
+  // eine aeltere App-Version verliert nichts.
   assert.equal(lies(KEYS.appBereich), 'code')
+})
+
+test('ein alter Speicherstand wird uebernommen, nie geloescht', () => {
+  globalThis.localStorage.removeItem(KEYS.appAktiv)
+  globalThis.localStorage.setItem(KEYS.appBereich, JSON.stringify('electro'))
+  assert.equal(hatGespeicherteApp(), true)
+  assert.equal(loadAppMode(), APP_MODES.ELECTRO)
+  // Beim Lesen wird der Wert in den neuen Schluessel kopiert …
+  assert.equal(lies(KEYS.appAktiv), 'electro')
+  // … und der alte bleibt unangetastet stehen.
+  assert.equal(lies(KEYS.appBereich), 'electro')
 })
 
 test('jeder Bereich hat ein deutsches Etikett', () => {

@@ -88,33 +88,6 @@ export default function CodeLearningHome() {
         </div>
       </header>
 
-      <div className="bereich-raster">
-        <Card titel="Heute lernen" icon="heute">
-          <ul className="cl-heute">
-            {heute.map(({ pfad, lektion }) => (
-              <li key={lektion.id}>
-                <span aria-hidden="true">{pfad.icon}</span>
-                <span className="cl-heute-text">
-                  <strong>{pfad.title.split(' ')[0]}:</strong> {lektion.title}
-                </span>
-                <span className="cl-lektion-dauer">{lektion.durationMinutes} Min</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-
-        <CodeLearningProgress />
-      </div>
-
-      <section className="bereich-abschnitt" aria-labelledby="cl-pfade-titel">
-        <h2 id="cl-pfade-titel">Lernpfade</h2>
-        <div className="bereich-raster">
-          {codeLearningPaths.map((pfad) => (
-            <CodeLearningPath key={pfad.id} path={pfad} />
-          ))}
-        </div>
-      </section>
-
       <section className="bereich-abschnitt" aria-labelledby="cl-praxis-titel">
         <h2 id="cl-praxis-titel">Mitmachen: direkt bauen</h2>
         <p className="cl-pfad-text">
@@ -143,6 +116,33 @@ export default function CodeLearningHome() {
                 {codeLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
               </PrimaryButton>
             </Card>
+          ))}
+        </div>
+      </section>
+
+      <div className="bereich-raster">
+        <Card titel="Heute lernen" icon="heute">
+          <ul className="cl-heute">
+            {heute.map(({ pfad, lektion }) => (
+              <li key={lektion.id}>
+                <span aria-hidden="true">{pfad.icon}</span>
+                <span className="cl-heute-text">
+                  <strong>{pfad.title.split(' ')[0]}:</strong> {lektion.title}
+                </span>
+                <span className="cl-lektion-dauer">{lektion.durationMinutes} Min</span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <CodeLearningProgress />
+      </div>
+
+      <section className="bereich-abschnitt" aria-labelledby="cl-pfade-titel">
+        <h2 id="cl-pfade-titel">Lernpfade</h2>
+        <div className="bereich-raster">
+          {codeLearningPaths.map((pfad) => (
+            <CodeLearningPath key={pfad.id} path={pfad} />
           ))}
         </div>
       </section>

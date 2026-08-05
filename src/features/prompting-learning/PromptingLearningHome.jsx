@@ -83,31 +83,6 @@ export default function PromptingLearningHome() {
         </div>
       </header>
 
-      {naechste && (
-        <Card titel="Heute lernen" icon="heute">
-          <p className="pl-heute">
-            <strong>{naechste.title}</strong> — {naechste.description}{' '}
-            <span className="pl-meta">
-              (<Icon name="uhr" groesse={14} /> ca. {naechste.durationMinutes} Min)
-            </span>
-          </p>
-        </Card>
-      )}
-
-      <section className="bereich-abschnitt" aria-labelledby="pl-lektionen-titel">
-        <h2 id="pl-lektionen-titel">Lektionen</h2>
-        <div className="bereich-raster">
-          {promptLessons.map((lesson) => (
-            <PromptLessonCard
-              key={lesson.id}
-              lesson={lesson}
-              status={status[lesson.id]}
-              onOeffnen={() => setAktiveLektion(lesson)}
-            />
-          ))}
-        </div>
-      </section>
-
       <section className="bereich-abschnitt" aria-labelledby="pl-praxis-titel">
         <h2 id="pl-praxis-titel">Mitmachen: mit Prüfliste schreiben</h2>
         <p className="pl-text">
@@ -136,6 +111,31 @@ export default function PromptingLearningHome() {
                 {promptLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
               </PrimaryButton>
             </Card>
+          ))}
+        </div>
+      </section>
+
+      {naechste && (
+        <Card titel="Heute lernen" icon="heute">
+          <p className="pl-heute">
+            <strong>{naechste.title}</strong> — {naechste.description}{' '}
+            <span className="pl-meta">
+              (<Icon name="uhr" groesse={14} /> ca. {naechste.durationMinutes} Min)
+            </span>
+          </p>
+        </Card>
+      )}
+
+      <section className="bereich-abschnitt" aria-labelledby="pl-lektionen-titel">
+        <h2 id="pl-lektionen-titel">Lektionen</h2>
+        <div className="bereich-raster">
+          {promptLessons.map((lesson) => (
+            <PromptLessonCard
+              key={lesson.id}
+              lesson={lesson}
+              status={status[lesson.id]}
+              onOeffnen={() => setAktiveLektion(lesson)}
+            />
           ))}
         </div>
       </section>

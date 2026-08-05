@@ -5,8 +5,10 @@ import Badge from '../../components/common/Badge.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
+import LektionPlayer from '../app-mode/LektionPlayer.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'
 import { codeLernstand } from './codeProgressStore.js'
+import { holeSchritte } from './data/codeSchritte.js'
 
 /**
  * @param {{path:{id:string,title:string,icon:string,description:string,
@@ -66,12 +68,24 @@ export default function CodeLearningPath({ path }) {
         </ul>
       )}
 
-      <LektionModal
-        lektion={aktiveLektion}
-        erledigt={aktiveLektion ? codeLernstand.istErledigt(aktiveLektion.id) : false}
-        schliessen={() => setAktiveLektion(null)}
-        abschliessen={abschliessen}
-      />
+      {/* Lektionen mit interaktiven Schritten oeffnen den Player (wie Mimo,
+          mit Live-Vorschau) — alle anderen das bewaehrte Lese-Modal. */}
+      {aktiveLektion && holeSchritte(aktiveLektion.id) ? (
+        <LektionPlayer
+          key={aktiveLektion.id}
+          lektion={aktiveLektion}
+          schritte={holeSchritte(aktiveLektion.id)}
+          lernstand={codeLernstand}
+          schliessen={() => setAktiveLektion(null)}
+        />
+      ) : (
+        <LektionModal
+          lektion={aktiveLektion}
+          erledigt={aktiveLektion ? codeLernstand.istErledigt(aktiveLektion.id) : false}
+          schliessen={() => setAktiveLektion(null)}
+          abschliessen={abschliessen}
+        />
+      )}
     </section>
   )
 }

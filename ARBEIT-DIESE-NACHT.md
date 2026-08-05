@@ -179,9 +179,189 @@ die sich direkt dort öffnet wie eine normale Tastatur, aber für Code."
   Löschen + ⏎), alle Checks grün, +20 XP; Tasten ≥ 44 px, keine
   horizontale Scrollbar, Umschalten in beide Richtungen.
 
+## Nachtrag 6: Fokus-Fehler behoben — Tastatur klappte nach jedem Buchstaben zu
+
+Gemeldet: „Wenn ich etwas schreibe, geht nach jedem Buchstaben die
+Tastatur wieder weg."
+
+- Ursache: Die Fokusfalle in `Modal.jsx` lief bei **jedem Neu-Zeichnen**
+  neu (weil sie von der bei jedem Render neuen `schliessen`-Funktion
+  abhing) — jeder Tastendruck riss so den Fokus aus dem Eingabefeld auf
+  den Schließen-Knopf, und auf dem iPhone klappte die Tastatur zu.
+  Betroffen waren alle Eingabefelder in Modalen: Praxis-Aufgaben UND
+  die Notizfelder der Übungen.
+- Fix: Der Effekt hängt nur noch am Auf/Zu des Modals; die aktuelle
+  `schliessen`-Funktion kommt aus einem Ref.
+- E2E-Nachweis (vorher rot, nachher grün): „abcdef" tippen → alle
+  Buchstaben kommen an, Fokus bleibt im Feld — mit Gerätetastatur, mit
+  Code-Tastatur und im Übungs-Notizfeld.
+
+## Nachtrag 7: Mehr Lerninhalte für „Code lernen"
+
+- **10 neue Lektionen** (43 gesamt im Code-Bereich):
+  - HTML: Tabellen (table/tr/th/td), Audio und Video einbinden
+  - CSS: position sticky/fixed (Bottom-Navigation!), Dunkelmodus mit
+    CSS-Variablen — erklärt am echten tokens.css-Muster der App
+  - JavaScript: Speichern im Browser (localStorage, JSON) — erklärt am
+    echten Speicher-Muster der App; Fehler finden mit console.log
+  - TypeScript: Funktionen mit Typen · GitHub: Issues ·
+    VS Code: Erweiterungen/Format on Save · Mini-Projekt: Visitenkarten-Seite
+- **2 neue Mitmach-Aufgaben** (8 gesamt): „Eine Liste bauen" (ul mit
+  drei li) und „Einen Link erstellen" (a mit https-Adresse und klarem
+  Linktext). Die Code-Tastatur hat dafür drei neue Bausteine:
+  `<ul>…</ul>`, `<li>…</li>`, `<a href="…">`.
+- Tests decken alles automatisch mit ab (246 grün); E2E: beide neue
+  Aufgaben sichtbar, neue Lektionen in den aufgeklappten Pfaden,
+  Listen-Aufgabe komplett nur mit den neuen Tastatur-Bausteinen gelöst
+  (+20 XP).
+
+## Nachtrag 8: Mitmachen nach oben, Ergebnis direkt unterm Code, 5 neue Bau-Aufgaben
+
+Wunsch: „Mehr Mitmachen — selber bauen und direkt darunter das Ergebnis
+live sehen. Und die Aufgaben sollen oben stehen."
+
+- **Aufgaben zuerst**: In allen drei Bereichen steht die
+  Mitmach-Sektion jetzt ganz oben auf der Seite — Code („Mitmachen:
+  direkt bauen"), Elektro („Rechnen: direkt prüfen"), AI-Sprache
+  („Mitmachen: mit Prüfliste schreiben"). Lernpfade/Lektionen folgen
+  darunter.
+- **Ergebnis direkt unterm Code**: Im Aufgabenfenster kommt die
+  Live-Vorschau („dein Ergebnis") jetzt unmittelbar unter dem
+  Eingabefeld — die Code-Tastatur sitzt darunter. Beim Tippen sieht man
+  Code und Ergebnis gleichzeitig.
+- **5 neue Bau-Aufgaben** (13 gesamt im Code-Bereich):
+  Bild mit Alt-Text (die Vorschau zeigt den Alt-Text — der Sinn von alt
+  wird sichtbar), kleines Formular (for/id müssen wirklich
+  zusammenpassen — die Prüfung gleicht beide ab), Vokabel-Tabelle
+  (Kurdisch|Deutsch), Farben als CSS-Variablen (das
+  Dunkelmodus-Muster der App zum Anfassen) und als Abschluss-Projekt
+  „Deine eigene Seite" (header/main/footer + Liste + Button).
+- Die Code-Tastatur kann alles davon: 8 neue Bausteine
+  (img, table, tr, th, td, label, input …) — jetzt 31 Bausteine.
+- 1 neuer gezielter Test (247 gesamt; die Musterlösungs-/Startcode-Tests
+  decken die 5 neuen Aufgaben automatisch mit ab). E2E: Mitmachen ist in
+  allen drei Bereichen die erste Sektion, die Vorschau steht direkt
+  unter dem Feld, die Bild-Aufgabe wurde gelöst; alle früheren
+  E2E-Suiten (Praxis, Tastatur, Fokus) weiter grün.
+
+## Nachtrag 9: Interaktiver Lektions-Player (Mimo-Stil, mit Live-Vorschau)
+
+Wunsch (mit Screenshots aus Mimo): „Der Code-Bereich soll so sein — aber
+ich sollte die Übungen live sehen: Wenn ich etwas schreibe, sollte ich
+die Ergebnisse direkt sehen."
+
+- **Neuer Lektions-Player** (`src/features/app-mode/LektionPlayer.jsx`):
+  Vollbild, oben ✕ und Fortschrittsbalken, EIN Schritt pro Bildschirm,
+  unten die Rückmeldung („Das ist richtig! Lass uns so weitermachen." /
+  „Nicht ganz — versuch es noch einmal." mit Tipp) und der Weiter-Knopf.
+- **Zwei Schritt-Arten**:
+  - *Wahl*: Frage + Antwortkarten (auch mit Code wie `<p>`), Einsenden,
+    grün/rot-Markierung der Karten.
+  - *Bauen*: Code aus Baustein-Chips zusammentippen (absichtlich
+    durcheinander), mit ↺ und ⌫, „index.html"-Editor — und **anders als
+    bei Mimo: eine Live-Vorschau direkt darunter**, die schon während
+    des Bauens jedes angetippte Teil sofort anzeigt.
+- **Alle 9 HTML-Lektionen sind jetzt interaktiv** (31 Schritte, darunter
+  9 Bau-Schritte mit Vorschau — inkl. der Mimo-Klassiker „Welcher Tag
+  erstellt einen Absatz?" und „Programmiere einen Button mit dem Text
+  Post"). Lektionen ohne Schritte behalten automatisch das Lese-Modal.
+  Abschluss wie gehabt: einmalig +10 XP über den gemeinsamen Lernstand.
+- 4 neue Tests (251 gesamt), darunter eine Tiefensuche, die beweist:
+  Jede Baustein-Menge ergibt in genau erreichbarer Reihenfolge die
+  Lösung — und ist nie schon vorsortiert.
+- E2E (11 Prüfungen grün): falsche Antwort → rot, richtige → grün,
+  Bau-Schritt per Chips gelöst, Vorschau zeigt „Silav!" schon während
+  des Bauens, Abschluss speichert +10 XP.
+
+## Nachtrag 10: CSS und JavaScript ebenfalls interaktiv — und JS läuft wirklich
+
+- **Alle 27 Lektionen der drei Hauptpfade sind jetzt interaktiv**:
+  HTML (31 Schritte), CSS (27) und JavaScript (27) — insgesamt
+  85 Schritte, davon 26 Bau-Schritte.
+- **CSS-Bau-Schritte mit sichtbarem Ergebnis**: roten Absatz färben,
+  Karte mit padding, App-Button gestalten, Flexbox-Reihe, Media Query,
+  Grid-Raster, Drück-Animation (in der Vorschau ausprobierbar!),
+  klebende Kopfzeile (in der Vorschau scrollbar!), dunkle Karte mit
+  CSS-Variablen.
+- **JavaScript-Bau-Schritte werden wirklich AUSGEFÜHRT**: Die Vorschau
+  erlaubt Skripte nur hier — der Code besteht ausschließlich aus
+  unseren kuratierten Bausteinen (nie freie Eingabe), und ohne
+  allow-same-origin bleibt der Rahmen ohne Zugriff auf Speicher und
+  Cookies. Ergebnis: „Silav ji JavaScript!" erscheint, weil DEIN
+  zusammengesetzter Code läuft; beim Klick-Schritt reagiert der Knopf
+  in der Vorschau tatsächlich; Variablen rechnen (15 XP), if zeigt die
+  Tagesziel-Meldung, die Schleife baut eine echte Liste, die Funktion
+  begrüßt Zilan, JSON.stringify zeigt den Text.
+- Player kann jetzt optional eine „Hülle" um den gebauten Code legen
+  (z. B. der leere Absatz plus script-Tag) — der Lernende baut nur die
+  spannende Zeile.
+- Layout-Fix: Inhalte im Player werden nie mehr zusammengedrückt
+  (flex-shrink), bei Platzmangel scrollt der Bereich.
+- 1 neuer Test (252 gesamt) — Hülle/Skript-Regeln; die Tiefensuche
+  prüft auch alle 17 neuen Bau-Schritte. E2E: CSS-Absatz ist wirklich
+  rot (getComputedStyle), JS-Code läuft, Klick in der Vorschau wirkt,
+  css-1 und js-1 abgeschlossen.
+
+## Nachtrag 11: „Jetzt du" — selber schreiben, nicht nur klicken
+
+Wunsch: „Ich sollte auch selber schreiben, nicht nur klicken."
+
+- **Neue Schritt-Art „Selber schreiben"** im Lektions-Player: ein
+  eigenes Codefeld (mit der Code-Tastatur samt Bausteinen und
+  Gerätetastatur-Umschalter), die Live-Vorschau direkt darunter und
+  eine Prüfliste, die live grün abhakt. Erst wenn deine eigene Lösung
+  alle Punkte erfüllt, geht es weiter.
+- **7 „Jetzt du"-Schritte** als Abschluss wichtiger Lektionen:
+  Absatz (html-1), Überschrift (html-2), Button mit type (html-3),
+  Liste (html-6), p-Regel mit Farbe (css-1, mit vorbereitetem
+  style-Block), Button-Gestaltung mit 44-px-Regel (css-3) und die
+  querySelector-Zeile (js-1) — **der selbst getippte JS-Code läuft
+  wirklich in der Vorschau**.
+- Schlaue iOS-Anführungszeichen zählen auch hier wie gerade.
+- 2 neue Tests (254 gesamt): jede Musterlösung besteht ihre Prüfliste,
+  kein Starttext löst von allein, Anführungszeichen-Toleranz.
+- E2E: Code-Tastatur öffnet sich im Player, Prüfliste hakt live ab,
+  eigener Text erscheint in der Vorschau, eigener JS-Gruß („Rojbaş!")
+  läuft, Lektionen weiterhin mit +10 XP abschließbar.
+
+## Nachtrag 12: Multi-App-System — App-Auswahl, harte Trennung, App-Identitäten
+
+Korrektur-Auftrag: „Code lernen soll sich wie eine EIGENE App anfühlen —
+mehrere Apps in einer Website, jede öffnet sich getrennt."
+
+- **App-Auswahl (Launcher)**: Beim allerersten Start fragt RED-KURD
+  „Welche App möchtest du öffnen?" — vier Karten (Sprache lernen 🌍,
+  Code lernen, AI-Sprache, Elektro-Lehre), jede mit Symbol,
+  Beschreibung, eigener Farbe und großem Öffnen-Knopf. Während die
+  Auswahl offen ist, ist KEINE App sichtbar.
+- **Harte Trennung bestätigt und getestet**: Die aktive App füllt den
+  ganzen Bildschirm; die Sprach-App (inkl. ihrer Navigation und
+  Kopfleiste) wird in den anderen Apps gar nicht erst gerendert —
+  nichts überlappt, nichts steht untereinander.
+- **„← Apps"**: In jeder App führt der Apps-Knopf im Umschalter zurück
+  zur Auswahl; die Schnell-Chips (Sprache | Code | AI | Elektro)
+  bleiben für den direkten Wechsel.
+- **Neuer Speicher-Schlüssel** `red-kurd-active-app-v1` (Werte
+  language/code/prompting/electro, Standard language). Der alte
+  Schlüssel `red-kurd-active-app-mode-v1` wird beim Lesen übernommen
+  und beim Speichern weiter mitgeschrieben — ein Rücksprung auf eine
+  ältere Version verliert nichts.
+- **App-Identitäten**: Sprache grün/türkis, Code blau/violett,
+  AI-Sprache rot/orange, Elektro gold — in Auswahl und Umschalter.
+- 1 neuer Test + erweiterte Storage-Tests (255 gesamt). E2E: alle
+  6 Akzeptanztests des Auftrags grün (36 Prüfungen) — Auswahl, Nur-Code,
+  Nur-Sprache, Nur-AI, Reload-Persistenz, Mobile-Regeln (44-px-Buttons,
+  keine horizontale Scroll-Leiste).
+- Struktur: statt des vorgeschlagenen src/apps/-Umbaus wurde passend in
+  die bestehende Struktur integriert (src/features/app-mode/ trägt
+  Launcher + Umschalter + Speicher; die Apps liegen in src/features/*
+  bzw. src/modes für Sprache) — kein riskanter Großumzug.
+
 ## Offene nächste Schritte
 
+- mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
+- interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
+- Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
   Code: kleine JS-Aufgaben)
-- mehr Lektionen je Pfad (Elektro: Motoren; Code: React)
 - gemeinsame Wochenübersicht über alle Bereiche

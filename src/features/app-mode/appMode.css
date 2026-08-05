@@ -38,21 +38,27 @@
   border-color: var(--rk-primary);
   background: var(--rk-primary-soft);
 }
+/* Code lernen: blau/violett. */
 .app-umschalter-knopf.bereich-code.aktiv {
-  color: var(--rk-blue-dark);
-  border-color: var(--rk-blue);
-  background: var(--rk-blue-soft);
+  color: var(--rk-purple-dark);
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
 }
+/* AI-Sprache: rot/orange. */
 .app-umschalter-knopf.bereich-prompting.aktiv {
   color: var(--rk-orange-dark);
-  border-color: var(--rk-orange);
+  border-color: var(--rk-red);
   background: var(--rk-orange-soft);
 }
 .app-umschalter-knopf.bereich-electro.aktiv {
-  color: var(--rk-yellow, #f5b82e);
   color: var(--rk-orange-dark);
   border-color: var(--rk-yellow);
   background: var(--rk-yellow-soft);
+}
+
+.app-umschalter-apps {
+  color: var(--rk-text);
+  border-color: var(--rk-border);
 }
 
 /* Schmale Bildschirme: „Sprache | Code | AI" statt der langen Namen. */
@@ -74,6 +80,105 @@
   }
   .app-umschalter-kurz {
     display: inline;
+  }
+}
+
+/* ===== App-Auswahl (Launcher): mehrere Apps in einer Website ===== */
+
+.app-launcher {
+  min-height: 100dvh;
+  padding: calc(var(--space-5) + env(safe-area-inset-top, 0px)) var(--space-4)
+    calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 44rem;
+  margin: 0 auto;
+}
+.app-launcher-marke {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--rk-primary-dark);
+}
+.app-launcher-kopf h1 {
+  font-size: var(--text-xl, 1.4rem);
+  margin-top: var(--space-2);
+}
+.app-launcher-text {
+  color: var(--rk-text-muted);
+  margin-top: var(--space-1);
+}
+.app-launcher-karten {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.app-launcher-karte {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+}
+.app-launcher-symbol {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+}
+.app-launcher-inhalt {
+  flex: 1;
+  min-width: 0;
+}
+.app-launcher-inhalt h2 {
+  font-size: var(--text-base);
+}
+.app-launcher-inhalt p {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  margin-top: 2px;
+}
+/* Jede App traegt ihre Identitaet schon in der Auswahl. */
+.app-launcher-karte.bereich-language {
+  border-color: var(--rk-primary);
+}
+.app-launcher-karte.bereich-language .app-launcher-symbol {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.app-launcher-karte.bereich-code {
+  border-color: var(--rk-purple);
+}
+.app-launcher-karte.bereich-code .app-launcher-symbol {
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+}
+.app-launcher-karte.bereich-prompting {
+  border-color: var(--rk-red);
+}
+.app-launcher-karte.bereich-prompting .app-launcher-symbol {
+  background: var(--rk-orange-soft);
+  color: var(--rk-orange-dark);
+}
+.app-launcher-karte.bereich-electro {
+  border-color: var(--rk-yellow);
+}
+.app-launcher-karte.bereich-electro .app-launcher-symbol {
+  background: var(--rk-yellow-soft);
+  color: var(--rk-orange-dark);
+}
+@media (max-width: 560px) {
+  .app-launcher-karte {
+    flex-wrap: wrap;
+  }
+  .app-launcher-karte .rk-knopf {
+    width: 100%;
   }
 }
 
@@ -198,7 +303,7 @@
 .praxis-vorschau {
   display: block;
   width: 100%;
-  height: 220px;
+  height: 170px;
   border: 2px solid var(--rk-border);
   border-radius: var(--radius-small);
   background: #ffffff; /* Vorschau bleibt bewusst hell — wie eine echte Seite */
@@ -254,6 +359,214 @@
   color: var(--rk-text);
   font-size: var(--text-sm);
   font-weight: 600;
+}
+
+/* ===== Lektions-Player (ein Schritt pro Bildschirm) ===== */
+
+.lektion-player {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: var(--rk-bg);
+  outline: none;
+}
+.lp-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) var(--space-4) var(--space-3);
+}
+.lp-zu {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--rk-text-muted);
+}
+.lp-fortschritt {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rk-border);
+  overflow: hidden;
+}
+.lp-fortschritt-balken {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--rk-primary);
+  transition: width 250ms ease;
+}
+.lp-inhalt {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+/* Kinder nie zusammendruecken — bei Platzmangel scrollt der Bereich. */
+.lp-inhalt > * {
+  flex-shrink: 0;
+}
+.lp-frage {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.45;
+}
+.lp-hinweis {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.lp-optionen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lp-option {
+  min-height: 56px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-size: max(16px, var(--text-base));
+  text-align: left;
+}
+.lp-option code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--rk-surface-soft);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.lp-option.gewaehlt {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+.lp-option.richtig {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.lp-option.falsch {
+  border-color: var(--rk-red);
+  background: var(--rk-red-soft);
+}
+.lp-datei {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small) var(--radius-small) 0 0;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  border: 1.5px solid var(--rk-border);
+  border-bottom: none;
+}
+.lp-editor {
+  min-height: 72px;
+  padding: var(--space-3);
+  border: 1.5px solid var(--rk-border);
+  border-radius: 0 0 var(--radius-small) var(--radius-small);
+  background: var(--rk-surface);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 6px;
+}
+.lp-cursor {
+  width: 10px;
+  height: 26px;
+  border-radius: 3px;
+  background: var(--rk-primary);
+  animation: lp-blinken 1s steps(1) infinite;
+}
+@keyframes lp-blinken {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-cursor { animation: none; }
+}
+.lp-chip-fest,
+.lp-chip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(16px, var(--text-sm));
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.lp-chip-fest {
+  background: var(--rk-primary-soft);
+  color: var(--rk-text);
+  border: 1px solid var(--rk-primary);
+}
+.lp-vorschau {
+  height: 150px;
+}
+.lp-werkzeuge {
+  display: flex;
+  gap: var(--space-2);
+}
+.lp-werkzeug {
+  min-width: 52px;
+  min-height: 44px;
+  border: 1.5px solid var(--rk-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-size: 18px;
+}
+.lp-werkzeug:disabled {
+  opacity: 0.4;
+}
+.lp-bausteine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.lp-chip {
+  min-height: 48px;
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  box-shadow: 0 1px 0 var(--rk-border-strong);
+}
+.lp-chip:disabled {
+  opacity: 0.35;
+}
+.lp-fuss {
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  border-top: 1.5px solid var(--rk-border);
+  background: var(--rk-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lp-fuss.richtig {
+  border-top-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.lp-fuss.falsch {
+  border-top-color: var(--rk-red);
+  background: var(--rk-red-soft);
+}
+.lp-feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+}
+.lp-feedback.richtig {
+  color: var(--rk-green-dark);
+}
+.lp-feedback.falsch {
+  color: var(--rk-red-dark);
+}
+.lp-fuss .rk-knopf {
+  width: 100%;
 }
 
 /* ===== Code-Tastatur (Bildschirm-Tastatur der Code-Aufgaben) ===== */
