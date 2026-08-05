@@ -1,0 +1,80 @@
+/* ===== Bereich „Elektro-Lehre" — gold/gelber Akzent, ruhig und klar ===== */
+
+.bereich-electro h1 {
+  color: var(--rk-orange-dark);
+}
+
+.el-text {
+  color: var(--rk-text-muted);
+}
+
+.el-heute {
+  line-height: 1.6;
+}
+
+.el-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Lektionen (anklickbare Karten) --- */
+.el-lektion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+}
+.el-lektion:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.el-lektion-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.el-lektion-titel {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.el-lektion-status {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.el-lektion.status-done .el-lektion-status {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.el-lektion.status-current .el-lektion-status {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-yellow);
+  background: var(--rk-yellow-soft);
+}
+
+/* --- Uebungen --- */
+.el-uebung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.el-uebung-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}

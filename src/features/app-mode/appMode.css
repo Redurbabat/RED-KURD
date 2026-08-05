@@ -48,6 +48,12 @@
   border-color: var(--rk-orange);
   background: var(--rk-orange-soft);
 }
+.app-umschalter-knopf.bereich-electro.aktiv {
+  color: var(--rk-yellow, #f5b82e);
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-yellow);
+  background: var(--rk-yellow-soft);
+}
 
 /* Schmale Bildschirme: „Sprache | Code | AI" statt der langen Namen. */
 .app-umschalter-kurz {

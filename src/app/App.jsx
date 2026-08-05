@@ -27,8 +27,10 @@ import { LoadingState } from '../components/common/EmptyState.jsx'
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
 const ladeCode = () => import('../features/code-learning/CodeLearningHome.jsx')
 const ladePrompting = () => import('../features/prompting-learning/PromptingLearningHome.jsx')
+const ladeElectro = () => import('../features/electro-learning/ElectroLearningHome.jsx')
 const CodeLearningHome = lazy(ladeCode)
 const PromptingLearningHome = lazy(ladePrompting)
+const ElectroLearningHome = lazy(ladeElectro)
 
 import '../styles/tokens.css'
 import '../styles/global.css'
@@ -161,6 +163,7 @@ export default function App() {
     const alles = () => {
       ladeCode().catch(() => {})
       ladePrompting().catch(() => {})
+      ladeElectro().catch(() => {})
     }
     if ('requestIdleCallback' in window) {
       const id = window.requestIdleCallback(alles, { timeout: 8000 })
@@ -246,6 +249,7 @@ export default function App() {
         <Suspense fallback={<LoadingState />}>
           {activeMode === APP_MODES.CODE && <CodeLearningHome />}
           {activeMode === APP_MODES.PROMPTING && <PromptingLearningHome />}
+          {activeMode === APP_MODES.ELECTRO && <ElectroLearningHome />}
         </Suspense>
       )}
     </div>

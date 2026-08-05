@@ -1,0 +1,58 @@
+// Uebungen des Bereichs „Elektro-Lehre": rechnen, erklaeren, sicher denken.
+
+export const electroExercises = [
+  {
+    id: 'eluebung-ohm',
+    title: 'Ohmsches Gesetz anwenden',
+    topic: 'Grundlagen',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 10,
+    description: 'Drei kleine Rechnungen mit dem URI-Dreieck.',
+    task: 'Rechne: a) U = 24 V, R = 8 Ω → I? b) U = 230 V, I = 2 A → R? c) R = 100 Ω, I = 0,5 A → U? Schreibe den Rechenweg auf.',
+  },
+  {
+    id: 'eluebung-leistung',
+    title: 'Leistung berechnen',
+    topic: 'Grundlagen',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 8,
+    description: 'Von Volt und Ampere zur Watt-Zahl.',
+    task: 'Ein Heizlüfter zieht an 230 V genau 8,7 A. Berechne die Leistung. Prüfe danach: Welche Watt-Zahl steht auf drei Geräten bei dir zu Hause?',
+  },
+  {
+    id: 'eluebung-5regeln',
+    title: 'Die 5 Sicherheitsregeln aufschreiben',
+    topic: 'Sicherheit',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 8,
+    description: 'Aus dem Kopf, in der richtigen Reihenfolge.',
+    task: 'Schreibe die fünf Sicherheitsregeln aus dem Gedächtnis in der richtigen Reihenfolge auf. Kontrolliere mit der Lektion und wiederhole, bis alles sitzt.',
+  },
+  {
+    id: 'eluebung-schaltung',
+    title: 'Reihe oder parallel?',
+    topic: 'Grundlagen',
+    difficulty: 'Mittel',
+    estimatedMinutes: 10,
+    description: 'Schaltungen erkennen und begründen.',
+    task: 'Erkläre in eigenen Worten: Warum gehen bei einer alten Lichterkette alle Lampen aus, wenn eine kaputt ist — und warum funktionieren die Steckdosen im Haus trotzdem einzeln?',
+  },
+  {
+    id: 'eluebung-messen',
+    title: 'Eine Messung planen',
+    topic: 'Praxis',
+    difficulty: 'Mittel',
+    estimatedMinutes: 10,
+    description: 'Erst denken, dann messen.',
+    task: 'Du willst die Spannung einer 9-V-Batterie und den Strom durch eine kleine Lampe messen. Beschreibe für beide Messungen: Messart, Anschluss (parallel/in Reihe) und worauf du vorher achtest.',
+  },
+  {
+    id: 'eluebung-gefahren',
+    title: 'Gefahren im Alltag finden',
+    topic: 'Sicherheit',
+    difficulty: 'Anfänger',
+    estimatedMinutes: 10,
+    description: 'Den Sicherheitsblick trainieren.',
+    task: 'Finde bei dir zu Hause drei mögliche elektrische Gefahrenstellen (z. B. beschädigtes Kabel, Mehrfachstecker-Kette, Elektrik im Bad) und schreibe zu jeder auf, warum sie gefährlich ist und was zu tun wäre.',
+  },
+]

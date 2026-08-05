@@ -97,9 +97,26 @@ Inzwischen ebenfalls fertig:
 - 2 weitere Tests (224 gesamt); E2E: Übung öffnen → Notiz → abschließen
   → XP 15, Offene 6→5, Tagesziel 15/30; Reload behält Notiz und Status.
 
+## Nachtrag 3 (gleiche Nacht, vierter Teil)
+
+- **Elektro-Lehre ist der vierte Bereich** (⚡, gold/gelber Akzent):
+  9 Lektionen in drei Gruppen — Grundlagen (Strom, U/I/R, Ohmsches
+  Gesetz, Leistung), Sicherheit (Gefahren, die 5 Sicherheitsregeln,
+  Schutzleiter/FI) und Praxis (Multimeter, Reihen-/Parallelschaltung) —
+  plus 6 Übungen. Eigener Lernstand `red-kurd-electro-progress-v1`.
+  Alle Inhalte sind Theorie zum Verstehen; die Texte sagen klar, dass an
+  Anlagen Elektrofachkräfte arbeiten.
+- Der Umschalter zeigt jetzt vier Bereiche („Sprache | Code | AI |
+  Elektro“ auf dem Handy) — ein neuer Bereich ist nur noch ein Eintrag
+  in `appModes.js` plus ein Feature-Ordner.
+- **Export/Import abgesichert**: Ein Test beweist, dass die Sicherung
+  die Lernstände aller Bereiche, das Fehlerbuch und den aktiven Bereich
+  mitnimmt.
+- 3 weitere Tests (227 gesamt); E2E: Elektro öffnen, erste Lektion
+  abschließen → XP 10, gespeichert.
+
 ## Offene nächste Schritte
 
-- Bereichs-Lernstand in Export/Import aufnehmen (KEYS sind registriert,
-  Export nimmt sie automatisch mit)
-- Elektro-Lehre als vierter Bereich
-- automatische Prüfung einzelner Übungen (z. B. Noten-Durchschnitt)
+- automatische Prüfung einzelner Übungen (z. B. Ohm-Rechnungen)
+- mehr Lektionen je Pfad (Elektro: Motoren, Drehstrom; Code: React)
+- gemeinsame Wochenübersicht über alle Bereiche
