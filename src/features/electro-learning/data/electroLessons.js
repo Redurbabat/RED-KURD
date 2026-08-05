@@ -108,6 +108,35 @@ export const electroLessons = [
     merke: 'Grün-gelb ist heilig — und der FI rettet Leben.',
   },
 
+  {
+    id: 'el-adern',
+    gruppe: 'Sicherheit',
+    title: 'Aderfarben: L, N und PE',
+    description: 'Welche Ader welche Aufgabe hat — und welche heilig ist.',
+    durationMinutes: 8,
+    inhalt: [
+      'In einer Leitung stecken meist drei Adern: Aussenleiter L (braun oder schwarz) bringt die Spannung, Neutralleiter N (blau) fuehrt den Strom zurueck, Schutzleiter PE (gruen-gelb) schuetzt.',
+      'Gruen-gelb ist ausschliesslich dem Schutz vorbehalten — niemals als stromfuehrende Ader missbrauchen. Das ist eine der wichtigsten Regeln der Elektroinstallation.',
+      'Achtung: Farben sagen viel, beweisen aber nichts — ob eine Ader wirklich spannungsfrei ist, zeigt nur die Messung (Regel 3!).',
+    ],
+    beispiel: 'L  = braun/schwarz -> Aussenleiter (bringt Spannung)\nN  = blau          -> Neutralleiter (fuehrt zurueck)\nPE = gruen-gelb    -> Schutzleiter (schuetzt)',
+    merke: 'Braun bringt, Blau geht zurueck, Gruen-Gelb schuetzt — und Farben ersetzen nie die Messung.',
+  },
+  {
+    id: 'el-drehstrom',
+    gruppe: 'Grundlagen',
+    title: 'Drehstrom: die drei Phasen',
+    description: 'Warum aus der Wand mehr kommt als 230 V.',
+    durationMinutes: 10,
+    inhalt: [
+      'Das Netz liefert drei Aussenleiter (L1, L2, L3), deren Spannungen zeitlich versetzt schwingen — Drehstrom. Zwischen einem Aussenleiter und N liegen 230 V, zwischen zwei Aussenleitern 400 V.',
+      'Grosse Verbraucher wie Herd, Durchlauferhitzer oder Motoren nutzen alle drei Phasen — deshalb haben sie die dicken fuenfadrigen Anschluesse.',
+      'Fuer die Ausbildung reicht jetzt: 230 V = Phase gegen N, 400 V = Phase gegen Phase, und Motoren lieben Drehstrom, weil er von allein ein drehendes Feld erzeugt.',
+    ],
+    beispiel: 'L1—N  = 230 V (Steckdose)\nL1—L2 = 400 V (Herd, Motor)\n3 Phasen, je 120 Grad versetzt',
+    merke: '230 V gegen N, 400 V zwischen den Phasen.',
+  },
+
   // ===== Praxis =====
   {
     id: 'el-multimeter',

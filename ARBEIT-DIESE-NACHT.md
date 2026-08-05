@@ -115,8 +115,41 @@ Inzwischen ebenfalls fertig:
 - 3 weitere Tests (227 gesamt); E2E: Elektro öffnen, erste Lektion
   abschließen → XP 10, gespeichert.
 
+## Nachtrag 4: Mitmach-Aufgaben + mehr Lektionen
+
+Wunsch: „direkte Aufgaben machen — z. B. einen Teil einer Webseite,
+einen Button erstellen, Farben — und mehr Lektionen.“
+
+- **Mitmach-Aufgaben mit Sofort-Prüfung** (gemeinsamer Baustein
+  `src/features/app-mode/PraxisAufgabe.jsx`, +20 XP je Aufgabe,
+  Eingabe wird lokal gespeichert):
+  - **Code — „Mitmachen: direkt bauen“** (6 Aufgaben): erste Webseite,
+    Button erstellen, Farben ändern, Button schön machen (44-px-Regel!),
+    Karte bauen, Seite in Kopf/Inhalt/Fuß aufteilen. Man schreibt
+    echten HTML/CSS-Code in ein Feld, die **Live-Vorschau** zeigt sofort
+    das Ergebnis (sicher in einer Sandbox, ohne Skripte), und eine
+    **Prüfliste** hakt jeden erfüllten Punkt grün ab.
+  - **Elektro — „Rechnen: direkt prüfen“** (5 Aufgaben): Strom,
+    Widerstand, Spannung, Leistung, FI-Auslösestrom. Komma oder Punkt —
+    beides zählt; kleine Rundungen werden toleriert.
+  - **AI-Sprache — „Mitmachen: mit Prüfliste schreiben“** (3 Aufgaben):
+    kompletten Claude-Auftrag schreiben, Bug-Report ausfüllen, schwachen
+    Prompt verbessern — die Prüfliste prüft live auf Ort, Verbote,
+    Prüfung, Länge.
+- **9 neue Lektionen**: Code (Listen, Formulare, Grid, Übergänge,
+  Funktionen, DOM), Elektro (Aderfarben L/N/PE, Drehstrom 230/400 V),
+  AI-Sprache (Kontext mitgeben).
+- 11 weitere Tests (238 gesamt) — darunter: jede Musterlösung besteht
+  ihre eigene Prüfliste, kein Startcode löst die Aufgabe von allein,
+  Komma-/Punkt-Zahlen werden verstanden.
+- E2E (iPhone-Viewport, 15 Prüfungen grün): Button-Aufgabe lösen →
+  Checks werden grün, Vorschau zeigt den Button, +20 XP, Reload behält
+  Eingabe und „Erledigt“; Elektro „3,0" mit Komma wird als richtig
+  erkannt, falsche Zahl bleibt offen.
+
 ## Offene nächste Schritte
 
-- automatische Prüfung einzelner Übungen (z. B. Ohm-Rechnungen)
-- mehr Lektionen je Pfad (Elektro: Motoren, Drehstrom; Code: React)
+- mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
+  Code: kleine JS-Aufgaben)
+- mehr Lektionen je Pfad (Elektro: Motoren; Code: React)
 - gemeinsame Wochenübersicht über alle Bereiche

@@ -8,12 +8,14 @@ import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
+import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import CodeLearningPath from './CodeLearningPath.jsx'
 import CodeLearningProgress from './CodeLearningProgress.jsx'
 import Fehlerbuch from './Fehlerbuch.jsx'
 import { codeLearningPaths } from './data/codeLessons.js'
 import { codeExercises } from './data/codeExercises.js'
+import { codePraxisAufgaben } from './data/codePraxis.js'
 import { codeLernstand } from './codeProgressStore.js'
 import './codeLearning.css'
 
@@ -32,6 +34,7 @@ function naechsteLektionen(anzahl = 3) {
 export default function CodeLearningHome() {
   useLernstand()
   const [aktiveUebung, setAktiveUebung] = useState(null)
+  const [aktivePraxis, setAktivePraxis] = useState(null)
   const heute = naechsteLektionen(3)
   const alleLektionen = codeLearningPaths.flatMap((p) => p.lessons)
   const gesamt = codeLernstand.fortschrittProzent(alleLektionen)
@@ -112,6 +115,38 @@ export default function CodeLearningHome() {
         </div>
       </section>
 
+      <section className="bereich-abschnitt" aria-labelledby="cl-praxis-titel">
+        <h2 id="cl-praxis-titel">Mitmachen: direkt bauen</h2>
+        <p className="cl-pfad-text">
+          Schreib den Code hier in der App — die Vorschau zeigt sofort das Ergebnis, die
+          Prüfliste sagt dir, wann alles stimmt.
+        </p>
+        <div className="bereich-raster">
+          {codePraxisAufgaben.map((aufgabe) => (
+            <Card key={aufgabe.id} className="cl-uebung">
+              <div className="cl-uebung-kopf">
+                <h3>{aufgabe.title}</h3>
+                {codeLernstand.istErledigt(aufgabe.id) ? (
+                  <Badge ton="gruen" icon="haken">
+                    Erledigt
+                  </Badge>
+                ) : (
+                  <Badge ton="blau">{aufgabe.topic}</Badge>
+                )}
+              </div>
+              <p className="cl-pfad-text">{aufgabe.description}</p>
+              <p className="cl-uebung-meta">
+                <Icon name="uhr" groesse={14} /> ca. {aufgabe.estimatedMinutes} Min · mit
+                Live-Vorschau
+              </p>
+              <PrimaryButton art="blau" icon="play" onClick={() => setAktivePraxis(aufgabe)}>
+                {codeLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
+              </PrimaryButton>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       <section className="bereich-abschnitt" aria-labelledby="cl-uebungen-titel">
         <h2 id="cl-uebungen-titel">Übungen</h2>
         <div className="bereich-raster">
@@ -150,6 +185,13 @@ export default function CodeLearningHome() {
         uebung={aktiveUebung}
         lernstand={codeLernstand}
         schliessen={() => setAktiveUebung(null)}
+      />
+
+      <PraxisAufgabe
+        key={aktivePraxis?.id || 'keine'}
+        aufgabe={aktivePraxis}
+        lernstand={codeLernstand}
+        schliessen={() => setAktivePraxis(null)}
       />
     </div>
   )

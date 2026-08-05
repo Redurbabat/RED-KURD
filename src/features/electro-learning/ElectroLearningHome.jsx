@@ -9,10 +9,12 @@ import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
+import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import ElectroLessonCard from './ElectroLessonCard.jsx'
 import { electroGruppen, electroLessons } from './data/electroLessons.js'
 import { electroExercises } from './data/electroExercises.js'
+import { electroPraxisAufgaben } from './data/electroPraxis.js'
 import { electroLernstand } from './electroProgressStore.js'
 import './electroLearning.css'
 
@@ -20,6 +22,7 @@ export default function ElectroLearningHome() {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
+  const [aktivePraxis, setAktivePraxis] = useState(null)
 
   const status = electroLernstand.statusFuer(electroLessons)
   const gesamt = electroLernstand.fortschrittProzent(electroLessons)
@@ -111,6 +114,37 @@ export default function ElectroLearningHome() {
         </section>
       ))}
 
+      <section className="bereich-abschnitt" aria-labelledby="el-praxis-titel">
+        <h2 id="el-praxis-titel">Rechnen: direkt prüfen</h2>
+        <p className="el-text">
+          Tippe dein Ergebnis ein — die App prüft sofort, ob es stimmt.
+        </p>
+        <div className="bereich-raster">
+          {electroPraxisAufgaben.map((aufgabe) => (
+            <Card key={aufgabe.id} className="el-uebung">
+              <div className="el-uebung-kopf">
+                <h3>{aufgabe.title}</h3>
+                {electroLernstand.istErledigt(aufgabe.id) ? (
+                  <Badge ton="gruen" icon="haken">
+                    Erledigt
+                  </Badge>
+                ) : (
+                  <Badge ton="gold">{aufgabe.topic}</Badge>
+                )}
+              </div>
+              <p className="el-text">{aufgabe.description}</p>
+              <p className="el-meta">
+                <Icon name="uhr" groesse={14} /> ca. {aufgabe.estimatedMinutes} Min · mit
+                Sofort-Prüfung
+              </p>
+              <PrimaryButton art="still" icon="play" onClick={() => setAktivePraxis(aufgabe)}>
+                {electroLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
+              </PrimaryButton>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       <section className="bereich-abschnitt" aria-labelledby="el-uebungen-titel">
         <h2 id="el-uebungen-titel">Übungen</h2>
         <div className="bereich-raster">
@@ -151,6 +185,13 @@ export default function ElectroLearningHome() {
         uebung={aktiveUebung}
         lernstand={electroLernstand}
         schliessen={() => setAktiveUebung(null)}
+      />
+
+      <PraxisAufgabe
+        key={aktivePraxis?.id || 'keine'}
+        aufgabe={aktivePraxis}
+        lernstand={electroLernstand}
+        schliessen={() => setAktivePraxis(null)}
       />
     </div>
   )

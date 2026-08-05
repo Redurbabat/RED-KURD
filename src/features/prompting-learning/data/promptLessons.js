@@ -111,6 +111,19 @@ export const promptLessons = [
     merke: 'Beschreibe Entscheidungen, nicht Gefühle.',
   },
   {
+    id: 'prompt-kontext',
+    title: 'Kontext mitgeben',
+    description: 'Die KI kennt dein Projekt nicht — außer du erzählst es ihr.',
+    durationMinutes: 8,
+    inhalt: [
+      'Eine KI weiß nichts über dein Projekt, deine Nutzer oder deine Regeln — außer, du schreibst es in den Auftrag. Guter Kontext spart zehn Rückfragen.',
+      'Nützlicher Kontext: Was ist die App? Für wen? Welche Regeln gelten (z. B. „Deutsch ist die Bediensprache“, „keine neuen Pakete“)? Was wurde schon probiert?',
+      'Bei RED-KURD übernimmt die Datei CLAUDE.md genau diese Rolle: Sie gibt jeder Arbeitssitzung dieselben Grundregeln mit.',
+    ],
+    beispiel: 'Kontext: RED-KURD ist eine lokale Lern-App für Deutschsprachige, Haupt-Zielgerät iPhone. Regeln: Deutsch als UI-Sprache, keine neuen Pakete, Lernstand nie gefährden. Aufgabe: …',
+    merke: 'Erst der Kontext, dann die Aufgabe — die KI liest nur, was da steht.',
+  },
+  {
     id: 'prompt-claude-auftrag',
     title: 'Claude-Code-Auftrag schreiben',
     description: 'Ziel, Grenzen, Verbote und Tests — ein kompletter sicherer Auftrag.',

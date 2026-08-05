@@ -2,16 +2,20 @@
 // XP, Reihe und Fortschritt kommen aus dem echten, gespeicherten Lernstand.
 import { useState } from 'react'
 import { useLernstand } from '../../core/store.js'
+import Badge from '../../components/common/Badge.jsx'
 import Card from '../../components/common/Card.jsx'
+import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
+import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import PromptLessonCard from './PromptLessonCard.jsx'
 import PromptTrainingCard from './PromptTrainingCard.jsx'
 import { promptLessons } from './data/promptLessons.js'
 import { promptExercises } from './data/promptExercises.js'
+import { promptPraxisAufgaben } from './data/promptPraxis.js'
 import { promptLernstand } from './promptProgressStore.js'
 import './promptingLearning.css'
 
@@ -19,6 +23,7 @@ export default function PromptingLearningHome() {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
+  const [aktivePraxis, setAktivePraxis] = useState(null)
 
   const status = promptLernstand.statusFuer(promptLessons)
   const gesamt = promptLernstand.fortschrittProzent(promptLessons)
@@ -103,6 +108,38 @@ export default function PromptingLearningHome() {
         </div>
       </section>
 
+      <section className="bereich-abschnitt" aria-labelledby="pl-praxis-titel">
+        <h2 id="pl-praxis-titel">Mitmachen: mit Prüfliste schreiben</h2>
+        <p className="pl-text">
+          Schreib deinen Auftrag hier in der App — die Prüfliste zeigt live, welche
+          Bausteine noch fehlen.
+        </p>
+        <div className="bereich-raster">
+          {promptPraxisAufgaben.map((aufgabe) => (
+            <Card key={aufgabe.id} className="pl-uebung">
+              <div className="pl-uebung-kopf">
+                <h3>{aufgabe.title}</h3>
+                {promptLernstand.istErledigt(aufgabe.id) ? (
+                  <Badge ton="gruen" icon="haken">
+                    Erledigt
+                  </Badge>
+                ) : (
+                  <Badge ton="gold">{aufgabe.topic}</Badge>
+                )}
+              </div>
+              <p className="pl-text">{aufgabe.description}</p>
+              <p className="pl-meta">
+                <Icon name="uhr" groesse={14} /> ca. {aufgabe.estimatedMinutes} Min · mit
+                Prüfliste
+              </p>
+              <PrimaryButton art="still" icon="play" onClick={() => setAktivePraxis(aufgabe)}>
+                {promptLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
+              </PrimaryButton>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       <section className="bereich-abschnitt" aria-labelledby="pl-training-titel">
         <h2 id="pl-training-titel">Training: selbst formulieren</h2>
         <div className="bereich-raster">
@@ -129,6 +166,13 @@ export default function PromptingLearningHome() {
         uebung={aktiveUebung}
         lernstand={promptLernstand}
         schliessen={() => setAktiveUebung(null)}
+      />
+
+      <PraxisAufgabe
+        key={aktivePraxis?.id || 'keine'}
+        aufgabe={aktivePraxis}
+        lernstand={promptLernstand}
+        schliessen={() => setAktivePraxis(null)}
       />
     </div>
   )
