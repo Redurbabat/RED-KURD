@@ -521,6 +521,30 @@ Test besteht darauf, dass **jede** Lektion Schritte hat:
 - Kleinigkeit nebenbei: In der Wochenübersicht hieß es „1 Tage" — jetzt
   „1 Tag".
 
+## Nachtrag 19: JavaScript-Mitmach-Aufgaben und die Wegkarte überall
+
+- **Vier neue JavaScript-Aufgaben** im Code-Bereich (17 Mitmach-Aufgaben
+  gesamt) — und **dein eigener Code läuft wirklich**:
+  - *Text mit JavaScript ändern*: Element holen, textContent setzen.
+  - *Einen Klick verarbeiten*: Lauscher anhängen — in der Vorschau
+    tatsächlich drückbar.
+  - *Einen Zähler bauen*: Variable, Klick, Anzeige zusammen. Dreimal
+    klicken heißt in der Vorschau wirklich „3".
+  - *Eine Liste aus Daten bauen*: aus einem Array per Schleife eine
+    echte HTML-Liste.
+  - Dafür kennt PraxisAufgabe jetzt `huelle` (das Gerüst mit `{{code}}`)
+    und `skript`. Die Sandbox bleibt ohne `allow-same-origin` — kein
+    Zugriff auf Speicher, Cookies oder die App. Ein Test stellt sicher,
+    dass reines HTML eine JavaScript-Aufgabe nie besteht.
+- **Die Wegkarte gilt jetzt für alle Apps**: Der Baustein liegt als
+  `LernpfadKarte` in `src/features/app-mode/` und wird in Code lernen
+  (je Lernpfad), Elektro-Lehre (je Gruppe) und AI-Sprache genutzt —
+  überall mit dem Umschalter Liste/Wegkarte.
+- 2 neue Tests (306 gesamt). E2E: 18 Prüfungen grün — vier neue
+  Aufgaben da, Zähler in der Vorschau geklickt und hochgezählt,
+  +20 XP, HTML besteht die JS-Aufgabe nicht, Wegkarte in Elektro und
+  AI-Sprache samt gesperrten Knoten.
+
 ## Offene nächste Schritte
-- weitere Mitmach-Aufgaben (kleine JS-Aufgaben im Code-Bereich)
-- Wegkarte auch für die anderen Apps, falls sie sich bewährt
+- Wegkarte auch in der Sprach-App, falls sie sich bewährt
+- weitere Lektionsinhalte nach Bedarf

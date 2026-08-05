@@ -256,6 +256,120 @@ export const codePraxisAufgaben = [
   },
 ]
 
+// ===== JavaScript-Aufgaben: der eigene Code laeuft wirklich =====
+// `huelle` liefert das Geruest (leerer Absatz, Knopf …), `{{code}}` ist die
+// Stelle fuer den eigenen Code. `skript: true` erlaubt der Vorschau, ihn
+// auszufuehren — in einer Sandbox ohne Zugriff auf Speicher oder App.
+
+codePraxisAufgaben.push(
+  {
+    id: 'praxis-js-text',
+    art: 'html',
+    skript: true,
+    huelle: '<p id="gruss">(noch leer)</p>\n<script>{{code}}</script>',
+    title: 'Text mit JavaScript ändern',
+    topic: 'JavaScript',
+    estimatedMinutes: 8,
+    description: 'Hol das Element und schreib deinen Text hinein — er erscheint sofort.',
+    auftrag:
+      'Der Absatz oben ist leer. Hol ihn mit document.querySelector("#gruss") und setz seinen textContent auf einen Gruß deiner Wahl. Die Vorschau führt deinen Code wirklich aus!',
+    startCode: "// Hol #gruss und setze textContent\n",
+    tipp: "document.querySelector('#gruss').textContent = 'Silav!'",
+    checks: [
+      {
+        id: 'holen',
+        text: "Das Element holen: document.querySelector('#gruss')",
+        pruefe: (c) => /document\.querySelector\(\s*['"]#gruss['"]\s*\)/.test(c),
+      },
+      {
+        id: 'setzen',
+        text: 'textContent auf einen eigenen Text setzen',
+        pruefe: (c) => /\.textContent\s*=\s*['"][^'"]+['"]/.test(c),
+      },
+    ],
+    musterloesung: "document.querySelector('#gruss').textContent = 'Silav!'",
+  },
+  {
+    id: 'praxis-js-klick',
+    art: 'html',
+    skript: true,
+    huelle:
+      '<button id="knopf" type="button">Klick mich</button>\n<p id="antwort"></p>\n<script>{{code}}</script>',
+    title: 'Einen Klick verarbeiten',
+    topic: 'JavaScript',
+    estimatedMinutes: 10,
+    description: 'Beim Klick soll eine Antwort erscheinen — in der Vorschau ausprobierbar.',
+    auftrag:
+      'Hänge dem Knopf einen Klick-Lauscher an: Beim Klick soll im Absatz #antwort ein Text erscheinen. Danach kannst du in der Vorschau wirklich draufdrücken.',
+    startCode: "// addEventListener('click', …) an #knopf haengen\n",
+    tipp: "document.querySelector('#knopf').addEventListener('click', () => { … })",
+    checks: [
+      {
+        id: 'knopf',
+        text: "Den Knopf holen: document.querySelector('#knopf')",
+        pruefe: (c) => /document\.querySelector\(\s*['"]#knopf['"]\s*\)/.test(c),
+      },
+      {
+        id: 'lauscher',
+        text: "addEventListener('click', …) hängt daran",
+        pruefe: (c) => /\.addEventListener\(\s*['"]click['"]/.test(c),
+      },
+      {
+        id: 'antwort',
+        text: 'Im Inneren wird #antwort ein Text gegeben',
+        pruefe: (c) =>
+          /#antwort['"]\s*\)[\s\S]*\.textContent\s*=\s*['"][^'"]+['"]/.test(c),
+      },
+    ],
+    musterloesung:
+      "document.querySelector('#knopf').addEventListener('click', () => {\n  document.querySelector('#antwort').textContent = 'Spas!'\n})",
+  },
+  {
+    id: 'praxis-js-zaehler',
+    art: 'html',
+    skript: true,
+    huelle:
+      '<button id="plus" type="button">+1</button>\n<p id="stand">0</p>\n<script>{{code}}</script>',
+    title: 'Einen Zähler bauen',
+    topic: 'JavaScript',
+    estimatedMinutes: 12,
+    description: 'Variable, Klick und Anzeige zusammen — dein erstes kleines Programm.',
+    auftrag:
+      'Baue einen Zähler: Lege eine Variable mit 0 an, erhöhe sie bei jedem Klick auf #plus um 1 und zeig den neuen Stand in #stand. In der Vorschau kannst du mehrmals klicken.',
+    startCode: '// let zaehler = 0 — dann bei jedem Klick erhoehen\n',
+    tipp: 'let zaehler = 0 · zaehler = zaehler + 1 · textContent = zaehler',
+    checks: [
+      { id: 'variable', text: 'Eine Variable mit let (Startwert 0)', pruefe: (c) => /let\s+\w+\s*=\s*0/.test(c) },
+      { id: 'klick', text: "Ein Klick-Lauscher auf #plus", pruefe: (c) => /#plus['"]\s*\)[\s\S]*addEventListener\(\s*['"]click['"]/.test(c) },
+      { id: 'erhoehen', text: 'Der Zähler wird erhöht (+ 1 oder ++)', pruefe: (c) => /(\+\+|\+=\s*1|=\s*\w+\s*\+\s*1)/.test(c) },
+      { id: 'anzeigen', text: '#stand bekommt den neuen Wert', pruefe: (c) => /#stand['"]\s*\)[\s\S]*\.textContent\s*=/.test(c) },
+    ],
+    musterloesung:
+      "let zaehler = 0\ndocument.querySelector('#plus').addEventListener('click', () => {\n  zaehler = zaehler + 1\n  document.querySelector('#stand').textContent = zaehler\n})",
+  },
+  {
+    id: 'praxis-js-liste',
+    art: 'html',
+    skript: true,
+    huelle: '<ul id="liste"></ul>\n<script>{{code}}</script>',
+    title: 'Eine Liste aus Daten bauen',
+    topic: 'JavaScript',
+    estimatedMinutes: 12,
+    description: 'Aus einem Array wird per Schleife eine echte HTML-Liste.',
+    auftrag:
+      'Lege eine Liste mit mindestens drei Wörtern an und baue daraus mit einer Schleife die Einträge in #liste. Die Vorschau zeigt sie sofort.',
+    startCode: "// const woerter = ['Silav', 'Spas', 'Baş'] — dann eine Schleife\n",
+    tipp: "for (const wort of woerter) { … innerHTML += '<li>' + wort + '</li>' }",
+    checks: [
+      { id: 'array', text: 'Eine Liste (Array) mit mindestens drei Einträgen', pruefe: (c) => /\[[^\]]*,[^\]]*,[^\]]*\]/.test(c) },
+      { id: 'schleife', text: 'Eine Schleife (for … of oder forEach/map)', pruefe: (c) => /for\s*\(|\.forEach\(|\.map\(/.test(c) },
+      { id: 'einfuegen', text: 'Die Einträge landen in #liste', pruefe: (c) => /#liste['"]\s*\)[\s\S]*(innerHTML|appendChild)/.test(c) },
+    ],
+    musterloesung:
+      "const woerter = ['Silav', 'Spas', 'Baş']\nfor (const wort of woerter) {\n  document.querySelector('#liste').innerHTML += '<li>' + wort + '</li>'\n}",
+  }
+)
+
 // iOS-Tastaturen machen aus geraden Anfuehrungszeichen gern „schlaue"
 // (geschwungene). Fuer die Pruefung zaehlen beide gleich — sonst faellt
 // eine richtige Loesung nur wegen der Tastatur durch.

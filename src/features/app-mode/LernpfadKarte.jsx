@@ -16,7 +16,7 @@ const BESCHRIFTUNG = {
 /**
  * @param {{lessons:Array, status:Object, oeffnen:(lektion:Object)=>void}} props
  */
-export default function CodeLernpfadKarte({ lessons, status, oeffnen }) {
+export default function LernpfadKarte({ lessons, status, oeffnen }) {
   return (
     <ol className="pfadkarte" aria-label="Lernpfad">
       {lessons.map((lektion, i) => {

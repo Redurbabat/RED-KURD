@@ -7,7 +7,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import LektionPlayer from '../app-mode/LektionPlayer.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'
-import CodeLernpfadKarte from './CodeLernpfadKarte.jsx'
+import LernpfadKarte from '../app-mode/LernpfadKarte.jsx'
 import { codeLernstand } from './codeProgressStore.js'
 import { holeSchritte } from './data/codeSchritte.js'
 
@@ -60,10 +60,10 @@ export default function CodeLearningPath({ path }) {
 
       {offen && (
         <>
-          <div className="cl-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
+          <div className="pfad-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
             <button
               type="button"
-              className={`cl-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+              className={`pfad-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
               aria-pressed={!alsKarte}
               onClick={() => setAlsKarte(false)}
             >
@@ -71,7 +71,7 @@ export default function CodeLearningPath({ path }) {
             </button>
             <button
               type="button"
-              className={`cl-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+              className={`pfad-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
               aria-pressed={alsKarte}
               onClick={() => setAlsKarte(true)}
             >
@@ -80,7 +80,7 @@ export default function CodeLearningPath({ path }) {
           </div>
 
           {alsKarte ? (
-            <CodeLernpfadKarte
+            <LernpfadKarte
               lessons={path.lessons}
               status={status}
               oeffnen={setAktiveLektion}

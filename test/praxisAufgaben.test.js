@@ -80,6 +80,32 @@ test('HTML-Pruefungen erkennen echte Loesungen, nicht nur Schluesselwoerter im K
   assert.equal(ohneButton, false)
 })
 
+test('Aufgaben mit Skript haben eine Huelle mit {{code}} und <script>', () => {
+  let mitSkript = 0
+  for (const [name, aufgaben] of BEREICHE.map(([n, a]) => [n, a])) {
+    for (const a of aufgaben) {
+      if (!a.skript) continue
+      mitSkript += 1
+      assert.ok(a.huelle, `${name}/${a.id}: skript ohne Huelle`)
+      assert.ok(a.huelle.includes('{{code}}'), `${a.id}: Huelle ohne {{code}}`)
+      assert.ok(a.huelle.includes('<script>'), `${a.id}: Huelle ohne <script>`)
+    }
+  }
+  assert.ok(mitSkript >= 4, 'mindestens vier JavaScript-Aufgaben')
+})
+
+test('die JavaScript-Aufgaben verlangen wirklich JavaScript', () => {
+  const js = codePraxisAufgaben.filter((a) => a.skript)
+  for (const a of js) {
+    // Reines HTML darf eine JS-Aufgabe nicht bestehen
+    assert.equal(
+      a.checks.every((c) => c.pruefe('<p>Hallo</p>')),
+      false,
+      `${a.id}: HTML allein besteht die Pruefung`
+    )
+  }
+})
+
 test('Formular-Pruefung verlangt, dass for und id wirklich zusammenpassen', () => {
   const formular = codePraxisAufgaben.find((a) => a.id === 'praxis-formular')
   const verbunden = formular.checks.find((c) => c.id === 'verbunden')

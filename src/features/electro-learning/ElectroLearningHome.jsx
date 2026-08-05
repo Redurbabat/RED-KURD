@@ -10,6 +10,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import UebungModal from '../app-mode/UebungModal.jsx'
 import PraxisAufgabe from '../app-mode/PraxisAufgabe.jsx'
+import LernpfadKarte from '../app-mode/LernpfadKarte.jsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import ElectroLessonCard from './ElectroLessonCard.jsx'
 import { electroGruppen, electroLessons } from './data/electroLessons.js'
@@ -28,6 +29,8 @@ export default function ElectroLearningHome({ ohneKopf = false }) {
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
   const [aktivePraxis, setAktivePraxis] = useState(null)
+  // Zwei Darstellungen derselben Lektionen: Liste oder Wegkarte.
+  const [alsKarte, setAlsKarte] = useState(false)
 
   const status = electroLernstand.statusFuer(electroLessons)
   const gesamt = electroLernstand.fortschrittProzent(electroLessons)
@@ -134,9 +137,35 @@ export default function ElectroLearningHome({ ohneKopf = false }) {
         </Card>
       )}
 
+      <div className="pfad-ansicht-wahl" role="group" aria-label="Darstellung der Lektionen">
+        <button
+          type="button"
+          className={`pfad-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+          aria-pressed={!alsKarte}
+          onClick={() => setAlsKarte(false)}
+        >
+          Liste
+        </button>
+        <button
+          type="button"
+          className={`pfad-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+          aria-pressed={alsKarte}
+          onClick={() => setAlsKarte(true)}
+        >
+          Wegkarte
+        </button>
+      </div>
+
       {electroGruppen.map((gruppe) => (
         <section key={gruppe} className="bereich-abschnitt" aria-label={gruppe}>
           <h2>{gruppe}</h2>
+          {alsKarte ? (
+            <LernpfadKarte
+              lessons={electroLessons.filter((l) => l.gruppe === gruppe)}
+              status={status}
+              oeffnen={setAktiveLektion}
+            />
+          ) : (
           <div className="bereich-raster">
             {electroLessons
               .filter((l) => l.gruppe === gruppe)
@@ -149,6 +178,7 @@ export default function ElectroLearningHome({ ohneKopf = false }) {
                 />
               ))}
           </div>
+          )}
         </section>
       ))}
 
