@@ -452,9 +452,37 @@ Werkzeuge, mit denen man wirklich arbeitet statt nur liest.
   „besser"-Erkennung, Kopieren in die Zwischenablage, nummerierte
   Schritte, Merge-Empfehlung in drei Stufen, Reload-Persistenz, mobil.
 
+## Nachtrag 16: Sicherung über alle vier Apps + der Rest wird interaktiv
+
+**Phase 7 — die Sicherung ist bewiesen.** Ein neuer Rundlauf-Test macht
+den Ernstfall durch: in allen vier Apps etwas tun → exportieren → Gerät
+komplett leeren → importieren → prüfen, ob wirklich alles zurückkommt.
+Zurück sind: Sprach-Lernstand und Profil, Code-Lektion und Fehlerbuch,
+AI-Lektion samt angefangenem Auftrag und PR-Haken, Elektro-Lektion mit
+Note, Prüfung und Berichtsheft-Woche. Dazu drei Sicherheitsnetze:
+- Die XP der vier Apps bleiben getrennt — keine App zählt für die andere.
+- Gerätelokale Werte (Anmelde-Entscheidung, laufende Sitzung) wandern
+  bewusst NICHT in die Sicherung.
+- Eine fremde oder kaputte Datei überschreibt garantiert nichts.
+
+**Der Code-Bereich ist jetzt vollständig interaktiv.** Auch TypeScript,
+GitHub, VS Code und die Mini-Projekte laufen im Schritt-Player — der
+Test besteht darauf, dass **jede** Lektion Schritte hat:
+- TypeScript: Funktionen mit Typen, string[], interface, Rückgabetypen —
+  Bau-Schritte ohne Vorschau (es gibt nichts anzuzeigen), Editor bleibt.
+- GitHub: Commit-Nachrichten, Branch → PR → Merge als Reihenfolge-Aufgabe,
+  Issues und „closes #12".
+- VS Code: Strg+P, Projekt-Suche, Terminal-Befehle in der richtigen
+  Reihenfolge, Prettier und Format on Save.
+- Mini-Projekte: Filmkarte bauen (mit Vorschau) und selbst schreiben,
+  Notenrechner mit abgesichertem Randfall (läuft wirklich),
+  Bottom-Navigation, Visitenkarten-Seite als „Jetzt du".
+- 4 neue Tests (294 gesamt). E2E: 14 Prüfungen grün — inklusive des
+  schönen Nebenbefunds, dass spätere Lektionen korrekt gesperrt bleiben,
+  bis die davor fertig sind.
+
 ## Offene nächste Schritte
 - mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
-- interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
   Code: kleine JS-Aufgaben)
