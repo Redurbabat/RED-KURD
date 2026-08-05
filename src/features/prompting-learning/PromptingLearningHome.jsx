@@ -19,7 +19,12 @@ import { promptPraxisAufgaben } from './data/promptPraxis.js'
 import { promptLernstand } from './promptProgressStore.js'
 import './promptingLearning.css'
 
-export default function PromptingLearningHome() {
+/**
+ * Der Lernbereich der AI-Sprache (Lektionen, Mitmachen, Training).
+ * @param {{ohneKopf?:boolean}} props — innerhalb der App-Hülle trägt
+ *   PromptingApp bereits Titel und Kennzahlen.
+ */
+export default function PromptingLearningHome({ ohneKopf = false }) {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
@@ -37,7 +42,8 @@ export default function PromptingLearningHome() {
   }
 
   return (
-    <div className="bereich-seite bereich-prompting">
+    <div className={ohneKopf ? 'pl-lernen' : 'bereich-seite bereich-prompting'}>
+      {!ohneKopf && (
       <header className="bereich-kopf">
         <h1>
           <span aria-hidden="true">🤖</span> AI-Sprache lernen
@@ -82,6 +88,7 @@ export default function PromptingLearningHome() {
           <ProgressBar wert={xpHeute} max={TAGESZIEL_XP} label="Tagesziel" klein />
         </div>
       </header>
+      )}
 
       <section className="bereich-abschnitt" aria-labelledby="pl-praxis-titel">
         <h2 id="pl-praxis-titel">Mitmachen: mit Prüfliste schreiben</h2>

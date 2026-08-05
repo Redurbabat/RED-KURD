@@ -23,6 +23,8 @@ export const KEYS = {
   // Schule und Betrieb der Elektro-Lehre: Faecher, Noten, Pruefungen,
   // Berichtsheft. Bleibt lokal, wandert aber in Sicherungen mit.
   electroSchule: 'red-kurd-electro-school-v1',
+  // Werkstatt der AI-Sprache: begonnene Auftraege, Bug-Reports, PR-Haken.
+  promptingWerkstatt: 'red-kurd-prompting-workshop-v1',
   fehlerbuch: 'red-kurd-fehlerbuch-v1',
   // Bewusste Entscheidung „ohne Konto lernen“ — ueberlebt das Neuladen,
   // bleibt aber geraete-lokal (siehe NUR_LOKAL) und wandert nie in Sicherungen.

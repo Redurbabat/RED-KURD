@@ -88,3 +88,86 @@
   background: var(--rk-surface-soft);
   font-size: var(--text-sm);
 }
+
+/* ===== Werkstatt der AI-Sprache (Baukasten, PR-Checkliste) ===== */
+
+.pl-werkstatt,
+.pl-pr,
+.pl-heute-seite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.pl-gross {
+  font-size: var(--text-lg);
+}
+.pl-feld-karte .rk-feld {
+  margin-top: var(--space-1);
+}
+.pl-ergebnis {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(15px, var(--text-sm));
+  line-height: 1.5;
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  border: 1.5px solid var(--rk-border);
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
+  margin-bottom: var(--space-3);
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.pl-werkstatt-knoepfe {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+.pl-checkliste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.pl-check-knopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  text-align: left;
+  font-size: var(--text-sm);
+}
+.pl-check-knopf.an {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.pl-check-kasten {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  border: 2px solid var(--rk-border-strong);
+}
+.pl-check-knopf.an .pl-check-kasten {
+  border-color: var(--rk-green);
+  background: var(--rk-green);
+  color: #ffffff;
+}
+.pl-urteil {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}

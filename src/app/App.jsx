@@ -28,10 +28,10 @@ import { LoadingState } from '../components/common/EmptyState.jsx'
 
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
 const ladeCode = () => import('../features/code-learning/CodeLearningHome.jsx')
-const ladePrompting = () => import('../features/prompting-learning/PromptingLearningHome.jsx')
+const ladePrompting = () => import('../features/prompting-learning/PromptingApp.jsx')
 const ladeElectro = () => import('../features/electro-learning/ElectroApp.jsx')
 const CodeLearningHome = lazy(ladeCode)
-const PromptingLearningHome = lazy(ladePrompting)
+const PromptingApp = lazy(ladePrompting)
 const ElectroApp = lazy(ladeElectro)
 
 import '../styles/tokens.css'
@@ -267,7 +267,7 @@ export default function App() {
       {activeMode !== APP_MODES.LANGUAGE && (
         <Suspense fallback={<LoadingState />}>
           {activeMode === APP_MODES.CODE && <CodeLearningHome />}
-          {activeMode === APP_MODES.PROMPTING && <PromptingLearningHome />}
+          {activeMode === APP_MODES.PROMPTING && <PromptingApp />}
           {activeMode === APP_MODES.ELECTRO && <ElectroApp />}
         </Suspense>
       )}

@@ -423,9 +423,36 @@ Aus der Karte mit Lektionen ist eine App mit eigener Navigation geworden:
   mit Komma), ungültige Note abgelehnt, Countdown, Berichtsheft,
   Live-Rechner, alles nach Reload noch da, mobil ohne Scroll-Leiste.
 
-## Offene nächste Schritte
+## Nachtrag 15: AI-Sprache wird eine Werkstatt (Phase 5)
 
-- AI-Sprache interaktiver (Auftrag-Baukasten, Bug-Report-Generator)
+Auch die AI-Sprache hat jetzt eine eigene Navigation:
+**Heute · Auftrag · Bug-Report · PR prüfen · Lernen** — und drei
+Werkzeuge, mit denen man wirklich arbeitet statt nur liest.
+
+- **Auftrag-Baukasten**: Fünf Felder (Ziel · Ort · Nicht erlaubt ·
+  Prüfung · Arbeitsweise) — beim Tippen entsteht darunter **live der
+  fertige Claude-Code-Auftrag** mit sauberen Überschriften; mehrzeilige
+  Felder werden automatisch zur Aufzählung. Ein Knopf kopiert alles in
+  die Zwischenablage.
+- **Ehrliche Prüfliste**: Sie verlangt ein Ziel mit Substanz (≥ 30
+  Zeichen), Ort, mindestens ein Verbot und eine Prüfung — und sie
+  erkennt leere Wörter: „Mach die Seite besser" fällt durch, mit
+  Begründung.
+- **Bug-Report-Generator**: Was passiert · Erwartet · Nachstellen ·
+  Gerät · Fehlermeldung. Die Schritte werden automatisch nummeriert;
+  ein einzelner Schritt zählt nicht als Anleitung.
+- **PR prüfen**: acht Fragen zum Abhaken mit ehrlicher Empfehlung.
+  Tests/Build und die Verbote sind **Ausschlusskriterien** — fehlen
+  sie, sagt die App „Zurückgeben" statt „fast fertig".
+- Angefangene Texte und Haken überleben das Neuladen (neuer Schlüssel
+  `red-kurd-prompting-workshop-v1`, wandert in Export/Import mit).
+- Logik in `src/core/prompting/promptBaukasten.js` (rein, testbar),
+  Speicher in `werkstattStore.js`.
+- 13 neue Tests (290 gesamt). E2E: 26 Prüfungen grün — Live-Text,
+  „besser"-Erkennung, Kopieren in die Zwischenablage, nummerierte
+  Schritte, Merge-Empfehlung in drei Stufen, Reload-Persistenz, mobil.
+
+## Offene nächste Schritte
 - mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
 - interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
