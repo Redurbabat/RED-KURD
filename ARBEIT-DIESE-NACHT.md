@@ -244,9 +244,39 @@ live sehen. Und die Aufgaben sollen oben stehen."
   unter dem Feld, die Bild-Aufgabe wurde gelöst; alle früheren
   E2E-Suiten (Praxis, Tastatur, Fokus) weiter grün.
 
+## Nachtrag 9: Interaktiver Lektions-Player (Mimo-Stil, mit Live-Vorschau)
+
+Wunsch (mit Screenshots aus Mimo): „Der Code-Bereich soll so sein — aber
+ich sollte die Übungen live sehen: Wenn ich etwas schreibe, sollte ich
+die Ergebnisse direkt sehen."
+
+- **Neuer Lektions-Player** (`src/features/app-mode/LektionPlayer.jsx`):
+  Vollbild, oben ✕ und Fortschrittsbalken, EIN Schritt pro Bildschirm,
+  unten die Rückmeldung („Das ist richtig! Lass uns so weitermachen." /
+  „Nicht ganz — versuch es noch einmal." mit Tipp) und der Weiter-Knopf.
+- **Zwei Schritt-Arten**:
+  - *Wahl*: Frage + Antwortkarten (auch mit Code wie `<p>`), Einsenden,
+    grün/rot-Markierung der Karten.
+  - *Bauen*: Code aus Baustein-Chips zusammentippen (absichtlich
+    durcheinander), mit ↺ und ⌫, „index.html"-Editor — und **anders als
+    bei Mimo: eine Live-Vorschau direkt darunter**, die schon während
+    des Bauens jedes angetippte Teil sofort anzeigt.
+- **Alle 9 HTML-Lektionen sind jetzt interaktiv** (31 Schritte, darunter
+  9 Bau-Schritte mit Vorschau — inkl. der Mimo-Klassiker „Welcher Tag
+  erstellt einen Absatz?" und „Programmiere einen Button mit dem Text
+  Post"). Lektionen ohne Schritte behalten automatisch das Lese-Modal.
+  Abschluss wie gehabt: einmalig +10 XP über den gemeinsamen Lernstand.
+- 4 neue Tests (251 gesamt), darunter eine Tiefensuche, die beweist:
+  Jede Baustein-Menge ergibt in genau erreichbarer Reihenfolge die
+  Lösung — und ist nie schon vorsortiert.
+- E2E (11 Prüfungen grün): falsche Antwort → rot, richtige → grün,
+  Bau-Schritt per Chips gelöst, Vorschau zeigt „Silav!" schon während
+  des Bauens, Abschluss speichert +10 XP.
+
 ## Offene nächste Schritte
 
+- interaktive Schritte für CSS- und JavaScript-Pfad (Muster steht)
+- Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
   Code: kleine JS-Aufgaben)
-- mehr Lektionen je Pfad (Elektro: Motoren; Code: React)
 - gemeinsame Wochenübersicht über alle Bereiche
