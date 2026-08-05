@@ -196,6 +196,25 @@ Tastatur wieder weg."
   Buchstaben kommen an, Fokus bleibt im Feld — mit Gerätetastatur, mit
   Code-Tastatur und im Übungs-Notizfeld.
 
+## Nachtrag 7: Mehr Lerninhalte für „Code lernen"
+
+- **10 neue Lektionen** (43 gesamt im Code-Bereich):
+  - HTML: Tabellen (table/tr/th/td), Audio und Video einbinden
+  - CSS: position sticky/fixed (Bottom-Navigation!), Dunkelmodus mit
+    CSS-Variablen — erklärt am echten tokens.css-Muster der App
+  - JavaScript: Speichern im Browser (localStorage, JSON) — erklärt am
+    echten Speicher-Muster der App; Fehler finden mit console.log
+  - TypeScript: Funktionen mit Typen · GitHub: Issues ·
+    VS Code: Erweiterungen/Format on Save · Mini-Projekt: Visitenkarten-Seite
+- **2 neue Mitmach-Aufgaben** (8 gesamt): „Eine Liste bauen" (ul mit
+  drei li) und „Einen Link erstellen" (a mit https-Adresse und klarem
+  Linktext). Die Code-Tastatur hat dafür drei neue Bausteine:
+  `<ul>…</ul>`, `<li>…</li>`, `<a href="…">`.
+- Tests decken alles automatisch mit ab (246 grün); E2E: beide neue
+  Aufgaben sichtbar, neue Lektionen in den aufgeklappten Pfaden,
+  Listen-Aufgabe komplett nur mit den neuen Tastatur-Bausteinen gelöst
+  (+20 XP).
+
 ## Offene nächste Schritte
 
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;

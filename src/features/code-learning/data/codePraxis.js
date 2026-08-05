@@ -115,6 +115,42 @@ export const codePraxisAufgaben = [
     ],
     musterloesung: '<header>\n  <h1>Meine Seite</h1>\n</header>\n<main>\n  <p>Hier steht der Inhalt.</p>\n</main>\n<footer>Von Redur</footer>',
   },
+  {
+    id: 'praxis-liste',
+    art: 'html',
+    title: 'Eine Liste bauen',
+    topic: 'HTML',
+    estimatedMinutes: 8,
+    description: 'Drei Einträge mit Punkten davor — wie in jeder echten App.',
+    auftrag:
+      'Baue eine ungeordnete Liste (ul) mit mindestens drei Einträgen (li) — zum Beispiel Sprachen, die du sprichst oder lernst. Die Vorschau zeigt die Punkte sofort.',
+    startCode: '<h2>Meine Sprachen</h2>\n<!-- Hier fehlt die Liste -->\n',
+    tipp: '<ul>\n  <li>Erster Eintrag</li>\n</ul> — auf der <>-Ebene der Code-Tastatur liegen ul und li als Bausteine bereit.',
+    checks: [
+      { id: 'ul', text: 'Es gibt eine Liste <ul>…</ul>', pruefe: (c) => /<ul[\s>][\s\S]*<\/ul>/i.test(c) },
+      { id: 'drei', text: 'Mindestens drei Einträge <li>', pruefe: (c) => (c.match(/<li[\s>]/gi) || []).length >= 3 },
+      { id: 'inhalt', text: 'Die Einträge sind nicht leer', pruefe: (c) => /<li[^>]*>\s*[^<\s][\s\S]*?<\/li>/i.test(c) },
+    ],
+    musterloesung: '<h2>Meine Sprachen</h2>\n<ul>\n  <li>Kurmancî</li>\n  <li>Deutsch</li>\n  <li>Englisch</li>\n</ul>',
+  },
+  {
+    id: 'praxis-link',
+    art: 'html',
+    title: 'Einen Link erstellen',
+    topic: 'HTML',
+    estimatedMinutes: 8,
+    description: 'Ein Link mit Ziel und klarem Text — das a-Element.',
+    auftrag:
+      'Erstelle einen Link (a) auf eine Seite deiner Wahl: href bekommt eine vollständige Adresse mit https://, und der Linktext sagt klar, wohin es geht. (In der Vorschau ist Klicken aus Sicherheitsgründen aus — der Link wird trotzdem geprüft.)',
+    startCode: '<h1>Gute Seiten</h1>\n<!-- Hier fehlt der Link -->\n',
+    tipp: '<a href="https://…">Klarer Linktext</a> — „hier klicken" ist ein schlechter Linktext.',
+    checks: [
+      { id: 'a', text: 'Es gibt einen Link <a>…</a>', pruefe: (c) => /<a[\s>][\s\S]*<\/a>/i.test(c) },
+      { id: 'https', text: 'href beginnt mit https://', pruefe: (c) => /<a[^>]*href\s*=\s*["']https:\/\//i.test(c) },
+      { id: 'text', text: 'Der Link hat einen Text', pruefe: (c) => /<a[^>]*>\s*[^<\s][\s\S]*?<\/a>/i.test(c) },
+    ],
+    musterloesung: '<h1>Gute Seiten</h1>\n<a href="https://de.wikipedia.org">Wikipedia auf Deutsch</a>',
+  },
 ]
 
 // iOS-Tastaturen machen aus geraden Anfuehrungszeichen gern „schlaue"
