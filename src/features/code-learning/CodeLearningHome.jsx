@@ -15,7 +15,7 @@ import CodeLearningProgress from './CodeLearningProgress.jsx'
 import Fehlerbuch from './Fehlerbuch.jsx'
 import { codeLearningPaths } from './data/codeLessons.js'
 import { codeExercises } from './data/codeExercises.js'
-import { codePraxisAufgaben } from './data/codePraxis.js'
+import { codeGrunduebungen, codePraxisAufgaben } from './data/codePraxis.js'
 import { codeLernstand } from './codeProgressStore.js'
 import './codeLearning.css'
 
@@ -31,10 +31,40 @@ function naechsteLektionen(anzahl = 3) {
   return aus
 }
 
+/** Eine Mitmach-Aufgabe als Karte — für Grundübungen und Aufbau gleich. */
+function PraxisKarte({ aufgabe, oeffnen }) {
+  const erledigt = codeLernstand.istErledigt(aufgabe.id)
+  return (
+    <Card className="cl-uebung">
+      <div className="cl-uebung-kopf">
+        <h3>{aufgabe.title}</h3>
+        {erledigt ? (
+          <Badge ton="gruen" icon="haken">
+            Erledigt
+          </Badge>
+        ) : (
+          <Badge ton="blau">{aufgabe.topic}</Badge>
+        )}
+      </div>
+      <p className="cl-pfad-text">{aufgabe.description}</p>
+      <p className="cl-uebung-meta">
+        <Icon name="uhr" groesse={14} /> ca. {aufgabe.estimatedMinutes} Min · mit Live-Vorschau
+      </p>
+      <PrimaryButton art="blau" icon="play" onClick={() => oeffnen(aufgabe)}>
+        {erledigt ? 'Ansehen' : 'Loslegen'}
+      </PrimaryButton>
+    </Card>
+  )
+}
+
 export default function CodeLearningHome() {
   useLernstand()
   const [aktiveUebung, setAktiveUebung] = useState(null)
   const [aktivePraxis, setAktivePraxis] = useState(null)
+
+  // Grundübungen zuerst, danach die größeren Aufgaben.
+  const aufbauAufgaben = codePraxisAufgaben.filter((a) => a.stufe !== 'grund')
+  const geschaffteGrund = codeGrunduebungen.filter((a) => codeLernstand.istErledigt(a.id)).length
   const heute = naechsteLektionen(3)
   const alleLektionen = codeLearningPaths.flatMap((p) => p.lessons)
   const gesamt = codeLernstand.fortschrittProzent(alleLektionen)
@@ -88,34 +118,30 @@ export default function CodeLearningHome() {
         </div>
       </header>
 
+      <section className="bereich-abschnitt" aria-labelledby="cl-grund-titel">
+        <h2 id="cl-grund-titel">Grundübungen: Schritt für Schritt</h2>
+        <p className="cl-pfad-text">
+          Ganz von vorn — eine Sache pro Übung. Wer hier durch ist, kann die Bausteine.
+        </p>
+        <p className="cl-uebung-meta">
+          <Icon name="haken" groesse={14} /> {geschaffteGrund} von {codeGrunduebungen.length}{' '}
+          geschafft
+        </p>
+        <div className="bereich-raster">
+          {codeGrunduebungen.map((aufgabe) => (
+            <PraxisKarte key={aufgabe.id} aufgabe={aufgabe} oeffnen={setAktivePraxis} />
+          ))}
+        </div>
+      </section>
+
       <section className="bereich-abschnitt" aria-labelledby="cl-praxis-titel">
         <h2 id="cl-praxis-titel">Mitmachen: direkt bauen</h2>
         <p className="cl-pfad-text">
-          Schreib den Code hier in der App — die Vorschau zeigt sofort das Ergebnis, die
-          Prüfliste sagt dir, wann alles stimmt.
+          Größere Aufgaben, die die Bausteine zusammensetzen — mit Live-Vorschau und Prüfliste.
         </p>
         <div className="bereich-raster">
-          {codePraxisAufgaben.map((aufgabe) => (
-            <Card key={aufgabe.id} className="cl-uebung">
-              <div className="cl-uebung-kopf">
-                <h3>{aufgabe.title}</h3>
-                {codeLernstand.istErledigt(aufgabe.id) ? (
-                  <Badge ton="gruen" icon="haken">
-                    Erledigt
-                  </Badge>
-                ) : (
-                  <Badge ton="blau">{aufgabe.topic}</Badge>
-                )}
-              </div>
-              <p className="cl-pfad-text">{aufgabe.description}</p>
-              <p className="cl-uebung-meta">
-                <Icon name="uhr" groesse={14} /> ca. {aufgabe.estimatedMinutes} Min · mit
-                Live-Vorschau
-              </p>
-              <PrimaryButton art="blau" icon="play" onClick={() => setAktivePraxis(aufgabe)}>
-                {codeLernstand.istErledigt(aufgabe.id) ? 'Ansehen' : 'Loslegen'}
-              </PrimaryButton>
-            </Card>
+          {aufbauAufgaben.map((aufgabe) => (
+            <PraxisKarte key={aufgabe.id} aufgabe={aufgabe} oeffnen={setAktivePraxis} />
           ))}
         </div>
       </section>

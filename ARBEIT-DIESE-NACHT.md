@@ -545,6 +545,30 @@ Test besteht darauf, dass **jede** Lektion Schritte hat:
   +20 XP, HTML besteht die JS-Aufgabe nicht, Wegkarte in Elektro und
   AI-Sprache samt gesperrten Knoten.
 
+## Nachtrag 20: Zwölf Grundübungen — der Einstieg ganz von vorn
+
+Wunsch: „mehr Grundübungen für den Code-Bereich."
+
+- **Neuer erster Abschnitt „Grundübungen: Schritt für Schritt"** — steht
+  ganz oben, mit Zähler („3 von 12 geschafft"). Die größeren Aufgaben
+  („Mitmachen: direkt bauen") folgen darunter.
+- **Eine Sache pro Übung**, aufeinander aufbauend:
+  1. Eine Überschrift schreiben · 2. Zwei Absätze · 3. Ein Wort
+  hervorheben (strong INNERHALB des Absatzes) · 4. Dem Text eine Farbe
+  geben (die erste CSS-Regel) · 5. Die Seite einfärben (body) ·
+  6. Text mittig stellen · 7. Größer schreiben (mindestens 18 px —
+  die iPhone-Regel) · 8. Einen Rahmen ziehen · 9. Luft schaffen
+  (padding) · 10. Runde Ecken — aus dem Kasten wird eine Karte ·
+  11. Deine erste JavaScript-Zeile · 12. Rechnen mit Variablen.
+  Die Übungen 8–10 bauen aufeinander auf: derselbe Kasten wird Schritt
+  für Schritt zur Karte.
+- Die Prüfungen sind ehrlich streng: leere Absätze zählen nicht, eine
+  Schriftgröße unter 18 px besteht nicht, und bei „hervorheben" muss das
+  strong wirklich im Absatz stehen.
+- E2E: 19 Prüfungen grün — Abschnitt steht oben, Zähler zählt hoch,
+  Farbe wirkt wirklich (per Browser gemessen), „Hallo!" erscheint aus
+  eigenem JavaScript, 7 + 5 wird wirklich gerechnet.
+
 ## Offene nächste Schritte
 - Wegkarte auch in der Sprach-App, falls sie sich bewährt
 - weitere Lektionsinhalte nach Bedarf

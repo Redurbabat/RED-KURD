@@ -5,7 +5,256 @@
 // jede mit einer pruefe-Funktion) und musterloesung (besteht ALLE Checks —
 // das sichern die Tests ab).
 
+// ===== Grundübungen: die allerersten Schritte =====
+// Winzige Aufgaben, eine Sache pro Aufgabe. Wer hier durch ist, kann die
+// Bausteine — die groesseren Aufgaben weiter unten setzen sie zusammen.
+// `stufe: 'grund'` sortiert sie in der Oberflaeche nach vorn.
+
+export const codeGrunduebungen = [
+  {
+    id: 'grund-ueberschrift',
+    art: 'html',
+    stufe: 'grund',
+    title: '1 · Eine Überschrift schreiben',
+    topic: 'HTML',
+    estimatedMinutes: 3,
+    description: 'Der allererste Schritt: ein Element mit Anfang und Ende.',
+    auftrag:
+      'Schreib eine große Überschrift mit deinem Namen. Ein Element hat immer einen Anfang <h1> und ein Ende </h1> — dazwischen steht der Text.',
+    startCode: '',
+    tipp: '<h1>Dein Name</h1>',
+    checks: [
+      { id: 'h1', text: 'Eine Überschrift <h1>…</h1>', pruefe: (c) => /<h1[\s>][\s\S]*<\/h1>/i.test(c) },
+      { id: 'text', text: 'Zwischen Anfang und Ende steht Text', pruefe: (c) => /<h1[^>]*>\s*[^<\s][\s\S]*?<\/h1>/i.test(c) },
+    ],
+    musterloesung: '<h1>Redur</h1>',
+  },
+  {
+    id: 'grund-absaetze',
+    art: 'html',
+    stufe: 'grund',
+    title: '2 · Zwei Absätze',
+    topic: 'HTML',
+    estimatedMinutes: 4,
+    description: 'Jeder Gedanke bekommt seinen eigenen Absatz.',
+    auftrag:
+      'Schreib zwei Absätze untereinander: einen über dich, einen über das, was du lernen willst. Jeder Absatz ist ein eigenes <p>-Element.',
+    startCode: '<h1>Über mich</h1>\n',
+    tipp: '<p>Erster Satz.</p>\n<p>Zweiter Satz.</p>',
+    checks: [
+      { id: 'zwei', text: 'Zwei Absätze <p>', pruefe: (c) => (c.match(/<p[\s>]/gi) || []).length >= 2 },
+      { id: 'gefuellt', text: 'Beide haben Text', pruefe: (c) => (c.match(/<p[^>]*>\s*[^<\s]/gi) || []).length >= 2 },
+    ],
+    musterloesung: '<h1>Über mich</h1>\n<p>Ich heiße Redur.</p>\n<p>Ich lerne Code.</p>',
+  },
+  {
+    id: 'grund-fett',
+    art: 'html',
+    stufe: 'grund',
+    title: '3 · Ein Wort hervorheben',
+    topic: 'HTML',
+    estimatedMinutes: 4,
+    description: 'Elemente dürfen ineinander stecken.',
+    auftrag:
+      'Schreib einen Absatz und hebe darin EIN wichtiges Wort mit <strong> hervor. Das strong-Element steht dabei INNERHALB des Absatzes.',
+    startCode: '<p>Lernen macht Spaß.</p>\n',
+    tipp: '<p>Lernen macht <strong>Spaß</strong>.</p>',
+    checks: [
+      { id: 'p', text: 'Es gibt einen Absatz', pruefe: (c) => /<p[\s>][\s\S]*<\/p>/i.test(c) },
+      { id: 'strong', text: 'Ein <strong> mit Text', pruefe: (c) => /<strong[^>]*>\s*[^<\s][\s\S]*?<\/strong>/i.test(c) },
+      {
+        id: 'innen',
+        text: 'Das strong steht INNERHALB des Absatzes',
+        pruefe: (c) => /<p[^>]*>[\s\S]*<strong[\s>][\s\S]*<\/strong>[\s\S]*<\/p>/i.test(c),
+      },
+    ],
+    musterloesung: '<p>Lernen macht <strong>Spaß</strong>.</p>',
+  },
+  {
+    id: 'grund-farbe',
+    art: 'html',
+    stufe: 'grund',
+    title: '4 · Dem Text eine Farbe geben',
+    topic: 'CSS',
+    estimatedMinutes: 5,
+    description: 'Deine erste CSS-Regel — im style-Block.',
+    auftrag:
+      'Gib dem Absatz eine Farbe. Die Regel gehört in den style-Block: erst der Selektor (p), dann in geschweiften Klammern die Eigenschaft color mit einem Wert.',
+    startCode: '<style>\n\n</style>\n<p>Silav!</p>',
+    tipp: 'p { color: crimson; } — Doppelpunkt hinter der Eigenschaft, Semikolon am Ende.',
+    checks: [
+      { id: 'regel', text: 'Eine Regel p { … }', pruefe: (c) => /p\s*\{[\s\S]*?\}/i.test(c) },
+      { id: 'color', text: 'color ist gesetzt', pruefe: (c) => /color\s*:\s*[^;\s}]+/i.test(c) },
+    ],
+    musterloesung: '<style>\np { color: crimson; }\n</style>\n<p>Silav!</p>',
+  },
+  {
+    id: 'grund-hintergrund',
+    art: 'html',
+    stufe: 'grund',
+    title: '5 · Die Seite einfärben',
+    topic: 'CSS',
+    estimatedMinutes: 5,
+    description: 'Der ganzen Seite einen Hintergrund geben.',
+    auftrag:
+      'Gib der ganzen Seite eine Hintergrundfarbe. Der Selektor für die ganze Seite heißt body.',
+    startCode: '<style>\n\n</style>\n<h1>Meine Seite</h1>',
+    tipp: 'body { background: #e3f5f6; }',
+    checks: [
+      { id: 'body', text: 'Eine Regel body { … }', pruefe: (c) => /body\s*\{[\s\S]*?\}/i.test(c) },
+      { id: 'background', text: 'background ist gesetzt', pruefe: (c) => /background[^:]*:\s*[^;\s}]+/i.test(c) },
+    ],
+    musterloesung: '<style>\nbody { background: #e3f5f6; }\n</style>\n<h1>Meine Seite</h1>',
+  },
+  {
+    id: 'grund-mittig',
+    art: 'html',
+    stufe: 'grund',
+    title: '6 · Text mittig stellen',
+    topic: 'CSS',
+    estimatedMinutes: 4,
+    description: 'Eine Eigenschaft, ein sichtbarer Unterschied.',
+    auftrag: 'Stell die Überschrift in die Mitte. Die Eigenschaft dafür heißt text-align.',
+    startCode: '<style>\nh1 {\n\n}\n</style>\n<h1>Mittig!</h1>',
+    tipp: 'text-align: center;',
+    checks: [
+      { id: 'mitte', text: 'text-align: center ist gesetzt', pruefe: (c) => /text-align\s*:\s*center/i.test(c) },
+      { id: 'h1', text: 'Es gibt eine Überschrift', pruefe: (c) => /<h1[\s>][\s\S]*<\/h1>/i.test(c) },
+    ],
+    musterloesung: '<style>\nh1 {\n  text-align: center;\n}\n</style>\n<h1>Mittig!</h1>',
+  },
+  {
+    id: 'grund-groesse',
+    art: 'html',
+    stufe: 'grund',
+    title: '7 · Größer schreiben',
+    topic: 'CSS',
+    estimatedMinutes: 4,
+    description: 'Schriftgröße in Pixeln — mindestens 16, damit das iPhone nicht zoomt.',
+    auftrag:
+      'Mach den Absatz größer: mindestens 18 Pixel. Die Eigenschaft heißt font-size, der Wert bekommt die Einheit px.',
+    startCode: '<style>\np {\n\n}\n</style>\n<p>Lies mich!</p>',
+    tipp: 'font-size: 20px;',
+    checks: [
+      {
+        id: 'groesse',
+        text: 'font-size mit mindestens 18px',
+        pruefe: (c) => {
+          const treffer = c.match(/font-size\s*:\s*(\d+)px/i)
+          return !!treffer && Number(treffer[1]) >= 18
+        },
+      },
+    ],
+    musterloesung: '<style>\np {\n  font-size: 20px;\n}\n</style>\n<p>Lies mich!</p>',
+  },
+  {
+    id: 'grund-rahmen',
+    art: 'html',
+    stufe: 'grund',
+    title: '8 · Einen Rahmen ziehen',
+    topic: 'CSS',
+    estimatedMinutes: 5,
+    description: 'Ein Kasten mit Rand — der Anfang jeder Karte.',
+    auftrag:
+      'Gib dem Kasten einen sichtbaren Rahmen. Die Eigenschaft border braucht drei Angaben: Dicke, Art und Farbe.',
+    startCode: '<style>\n.kasten {\n\n}\n</style>\n<div class="kasten">Ich bin ein Kasten</div>',
+    tipp: 'border: 2px solid teal;',
+    checks: [
+      { id: 'border', text: 'border mit Dicke, Art und Farbe', pruefe: (c) => /border\s*:\s*\d+px\s+\w+\s+[^;\s}]+/i.test(c) },
+      { id: 'kasten', text: 'Der Kasten ist noch da', pruefe: (c) => /class\s*=\s*["']kasten["']/i.test(c) },
+    ],
+    musterloesung:
+      '<style>\n.kasten {\n  border: 2px solid teal;\n}\n</style>\n<div class="kasten">Ich bin ein Kasten</div>',
+  },
+  {
+    id: 'grund-luft',
+    art: 'html',
+    stufe: 'grund',
+    title: '9 · Luft schaffen',
+    topic: 'CSS',
+    estimatedMinutes: 5,
+    description: 'padding ist die Luft INNEN zwischen Rand und Text.',
+    auftrag:
+      'Der Text klebt am Rahmen. Gib dem Kasten Innenabstand mit padding — probier ruhig verschiedene Werte, die Vorschau zeigt es sofort.',
+    startCode:
+      '<style>\n.kasten {\n  border: 2px solid teal;\n\n}\n</style>\n<div class="kasten">Ich brauche Luft</div>',
+    tipp: 'padding: 16px;',
+    checks: [
+      { id: 'padding', text: 'padding ist gesetzt', pruefe: (c) => /padding\s*:\s*\d+/i.test(c) },
+      { id: 'border', text: 'Der Rahmen bleibt', pruefe: (c) => /border\s*:/i.test(c) },
+    ],
+    musterloesung:
+      '<style>\n.kasten {\n  border: 2px solid teal;\n  padding: 16px;\n}\n</style>\n<div class="kasten">Ich brauche Luft</div>',
+  },
+  {
+    id: 'grund-runde-ecken',
+    art: 'html',
+    stufe: 'grund',
+    title: '10 · Runde Ecken',
+    topic: 'CSS',
+    estimatedMinutes: 4,
+    description: 'Der letzte Schliff — aus dem Kasten wird eine Karte.',
+    auftrag: 'Mach die Ecken des Kastens rund. Die Eigenschaft heißt border-radius.',
+    startCode:
+      '<style>\n.kasten {\n  border: 2px solid teal;\n  padding: 16px;\n\n}\n</style>\n<div class="kasten">Eine Karte</div>',
+    tipp: 'border-radius: 12px;',
+    checks: [
+      { id: 'radius', text: 'border-radius ist gesetzt', pruefe: (c) => /border-radius\s*:\s*\d+/i.test(c) },
+      { id: 'padding', text: 'Luft und Rahmen bleiben', pruefe: (c) => /padding\s*:/i.test(c) && /border\s*:/i.test(c) },
+    ],
+    musterloesung:
+      '<style>\n.kasten {\n  border: 2px solid teal;\n  padding: 16px;\n  border-radius: 12px;\n}\n</style>\n<div class="kasten">Eine Karte</div>',
+  },
+  {
+    id: 'grund-js-zeigen',
+    art: 'html',
+    stufe: 'grund',
+    skript: true,
+    huelle: '<p id="aus">(noch leer)</p>\n<script>{{code}}</script>',
+    title: '11 · Deine erste JavaScript-Zeile',
+    topic: 'JavaScript',
+    estimatedMinutes: 6,
+    description: 'Ein Element holen und seinen Text ändern — mehr ist es nicht.',
+    auftrag:
+      'Schreib eine einzige Zeile JavaScript: Hol den Absatz mit der id „aus" und setz seinen textContent auf einen Text deiner Wahl.',
+    startCode: '',
+    tipp: "document.querySelector('#aus').textContent = 'Hallo!'",
+    checks: [
+      {
+        id: 'holen',
+        text: "Das Element holen: document.querySelector('#aus')",
+        pruefe: (c) => /document\.querySelector\(\s*['"]#aus['"]\s*\)/.test(c),
+      },
+      { id: 'setzen', text: 'textContent bekommt einen Text', pruefe: (c) => /\.textContent\s*=\s*['"][^'"]+['"]/.test(c) },
+    ],
+    musterloesung: "document.querySelector('#aus').textContent = 'Hallo!'",
+  },
+  {
+    id: 'grund-js-rechnen',
+    art: 'html',
+    stufe: 'grund',
+    skript: true,
+    huelle: '<p id="aus">(noch leer)</p>\n<script>{{code}}</script>',
+    title: '12 · Rechnen mit Variablen',
+    topic: 'JavaScript',
+    estimatedMinutes: 8,
+    description: 'Zwei Zahlen anlegen, addieren und das Ergebnis zeigen.',
+    auftrag:
+      'Leg zwei Variablen mit Zahlen an, addiere sie und zeig das Ergebnis im Absatz. Die Vorschau rechnet wirklich — probier andere Zahlen aus!',
+    startCode: '// const a = 7\n// const b = 5\n',
+    tipp: "const a = 7\nconst b = 5\ndocument.querySelector('#aus').textContent = a + b",
+    checks: [
+      { id: 'zwei', text: 'Zwei Variablen mit Zahlen', pruefe: (c) => (c.match(/(const|let)\s+\w+\s*=\s*\d+/g) || []).length >= 2 },
+      { id: 'plus', text: 'Sie werden addiert (mit +)', pruefe: (c) => /\w+\s*\+\s*\w+/.test(c) },
+      { id: 'zeigen', text: 'Das Ergebnis landet im Absatz', pruefe: (c) => /#aus['"]\s*\)[\s\S]*\.textContent\s*=/.test(c) },
+    ],
+    musterloesung:
+      "const a = 7\nconst b = 5\ndocument.querySelector('#aus').textContent = a + b",
+  },
+]
+
 export const codePraxisAufgaben = [
+  ...codeGrunduebungen,
   {
     id: 'praxis-erste-seite',
     art: 'html',
