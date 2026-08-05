@@ -386,10 +386,45 @@ innerhalb von Sprache lernen."
   Code-App ohne Abenteuer-Inhalte) + die 36 Multi-App-Prüfungen weiter
   grün.
 
+## Nachtrag 14: Elektro-Lehre wird eine echte App (Phase 3)
+
+Aus der Karte mit Lektionen ist eine App mit eigener Navigation geworden:
+**Heute · Noten · Prüfung · Bericht · Formeln · Lernen**.
+
+- **Heute**: nächste Prüfung mit Countdown („noch 3 Tage"), Notenschnitt
+  mit Ampel, offene Berichtsheft-Wochen, Formel des Tages, Regel des
+  Tages aus den fünf Sicherheitsregeln.
+- **Noten**: acht Fächer als Startbestand (Elektrotechnik, Mathematik,
+  Deutsch, Allgemeinbildung, Berufskunde, Zeichnen/Schema,
+  Werkstatt/Praxis, Sicherheit), eigene Fächer ergänzbar. Noten mit
+  Thema, **Gewicht** und Datum; gewichteter Schnitt, beste/schlechteste
+  Note, Trend und der **Ziel-Rechner**: „Zielnote 5 → nächste Prüfung
+  mindestens 6" (und ehrlich „mit einer Prüfung nicht mehr erreichbar",
+  wenn es rechnerisch nicht geht).
+- **Notenskala umschaltbar**: Schweiz (6 = beste) oder Deutschland
+  (1 = beste). Alle Rechnungen fragen die Skala — bestanden, beste Note
+  und Trend drehen sich mit.
+- **Prüfungen**: Titel, Fach, Datum, Themen, Stand (Nicht begonnen · Am
+  Lernen · Wiederholen · Bereit · Erledigt), sortiert nach Datum.
+- **Berichtsheft**: Woche, Zeitraum, Tätigkeiten, Gelerntes, Status
+  (Offen · Geschrieben · Kontrolliert · Abgegeben), neueste oben.
+- **Formeln & Rechner**: Ohmsches Gesetz (alle drei Richtungen),
+  Leistung, Energie + Stromkosten, Spannungsfall (Wechsel-/Drehstrom,
+  Kupfer/Aluminium, in Volt und Prozent), Formelsammlung und die fünf
+  Sicherheitsregeln in der richtigen Reihenfolge.
+- **Lernen**: die bisherigen Lektionen, Rechen-Aufgaben und Übungen —
+  unverändert, nur ohne doppelten Kopf.
+- Technik: reine Rechenlogik in `src/core/elektro/` (notenRechnung.js,
+  formeln.js), Speicher in `schuleStore.js` über den neuen Schlüssel
+  `red-kurd-electro-school-v1` — wandert automatisch in Export/Import.
+- 20 neue Tests (277 gesamt): Gewichtung, Ziel-Rechner in beide
+  Skalen-Richtungen, Trend, Spannungsfall gegen Handrechnung, kaputter
+  Speicherstand. E2E: 30 Prüfungen grün — Note eintragen (auch „5,5"
+  mit Komma), ungültige Note abgelehnt, Countdown, Berichtsheft,
+  Live-Rechner, alles nach Reload noch da, mobil ohne Scroll-Leiste.
+
 ## Offene nächste Schritte
 
-- Elektro-Lehre-MVP ausbauen (Fächer, Noten, Prüfungen, Berichtsheft,
-  Formel-Rechner — Phase 3 des Auftrags)
 - AI-Sprache interaktiver (Auftrag-Baukasten, Bug-Report-Generator)
 - mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
 - interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte

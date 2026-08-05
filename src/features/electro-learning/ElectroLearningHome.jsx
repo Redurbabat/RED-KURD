@@ -18,7 +18,12 @@ import { electroPraxisAufgaben } from './data/electroPraxis.js'
 import { electroLernstand } from './electroProgressStore.js'
 import './electroLearning.css'
 
-export default function ElectroLearningHome() {
+/**
+ * Der Lernbereich der Elektro-App (Lektionen, Rechnen, Übungen).
+ * @param {{ohneKopf?:boolean}} props — innerhalb der App-Hülle trägt
+ *   ElectroApp bereits Titel und Kennzahlen; dann bleibt der Kopf hier weg.
+ */
+export default function ElectroLearningHome({ ohneKopf = false }) {
   useLernstand()
   const [aktiveLektion, setAktiveLektion] = useState(null)
   const [aktiveUebung, setAktiveUebung] = useState(null)
@@ -36,7 +41,8 @@ export default function ElectroLearningHome() {
   }
 
   return (
-    <div className="bereich-seite bereich-electro">
+    <div className={ohneKopf ? 'el-lernen' : 'bereich-seite bereich-electro'}>
+      {!ohneKopf && (
       <header className="bereich-kopf">
         <h1>
           <span aria-hidden="true">⚡</span> Elektro-Lehre
@@ -84,6 +90,7 @@ export default function ElectroLearningHome() {
           <ProgressBar wert={xpHeute} max={TAGESZIEL_XP} label="Tagesziel" klein />
         </div>
       </header>
+      )}
 
       <section className="bereich-abschnitt" aria-labelledby="el-praxis-titel">
         <h2 id="el-praxis-titel">Rechnen: direkt prüfen</h2>
