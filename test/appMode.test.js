@@ -132,6 +132,55 @@ test('die Prompting-Lektionen sind vollstaendig und traegen echte Inhalte', () =
   }
 })
 
+// ===== Elektro-Daten =====
+
+const { electroLessons, electroGruppen } = await import(
+  '../src/features/electro-learning/data/electroLessons.js'
+)
+const { electroExercises } = await import(
+  '../src/features/electro-learning/data/electroExercises.js'
+)
+
+test('die Elektro-Lektionen sind vollstaendig, gruppiert und sicherheitsbewusst', () => {
+  const ids = electroLessons.map((l) => l.id)
+  assert.equal(new Set(ids).size, ids.length)
+  assert.ok(electroLessons.length >= 9, 'mindestens neun Lektionen')
+  for (const l of electroLessons) {
+    assert.ok(l.title && l.description, l.id)
+    assert.ok(electroGruppen.includes(l.gruppe), `${l.id}: unbekannte Gruppe ${l.gruppe}`)
+    assert.ok(Array.isArray(l.inhalt) && l.inhalt.length >= 2, `${l.id}: Inhalt fehlt`)
+    assert.ok(l.beispiel && l.merke, `${l.id}: Beispiel/Merksatz fehlt`)
+    assert.ok(!('status' in l), `${l.id}: Status kommt aus dem Lernstand`)
+  }
+  // Die 5 Sicherheitsregeln muessen als eigene Lektion existieren.
+  const regeln = electroLessons.find((l) => l.id === 'el-5regeln')
+  assert.ok(regeln, 'Lektion zu den 5 Sicherheitsregeln fehlt')
+  assert.ok(regeln.beispiel.includes('Freischalten'))
+  assert.ok(regeln.beispiel.includes('Spannungsfreiheit'))
+})
+
+test('jede Elektro-Uebung traegt alle Pflichtfelder', () => {
+  const ids = electroExercises.map((u) => u.id)
+  assert.equal(new Set(ids).size, ids.length)
+  assert.ok(electroExercises.length >= 6)
+  for (const u of electroExercises) {
+    assert.ok(u.title && u.topic && u.difficulty && u.description && u.task, u.id)
+    assert.ok(u.estimatedMinutes > 0, u.id)
+  }
+})
+
+test('der Export nimmt die Lernstaende aller Bereiche mit', async () => {
+  const { schreibe, exportiereSpeicherstand } = await import('../src/core/storage.js')
+  schreibe(KEYS.codeFortschritt, { version: 1, xp: 20, erledigt: { 'html-1': '2026-08-05' } })
+  schreibe(KEYS.electroFortschritt, { version: 1, xp: 10, erledigt: {} })
+  schreibe(KEYS.fehlerbuch, { version: 1, naechsteId: 2, eintraege: [] })
+  const sicherung = exportiereSpeicherstand()
+  assert.equal(sicherung.codeFortschritt.xp, 20)
+  assert.equal(sicherung.electroFortschritt.xp, 10)
+  assert.ok(sicherung.fehlerbuch, 'auch das Fehlerbuch wandert in die Sicherung')
+  assert.ok(sicherung.appBereich, 'der aktive Bereich ebenfalls')
+})
+
 test('jede Prompting-Uebung traegt alle Pflichtfelder', () => {
   const ids = promptExercises.map((u) => u.id)
   assert.equal(new Set(ids).size, ids.length)

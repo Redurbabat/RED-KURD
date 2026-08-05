@@ -16,6 +16,7 @@ export const KEYS = {
   // Lernstand der neuen Bereiche — getrennt vom Sprach-Lernstand.
   codeFortschritt: 'red-kurd-code-progress-v1',
   promptingFortschritt: 'red-kurd-prompting-progress-v1',
+  electroFortschritt: 'red-kurd-electro-progress-v1',
   fehlerbuch: 'red-kurd-fehlerbuch-v1',
   // Bewusste Entscheidung „ohne Konto lernen“ — ueberlebt das Neuladen,
   // bleibt aber geraete-lokal (siehe NUR_LOKAL) und wandert nie in Sicherungen.

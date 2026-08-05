@@ -84,3 +84,19 @@ test('leere Lektionslisten ergeben 0 Prozent statt Division durch null', () => {
   assert.equal(stand.fortschrittProzent([]), 0)
   assert.deepEqual(stand.statusFuer([]), {})
 })
+
+test('Uebungen geben ihre eigenen XP — und auch nur einmal', () => {
+  const stand = frisch('test-bereich-6')
+  assert.equal(stand.schliesseAb('uebung-1', 15), 15)
+  assert.equal(stand.schliesseAb('uebung-1', 15), 0)
+  assert.equal(stand.xpHeute(), 15)
+})
+
+test('Notizen werden gespeichert und ueberleben eine frische Instanz', () => {
+  const stand = frisch('test-bereich-7')
+  assert.equal(stand.notiz('uebung-1'), '')
+  stand.setzeNotiz('uebung-1', 'Mein erster Prompt-Entwurf')
+  assert.equal(stand.notiz('uebung-1'), 'Mein erster Prompt-Entwurf')
+  const zweite = erstelleBereichsLernstand('test-bereich-7')
+  assert.equal(zweite.notiz('uebung-1'), 'Mein erster Prompt-Entwurf')
+})

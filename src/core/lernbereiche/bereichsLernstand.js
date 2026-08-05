@@ -11,10 +11,13 @@ import { heute } from '../progress/scheduler.js'
 import { aktualisiereSerie } from '../progress/gamification.js'
 
 export const XP_JE_LEKTION = 10
+export const XP_JE_UEBUNG = 15
+export const TAGESZIEL_XP = 30
 
 const LEER = {
   version: 1,
-  erledigt: {}, // { lektionsId: 'JJJJ-MM-TT' }
+  erledigt: {}, // { lektionsId/uebungsId: 'JJJJ-MM-TT' }
+  notizen: {}, // { uebungsId: 'eigene Loesung/Notiz' }
   xp: 0,
   serie: 0,
   letzterTag: null,
@@ -28,7 +31,13 @@ export function erstelleBereichsLernstand(key) {
   function laden() {
     if (cache) return cache
     const d = lies(key) || {}
-    cache = { ...LEER, ...d, erledigt: { ...(d.erledigt || {}) }, tage: { ...(d.tage || {}) } }
+    cache = {
+      ...LEER,
+      ...d,
+      erledigt: { ...(d.erledigt || {}) },
+      notizen: { ...(d.notizen || {}) },
+      tage: { ...(d.tage || {}) },
+    }
     return cache
   }
 
@@ -76,6 +85,18 @@ export function erstelleBereichsLernstand(key) {
 
     xpHeute() {
       return laden().tage[heute()] || 0
+    },
+
+    /** Eigene Loesung/Notiz zu einer Uebung — bleibt lokal. */
+    notiz(id) {
+      return laden().notizen[id] || ''
+    },
+
+    setzeNotiz(id, text) {
+      const d = laden()
+      const wert = String(text || '')
+      if ((d.notizen[id] || '') === wert) return
+      sichern({ ...d, notizen: { ...d.notizen, [id]: wert } })
     },
 
     serie() {

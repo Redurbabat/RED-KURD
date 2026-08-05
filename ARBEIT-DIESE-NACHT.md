@@ -86,9 +86,102 @@ Inzwischen ebenfalls fertig:
   XP 0→10, Reihe 1 Tag, Reload behält alles; Fehlerbuch-Eintrag
   überlebt den Reload.
 
+## Nachtrag 2 (gleiche Nacht, dritter Teil)
+
+- **Übungen sind interaktiv**: „Übung öffnen“ zeigt die Aufgabe im Modal
+  mit einem Notizfeld für die eigene Lösung (wird lokal gespeichert, auch
+  beim Schließen ohne Abschluss). „Als erledigt markieren · +15 XP“ —
+  einmal je Übung. Der Zähler „Offene Übungen“ ist jetzt echt.
+- **Tagesziel**: beide Bereiche zeigen „Tagesziel: X/30 XP“ mit Balken
+  und „— geschafft!“ ab 30 XP.
+- 2 weitere Tests (224 gesamt); E2E: Übung öffnen → Notiz → abschließen
+  → XP 15, Offene 6→5, Tagesziel 15/30; Reload behält Notiz und Status.
+
+## Nachtrag 3 (gleiche Nacht, vierter Teil)
+
+- **Elektro-Lehre ist der vierte Bereich** (⚡, gold/gelber Akzent):
+  9 Lektionen in drei Gruppen — Grundlagen (Strom, U/I/R, Ohmsches
+  Gesetz, Leistung), Sicherheit (Gefahren, die 5 Sicherheitsregeln,
+  Schutzleiter/FI) und Praxis (Multimeter, Reihen-/Parallelschaltung) —
+  plus 6 Übungen. Eigener Lernstand `red-kurd-electro-progress-v1`.
+  Alle Inhalte sind Theorie zum Verstehen; die Texte sagen klar, dass an
+  Anlagen Elektrofachkräfte arbeiten.
+- Der Umschalter zeigt jetzt vier Bereiche („Sprache | Code | AI |
+  Elektro“ auf dem Handy) — ein neuer Bereich ist nur noch ein Eintrag
+  in `appModes.js` plus ein Feature-Ordner.
+- **Export/Import abgesichert**: Ein Test beweist, dass die Sicherung
+  die Lernstände aller Bereiche, das Fehlerbuch und den aktiven Bereich
+  mitnimmt.
+- 3 weitere Tests (227 gesamt); E2E: Elektro öffnen, erste Lektion
+  abschließen → XP 10, gespeichert.
+
+## Nachtrag 4: Mitmach-Aufgaben + mehr Lektionen
+
+Wunsch: „direkte Aufgaben machen — z. B. einen Teil einer Webseite,
+einen Button erstellen, Farben — und mehr Lektionen.“
+
+- **Mitmach-Aufgaben mit Sofort-Prüfung** (gemeinsamer Baustein
+  `src/features/app-mode/PraxisAufgabe.jsx`, +20 XP je Aufgabe,
+  Eingabe wird lokal gespeichert):
+  - **Code — „Mitmachen: direkt bauen“** (6 Aufgaben): erste Webseite,
+    Button erstellen, Farben ändern, Button schön machen (44-px-Regel!),
+    Karte bauen, Seite in Kopf/Inhalt/Fuß aufteilen. Man schreibt
+    echten HTML/CSS-Code in ein Feld, die **Live-Vorschau** zeigt sofort
+    das Ergebnis (sicher in einer Sandbox, ohne Skripte), und eine
+    **Prüfliste** hakt jeden erfüllten Punkt grün ab.
+  - **Elektro — „Rechnen: direkt prüfen“** (5 Aufgaben): Strom,
+    Widerstand, Spannung, Leistung, FI-Auslösestrom. Komma oder Punkt —
+    beides zählt; kleine Rundungen werden toleriert.
+  - **AI-Sprache — „Mitmachen: mit Prüfliste schreiben“** (3 Aufgaben):
+    kompletten Claude-Auftrag schreiben, Bug-Report ausfüllen, schwachen
+    Prompt verbessern — die Prüfliste prüft live auf Ort, Verbote,
+    Prüfung, Länge.
+- **9 neue Lektionen**: Code (Listen, Formulare, Grid, Übergänge,
+  Funktionen, DOM), Elektro (Aderfarben L/N/PE, Drehstrom 230/400 V),
+  AI-Sprache (Kontext mitgeben).
+- 11 weitere Tests (238 gesamt) — darunter: jede Musterlösung besteht
+  ihre eigene Prüfliste, kein Startcode löst die Aufgabe von allein,
+  Komma-/Punkt-Zahlen werden verstanden.
+- E2E (iPhone-Viewport, 15 Prüfungen grün): Button-Aufgabe lösen →
+  Checks werden grün, Vorschau zeigt den Button, +20 XP, Reload behält
+  Eingabe und „Erledigt“; Elektro „3,0" mit Komma wird als richtig
+  erkannt, falsche Zahl bleibt offen.
+
+## Nachtrag 5: Code-Tastatur — Mitmach-Aufgaben handy-tauglich
+
+Wunsch: „Es sollte auch für Handy gut sein — und eine Code-Tastatur,
+die sich direkt dort öffnet wie eine normale Tastatur, aber für Code."
+
+- **Eigene Code-Tastatur** (`src/features/app-mode/CodeTastatur.jsx`):
+  Tippt man bei einer Code-Aufgabe ins Feld, öffnet sich direkt darunter
+  eine eigene Bildschirm-Tastatur — die iPhone-Tastatur bleibt zu
+  (`inputMode="none"`). Drei Ebenen wie bei einer echten Tastatur:
+  - **ABC**: QWERTZ-Buchstaben mit ⇧ (Großschreiben), ⌫, Leertaste, ⏎
+  - **123**: Ziffern, Satz- und Code-Zeichen (`- / : ; ( ) " ' = +`),
+    dazu ä ö ü ß
+  - **`<>`**: Code-Zeichen (`< > / = " . #`) und **20 ganze Bausteine**
+    zum Antippen — `<h1>…</h1>`, `<p>`, `<button>` (gleich mit
+    `type="button"`), `<div>`, `<header>/<main>/<footer>`, `<style>`,
+    `class="…"`, `color:`, `background:`, `padding:`, `border-radius:`,
+    `min-height:`, `px`, `{ }` u. a.
+  - Eingefügt wird immer **an der Cursorposition**; markierter Text wird
+    von Bausteinen umschlossen (Wort markieren → `<h1>`-Taste →
+    Überschrift). Alle Tasten ≥ 44 px hoch.
+  - Umschalten jederzeit möglich: „Gerätetastatur" wechselt zur normalen
+    Tastatur, ein Chip „Code-Tastatur verwenden" holt sie zurück.
+- **Schlaue Anführungszeichen toleriert**: iOS macht aus `"` gern `„ "` —
+  die HTML-Prüfungen zählen beide gleich, eine richtige Lösung fällt
+  nie mehr wegen der Tastatur durch.
+- 8 weitere Tests (246 gesamt): Einfügen/Umschließen/Löschen an der
+  Cursorposition, iOS-Anführungszeichen.
+- E2E (iPhone-Viewport, 15 Prüfungen grün): Button-Aufgabe **komplett
+  nur mit der Code-Tastatur getippt** (Baustein + Shift + Buchstaben +
+  Löschen + ⏎), alle Checks grün, +20 XP; Tasten ≥ 44 px, keine
+  horizontale Scrollbar, Umschalten in beide Richtungen.
+
 ## Offene nächste Schritte
 
-- Übungen interaktiv machen (Eingabe + Prüfung)
-- Tagesziel für die neuen Bereiche
-- Bereichs-Lernstand in Export/Import prüfen (läuft schon über KEYS mit)
-- Elektro-Lehre als vierter Bereich
+- mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;
+  Code: kleine JS-Aufgaben)
+- mehr Lektionen je Pfad (Elektro: Motoren; Code: React)
+- gemeinsame Wochenübersicht über alle Bereiche

@@ -8,6 +8,7 @@ const ICONS = {
   language: 'sprache',
   code: 'puzzle',
   prompting: 'sprechblase',
+  electro: 'blitz',
 }
 
 /**
