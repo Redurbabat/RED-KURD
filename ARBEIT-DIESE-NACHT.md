@@ -147,6 +147,38 @@ einen Button erstellen, Farben — und mehr Lektionen.“
   Eingabe und „Erledigt“; Elektro „3,0" mit Komma wird als richtig
   erkannt, falsche Zahl bleibt offen.
 
+## Nachtrag 5: Code-Tastatur — Mitmach-Aufgaben handy-tauglich
+
+Wunsch: „Es sollte auch für Handy gut sein — und eine Code-Tastatur,
+die sich direkt dort öffnet wie eine normale Tastatur, aber für Code."
+
+- **Eigene Code-Tastatur** (`src/features/app-mode/CodeTastatur.jsx`):
+  Tippt man bei einer Code-Aufgabe ins Feld, öffnet sich direkt darunter
+  eine eigene Bildschirm-Tastatur — die iPhone-Tastatur bleibt zu
+  (`inputMode="none"`). Drei Ebenen wie bei einer echten Tastatur:
+  - **ABC**: QWERTZ-Buchstaben mit ⇧ (Großschreiben), ⌫, Leertaste, ⏎
+  - **123**: Ziffern, Satz- und Code-Zeichen (`- / : ; ( ) " ' = +`),
+    dazu ä ö ü ß
+  - **`<>`**: Code-Zeichen (`< > / = " . #`) und **20 ganze Bausteine**
+    zum Antippen — `<h1>…</h1>`, `<p>`, `<button>` (gleich mit
+    `type="button"`), `<div>`, `<header>/<main>/<footer>`, `<style>`,
+    `class="…"`, `color:`, `background:`, `padding:`, `border-radius:`,
+    `min-height:`, `px`, `{ }` u. a.
+  - Eingefügt wird immer **an der Cursorposition**; markierter Text wird
+    von Bausteinen umschlossen (Wort markieren → `<h1>`-Taste →
+    Überschrift). Alle Tasten ≥ 44 px hoch.
+  - Umschalten jederzeit möglich: „Gerätetastatur" wechselt zur normalen
+    Tastatur, ein Chip „Code-Tastatur verwenden" holt sie zurück.
+- **Schlaue Anführungszeichen toleriert**: iOS macht aus `"` gern `„ "` —
+  die HTML-Prüfungen zählen beide gleich, eine richtige Lösung fällt
+  nie mehr wegen der Tastatur durch.
+- 8 weitere Tests (246 gesamt): Einfügen/Umschließen/Löschen an der
+  Cursorposition, iOS-Anführungszeichen.
+- E2E (iPhone-Viewport, 15 Prüfungen grün): Button-Aufgabe **komplett
+  nur mit der Code-Tastatur getippt** (Baustein + Shift + Buchstaben +
+  Löschen + ⏎), alle Checks grün, +20 XP; Tasten ≥ 44 px, keine
+  horizontale Scrollbar, Umschalten in beide Richtungen.
+
 ## Offene nächste Schritte
 
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;

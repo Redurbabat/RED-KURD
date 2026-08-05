@@ -79,3 +79,11 @@ test('HTML-Pruefungen erkennen echte Loesungen, nicht nur Schluesselwoerter im K
   const ohneButton = button.checks.every((c) => c.pruefe('<h1>Hi</h1>'))
   assert.equal(ohneButton, false)
 })
+
+test('HTML-Pruefungen tolerieren schlaue Anfuehrungszeichen (iOS-Tastatur)', () => {
+  const button = codePraxisAufgaben.find((a) => a.id === 'praxis-button')
+  const mitSchlauenZeichen = button.checks.every((c) =>
+    c.pruefe('<h1>Hi</h1>\n<button type=„button“>Speichern</button>')
+  )
+  assert.equal(mitSchlauenZeichen, true)
+})

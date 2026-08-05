@@ -116,3 +116,19 @@ export const codePraxisAufgaben = [
     musterloesung: '<header>\n  <h1>Meine Seite</h1>\n</header>\n<main>\n  <p>Hier steht der Inhalt.</p>\n</main>\n<footer>Von Redur</footer>',
   },
 ]
+
+// iOS-Tastaturen machen aus geraden Anfuehrungszeichen gern „schlaue"
+// (geschwungene). Fuer die Pruefung zaehlen beide gleich — sonst faellt
+// eine richtige Loesung nur wegen der Tastatur durch.
+function glaette(code) {
+  return String(code ?? '')
+    .replace(/[„“”«»]/g, '"')
+    .replace(/[‚‘’]/g, "'")
+}
+
+for (const aufgabe of codePraxisAufgaben) {
+  for (const check of aufgabe.checks) {
+    const roh = check.pruefe
+    check.pruefe = (wert) => roh(glaette(wert))
+  }
+}

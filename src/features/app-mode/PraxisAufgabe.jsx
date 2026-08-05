@@ -6,11 +6,12 @@
 //   'html'  → Code-Editor + sichere Live-Vorschau (Sandbox-iframe ohne Skripte)
 //   'text'  → Textfeld (z. B. einen Prompt formulieren) + Pruefliste
 //   'zahl'  → Zahleneingabe (z. B. Ohm-Rechnung) + Sofort-Pruefung
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Badge from '../../components/common/Badge.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import Modal from '../../components/common/Modal.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import CodeTastatur from './CodeTastatur.jsx'
 
 export const XP_JE_MITMACH = 20
 
@@ -23,6 +24,11 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
     const gespeichert = lernstand.notiz(aufgabe.id)
     return gespeichert || aufgabe.startCode || ''
   })
+  // Code-Aufgaben: eigene Bildschirm-Tastatur statt der Geraetetastatur —
+  // auf dem Handy sind < > " = sonst muehsam zu erreichen.
+  const feldRef = useRef(null)
+  const [tastaturArt, setTastaturArt] = useState('code')
+  const [tastaturOffen, setTastaturOffen] = useState(false)
   if (!aufgabe) return null
 
   const erledigt = lernstand.istErledigt(aufgabe.id)
@@ -94,14 +100,50 @@ export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
             </label>
             <textarea
               id="praxis-eingabe"
+              ref={feldRef}
               className={`rk-feld ${aufgabe.art === 'html' ? 'praxis-code' : ''}`}
-              rows={aufgabe.art === 'html' ? 10 : 7}
+              rows={aufgabe.art === 'html' ? 8 : 7}
               value={wert}
               spellCheck={aufgabe.art !== 'html'}
               autoCapitalize={aufgabe.art === 'html' ? 'off' : 'sentences'}
+              autoCorrect={aufgabe.art === 'html' ? 'off' : 'on'}
+              autoComplete="off"
+              inputMode={aufgabe.art === 'html' && tastaturArt === 'code' ? 'none' : undefined}
+              onFocus={() => aufgabe.art === 'html' && tastaturArt === 'code' && setTastaturOffen(true)}
+              onClick={() => aufgabe.art === 'html' && tastaturArt === 'code' && setTastaturOffen(true)}
               onChange={(e) => setWert(e.target.value)}
               onBlur={wertSichern}
             />
+            {aufgabe.art === 'html' && !tastaturOffen && tastaturArt === 'code' && (
+              <p className="praxis-hinweis">
+                Tippe ins Feld — die Code-Tastatur öffnet sich direkt darunter.
+              </p>
+            )}
+            {aufgabe.art === 'html' && tastaturArt === 'code' && tastaturOffen && (
+              <CodeTastatur
+                feldRef={feldRef}
+                wert={wert}
+                aendern={setWert}
+                zurGeraetetastatur={() => {
+                  setTastaturArt('system')
+                  setTastaturOffen(false)
+                  requestAnimationFrame(() => feldRef.current?.focus())
+                }}
+                ausblenden={() => setTastaturOffen(false)}
+              />
+            )}
+            {aufgabe.art === 'html' && tastaturArt === 'system' && (
+              <button
+                type="button"
+                className="praxis-tastatur-chip"
+                onClick={() => {
+                  setTastaturArt('code')
+                  setTastaturOffen(true)
+                }}
+              >
+                Code-Tastatur verwenden
+              </button>
+            )}
           </>
         )}
 
