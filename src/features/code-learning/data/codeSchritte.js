@@ -7,6 +7,9 @@
 //             ABSICHTLICH in falscher Reihenfolge. loesung ist der fertige
 //             Code; eine Live-Vorschau zeigt das Ergebnis sofort.
 //
+//   'tippen' → selber schreiben: eigenes Eingabefeld (mit Code-Tastatur),
+//              Live-Vorschau und eine Pruefliste, die live abhakt.
+//
 // Lektionen ohne Schritte behalten automatisch das Lese-Modal.
 
 const SCHRITTE = {
@@ -44,6 +47,16 @@ const SCHRITTE = {
       richtig: 0,
       erklaerung: 'Öffnen und schließen: <p>…</p>. Nur wenige Elemente wie <img> stehen allein.',
     },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib SELBST einen Absatz mit einem Gruß deiner Wahl.',
+      checks: [
+        { id: 'p', text: 'Ein Absatz <p>…</p>', pruefe: (c) => /<p[\s>][\s\S]*<\/p>/i.test(c) },
+        { id: 'inhalt', text: 'Der Absatz hat Text', pruefe: (c) => /<p[^>]*>\s*[^<\s][\s\S]*?<\/p>/i.test(c) },
+      ],
+      musterloesung: '<p>Silav, ez Redur im!</p>',
+      tipp: '<p>Dein Gruß</p>',
+    },
   ],
 
   'html-2': [
@@ -74,6 +87,16 @@ const SCHRITTE = {
       bausteine: ['<p>', 'Ich lerne HTML.', '</p>', '<h2>Über mich</h2>'],
       loesung: '<h2>Über mich</h2><p>Ich lerne HTML.</p>',
       tipp: 'Die Überschrift kommt zuerst.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib SELBST die Hauptüberschrift für eine Seite über dich.',
+      checks: [
+        { id: 'h1', text: 'Eine Überschrift <h1>…</h1>', pruefe: (c) => /<h1[\s>][\s\S]*<\/h1>/i.test(c) },
+        { id: 'inhalt', text: 'Die Überschrift ist nicht leer', pruefe: (c) => /<h1[^>]*>\s*[^<\s][\s\S]*?<\/h1>/i.test(c) },
+      ],
+      musterloesung: '<h1>Redur lernt Code</h1>',
+      tipp: '<h1>…</h1>',
     },
   ],
 
@@ -107,6 +130,17 @@ const SCHRITTE = {
       optionen: ['„Zur Wörterbuch-Suche"', '„hier klicken"', '„Link"'],
       richtig: 0,
       erklaerung: 'Der Linktext sagt, wohin es geht — „hier klicken" sagt nichts.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib SELBST einen Button mit type="button" und einer deutschen Beschriftung.',
+      checks: [
+        { id: 'button', text: 'Ein <button>-Element', pruefe: (c) => /<button[\s>]/i.test(c) },
+        { id: 'type', text: 'type="button" ist gesetzt', pruefe: (c) => /<button[^>]*type\s*=\s*["']button["']/i.test(c) },
+        { id: 'text', text: 'Der Button hat eine Beschriftung', pruefe: (c) => /<button[^>]*>\s*[^<\s][\s\S]*?<\/button>/i.test(c) },
+      ],
+      musterloesung: '<button type="button">Speichern</button>',
+      tipp: '<button type="button">…</button> — die Code-Tastatur hat den Baustein.',
     },
   ],
 
@@ -161,6 +195,17 @@ const SCHRITTE = {
       code: true,
       richtig: 0,
       erklaerung: 'ol nummeriert automatisch — perfekt für Anleitungen.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib SELBST eine kleine Liste mit zwei Dingen, die du magst.',
+      checks: [
+        { id: 'ul', text: 'Eine Liste <ul>…</ul>', pruefe: (c) => /<ul[\s>][\s\S]*<\/ul>/i.test(c) },
+        { id: 'li', text: 'Mindestens zwei Einträge <li>', pruefe: (c) => (c.match(/<li[\s>]/gi) || []).length >= 2 },
+        { id: 'inhalt', text: 'Die Einträge sind nicht leer', pruefe: (c) => /<li[^>]*>\s*[^<\s][\s\S]*?<\/li>/i.test(c) },
+      ],
+      musterloesung: '<ul>\n  <li>Çay</li>\n  <li>Musik</li>\n</ul>',
+      tipp: 'ul und li liegen als Bausteine auf der <>-Ebene der Code-Tastatur.',
     },
   ],
 
@@ -274,6 +319,17 @@ const SCHRITTE = {
       richtig: 0,
       erklaerung: 'Wen? (Selektor) — was? (Eigenschaft) — wie? (Wert).',
     },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib SELBST in den style-Block eine Regel, die dem Absatz eine Farbe gibt.',
+      startText: '<style>\n\n</style>\n<p>Silav!</p>',
+      checks: [
+        { id: 'selektor', text: 'Eine Regel p { … }', pruefe: (c) => /p\s*\{[\s\S]*?\}/i.test(c) },
+        { id: 'farbe', text: 'color: ist gesetzt', pruefe: (c) => /color\s*:/i.test(c) },
+      ],
+      musterloesung: '<style>\np { color: crimson; }\n</style>\n<p>Silav!</p>',
+      tipp: 'p { color: crimson; } — die Vorschau färbt sofort um.',
+    },
   ],
 
   'css-2': [
@@ -341,6 +397,18 @@ const SCHRITTE = {
       ],
       richtig: 0,
       erklaerung: 'Große Fläche + klarer Text = weniger Fehltipper.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Gestalte den Button SELBST — mindestens 44 px hoch und mit Hintergrundfarbe.',
+      startText: '<style>\nbutton {\n\n}\n</style>\n<button type="button">Speichern</button>',
+      checks: [
+        { id: 'hoehe', text: 'min-height: mindestens 44px', pruefe: (c) => /min-height\s*:\s*(4[4-9]|[5-9]\d|\d{3,})px/i.test(c) },
+        { id: 'farbe', text: 'background ist gesetzt', pruefe: (c) => /background[^:]*:/i.test(c) },
+      ],
+      musterloesung:
+        '<style>\nbutton {\n  min-height: 44px;\n  background: #0ea5a8;\n  color: white;\n}\n</style>\n<button type="button">Speichern</button>',
+      tipp: 'min-height: 44px; background: …; — beides in die button-Regel.',
     },
   ],
 
@@ -591,6 +659,26 @@ const SCHRITTE = {
       bausteine: [".textContent", "document.querySelector('#gruss')", " = 'Silav ji JavaScript!';"],
       loesung: "document.querySelector('#gruss').textContent = 'Silav ji JavaScript!';",
       tipp: 'Element holen, dann .textContent, dann der neue Wert.',
+    },
+    {
+      art: 'tippen',
+      auftrag: 'Jetzt du: Schreib die Zeile SELBST — hol #gruss und setz textContent auf deinen eigenen Gruß. Die Vorschau führt deinen Code aus!',
+      skript: true,
+      huelle: '<p id="gruss"></p>\n<script>{{code}}</script>',
+      checks: [
+        {
+          id: 'holen',
+          text: "Das Element holen: document.querySelector('#gruss')",
+          pruefe: (c) => /document\.querySelector\(\s*['"]#gruss['"]\s*\)/.test(c),
+        },
+        {
+          id: 'setzen',
+          text: 'textContent = mit einem eigenen Text',
+          pruefe: (c) => /\.textContent\s*=\s*['"][^'"]+['"]/.test(c),
+        },
+      ],
+      musterloesung: "document.querySelector('#gruss').textContent = 'Silav!';",
+      tipp: "document.querySelector('#gruss').textContent = '…';",
     },
   ],
 
@@ -915,6 +1003,24 @@ const SCHRITTE = {
       erklaerung: 'Auto-Ton erschreckt, kostet Datenvolumen — und Browser blocken ihn meist.',
     },
   ],
+}
+
+// iOS macht aus geraden Anfuehrungszeichen gern „schlaue" — fuer die
+// Schreib-Schritte zaehlen beide gleich (wie bei den Mitmach-Aufgaben).
+function glaette(code) {
+  return String(code ?? '')
+    .replace(/[„“”«»]/g, '"')
+    .replace(/[‚‘’]/g, "'")
+}
+
+for (const schritte of Object.values(SCHRITTE)) {
+  for (const schritt of schritte) {
+    if (schritt.art !== 'tippen') continue
+    for (const check of schritt.checks) {
+      const roh = check.pruefe
+      check.pruefe = (wert) => roh(glaette(wert))
+    }
+  }
 }
 
 /** Die interaktiven Schritte einer Lektion — oder null (dann Lese-Modal). */

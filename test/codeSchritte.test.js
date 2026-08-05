@@ -27,9 +27,9 @@ test('HTML-, CSS- und JavaScript-Pfad sind komplett interaktiv', () => {
   }
 })
 
-test('Bau-Schritte mit Huelle/Skript sind stimmig', () => {
+test('Bau- und Schreib-Schritte mit Huelle/Skript sind stimmig', () => {
   for (const [id, schritte] of Object.entries(alleSchritte)) {
-    for (const s of schritte.filter((x) => x.art === 'bauen')) {
+    for (const s of schritte.filter((x) => x.art === 'bauen' || x.art === 'tippen')) {
       if (s.huelle) {
         assert.ok(s.huelle.includes('{{code}}'), `${id}: Huelle ohne {{code}}`)
       }
@@ -38,6 +38,37 @@ test('Bau-Schritte mit Huelle/Skript sind stimmig', () => {
       }
     }
   }
+})
+
+test('Schreib-Schritte: Musterloesung besteht die Pruefliste, der Start nicht', () => {
+  let anzahl = 0
+  for (const [id, schritte] of Object.entries(alleSchritte)) {
+    for (const s of schritte.filter((x) => x.art === 'tippen')) {
+      anzahl += 1
+      assert.ok(s.auftrag, `${id}: Auftrag fehlt`)
+      assert.ok(s.checks && s.checks.length >= 1, `${id}: keine Pruefliste`)
+      for (const c of s.checks) {
+        assert.ok(c.id && c.text, `${id}: Check ohne Id/Text`)
+        assert.equal(typeof c.pruefe, 'function', `${id}/${c.id}: pruefe fehlt`)
+        assert.ok(c.pruefe(s.musterloesung), `${id}: Musterloesung faellt bei „${c.text}" durch`)
+      }
+      const start = s.startText || ''
+      assert.equal(
+        s.checks.every((c) => c.pruefe(start)),
+        false,
+        `${id}: schon der Start besteht alles`
+      )
+    }
+  }
+  assert.ok(anzahl >= 7, 'mindestens sieben Schreib-Schritte')
+})
+
+test('Schreib-Schritte tolerieren schlaue Anfuehrungszeichen (iOS)', () => {
+  const js1 = alleSchritte['js-1'].find((s) => s.art === 'tippen')
+  const mitSchlauen = js1.checks.every((c) =>
+    c.pruefe("document.querySelector('#gruss').textContent = ‚Silav!';")
+  )
+  assert.equal(mitSchlauen, true)
 })
 
 test('Wahl-Schritte: eine richtige Antwort im gueltigen Bereich', () => {

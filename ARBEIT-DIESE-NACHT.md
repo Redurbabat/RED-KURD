@@ -302,8 +302,31 @@ die Ergebnisse direkt sehen."
   rot (getComputedStyle), JS-Code läuft, Klick in der Vorschau wirkt,
   css-1 und js-1 abgeschlossen.
 
+## Nachtrag 11: „Jetzt du" — selber schreiben, nicht nur klicken
+
+Wunsch: „Ich sollte auch selber schreiben, nicht nur klicken."
+
+- **Neue Schritt-Art „Selber schreiben"** im Lektions-Player: ein
+  eigenes Codefeld (mit der Code-Tastatur samt Bausteinen und
+  Gerätetastatur-Umschalter), die Live-Vorschau direkt darunter und
+  eine Prüfliste, die live grün abhakt. Erst wenn deine eigene Lösung
+  alle Punkte erfüllt, geht es weiter.
+- **7 „Jetzt du"-Schritte** als Abschluss wichtiger Lektionen:
+  Absatz (html-1), Überschrift (html-2), Button mit type (html-3),
+  Liste (html-6), p-Regel mit Farbe (css-1, mit vorbereitetem
+  style-Block), Button-Gestaltung mit 44-px-Regel (css-3) und die
+  querySelector-Zeile (js-1) — **der selbst getippte JS-Code läuft
+  wirklich in der Vorschau**.
+- Schlaue iOS-Anführungszeichen zählen auch hier wie gerade.
+- 2 neue Tests (254 gesamt): jede Musterlösung besteht ihre Prüfliste,
+  kein Starttext löst von allein, Anführungszeichen-Toleranz.
+- E2E: Code-Tastatur öffnet sich im Player, Prüfliste hakt live ab,
+  eigener Text erscheint in der Vorschau, eigener JS-Gruß („Rojbaş!")
+  läuft, Lektionen weiterhin mit +10 XP abschließbar.
+
 ## Offene nächste Schritte
 
+- mehr „Jetzt du"-Schreib-Schritte (weitere CSS-/JS-Lektionen)
 - interaktive Schritte für TypeScript/GitHub/VS Code/Mini-Projekte
 - Lernpfad-Ansicht als Knoten-Karte (Mimo-Wegpunkte) — größerer Umbau
 - mehr Mitmach-Aufgaben (Elektro: Reihen-/Parallel-Rechnungen;

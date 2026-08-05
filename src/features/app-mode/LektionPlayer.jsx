@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.js'
+import CodeTastatur from './CodeTastatur.jsx'
 
 /**
  * @param {{lektion:Object, schritte:Array, lernstand:Object, schliessen:Function}} props
@@ -18,8 +19,13 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
   const [index, setIndex] = useState(0)
   const [antwort, setAntwort] = useState(null)
   const [gebaut, setGebaut] = useState([])
+  const [text, setText] = useState(() => schritte[0].startText || '')
   const [ergebnis, setErgebnis] = useState(null) // null | 'richtig' | 'falsch'
   const wurzel = useRef(null)
+  // Schreib-Schritte: eigenes Feld mit der Code-Tastatur (wie Mitmach-Aufgaben)
+  const feldRef = useRef(null)
+  const [tastaturArt, setTastaturArt] = useState('code')
+  const [tastaturOffen, setTastaturOffen] = useState(false)
 
   const schritt = schritte[index]
   const letzter = index === schritte.length - 1
@@ -43,11 +49,17 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
     }
   }, [])
 
-  const zusammengebaut = gebaut.map((i) => schritt.bausteine[i]).join('')
+  const zusammengebaut =
+    schritt.art === 'tippen' ? text : gebaut.map((i) => schritt.bausteine[i]).join('')
+  const checks =
+    schritt.art === 'tippen' ? schritt.checks.map((c) => ({ ...c, ok: !!c.pruefe(text) })) : []
+  const alleChecksOk = checks.length > 0 && checks.every((c) => c.ok)
 
   function pruefen() {
     if (schritt.art === 'wahl') {
       setErgebnis(antwort === schritt.richtig ? 'richtig' : 'falsch')
+    } else if (schritt.art === 'tippen') {
+      setErgebnis(alleChecksOk ? 'richtig' : 'falsch')
     } else {
       setErgebnis(zusammengebaut === schritt.loesung ? 'richtig' : 'falsch')
     }
@@ -62,6 +74,8 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
     setIndex(index + 1)
     setAntwort(null)
     setGebaut([])
+    setText(schritte[index + 1].startText || '')
+    setTastaturOffen(false)
     setErgebnis(null)
   }
 
@@ -82,7 +96,15 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
   }
 
   const pruefbar =
-    schritt.art === 'wahl' ? antwort !== null : gebaut.length === schritt.bausteine.length
+    schritt.art === 'wahl'
+      ? antwort !== null
+      : schritt.art === 'tippen'
+        ? text.trim().length > 0
+        : gebaut.length === schritt.bausteine.length
+
+  const vorschauInhalt = schritt.huelle
+    ? schritt.huelle.replace('{{code}}', zusammengebaut)
+    : zusammengebaut
 
   return (
     <div
@@ -140,6 +162,96 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
               ))}
             </div>
           </>
+        ) : schritt.art === 'tippen' ? (
+          <>
+            <p className="lp-frage">{schritt.auftrag}</p>
+            <p className="lp-hinweis">
+              <Icon name="info" groesse={16} /> Schreib den Code selbst — die Prüfliste hakt live
+              ab
+            </p>
+
+            <label className="rk-feld-label" htmlFor="lp-eingabe">
+              Dein Code
+            </label>
+            <textarea
+              id="lp-eingabe"
+              ref={feldRef}
+              className="rk-feld praxis-code"
+              rows={5}
+              value={text}
+              spellCheck={false}
+              autoCapitalize="off"
+              autoCorrect="off"
+              autoComplete="off"
+              inputMode={tastaturArt === 'code' ? 'none' : undefined}
+              onFocus={() => tastaturArt === 'code' && setTastaturOffen(true)}
+              onClick={() => tastaturArt === 'code' && setTastaturOffen(true)}
+              onChange={(e) => {
+                setText(e.target.value)
+                setErgebnis(null)
+              }}
+            />
+
+            {schritt.vorschau !== false && (
+              <>
+                <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
+                <iframe
+                  className="praxis-vorschau lp-vorschau"
+                  title="Live-Vorschau deines Codes"
+                  sandbox={schritt.skript ? 'allow-scripts' : ''}
+                  srcDoc={vorschauInhalt}
+                />
+              </>
+            )}
+
+            {!tastaturOffen && tastaturArt === 'code' && (
+              <p className="praxis-hinweis">
+                Tippe ins Feld — die Code-Tastatur öffnet sich direkt darunter.
+              </p>
+            )}
+            {tastaturArt === 'code' && tastaturOffen && (
+              <CodeTastatur
+                feldRef={feldRef}
+                wert={text}
+                aendern={(neu) => {
+                  setText(neu)
+                  setErgebnis(null)
+                }}
+                zurGeraetetastatur={() => {
+                  setTastaturArt('system')
+                  setTastaturOffen(false)
+                  requestAnimationFrame(() => feldRef.current?.focus())
+                }}
+                ausblenden={() => setTastaturOffen(false)}
+              />
+            )}
+            {tastaturArt === 'system' && (
+              <button
+                type="button"
+                className="praxis-tastatur-chip"
+                onClick={() => {
+                  setTastaturArt('code')
+                  setTastaturOffen(true)
+                }}
+              >
+                Code-Tastatur verwenden
+              </button>
+            )}
+
+            <ul className="praxis-checks" aria-label="Prüfliste">
+              {checks.map((c) => (
+                <li key={c.id} className={c.ok ? 'ok' : 'offen'}>
+                  <span className="praxis-check-zeichen" aria-hidden="true">
+                    <Icon name={c.ok ? 'haken' : 'kreuz'} groesse={14} />
+                  </span>
+                  <span>
+                    {c.text}
+                    <span className="nur-sr">{c.ok ? ' — erfüllt' : ' — noch offen'}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </>
         ) : (
           <>
             <p className="lp-frage">{schritt.auftrag}</p>
@@ -162,19 +274,15 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
               <>
                 <p className="rk-feld-label">Live-Vorschau — dein Ergebnis</p>
                 {/* Sandbox: normal ohne jede Rechte. allow-scripts gibt es NUR
-                    fuer Bau-Schritte mit skript:true — dort besteht der Code
-                    ausschliesslich aus unseren eigenen, kuratierten Bausteinen
-                    (nie freie Eingabe), und ohne allow-same-origin bleibt der
-                    Rahmen ohne Zugriff auf Speicher und Cookies. */}
+                    bei skript:true — dann laeuft der Lektions-Code (kuratierte
+                    Bausteine bzw. der selbst geschriebene Code des Lernenden)
+                    in einem Rahmen OHNE allow-same-origin: kein Zugriff auf
+                    Speicher, Cookies oder die App selbst. */}
                 <iframe
                   className="praxis-vorschau lp-vorschau"
                   title="Live-Vorschau deines Codes"
                   sandbox={schritt.skript ? 'allow-scripts' : ''}
-                  srcDoc={
-                    schritt.huelle
-                      ? schritt.huelle.replace('{{code}}', zusammengebaut)
-                      : zusammengebaut
-                  }
+                  srcDoc={vorschauInhalt}
                 />
               </>
             )}
