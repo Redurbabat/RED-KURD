@@ -569,6 +569,22 @@ Wunsch: „mehr Grundübungen für den Code-Bereich."
   Farbe wirkt wirklich (per Browser gemessen), „Hallo!" erscheint aus
   eigenem JavaScript, 7 + 5 wird wirklich gerechnet.
 
+## Nachtrag 21: Die Wegkarte jetzt auch in der Sprach-App
+
+- Die Kursseite (Modern-Ansicht) hat denselben Umschalter **Liste /
+  Wegkarte**. In der Wegkarte liegen die Einheiten jeder Welt als
+  Knotenkette — fertig grün, aktuell violett mit Leuchtring, gesperrt
+  mit Schloss. Antippen öffnet dieselbe Einheit wie aus der Liste.
+- Dafür versteht die Wegkarte jetzt auch die deutschen Zustandsnamen
+  der Sprach-App (fertig · aktuell · begonnen · gesperrt) und nimmt eine
+  eigene Meta-Zeile — dort steht „5 Lektionen" statt einer Minutenzahl.
+- Am Sprachbereich selbst ändert sich sonst nichts: Die Liste bleibt die
+  Standard-Ansicht, alle 56 Einheiten sind unverändert da.
+- E2E: 16 Prüfungen grün — Liste bleibt Standard, 56 Wegpunkte für 56
+  Einheiten, deutsche Zustände korrekt übersetzt, Wegpunkt öffnet
+  `/course/begruessung`, keine horizontale Scroll-Leiste.
+
+Damit ist die Wegkarte in **allen vier Apps** verfügbar.
+
 ## Offene nächste Schritte
-- Wegkarte auch in der Sprach-App, falls sie sich bewährt
 - weitere Lektionsinhalte nach Bedarf

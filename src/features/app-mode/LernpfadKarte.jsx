@@ -13,14 +13,31 @@ const BESCHRIFTUNG = {
   locked: 'noch gesperrt',
 }
 
+// Die Sprach-App benennt ihre Zustaende deutsch — hier zusammengefuehrt,
+// damit dieselbe Wegkarte in allen Apps funktioniert.
+const NORMAL = {
+  fertig: 'done',
+  aktuell: 'current',
+  begonnen: 'open',
+  gesperrt: 'locked',
+}
+
 /**
- * @param {{lessons:Array, status:Object, oeffnen:(lektion:Object)=>void}} props
+ * @param {{lessons:Array, status:Object, oeffnen:(lektion:Object)=>void,
+ *          meta?:(lektion:Object)=>string}} props
+ *   meta liefert die Zeile unter dem Titel — Standard: Dauer in Minuten.
  */
-export default function LernpfadKarte({ lessons, status, oeffnen }) {
+export default function LernpfadKarte({
+  lessons,
+  status,
+  oeffnen,
+  meta = (l) => `${l.durationMinutes} Min`,
+}) {
   return (
     <ol className="pfadkarte" aria-label="Lernpfad">
       {lessons.map((lektion, i) => {
-        const s = status[lektion.id] || 'open'
+        const roh = status[lektion.id] || 'open'
+        const s = NORMAL[roh] || roh
         const gesperrt = s === 'locked'
         const seite = i % 2 === 0 ? 'links' : 'rechts'
         return (
@@ -30,7 +47,7 @@ export default function LernpfadKarte({ lessons, status, oeffnen }) {
               type="button"
               className="pfadkarte-knoten"
               disabled={gesperrt}
-              aria-label={`${lektion.title} · ${lektion.durationMinutes} Minuten · ${BESCHRIFTUNG[s]}`}
+              aria-label={`${lektion.title} · ${meta(lektion)} · ${BESCHRIFTUNG[s]}`}
               onClick={() => oeffnen(lektion)}
             >
               <span className="pfadkarte-zeichen" aria-hidden="true">
@@ -46,7 +63,7 @@ export default function LernpfadKarte({ lessons, status, oeffnen }) {
             <span className="pfadkarte-text">
               <strong>{lektion.title}</strong>
               <span className="pfadkarte-meta">
-                {lektion.durationMinutes} Min · {BESCHRIFTUNG[s]}
+                {meta(lektion)} · {BESCHRIFTUNG[s]}
               </span>
             </span>
           </li>
