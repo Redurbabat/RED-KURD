@@ -22,7 +22,7 @@ const { fehlerNotieren, fehlerEntfernen, fehlerbuchEintraege } = await import(
   '../src/features/code-learning/fehlerbuchStore.js'
 )
 const { KEYS, lies } = await import('../src/core/storage.js')
-const { heute } = await import('../src/core/progress/scheduler.js')
+const { heute } = await import('../src/core/progress/scheduler.ts')
 
 test('ein Eintrag braucht Titel und Fehlerbeschreibung', () => {
   assert.equal(fehlerNotieren({ titel: '', fehler: 'x' }), null)

@@ -7,8 +7,8 @@
 // direkt folgende -> 'open', alles danach -> 'locked'.
 import { lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { heute } from '../progress/scheduler.js'
-import { aktualisiereSerie } from '../progress/gamification.js'
+import { heute } from '../progress/scheduler.ts'
+import { aktualisiereSerie } from '../progress/gamification.ts'
 
 export const XP_JE_LEKTION = 10
 export const XP_JE_UEBUNG = 15

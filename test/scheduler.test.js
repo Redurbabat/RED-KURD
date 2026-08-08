@@ -17,7 +17,7 @@ import {
   schluesselTeile,
   tagPlus,
   tagVon,
-} from '../src/core/progress/scheduler.js'
+} from '../src/core/progress/scheduler.ts'
 
 const EchteUhr = Date
 
@@ -528,4 +528,14 @@ test('der Textvergleich trägt über Monats- und Jahresgrenzen', () => {
   assert.equal(istFaellig({ faellig: '2026-09-30' }, '2026-10-01'), true)
   assert.equal(istFaellig({ faellig: '2026-10-01' }, '2026-09-30'), false)
   assert.equal(istFaellig({ faellig: '2024-02-29' }, '2024-03-01'), true)
+})
+
+test('eine beschaedigte Karte mit negativer Stufe bekommt eine gueltige Faelligkeit', () => {
+  // Ohne untere Deckelung des Tabellenindex entstand hier "NaN-NaN-NaN";
+  // istFaellig vergleicht als Text, die Karte waere nie wieder drangekommen.
+  for (const stufe of [-1, -5, -99]) {
+    const karte = naechsteKarte({ stufe, gesehen: 3, richtig: 1 }, true)
+    assert.match(karte.faellig, /^\d{4}-\d{2}-\d{2}$/, `stufe ${stufe}`)
+    assert.equal(istFaellig({ faellig: karte.faellig }, tagPlus(400)), true, `stufe ${stufe}`)
+  }
 })

@@ -2,7 +2,7 @@
 // auf dem Geraet. Neueste Eintraege stehen oben.
 import { KEYS, lies, schreibe } from '../../core/storage.js'
 import { melden, beiFremdaenderung } from '../../core/store.js'
-import { heute } from '../../core/progress/scheduler.js'
+import { heute } from '../../core/progress/scheduler.ts'
 
 const LEER = { version: 1, naechsteId: 1, eintraege: [] }
 

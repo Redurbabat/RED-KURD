@@ -66,11 +66,12 @@ noch von einer einzigen App ausgeht.
 **Ziel:** Die Speicherformen aller vier Apps sind benannt, geprüft und umziehbar, ohne
 dass jemand Angst um seinen Lernstand haben muss.
 
-- [ ] TypeScript-Migration in der Reihenfolge aus ADR-006: **Kernlogik → Stores →
+- [~] TypeScript-Migration in der Reihenfolge aus ADR-006: **Kernlogik → Stores →
       Komponenten**
-  - [ ] Kernlogik ohne Browser-Bindung zuerst: `progress/scheduler`,
-        `progress/gamification`, `session/exerciseFactory`, `session/sessionPlanner`,
-        `schrift/transliteration`
+  - [x] `progress/scheduler.ts` und `progress/gamification.ts` (erste Welle;
+        Verhalten per Differenztest gegen den Vorstand belegt, kein `!`, kein `as`)
+  - [ ] restliche Kernlogik ohne Browser-Bindung: `session/exerciseFactory`,
+        `session/sessionPlanner`, `schrift/transliteration`
   - [ ] danach `courses/courseRepository` und `progress/progressSelectors`
   - [ ] danach die Stores: `storage`, `store`, `progressStore`, `profileStore`,
         `uiStore`, `sessionStore`, `taskStore`, `shopStore`, `achievementsStore`,

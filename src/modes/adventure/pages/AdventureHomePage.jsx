@@ -11,7 +11,7 @@ import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import { grussText } from '../../../core/texts.js'
 import { statistik } from '../../../core/progress/progressSelectors.js'
-import { heute } from '../../../core/progress/scheduler.js'
+import { heute } from '../../../core/progress/scheduler.ts'
 import {
   aktuelleEinheit,
   aktuelleWelt,

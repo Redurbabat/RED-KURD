@@ -183,8 +183,8 @@ eigene Wert mit eigener Einheit, gemeinsames Maß sind die aktiven Tage.
 
 | Datei | Aufgabe |
 |---|---|
-| `progress/gamification.js` | `tageZwischen`, `aktualisiereSerie`, `WOCHENLIGEN`, `ligaFuerAufgaben` |
-| `progress/scheduler.js` | Wiederholsystem (SM-2-vereinfacht): `ABSTAENDE`, `naechsteKarte`, `kartenSchluessel`, `tagVon`, `heute` |
+| `progress/gamification.ts` | `tageZwischen`, `aktualisiereSerie`, `WOCHENLIGEN`, `ligaFuerAufgaben` — nach TypeScript migriert (erste Welle, zusammen mit scheduler.ts) (ADR-006) |
+| `progress/scheduler.ts` | Wiederholsystem (SM-2-vereinfacht): `ABSTAENDE`, `naechsteKarte`, `kartenSchluessel`, `tagVon`, `heute` — nach TypeScript migriert (ADR-006) |
 | `session/exerciseFactory.js` | `baueUebungen()`, `mische()`, `istRichtigGetippt()`, `SKILL_JE_ART` |
 | `session/sessionPlanner.js` | `planeSitzung/Lektion/Wiederholung/Schwierige/Training`, `DAUERN` |
 | `courses/courseRepository.js` | `WELTEN` (10), `EINHEITEN` (56), `ALLE_WOERTER` (596), `LEKTIONS_ARTEN` (5), `einheitStatus`, `weltPfad`, `aktuellerKnoten` |

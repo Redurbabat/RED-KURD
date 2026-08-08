@@ -22,7 +22,26 @@ export type Tagesschluessel = string
 /** Kartenschlüssel im Format `de|ku|fertigkeit`. */
 export type Kartenschluessel = string
 
-/** Eine Wiederholkarte (vereinfachtes SM-2, siehe scheduler.js). */
+/**
+ * Die Fertigkeit, wie sie in einem Kartenschlüssel steht. `gemischt` heißt:
+ * der Schlüssel nennt keine, die Karte gilt also für alle zusammen.
+ */
+export type Kartenfertigkeit = Fertigkeit | 'gemischt'
+
+/**
+ * Ein zerlegter Kartenschlüssel. Bewusst weit gefasst: `schluesselTeile`
+ * trennt stur am `|` und prüft nicht, ob der dritte Teil wirklich eine
+ * Fertigkeit ist — siehe die bekannte Grenze des Trennzeichens in STORAGE.md.
+ */
+export interface Kartenteile {
+  de: string
+  /** Fehlt, wenn der Schlüssel gar kein `|` enthält. */
+  ku: string | undefined
+  /** `gemischt`, wenn der Schlüssel keinen dritten Teil hat. */
+  skill: string
+}
+
+/** Eine Wiederholkarte (vereinfachtes SM-2, siehe scheduler.ts). */
 export interface Karte {
   /** 0–6; Abstände [1, 3, 7, 16, 35, 70] Tage. Richtig → +1, falsch → zurück auf 0. */
   stufe: number
@@ -135,4 +154,79 @@ export interface Sicherung {
   auszeichnungen?: unknown
   aufgaben?: unknown
   herzen?: unknown
+}
+
+/* ===== Die anderen drei Apps =====
+   Code lernen, AI-Sprache und Elektro-Lehre teilen sich EINE Implementierung
+   (core/lernbereiche/bereichsLernstand.js), aber je einen eigenen Schlüssel.
+   Geteilt werden die Regeln, nicht die Zahlen — siehe ADR-008. */
+
+/** Zustand einer Lektion, immer aus dem Lernstand abgeleitet, nie aus den Daten. */
+export type Lektionsstatus = 'done' | 'current' | 'open' | 'locked'
+
+/**
+ * Lernstand eines App-Bereichs. Gilt für codeFortschritt,
+ * promptingFortschritt und electroFortschritt gleichermaßen.
+ */
+export interface Bereichslernstand {
+  version: 1
+  /** Lektions- oder Übungs-ID → Tag der Erledigung. */
+  erledigt: Record<string, Tagesschluessel>
+  /** Übungs-ID → eigene Lösung oder Notiz. */
+  notizen: Record<string, string>
+  xp: number
+  serie: number
+  letzterTag: Tagesschluessel | null
+  /** Tag → an diesem Tag gesammelte XP. Wächst bisher ohne Obergrenze. */
+  tage: Record<Tagesschluessel, number>
+}
+
+/* ===== Gamification =====
+   Serie und Wochenliga werden nicht als eigene Form gespeichert, sondern aus
+   einem Lernstand berechnet (core/progress/gamification.ts). Die Regeln sind
+   für alle vier Apps dieselben, die Zahlen nicht — siehe ADR-008. */
+
+/**
+ * Der Ausschnitt eines Lernstands, den die Serienberechnung liest. Alle Felder
+ * sind wahlfrei: der Bereichs-Lernstand der drei neuen Apps kennt keinen
+ * `serienSchutz`, der Lernstand der Sprach-App schon.
+ */
+export interface Serienstand {
+  serie?: number
+  letzterTag?: Tagesschluessel | null
+  serienSchutz?: number
+}
+
+/** Ergebnis der Serienberechnung für den ersten Lernmoment eines Tages. */
+export interface Serienergebnis {
+  serie: number
+  letzterTag: Tagesschluessel
+  serienSchutz: number
+  /** Zahl der Schutz-Tage, die diese Berechnung verbraucht hat; sonst 0. */
+  schutzBenutzt: number
+}
+
+/** Eine Stufe der persönlichen Wochenliga. */
+export interface Wochenliga {
+  id: string
+  name: string
+  /** Untere Schwelle in gelösten Aufgaben, einschließlich. */
+  start: number
+  /** Obere Schwelle; `null` in der höchsten Liga. */
+  ziel: number | null
+  icon: string
+  text: string
+}
+
+/** Eine Ligastufe samt Einordnung des aktuellen Wochenstands. */
+export interface Wochenligastand extends Wochenliga {
+  /** Gelöste Aufgaben dieser Woche, nie negativ. */
+  aufgaben: number
+  naechste: Wochenliga | null
+  /** Fortschritt innerhalb der Stufe; in der höchsten Liga fest 1. */
+  fortschritt: number
+  /** Breite der Stufe; in der höchsten Liga fest 1. */
+  spanne: number
+  /** Aufgaben bis zur nächsten Stufe; in der höchsten Liga 0. */
+  fehlen: number
 }

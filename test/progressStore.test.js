@@ -43,7 +43,7 @@ const {
   zahleEdelsteine,
   zaehleAufgabe,
 } = await import('../src/core/progress/progressStore.js')
-const { heute, tagPlus, tagVon } = await import('../src/core/progress/scheduler.js')
+const { heute, tagPlus, tagVon } = await import('../src/core/progress/scheduler.ts')
 
 // ===== XP und Serie =====
 

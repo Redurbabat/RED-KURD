@@ -1,8 +1,8 @@
 // Auswertungen des Lernstands: faellige Karten, Fertigkeiten, Wochenaktivitaet.
 // Reine Lesefunktionen — sie aendern nichts.
 import { holeFortschritt, level } from './progressStore.js'
-import { heute, tagVon, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.js'
-import { ligaFuerAufgaben } from './gamification.js'
+import { heute, tagVon, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.ts'
+import { ligaFuerAufgaben } from './gamification.ts'
 
 /** Alle heute faelligen Karten. */
 export function faelligeKarten() {

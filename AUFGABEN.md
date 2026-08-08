@@ -36,7 +36,7 @@ Herkunft: die Liste stammt aus der Auswertung von 23 offenen Lern- und Sprachpro
       Grammatik (`GrammarTrainer`).
 - [x] **XP, Tagesserie, Level** und dazu Sterne, Edelsteine, Schlüssel, Truhen,
       Tages- und Wochenaufgaben, Auszeichnungen, Wochenliga.
-- [x] **Spaced Repetition** — SM-2-vereinfacht in `src/core/progress/scheduler.js`,
+- [x] **Spaced Repetition** — SM-2-vereinfacht in `src/core/progress/scheduler.ts`,
       Stufen 0–6 mit den Abständen 1/3/7/16/35/70 Tage.
 - [x] **Eigene Kartenstapel** — `merkeWort()` aus dem Wörterbuch und aus dem Lesetext,
       dort auch „alle Wörter merken".

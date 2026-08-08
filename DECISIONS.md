@@ -338,13 +338,13 @@ Prompt-Übung sind nicht dieselbe Einheit.
   Lektionsstatus wird immer aus dem Lernstand abgeleitet (`done` → `current` → `open` →
   `locked`), Konstanten `XP_JE_LEKTION` = 10, `XP_JE_UEBUNG` = 15, `TAGESZIEL_XP` = 30.
 - **Geteilt wird die Serienregel, nicht die Serie.** Alle drei rufen dieselbe reine
-  Funktion `aktualisiereSerie()` aus `core/progress/gamification.js` und `heute()` aus
-  `core/progress/scheduler.js` — jede aber auf ihrem eigenen Stand.
+  Funktion `aktualisiereSerie()` aus `core/progress/gamification.ts` und `heute()` aus
+  `core/progress/scheduler.ts` — jede aber auf ihrem eigenen Stand.
 - **Die Sprach-App hat ihr eigenes, älteres und größeres Modell** (`progressStore.js`):
   XP, Serie samt Serienschutz, Einheiten, Sterne, Wiederholkarten, Tagesstatistik über 60
   Tage, Edelsteine, Schlüssel, Truhen, Lernzeit. Mit den anderen teilt sie nur die
   Serienregel.
-- **Das Wiederholsystem gibt es nur in der Sprach-App.** `scheduler.js` (SM-2-Idee,
+- **Das Wiederholsystem gibt es nur in der Sprach-App.** `scheduler.ts` (SM-2-Idee,
   Stufen mit den Abständen 1/3/7/16/35/70 Tage) arbeitet auf Karten. Die drei neuen Apps
   kennen keine Karten: ihr Lernstand merkt sich, **was** erledigt ist, nicht, **wann** es
   wieder fällig wird.

@@ -25,7 +25,9 @@
     "noEmit": true,
     "skipLibCheck": true,
 
-    "allowImportingTsExtensions": false,
+    /* Migrierte Module werden mit .ts-Endung importiert (Node loest .js
+       nicht auf .ts auf). Zulaessig, weil noEmit gesetzt ist. */
+    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/types/**/*.d.ts"],

@@ -11,7 +11,7 @@ import {
   schluesselTeile,
   tagPlus,
   tagVon,
-} from '../src/core/progress/scheduler.js'
+} from '../src/core/progress/scheduler.ts'
 
 test('tagVon liefert den Kalendertag in der Zeitzone des Geraets', () => {
   assert.equal(tagVon(new Date(2026, 7, 3, 23, 59)), '2026-08-03')

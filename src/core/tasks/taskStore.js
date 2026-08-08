@@ -2,7 +2,7 @@
 // abgeleitet — es gibt keine zweite Zaehlung, die auseinanderlaufen koennte.
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { heute } from '../progress/scheduler.js'
+import { heute } from '../progress/scheduler.ts'
 import { gibXp, gibEdelsteine, gibSchluessel, holeFortschritt } from '../progress/progressStore.js'
 import {
   tagesStatistik,

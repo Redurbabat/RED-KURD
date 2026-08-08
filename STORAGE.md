@@ -137,7 +137,7 @@ Quelle: `src/core/progress/progressStore.js:9–27` (Konstante `LEER`). Dies ist
 | `weltTruhen` | `Record<string, string>` | Welt-ID → `"JJJJ-MM-TT"`; liegt bewusst hier und nicht in einem eigenen Schlüssel, damit der Export sie mitnimmt |
 | `lernzeit` | `number` | Lernsekunden insgesamt |
 
-**`Karte`** (`src/core/progress/scheduler.js:50–66`) — vereinfachtes SM-2:
+**`Karte`** (`src/core/progress/scheduler.ts:63–91`) — vereinfachtes SM-2:
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -146,7 +146,7 @@ Quelle: `src/core/progress/progressStore.js:9–27` (Konstante `LEER`). Dies ist
 | `gesehen` | `number` | Antwortversuche insgesamt |
 | `richtig` | `number` | Davon richtig |
 
-Der Schlüssel enthält die Fertigkeit, weil dieselbe Vokabel je Fertigkeit unterschiedlich sicher sitzt. Gültige Fertigkeiten: `erkennen`, `abrufen`, `schreiben`, `hoeren` (`scheduler.js:7`).
+Der Schlüssel enthält die Fertigkeit, weil dieselbe Vokabel je Fertigkeit unterschiedlich sicher sitzt. Gültige Fertigkeiten: `erkennen`, `abrufen`, `schreiben`, `hoeren` (`scheduler.ts:16`).
 
 **`Tag`** (`progressStore.js:199`, Konstante `LEERER_TAG`):
 

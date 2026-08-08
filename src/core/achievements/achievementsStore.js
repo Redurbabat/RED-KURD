@@ -3,7 +3,7 @@
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
 import { statistik } from '../progress/progressSelectors.js'
-import { heute } from '../progress/scheduler.js'
+import { heute } from '../progress/scheduler.ts'
 import { kursFortschritt, WELTEN, weltFortschritt } from '../courses/courseRepository.js'
 
 export const AUSZEICHNUNGEN = [

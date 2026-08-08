@@ -3,8 +3,8 @@
 // bewusst KEINEN zweiten Fortschritt fuer das Abenteuer.
 import { KEYS, lies, schreibe, exportiereSpeicherstand } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { heute, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.js'
-import { aktualisiereSerie } from './gamification.js'
+import { heute, naechsteKarte, kartenSchluessel, SICHER_AB } from './scheduler.ts'
+import { aktualisiereSerie } from './gamification.ts'
 
 const LEER = {
   version: 2,

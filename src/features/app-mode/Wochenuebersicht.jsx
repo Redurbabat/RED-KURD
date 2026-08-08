@@ -3,7 +3,7 @@
 // Zahl mit eigener Einheit (Sprache zählt Aufgaben, die anderen XP).
 import Icon from '../../components/icons/Icon.jsx'
 import { KEYS, lies } from '../../core/storage.js'
-import { heute } from '../../core/progress/scheduler.js'
+import { heute } from '../../core/progress/scheduler.ts'
 import { reiheGesamt, wochenUebersicht } from '../../core/lernbereiche/wochenUebersicht.js'
 import { APP_MODES, APP_MODE_LABELS } from './appModes.js'
 

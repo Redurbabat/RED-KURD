@@ -7,13 +7,13 @@
     "dev": "vite",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
-    "test": "node --test",
+    "test": "node --experimental-strip-types --test",
     "data:check": "node scripts/upload-cloud-data.mjs --dry-run",
     "data:upload": "node scripts/upload-cloud-data.mjs",
     "app:upload": "node scripts/upload-cloud-data.mjs dist --prefix=app --exclude=server,daten,.openai",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src test scripts server.js sites",
-    "content:check": "node --test test/course-content.test.js test/language-courses.test.js",
+    "content:check": "node --experimental-strip-types --test test/course-content.test.js test/language-courses.test.js",
     "check": "npm run typecheck && npm run lint && npm test && npm run build"
   },
   "dependencies": {

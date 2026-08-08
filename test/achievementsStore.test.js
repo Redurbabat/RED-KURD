@@ -23,7 +23,7 @@ const { setzeFortschritt } = await import('../src/core/progress/progressStore.js
 const { AUSZEICHNUNGEN, anzahlFrei, holeAuszeichnungen, zuruecksetzen } = await import(
   '../src/core/achievements/achievementsStore.js'
 )
-const { heute } = await import('../src/core/progress/scheduler.js')
+const { heute } = await import('../src/core/progress/scheduler.ts')
 
 test('jede Auszeichnung traegt Name, Beschreibung und eine Pruefung', () => {
   const ids = AUSZEICHNUNGEN.map((a) => a.id)

@@ -4,7 +4,7 @@ import {
   aktualisiereSerie,
   ligaFuerAufgaben,
   tageZwischen,
-} from '../src/core/progress/gamification.js'
+} from '../src/core/progress/gamification.ts'
 
 test('Kalendertage werden unabhängig von Uhrzeit und Sommerzeit gezählt', () => {
   assert.equal(tageZwischen('2026-03-28', '2026-03-30'), 2)
