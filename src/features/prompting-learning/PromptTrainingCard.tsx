@@ -3,12 +3,19 @@ import Badge from '../../components/common/Badge.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 
-/**
- * @param {{exercise:{id:string,title:string,topic:string,difficulty:string,
- *          estimatedMinutes:number,description:string,task:string},
- *          erledigt:boolean, onOeffnen:Function}} props
- */
-export default function PromptTrainingCard({ exercise, erledigt, onOeffnen }) {
+import type { Bereichsuebung } from '../../types/lernbereich'
+
+export interface PromptTrainingCardProps {
+  exercise: Bereichsuebung
+  erledigt: boolean
+  onOeffnen: () => void
+}
+
+export default function PromptTrainingCard({
+  exercise,
+  erledigt,
+  onOeffnen,
+}: PromptTrainingCardProps) {
   return (
     <section className="rk-karte pl-uebung">
       <header className="pl-uebung-kopf">
