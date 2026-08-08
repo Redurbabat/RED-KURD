@@ -179,7 +179,8 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 417 Tests grün.
+Stand: `npm test` läuft heute mit 436 Tests grün, dazu `npm run test:browser`
+mit 62 Prüfungen im echten Bündel.
 
 *Sprach-App*
 

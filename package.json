@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src test scripts server.js sites",
     "content:check": "node --experimental-strip-types --test test/course-content.test.js test/language-courses.test.js",
-    "check": "npm run typecheck && npm run lint && npm test && npm run build"
+    "check": "npm run typecheck && npm run lint && npm test && npm run build",
+    "test:browser": "node scripts/browser-tests.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
@@ -27,6 +28,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "drizzle-kit": "^0.31.10",
     "oxlint": "^1.77.0",
+    "playwright": "^1.49.0",
     "typescript": "^5.9.3",
     "vite": "^5.4.11"
   }

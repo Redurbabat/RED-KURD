@@ -182,7 +182,8 @@ Standardpfad der Datenbank ist `local-data/private/red-kurd.db`. Anpassbar über
 ```bash
 npm run typecheck   # tsc --noEmit, strict
 npm run lint        # oxlint über src test scripts server.js sites
-npm test            # node --test über test/
+npm test            # node --test über test/ (ohne Browser)
+npm run test:browser # Prüfungen im echten Bündel; einmalig: npx playwright install chromium
 npm run build       # Produktionsbündel
 npm run check       # typecheck + lint + test + build nacheinander
 ```

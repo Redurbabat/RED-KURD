@@ -605,4 +605,4 @@ Diese Punkte sind bekannt und stehen hier, damit sie nicht als Neuentdeckung wie
 
 ---
 
-*Stand: 375 Tests grün (`npm test`), darunter `storage.test.js`, `storage-basis.test.js`, `sicherungRundlauf.test.js`, `bereichsLernstand.test.js`, `elektroSchule.test.js`, `fehlerbuch.test.js`, `appMode.test.js` und `wochenUebersicht.test.js`. Prüfbar mit `npm run typecheck`, `npm run lint`, `npm run check`.*
+*Stand: 436 Tests grün (`npm test`), darunter `storage.test.js`, `storage-basis.test.js`, `migrationsPipeline.test.js`, `sicherung.test.js`, `sicherungRundlauf.test.js`, `aufnahmen.test.js`, `bereichsLernstand.test.js`, `elektroSchule.test.js`, `fehlerbuch.test.js`, `appMode.test.js` und `wochenUebersicht.test.js`. Was ohne Browser nicht prüfbar ist — die Migration von Version 1 von Ende zu Ende, das Einspielen einer Sicherung und die Aufnahmen in der IndexedDB — steht in `scripts/browser/` und läuft mit `npm run test:browser`. Prüfbar mit `npm run typecheck`, `npm run lint`, `npm run check`.*

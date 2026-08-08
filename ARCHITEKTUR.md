@@ -487,7 +487,8 @@ ohne dass der Typprüfer etwas merkt.
 | `npm run build` | Produktionsbündel und Worker-Vorbereitung |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | oxlint über `src test scripts server.js sites` |
-| `npm test` | `node --test` über `test/` |
+| `npm test` | `node --test` über `test/` — ohne Browser, ohne Netz |
+| `npm run test:browser` | die Prüfungen im echten Bündel (`scripts/browser/`): Migration von Version 1, Sicherung einspielen, Aufnahmen in der IndexedDB, alle vier Apps. Startet sich den Vorschauserver selbst. **Nicht Teil von `npm run check`** — wer keinen Browser hat, soll trotzdem entwickeln können |
 | `npm run check` | typecheck + lint + test + build in einem Lauf |
 | `npm run content:check` | nur die Kursdaten-Tests |
 
