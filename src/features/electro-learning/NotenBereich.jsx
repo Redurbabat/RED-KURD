@@ -18,7 +18,7 @@ import {
   istGueltigeNote,
   schlechtesteNote,
   trend,
-} from '../../core/elektro/notenRechnung.js'
+} from '../../core/elektro/notenRechnung.ts'
 
 const TREND_TEXT = {
   besser: 'Trend: aufwärts',

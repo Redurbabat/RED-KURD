@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
-import * as f from '../../core/elektro/formeln.js'
-import { gerundet } from '../../core/elektro/notenRechnung.js'
+import * as f from '../../core/elektro/formeln.ts'
+import { gerundet } from '../../core/elektro/notenRechnung.ts'
 
 function Feld({ id, label, wert, setzen, platzhalter }) {
   return (

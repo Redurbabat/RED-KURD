@@ -7,7 +7,7 @@ import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
 import { heute } from '../../core/progress/scheduler.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
-import { tageBis } from '../../core/elektro/notenRechnung.js'
+import { tageBis } from '../../core/elektro/notenRechnung.ts'
 
 const TON = {
   'Nicht begonnen': 'neutral',

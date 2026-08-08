@@ -6,7 +6,7 @@
 // exerciseFactory.ts): Die Suche darf grosszuegiger sein als eine Antwort-
 // Pruefung — ein Treffer zu viel stoert nicht, eine falsch akzeptierte
 // Antwort schon.
-export function sucheNormal(text) {
+export function sucheNormal(text: unknown): string {
   return String(text || '')
     .toLowerCase()
     .trim()

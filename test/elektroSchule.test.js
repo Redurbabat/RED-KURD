@@ -20,8 +20,8 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const rechnung = await import('../src/core/elektro/notenRechnung.js')
-const formeln = await import('../src/core/elektro/formeln.js')
+const rechnung = await import('../src/core/elektro/notenRechnung.ts')
+const formeln = await import('../src/core/elektro/formeln.ts')
 const schule = await import('../src/core/elektro/schuleStore.ts')
 const { KEYS } = await import('../src/core/storage.ts')
 
@@ -96,6 +96,24 @@ test('beste und schlechteste Note kennen die Richtung', () => {
   assert.equal(rechnung.schlechtesteNote(noten, 'schweiz'), 3)
   assert.equal(rechnung.besteNote(noten, 'deutschland'), 3)
   assert.equal(rechnung.schlechtesteNote(noten, 'deutschland'), 5.5)
+})
+
+test('unlesbare Noten zaehlen nirgends mit — auch nicht als 0', () => {
+  // Aufgefallen ist diese Luecke bei einer Gegenprobe: `werteVon()` durfte
+  // unlesbare Noten als 0 durchlassen, ohne dass ein Test es merkte. Der Fall
+  // ist alltaeglich — das Notenformular startet mit note: '' — und in der
+  // Schweizer Skala waere eine 0 sofort die schlechteste Note von allen.
+  const mitLuecken = [{ note: 3 }, { note: '' }, { note: 5.5 }, { note: 'abc' }, { note: null }]
+  assert.equal(rechnung.besteNote(mitLuecken, 'schweiz'), 5.5)
+  assert.equal(rechnung.schlechtesteNote(mitLuecken, 'schweiz'), 3, 'die leere Note wurde als 0 gewertet')
+  assert.equal(rechnung.besteNote(mitLuecken, 'deutschland'), 3)
+  assert.equal(rechnung.schlechtesteNote(mitLuecken, 'deutschland'), 5.5)
+  // Dasselbe beim Durchschnitt: (3 + 5.5) / 2, nicht durch fuenf geteilt.
+  assert.equal(rechnung.durchschnitt(mitLuecken), 4.25)
+  // Und wenn gar nichts lesbar ist, gibt es kein Ergebnis statt einer 0.
+  assert.equal(rechnung.besteNote([{ note: '' }, { note: '—' }]), null)
+  assert.equal(rechnung.schlechtesteNote([{ note: '' }]), null)
+  assert.equal(rechnung.durchschnitt([{ note: '' }]), null)
 })
 
 test('der Trend braucht genug Noten und kennt die Richtung', () => {

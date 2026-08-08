@@ -1,5 +1,5 @@
 // Online-Modus ohne lokalen Server: durchsucht die statischen JSON-Daten
-import { sucheNormal } from '../schrift/normalisierung.js'
+import { sucheNormal } from '../schrift/normalisierung.ts'
 
 let daten = null
 

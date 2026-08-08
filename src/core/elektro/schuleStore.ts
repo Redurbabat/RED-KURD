@@ -3,7 +3,7 @@
 // Server. Die Oberflaeche liest hier und rechnet nie selbst.
 import { KEYS, lies, schreibe } from '../storage.ts'
 import { melden } from '../store.ts'
-import { STANDARD_SKALA, durchschnitt, tageBis } from './notenRechnung.js'
+import { STANDARD_SKALA, durchschnitt, tageBis } from './notenRechnung.ts'
 
 import type {
   Berichtsstatus,
