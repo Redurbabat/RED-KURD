@@ -1,6 +1,7 @@
 // Kleiner Melder: Stores rufen `melden()`, React-Seiten hoeren mit `useLernstand()`.
 // So zeichnet die Oberflaeche neu, sobald sich XP, Karten, Sitzung oder Shop aendern.
 import { useSyncExternalStore } from 'react'
+import { KEYS } from './storage.ts'
 
 /**
  * Ein Hoerer bekommt nichts uebergeben — er soll nur wissen, *dass* sich etwas
@@ -59,20 +60,47 @@ export function beiFremdaenderung(leeren: Cacheleerer): Abmeldung {
   return () => leerer.delete(leeren)
 }
 
+/** Einen Schluessel an alle angemeldeten Cacheleerer melden. */
+function meldeSchluessel(schluessel: string): void {
+  leerer.forEach((leeren) => {
+    try {
+      leeren(schluessel)
+    } catch {
+      /* ein defekter Hoerer darf die anderen nicht blockieren */
+    }
+  })
+}
+
 if (typeof window !== 'undefined') {
   window.addEventListener('storage', (e) => {
     // Der Zwischenwert ist noetig, weil die Pruefung auf `null` sonst nicht bis
     // in den forEach-Rueckruf hinein gilt: der Pruefer traut einem Feld nicht
     // zu, dass es ueber eine Funktionsgrenze hinweg gleich bleibt.
     const geaendert = e.key
-    if (!geaendert || !geaendert.startsWith('red-kurd-')) return
-    leerer.forEach((leeren) => {
-      try {
-        leeren(geaendert)
-      } catch {
-        /* ein defekter Hoerer darf die anderen nicht blockieren */
-      }
-    })
+
+    // `key === null` heisst laut Spezifikation: ein anderer Tab hat
+    // `localStorage.clear()` gerufen — die groesste denkbare Fremdaenderung.
+    //
+    // Frueher fiel genau dieser Fall durch `if (!geaendert) return`. Die Folge
+    // war schlimmer als ein veralteter Bildschirm: dieser Tab behielt seine
+    // Modul-Caches, und beim naechsten Speichern schrieb er den geloeschten
+    // Lernstand vollstaendig zurueck. Der Nutzer loescht, und es kommt wieder.
+    //
+    // Statt die Rueckruf-Form zu weiten (`string | null`) wird jeder bekannte
+    // Schluessel einzeln gemeldet. Der Unterschied ist wichtig: die zehn
+    // angemeldeten Stores pruefen alle auf `key === KEYS.x`, und ein KUENFTIGER
+    // Store tut das auch. Bei einer geweiteten Form muesste jeder einzelne den
+    // `null`-Fall mitbedenken — und einer wuerde es vergessen. So kann das
+    // nicht passieren, solange sein Schluessel in `KEYS` steht, und genau das
+    // stellt `test/speicherregister.test.js` sicher.
+    if (geaendert === null) {
+      for (const schluessel of Object.values(KEYS)) meldeSchluessel(schluessel)
+      melden()
+      return
+    }
+
+    if (!geaendert.startsWith('red-kurd-')) return
+    meldeSchluessel(geaendert)
     melden()
   })
 }

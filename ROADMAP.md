@@ -135,6 +135,10 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] Test, dass die alten v1-Schlüssel liegen bleiben (ADR-005)
   - [x] App-Wahl: Test für beide Schlüssel und für den Altwert `adventure` →
         Sprach-App mit Abenteuer-Ansicht (`test/appMode.test.js`)
+- [x] `localStorage.clear()` über mehrere Tabs behoben: `e.key === null` invalidiert jetzt
+      **alle** Store-Caches. Vorher behielt ein offener Tab seine Caches und schrieb den
+      gelöschten Lernstand beim nächsten Speichern vollständig zurück — der Nutzer löscht,
+      und es kommt wieder (`test/mehrereTabs.test.js`, `scripts/browser/04-mehrere-tabs.mjs`)
 - [ ] IndexedDB-Umzug für Lernstand, Sitzungen und Aufnahmen — bestehende Daten werden
       **kopiert, nie gelöscht** (ADR-005); der localStorage-Bestand bleibt vorerst als
       Rückfallebene stehen
@@ -198,7 +202,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 455 Tests grün, dazu `npm run test:browser`
+Stand: `npm test` läuft heute mit 463 Tests grün, dazu `npm run test:browser`
 mit 62 Prüfungen im echten Bündel.
 
 *Sprach-App*
