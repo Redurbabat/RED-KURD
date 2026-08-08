@@ -52,7 +52,7 @@ Herkunft: die Liste stammt aus der Auswertung von 23 offenen Lern- und Sprachpro
 
 ### Sprachwerkzeuge
 - [x] **Schrift-Umwandlung Latein ↔ Arabisch** — eigene Regeln in
-      `src/core/schrift/transliteration.js`, Oberfläche unter `/explore/script`.
+      `src/core/schrift/transliteration.ts`, Oberfläche unter `/explore/script`.
 
 ### Plattform
 - [x] **Offline-Modus (PWA)** — Service Worker `public/sw.js` mit App-Hülle für

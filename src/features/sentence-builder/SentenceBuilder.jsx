@@ -3,7 +3,7 @@
 // Die Sätze kommen aus den statischen Beispieldaten, nicht aus dem Wiederholsystem.
 import { useEffect, useMemo, useState } from 'react'
 import { zufallsPaare } from '../../core/data/staticData.js'
-import { mische } from '../../core/session/exerciseFactory.js'
+import { mische } from '../../core/session/exerciseFactory.ts'
 import { gibXp } from '../../core/progress/progressStore.js'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'

@@ -6,7 +6,7 @@ import {
   WELTEN,
   ALLE_WOERTER,
 } from '../src/core/courses/courseRepository.js'
-import { planeLektion } from '../src/core/session/sessionPlanner.js'
+import { planeLektion } from '../src/core/session/sessionPlanner.ts'
 
 test('der Kurs waechst nur, er schrumpft nie', () => {
   // Untergrenzen statt Fixwerte: neue Kapitel sollen den Test nicht brechen,

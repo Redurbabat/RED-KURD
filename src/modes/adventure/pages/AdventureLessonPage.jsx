@@ -9,8 +9,8 @@ import {
   einheitProzent,
   holeEinheit,
 } from '../../../core/courses/courseRepository.js'
-import { planeLektion } from '../../../core/session/sessionPlanner.js'
-import { baueUebungen } from '../../../core/session/exerciseFactory.js'
+import { planeLektion } from '../../../core/session/sessionPlanner.ts'
+import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import {
   einheitAbgeschlossen,
   gibEdelsteine,

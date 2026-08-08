@@ -2,15 +2,98 @@
 // faellige Wiederholungen zuerst, dann neue Wörter aus der aktuellen Einheit.
 import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.js'
 import { EINHEITEN, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
-import { SKILL_JE_ART, baueUebungen, mische } from './exerciseFactory.js'
+import { SKILL_JE_ART, baueUebungen, mische } from './exerciseFactory.ts'
 
-export const DAUERN = [
+import type { Aufgabenart, Uebung, Uebungswort, Wort } from '../../types/lernstand'
+
+/**
+ * Eine Kurseinheit, so weit der Planer sie braucht. courseRepository ist noch
+ * JavaScript — die Form steht hier, bis das Modul selbst migriert ist.
+ */
+export interface Einheit {
+  id: string
+  name: string
+  woerter: readonly Wort[]
+  lektionen: readonly Lektion[]
+}
+
+/** Ein Abschnitt einer Einheit. `arten` ist blosser Text aus den Kursdaten. */
+export interface Lektion {
+  id: string
+  name: string
+  anzahl: number
+  arten?: readonly string[]
+}
+
+/**
+ * Was `faelligeKarten()` und `schwierigeKarten()` liefern: der zerlegte
+ * Kartenschluessel samt Kartenstand. progressSelectors ist noch JavaScript.
+ */
+interface Faelligkarte {
+  de: string
+  /** Fehlt, wenn der Kartenschluessel gar kein `|` enthaelt — siehe schluesselTeile(). */
+  ku: string | undefined
+  /** `gemischt`, eine Fertigkeit oder etwas Unbekanntes. */
+  skill: string
+}
+
+/** Eine der drei Sitzungslaengen. */
+export interface Dauerstufe {
+  id: string
+  name: string
+  dauer: string
+  minuten: number
+  aufgaben: number
+}
+
+/** Ergebnis von `planeSitzung`: die Aufgaben und die Zahlen fuer die Oberflaeche. */
+export interface Sitzungsplan {
+  uebungen: Uebung[]
+  titel: string
+  dauer: Dauerstufe
+  einheit: Einheit
+  wiederholungen: number
+  neueWoerter: number
+  hoerAufgaben: number
+  schreibAufgaben: number
+  rueckstand: boolean
+  faelligGesamt: number
+}
+
+/** Eine Sitzung, die nur aus einer Aufgabenliste besteht. */
+export interface Uebungsplan {
+  uebungen: Uebung[]
+  titel: string
+  anzahl: number
+}
+
+/** Ergebnis von `planeLektion`. */
+export interface Lektionsplan {
+  uebungen: Uebung[]
+  titel: string
+  einheit: Einheit
+  lektion: Lektion
+}
+
+/**
+ * Werte, die es nach den Kursdaten immer gibt. courseRepository greift am Ende
+ * auf `EINHEITEN[…]` zu, fuer tsc ist das Ergebnis deshalb „vielleicht
+ * undefined" — leer ist der Kursbaum aber nie. Waere er es doch, lief der
+ * Planer schon bisher in einen TypeError; er kommt jetzt eine Zeile frueher
+ * und sagt, was fehlt.
+ */
+function muss<T>(wert: T | null | undefined, was: string): T {
+  if (wert === null || wert === undefined) throw new Error(`${was} fehlt in den Kursdaten.`)
+  return wert
+}
+
+export const DAUERN: readonly [Dauerstufe, Dauerstufe, Dauerstufe] = [
   { id: 'kurz', name: 'Kurz', dauer: 'ca. 5 Min', minuten: 5, aufgaben: 8 },
   { id: 'standard', name: 'Standard', dauer: 'ca. 10 Min', minuten: 10, aufgaben: 14 },
   { id: 'intensiv', name: 'Intensiv', dauer: 'ca. 20 Min', minuten: 20, aufgaben: 24 },
 ]
 
-export function dauerVon(id) {
+export function dauerVon(id: string): Dauerstufe {
   return DAUERN.find((d) => d.id === id) || DAUERN[1]
 }
 
@@ -20,8 +103,14 @@ export function dauerVon(id) {
  * Tippaufgabe gestellt, bewertet dann die Karte „…|schreiben" und bleibt
  * selbst für immer fällig.
  */
-function alsWort(karte) {
-  return { de: karte.de, ku: karte.ku, bild: bildVon(karte.ku), skill: karte.skill }
+function alsWort(karte: Faelligkarte): Uebungswort {
+  // `ku` kann laut schluesselTeile() fehlen: ein Schluessel ohne `|` hat
+  // keinen kurmancî-Teil. Geschrieben werden Schluessel nur ueber
+  // kartenSchluessel(), solche Karten entstehen also allein aus beschaedigten
+  // Daten. Bisher wanderte das `undefined` unbemerkt bis in Frage und Antwort
+  // einer Aufgabe, jetzt steht dort ein leerer Text — fuer die Lernende
+  // dasselbe leere Feld. Die Luecke selbst bleibt und ist gemeldet.
+  return { de: karte.de, ku: karte.ku ?? '', bild: bildVon(karte.ku), skill: karte.skill }
 }
 
 /**
@@ -30,8 +119,8 @@ function alsWort(karte) {
  * de|ku|skill ohnehin einmalig, mit Skill im Schluessel waere das ein No-op
  * und „Silav" koennte viermal in derselben Wiederholung stehen.)
  */
-function ohneDoppelte(woerter) {
-  const gesehen = new Set()
+function ohneDoppelte<T extends { de: string; ku: string }>(woerter: readonly T[]): T[] {
+  const gesehen = new Set<string>()
   return woerter.filter((w) => {
     const key = `${w.de}|${w.ku}`
     if (gesehen.has(key)) return false
@@ -42,13 +131,13 @@ function ohneDoppelte(woerter) {
 
 /**
  * Plant eine gemischte Sitzung.
- * @param {string} dauerId 'kurz' | 'standard' | 'intensiv'
+ * @param dauerId 'kurz' | 'standard' | 'intensiv'
  */
-export function planeSitzung(dauerId = 'standard') {
+export function planeSitzung(dauerId: string = 'standard'): Sitzungsplan {
   const dauer = dauerVon(dauerId)
   const anzahl = dauer.aufgaben
-  const faellig = faelligeKarten()
-  const einheit = aktuelleEinheit()
+  const faellig: readonly Faelligkarte[] = faelligeKarten()
+  const einheit = muss<Einheit>(aktuelleEinheit(), 'Die aktuelle Einheit')
 
   // Bei grossem Rueckstand haben Wiederholungen Vorrang.
   const rueckstand = faellig.length > anzahl * 2
@@ -92,24 +181,28 @@ export function planeSitzung(dauerId = 'standard') {
 }
 
 /** Sitzung nur aus faelligen Karten. */
-export function planeWiederholung(anzahl = 15) {
-  const woerter = ohneDoppelte(mische(faelligeKarten()).map(alsWort)).slice(0, anzahl)
+export function planeWiederholung(anzahl: number = 15): Uebungsplan {
+  const karten: readonly Faelligkarte[] = faelligeKarten()
+  const woerter = ohneDoppelte(mische(karten).map(alsWort)).slice(0, anzahl)
   return { uebungen: baueUebungen(woerter), titel: 'Wiederholen', anzahl: woerter.length }
 }
 
 /** Sitzung aus den Wörtern, die immer wieder schwerfallen. */
-export function planeSchwierige(anzahl = 10) {
-  const woerter = ohneDoppelte(schwierigeKarten(anzahl * 2).map(alsWort)).slice(0, anzahl)
+export function planeSchwierige(anzahl: number = 10): Uebungsplan {
+  const karten: readonly Faelligkarte[] = schwierigeKarten(anzahl * 2)
+  const woerter = ohneDoppelte(karten.map(alsWort)).slice(0, anzahl)
   return { uebungen: baueUebungen(woerter), titel: 'Schwierige Wörter', anzahl: woerter.length }
 }
 
 /** Sitzung fuer eine Lektion einer Einheit. */
-export function planeLektion(einheitId, lektionId) {
-  const einheit = holeEinheit(einheitId)
+export function planeLektion(einheitId: string, lektionId: string): Lektionsplan | null {
+  const einheit: Einheit | null = holeEinheit(einheitId)
   if (!einheit) return null
-  const lektion =
+  const lektion = muss<Lektion>(
     einheit.lektionen.find((l) => l.id === lektionId || l.id === `${einheitId}-${lektionId}`) ||
-    einheit.lektionen[0]
+      einheit.lektionen[0],
+    'Eine Lektion der Einheit'
+  )
   const woerter = mische(einheit.woerter).slice(0, lektion.anzahl)
   return {
     uebungen: baueUebungen(woerter, lektion.arten),
@@ -124,21 +217,32 @@ export function planeLektion(einheitId, lektionId) {
  * Alle Wörter bis einschließlich der aktuellen Einheit — der Stoff, den die
  * Lernende schon gesehen hat oder gerade sieht.
  */
-function erreichterWortschatz() {
-  const jetzt = aktuelleEinheit()
-  const bis = EINHEITEN.findIndex((e) => e.id === jetzt.id)
-  return EINHEITEN.slice(0, bis >= 0 ? bis + 1 : EINHEITEN.length).flatMap((e) => e.woerter)
+function erreichterWortschatz(): Wort[] {
+  const jetzt = muss<Einheit>(aktuelleEinheit(), 'Die aktuelle Einheit')
+  const alle: readonly Einheit[] = EINHEITEN
+  const bis = alle.findIndex((e) => e.id === jetzt.id)
+  return alle.slice(0, bis >= 0 ? bis + 1 : alle.length).flatMap((e) => e.woerter)
 }
 
-export function planeTraining(art, anzahl = 12) {
+export function planeTraining(art: Aufgabenart, anzahl: number = 12): Uebungsplan {
   // Nur faellige Karten, deren Fertigkeit zur Trainingsart passt: Eine
   // „erkennen"-Karte in einem Tipp-Training wuerde die Karte „…|schreiben"
   // bewerten — die faellige Karte selbst bliebe fuer immer faellig.
   const passenderSkill = SKILL_JE_ART[art]
-  const faellig = faelligeKarten()
+  const karten: readonly Faelligkarte[] = faelligeKarten()
+  const faellig = karten
     .filter((k) => !k.skill || k.skill === 'gemischt' || k.skill === passenderSkill)
     .map(alsWort)
-  const aus = mische(faellig.length >= anzahl ? faellig : [...faellig, ...mische(aktuelleEinheit().woerter)])
+  // aktuelleEinheit() wird wie bisher nur dann gelesen, wenn die faelligen
+  // Karten nicht reichen.
+  const aus: Uebungswort[] = mische(
+    faellig.length >= anzahl
+      ? faellig
+      : [
+          ...faellig,
+          ...mische(muss<Einheit>(aktuelleEinheit(), 'Die aktuelle Einheit').woerter),
+        ]
+  )
   let woerter = aus.slice(0, anzahl)
 
   // Beim Bildertraining bevorzugen wir Wörter mit echtem Foto — aber nur aus

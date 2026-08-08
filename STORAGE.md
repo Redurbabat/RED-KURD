@@ -213,8 +213,8 @@ Geschrieben von `src/core/session/sessionStore.js:6–9`, befüllt aus `src/feat
 | `art` | `'wahl-ku' \| 'wahl-de' \| 'tippen' \| 'bild' \| 'hoeren'` | Aufgabenart; bestimmt die trainierte Fertigkeit |
 | `frage` | `string` | Fragetext |
 | `antwort` | `string` | Richtige Antwort |
-| `optionen` | `string[]` | Auswahlmöglichkeiten (bei `tippen` leer) |
-| `w` | `{ de: string, ku: string, bild?: string }` | Das Lernpaar; `bild` ist ein Emoji oder ein Fotopfad |
+| `optionen` | `string[]` bei `wahl-ku`, `wahl-de`, `hoeren`; `{ bild: string, ku: string }[]` bei `bild`; **fehlt** bei `tippen` | Auswahlmöglichkeiten. Die Form hängt an der Art — bei `tippen` legt `baueUebungen()` das Feld gar nicht erst an, `schlank()` schreibt dort `undefined` |
+| `w` | `{ de: string, ku: string, bild?: string }` | Das Lernpaar; `bild` ist ein Emoji oder ein Fotopfad. Vor `schlank()` trägt es zusätzlich `skill`, wenn das Wort aus einer fälligen Karte kam |
 
 `sitzungLaden()` verwirft den Stand, wenn `uebungen` fehlt oder leer ist oder wenn `index >= uebungen.length`.
 

@@ -18,7 +18,7 @@ import {
   aktuellerKnoten,
   weltPfad,
 } from '../../../core/courses/courseRepository.js'
-import { planeSitzung } from '../../../core/session/sessionPlanner.js'
+import { planeSitzung } from '../../../core/session/sessionPlanner.ts'
 import { standardDauer } from '../../../core/profile/profileStore.js'
 import { kulturkarten } from '../../../data/kultur.js'
 import Icon from '../../../components/icons/Icon.jsx'

@@ -6,7 +6,7 @@ import {
   lateinNachArabisch,
   arabischNachLatein,
   sprich,
-} from '../../core/schrift/transliteration.js'
+} from '../../core/schrift/transliteration.ts'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'

@@ -8,9 +8,9 @@ import {
   planeWiederholung,
   planeSchwierige,
   planeTraining,
-} from '../../../core/session/sessionPlanner.js'
+} from '../../../core/session/sessionPlanner.ts'
 import { standardDauer } from '../../../core/profile/profileStore.js'
-import { baueUebungen } from '../../../core/session/exerciseFactory.js'
+import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import SentenceBuilder from '../../../features/sentence-builder/SentenceBuilder.jsx'

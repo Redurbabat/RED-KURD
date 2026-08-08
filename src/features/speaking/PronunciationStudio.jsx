@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { EINHEITEN } from '../../core/courses/courseRepository.js'
 import { spieleWort, speichereAufnahme, holeAufnahme } from '../../core/audio/audioService.js'
-import { sprich } from '../../core/schrift/transliteration.js'
+import { sprich } from '../../core/schrift/transliteration.ts'
 import { gibXp } from '../../core/progress/progressStore.js'
 import Card from '../../components/common/Card.jsx'
 import Badge from '../../components/common/Badge.jsx'

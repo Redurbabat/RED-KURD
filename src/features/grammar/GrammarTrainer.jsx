@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react'
 import { EINHEITEN } from '../../core/courses/courseRepository.js'
 import { grammatikUebungen } from '../../data/grammatikUebungen.js'
-import { mische } from '../../core/session/exerciseFactory.js'
+import { mische } from '../../core/session/exerciseFactory.ts'
 import { gibXp } from '../../core/progress/progressStore.js'
 import { spieleWort, klickGefuehl } from '../../core/audio/audioService.js'
 import Card from '../../components/common/Card.jsx'

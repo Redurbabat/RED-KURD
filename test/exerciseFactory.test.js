@@ -7,7 +7,7 @@ import {
   baueUebungen,
   istRichtigGetippt,
   mische,
-} from '../src/core/session/exerciseFactory.js'
+} from '../src/core/session/exerciseFactory.ts'
 
 const WOERTER = [
   { de: 'Hallo', ku: 'Silav', bild: '👋' },

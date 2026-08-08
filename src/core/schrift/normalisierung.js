@@ -3,7 +3,7 @@
 // „çawa" findet und „kase" auch „Käse".
 //
 // Bewusst getrennt von der Tipp-Bewertung (istRichtigGetippt in
-// exerciseFactory.js): Die Suche darf grosszuegiger sein als eine Antwort-
+// exerciseFactory.ts): Die Suche darf grosszuegiger sein als eine Antwort-
 // Pruefung — ein Treffer zu viel stoert nicht, eine falsch akzeptierte
 // Antwort schon.
 export function sucheNormal(text) {

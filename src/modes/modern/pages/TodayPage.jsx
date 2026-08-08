@@ -14,7 +14,7 @@ import {
 } from '../../../core/progress/progressSelectors.js'
 import { tagesZiel, holeTageszielBelohnung } from '../../../core/progress/progressStore.js'
 import { standardDauer, tageszielWert } from '../../../core/profile/profileStore.js'
-import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.js'
+import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.ts'
 import { sitzungLaden, sitzungLoeschen, sitzungProzent } from '../../../core/session/sessionStore.js'
 import { einheitProzent } from '../../../core/courses/courseRepository.js'
 import Icon from '../../../components/icons/Icon.jsx'

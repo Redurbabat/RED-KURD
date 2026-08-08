@@ -1,5 +1,5 @@
 // Audio: eigene/Muttersprachler-Aufnahmen (IndexedDB) mit TTS als Ersatz
-import { sprich } from '../schrift/transliteration.js'
+import { sprich } from '../schrift/transliteration.ts'
 import { tonAn } from '../ui/uiStore.js'
 
 function oeffne() {

@@ -10,7 +10,7 @@ import {
   planeSitzung,
   planeTraining,
   planeWiederholung,
-} from '../src/core/session/sessionPlanner.js'
+} from '../src/core/session/sessionPlanner.ts'
 
 /** Faellige Karten aus echten Kurswoertern bauen, damit Aufgaben entstehen koennen. */
 function faelligeKartenAus(anzahlWoerter, skill = 'erkennen') {

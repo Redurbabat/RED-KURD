@@ -109,14 +109,60 @@ export interface UiEinstellungen {
   preferredVariant: string
 }
 
-/** Eine Aufgabe im Übungsspieler. */
-export interface Uebung {
-  art: Aufgabenart
+/** Ein Wortpaar des Kurses. `bild` ist meist ein Emoji, manchmal ein Foto. */
+export interface Wort {
+  de: string
+  ku: string
+  bild?: string
+}
+
+/**
+ * Ein Wort auf dem Weg in eine Aufgabe. Stammt es aus einer fälligen Karte,
+ * bringt es deren Fertigkeit mit — dann wird genau diese trainiert.
+ * `skill` ist roher Text aus dem Kartenschlüssel: `gemischt` oder etwas
+ * Unbekanntes sind möglich, deshalb `string` und nicht `Fertigkeit`.
+ */
+export interface Uebungswort extends Wort {
+  skill?: string
+}
+
+/** Eine Kachel einer Bildaufgabe. */
+export interface Bildoption {
+  bild: string
+  ku: string
+}
+
+/** Was jede Aufgabe hat, unabhängig von ihrer Art. */
+interface Aufgabenkern {
   frage: string
   antwort: string
-  optionen: unknown[]
-  w: { de: string; ku: string; bild?: string }
+  w: Uebungswort
 }
+
+/** Bildaufgabe: vier Kacheln, gesucht ist das Bild zum Kurmancî-Wort. */
+export interface Bildaufgabe extends Aufgabenkern {
+  art: 'bild'
+  optionen: Bildoption[]
+}
+
+/** Wahlaufgabe: vier Wörter zur Auswahl. */
+export interface Wahlaufgabe extends Aufgabenkern {
+  art: 'wahl-ku' | 'wahl-de' | 'hoeren'
+  optionen: string[]
+}
+
+/** Tippaufgabe: die Antwort wird geschrieben — sie hat gar keine Optionen. */
+export interface Tippaufgabe extends Aufgabenkern {
+  art: 'tippen'
+}
+
+/**
+ * Eine Aufgabe im Übungsspieler. Die Optionen hängen an der Art: Bildaufgaben
+ * tragen Kacheln, Wahlaufgaben Wörter, die Tippaufgabe hat keine. Das eine
+ * `optionen: unknown[]` von früher hat genau das verdeckt — siehe
+ * exerciseFactory.ts, wo die drei Formen entstehen.
+ */
+export type Uebung = Bildaufgabe | Wahlaufgabe | Tippaufgabe
 
 /** `red-kurd-session-v2` — laufende Sitzung. Hat bisher kein version-Feld. */
 export interface Sitzung {
