@@ -1,7 +1,7 @@
 // Startseite des Bereichs „Elektro-Lehre": Grundlagen, Sicherheit, Praxis.
 // XP, Reihe und Fortschritt kommen aus dem echten, gespeicherten Lernstand.
 import { useState } from 'react'
-import { useLernstand } from '../../core/store.js'
+import { useLernstand } from '../../core/store.ts'
 import Badge from '../../components/common/Badge.jsx'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'

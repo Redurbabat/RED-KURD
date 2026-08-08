@@ -1,8 +1,8 @@
 // Lesen: kuratierte Kurztexte und echte Tatoeba-Sätze.
 // Jedes Wort ist anklickbar — Nachschlagen, Anhören und Merken in einem Panel.
 import { useEffect, useMemo, useState } from 'react'
-import { useLernstand } from '../../core/store.js'
-import { gibXp, merkeWort, holeFortschritt } from '../../core/progress/progressStore.js'
+import { useLernstand } from '../../core/store.ts'
+import { gibXp, merkeWort, holeFortschritt } from '../../core/progress/progressStore.ts'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, zufallsPaare } from '../../core/data/staticData.js'

@@ -1,6 +1,6 @@
 // Einheitendetail: Lernziel, wichtige Wörter und die fünf Lernschritte.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import {
   BESTANDEN_AB,
@@ -9,7 +9,7 @@ import {
   einheitStatus,
   holeEinheit,
 } from '../../../core/courses/courseRepository.ts'
-import { kennstWort, merkeWort } from '../../../core/progress/progressStore.js'
+import { kennstWort, merkeWort } from '../../../core/progress/progressStore.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Card from '../../../components/common/Card.jsx'

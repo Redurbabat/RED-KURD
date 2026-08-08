@@ -1,6 +1,6 @@
 // Auswertungen des Lernstands: faellige Karten, Fertigkeiten, Wochenaktivitaet.
 // Reine Lesefunktionen — sie aendern nichts.
-import { holeFortschritt, level } from './progressStore.js'
+import { holeFortschritt, level } from './progressStore.ts'
 import { heute, tagVon, schluesselTeile, SICHER_AB, SKILLS } from './scheduler.ts'
 import { ligaFuerAufgaben } from './gamification.ts'
 

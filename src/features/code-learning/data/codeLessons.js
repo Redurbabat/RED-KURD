@@ -488,7 +488,7 @@ export const codeLearningPaths = [
           'Mit Strg+P (Mac: Cmd+P) springst du zu jeder Datei, indem du ihren Namen tippst — schneller als jedes Klicken.',
           'Mehrere Dateien öffnen sich als Tabs nebeneinander, wie im Browser.',
         ],
-        beispiel: 'Strg+P → "storage" → öffnet src/core/storage.js',
+        beispiel: 'Strg+P → "storage" → öffnet src/core/storage.ts',
         merke: 'Strg+P und Dateinamen tippen — der schnellste Weg durch ein Projekt.',
       },
       {

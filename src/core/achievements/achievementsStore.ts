@@ -1,12 +1,14 @@
 // Auszeichnungen. Sie werden aus dem Lernstand berechnet — gesperrte
 // Auszeichnungen bleiben sichtbar, damit klar ist, was als Naechstes kommt.
-import { KEYS, lies, schreibe } from '../storage.js'
-import { melden, beiFremdaenderung } from '../store.js'
+import { KEYS, lies, schreibe } from '../storage.ts'
+import { melden, beiFremdaenderung } from '../store.ts'
 import { statistik } from '../progress/progressSelectors.ts'
 import { heute } from '../progress/scheduler.ts'
 import { kursFortschritt, WELTEN, weltFortschritt } from '../courses/courseRepository.ts'
 
-export const AUSZEICHNUNGEN = [
+import type { Auszeichnung, Auszeichnungsstand, Auszeichnungsstatus } from '../../types/lernstand'
+
+export const AUSZEICHNUNGEN: readonly Auszeichnung[] = [
   {
     id: 'erste-schritte',
     name: 'Erste Schritte',
@@ -81,11 +83,18 @@ export const AUSZEICHNUNGEN = [
   },
 ]
 
-let cache
+// Anfangs `undefined`, nach einer Fremdaenderung `null` — beides faellt in
+// `laden()` durch dieselbe Pruefung.
+let cache: Auszeichnungsstand | null | undefined
 
-function laden() {
+function laden(): Auszeichnungsstand {
   if (cache) return cache
-  cache = { version: 1, erhalten: {}, ...(lies(KEYS.auszeichnungen) || {}) }
+  // Die Reihenfolge ist wichtig: Gespeichertes steht hinten und ueberschreibt
+  // die Vorgabe. `Partial`, weil auf der Platte ein aelterer oder von Hand
+  // veraenderter Stand liegen darf — der Rueckfall darunter faengt zusaetzlich
+  // ein ausdrueckliches `null` ab, das kein Typ beschreibt.
+  const gespeichert = lies<Partial<Auszeichnungsstand>>(KEYS.auszeichnungen)
+  cache = { version: 1, erhalten: {}, ...(gespeichert || {}) }
   cache.erhalten = cache.erhalten || {}
   return cache
 }
@@ -94,7 +103,7 @@ function laden() {
  * Liefert alle Auszeichnungen mit Status und merkt sich neu erreichte
  * (fuer den kleinen Hinweis „Neu!").
  */
-export function holeAuszeichnungen() {
+export function holeAuszeichnungen(): Auszeichnungsstatus[] {
   const s = statistik()
   const k = kursFortschritt()
   const weltenFertig = WELTEN.filter((w) => !weltFortschritt(w.id).offen).length
@@ -119,11 +128,11 @@ export function holeAuszeichnungen() {
   return liste
 }
 
-export function anzahlFrei() {
+export function anzahlFrei(): number {
   return holeAuszeichnungen().filter((a) => a.frei).length
 }
 
-export function zuruecksetzen() {
+export function zuruecksetzen(): void {
   cache = { version: 1, erhalten: {} }
   schreibe(KEYS.auszeichnungen, cache)
   melden()

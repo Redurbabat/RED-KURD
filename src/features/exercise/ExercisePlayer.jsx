@@ -9,9 +9,9 @@ import HeloMascot from '../../components/mascot/HeloMascot.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { istRichtigGetippt, SKILL_JE_ART } from '../../core/session/exerciseFactory.ts'
-import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.js'
+import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.ts'
 import { deutschVon, fotoVon, kurmanciVon } from '../../core/courses/courseRepository.ts'
-import { sitzungSpeichern, sitzungLoeschen } from '../../core/session/sessionStore.js'
+import { sitzungSpeichern, sitzungLoeschen } from '../../core/session/sessionStore.ts'
 import { T } from '../../core/texts.js'
 
 const BUCHSTABEN = ['A', 'B', 'C', 'D']

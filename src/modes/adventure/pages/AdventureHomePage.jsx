@@ -7,7 +7,7 @@
 // bereits eine Pergamentfläche. Kopfstatistik und Navigation kommen aus der
 // Shell und werden hier nicht wiederholt.
 import { useMemo } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { grussText } from '../../../core/texts.js'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
@@ -19,7 +19,7 @@ import {
   weltPfad,
 } from '../../../core/courses/courseRepository.ts'
 import { planeSitzung } from '../../../core/session/sessionPlanner.ts'
-import { standardDauer } from '../../../core/profile/profileStore.js'
+import { standardDauer } from '../../../core/profile/profileStore.ts'
 import { kulturkarten } from '../../../data/kultur.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'

@@ -23,7 +23,7 @@ globalThis.localStorage = new SpeicherAttrappe()
 const rechnung = await import('../src/core/elektro/notenRechnung.js')
 const formeln = await import('../src/core/elektro/formeln.js')
 const schule = await import('../src/core/elektro/schuleStore.js')
-const { KEYS } = await import('../src/core/storage.js')
+const { KEYS } = await import('../src/core/storage.ts')
 
 // ===== Noten =====
 
@@ -245,7 +245,7 @@ test('ein kaputter Speicherstand wirft die App nicht um', () => {
 })
 
 test('der Schul-Schluessel wandert in die Sicherung', async () => {
-  const { exportiereSpeicherstand } = await import('../src/core/storage.js')
+  const { exportiereSpeicherstand } = await import('../src/core/storage.ts')
   globalThis.localStorage.removeItem(KEYS.electroSchule)
   schule._cacheLeeren()
   schule.fachHinzufuegen({ name: 'Prüffach' })

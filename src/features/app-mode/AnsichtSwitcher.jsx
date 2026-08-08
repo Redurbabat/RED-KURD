@@ -4,8 +4,8 @@
 // Sichtbar nur, wenn die App „Sprache lernen" offen ist.
 import { useRoute, navigiere } from '../../app/router.jsx'
 import { istAbenteuerPfad, istRedlingoPfad } from '../../app/AppRouter.jsx'
-import { useLernstand } from '../../core/store.js'
-import { appModus, setzeAppModus } from '../../core/ui/uiStore.js'
+import { useLernstand } from '../../core/store.ts'
+import { appModus, setzeAppModus } from '../../core/ui/uiStore.ts'
 import './appMode.css'
 
 const ANSICHTEN = [

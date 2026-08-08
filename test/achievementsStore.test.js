@@ -19,9 +19,9 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { setzeFortschritt } = await import('../src/core/progress/progressStore.js')
+const { setzeFortschritt } = await import('../src/core/progress/progressStore.ts')
 const { AUSZEICHNUNGEN, anzahlFrei, holeAuszeichnungen, zuruecksetzen } = await import(
-  '../src/core/achievements/achievementsStore.js'
+  '../src/core/achievements/achievementsStore.ts'
 )
 const { heute } = await import('../src/core/progress/scheduler.ts')
 

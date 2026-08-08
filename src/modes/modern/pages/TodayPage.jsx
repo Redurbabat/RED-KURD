@@ -2,8 +2,8 @@
 // Überblick und Tagesziel. Die Seite rechnet nichts selbst — sie liest Selektoren
 // und den Sitzungsplaner.
 import { useMemo, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
-import { TAB_KEYS, schreibeTab } from '../../../core/storage.js'
+import { useLernstand } from '../../../core/store.ts'
+import { TAB_KEYS, schreibeTab } from '../../../core/storage.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T, grussText } from '../../../core/texts.js'
 import {
@@ -12,10 +12,10 @@ import {
   gesternStatistik,
   lernzeitText,
 } from '../../../core/progress/progressSelectors.ts'
-import { tagesZiel, holeTageszielBelohnung } from '../../../core/progress/progressStore.js'
-import { standardDauer, tageszielWert } from '../../../core/profile/profileStore.js'
+import { tagesZiel, holeTageszielBelohnung } from '../../../core/progress/progressStore.ts'
+import { standardDauer, tageszielWert } from '../../../core/profile/profileStore.ts'
 import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.ts'
-import { sitzungLaden, sitzungLoeschen, sitzungProzent } from '../../../core/session/sessionStore.js'
+import { sitzungLaden, sitzungLoeschen, sitzungProzent } from '../../../core/session/sessionStore.ts'
 import { einheitProzent } from '../../../core/courses/courseRepository.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'

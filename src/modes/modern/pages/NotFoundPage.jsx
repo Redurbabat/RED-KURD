@@ -1,6 +1,6 @@
 // Freundliche Seite für unbekannte Adressen: sagt, was los ist, zeigt den
 // gesuchten Pfad und bietet zwei sichere Wege zurück in die App.
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'

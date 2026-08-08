@@ -1,7 +1,7 @@
 // Üben-Übersicht: empfohlene Mischung, sechs Trainings, eine Empfehlung nach
 // Fertigkeit und die Wörter, die gerade Mühe machen. Die Seite rechnet nichts
 // selbst — sie liest Selektoren und navigiert zu /practice/<id>.
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {

@@ -1,14 +1,14 @@
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { statistik, wochenAktivitaet, wochenLiga } from '../../../core/progress/progressSelectors.ts'
-import { tagesZiel } from '../../../core/progress/progressStore.js'
-import { tageszielWert } from '../../../core/profile/profileStore.js'
+import { tagesZiel } from '../../../core/progress/progressStore.ts'
+import { tageszielWert } from '../../../core/profile/profileStore.ts'
 import {
   aktuelleEinheit,
   einheitProzent,
   kursFortschritt,
 } from '../../../core/courses/courseRepository.ts'
-import { sitzungLaden } from '../../../core/session/sessionStore.js'
+import { sitzungLaden } from '../../../core/session/sessionStore.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'
 

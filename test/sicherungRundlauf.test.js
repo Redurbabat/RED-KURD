@@ -34,7 +34,7 @@ async function frischeModule() {
   welle += 1
   const q = `?welle=${welle}`
   return {
-    storage: await import(`../src/core/storage.js${q}`),
+    storage: await import(`../src/core/storage.ts${q}`),
     code: await import(`../src/features/code-learning/codeProgressStore.js${q}`),
     prompt: await import(`../src/features/prompting-learning/promptProgressStore.js${q}`),
     electro: await import(`../src/features/electro-learning/electroProgressStore.js${q}`),

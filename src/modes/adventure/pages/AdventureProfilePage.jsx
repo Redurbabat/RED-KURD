@@ -1,14 +1,14 @@
 // Profil des Abenteuer-Modus (Designpaket Bild 11): Profilkopf mit Level,
 // vier Kennzahlen, Auszeichnungen und Wochenaktivität. Alle Werte kommen aus
 // dem einen gemeinsamen Lernstand.
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { Link } from '../../../app/router.jsx'
 import { statistik, wochenAktivitaet } from '../../../core/progress/progressSelectors.ts'
-import { level } from '../../../core/progress/progressStore.js'
+import { level } from '../../../core/progress/progressStore.ts'
 import { WELTEN, weltFortschritt } from '../../../core/courses/courseRepository.ts'
-import { holeProfil } from '../../../core/profile/profileStore.js'
-import { holeAuszeichnungen } from '../../../core/achievements/achievementsStore.js'
-import { aktiverArtikel } from '../../../core/shop/shopStore.js'
+import { holeProfil } from '../../../core/profile/profileStore.ts'
+import { holeAuszeichnungen } from '../../../core/achievements/achievementsStore.ts'
+import { aktiverArtikel } from '../../../core/shop/shopStore.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'

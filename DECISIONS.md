@@ -30,7 +30,7 @@ Cloudflare-Betrieb (Worker + D1, `sites/auth.js`). Fehlt das Backend, erkennt
 `authApi.kontoStatus()` das an 404/405 und die App läuft unverändert weiter. Die
 Entscheidung „ohne Konto lernen" wird geräte-lokal in `red-kurd-ohne-konto-v1`
 festgehalten und ist bewusst von Export und Import ausgenommen (`NUR_LOKAL` in
-`src/core/storage.js`), damit ein eingelesenes Backup nicht die Anmeldeentscheidung
+`src/core/storage.ts`), damit ein eingelesenes Backup nicht die Anmeldeentscheidung
 eines fremden Geräts überträgt. Aus demselben Grund steht dort inzwischen auch die
 laufende Sitzung (`sitzung`): eine halb fertige Übungsrunde gehört dem Gerät, auf dem
 sie begonnen wurde, und darf anderswo nicht wiederbelebt werden.
@@ -55,7 +55,7 @@ Wiederholkarten und XP dreifach gepflegt werden müssten.
 
 **Entscheidung**
 Genau ein Speicher hält den Lernstand: `red-kurd-progress-v2`
-(`src/core/progress/progressStore.js`). Darin XP, Serie samt Serienschutz, Einheiten,
+(`src/core/progress/progressStore.ts`). Darin XP, Serie samt Serienschutz, Einheiten,
 Sterne, Wiederholkarten, Tagesaktivität (60 Tage), Edelsteine, Schlüssel, Truhen und
 Lernzeit. Der Modus steht in `red-kurd-ui-v1` und wirkt ausschließlich auf die
 Darstellung: er setzt `data-mode` am `<html>`, wählt Navigation und CSS und schaltet
@@ -162,7 +162,7 @@ Browser des Nutzers. Eine fehlerhafte Migration oder ein Rückschritt auf eine �
 App-Version darf sie nicht vernichten.
 
 **Entscheidung**
-`migriere()` in `src/core/storage.js` liest die alten v1-Schlüssel
+`migriere()` in `src/core/storage.ts` liest die alten v1-Schlüssel
 (`red-kurd-fortschritt-v1`, `red-kurd-profil-v1`, `red-kurd-session-v1`,
 `red-kurd-modus`), schreibt das Ergebnis unter den neuen Schlüssel und **lässt die
 alten Werte liegen**. Geschrieben wird nur, wenn das Ziel noch leer ist; der Vorgang
@@ -291,7 +291,7 @@ beim Laden zu „Sprache lernen + Abenteuer-Ansicht" migriert.
   gemeinsamen Funktion neu geprüft.
 - **Vier Fortschritte.** Vier Schlüssel, kein gemeinsamer Lernstand — Einzelheiten und
   Begründung in ADR-008.
-- **Größerer Prüfaufwand.** Jede Änderung an `storage.js`, am Sicherungsformat oder am
+- **Größerer Prüfaufwand.** Jede Änderung an `storage.ts`, am Sicherungsformat oder am
   Lernstand-Baukasten betrifft vier Apps zugleich. `test/sicherungRundlauf.test.js` prüft
   deshalb den vollen Weg über alle vier: füllen → exportieren → Gerät leeren →
   importieren. Fehlt beim Hinzufügen einer App der Schlüssel in `KEYS`, fehlt ihr Stand
@@ -340,7 +340,7 @@ Prompt-Übung sind nicht dieselbe Einheit.
 - **Geteilt wird die Serienregel, nicht die Serie.** Alle drei rufen dieselbe reine
   Funktion `aktualisiereSerie()` aus `core/progress/gamification.ts` und `heute()` aus
   `core/progress/scheduler.ts` — jede aber auf ihrem eigenen Stand.
-- **Die Sprach-App hat ihr eigenes, älteres und größeres Modell** (`progressStore.js`):
+- **Die Sprach-App hat ihr eigenes, älteres und größeres Modell** (`progressStore.ts`):
   XP, Serie samt Serienschutz, Einheiten, Sterne, Wiederholkarten, Tagesstatistik über 60
   Tage, Edelsteine, Schlüssel, Truhen, Lernzeit. Mit den anderen teilt sie nur die
   Serienregel.

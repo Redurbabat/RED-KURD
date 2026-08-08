@@ -5,7 +5,7 @@ import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
-import { useLernstand } from '../../core/store.js'
+import { useLernstand } from '../../core/store.ts'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import {
   AUFTRAG_FELDER,

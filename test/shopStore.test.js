@@ -18,7 +18,7 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { holeFortschritt, setzeFortschritt } = await import('../src/core/progress/progressStore.js')
+const { holeFortschritt, setzeFortschritt } = await import('../src/core/progress/progressStore.ts')
 const {
   ARTIKEL,
   aktiverArtikel,
@@ -28,7 +28,7 @@ const {
   kaufe,
   setzeAktiv,
   setzeShop,
-} = await import('../src/core/shop/shopStore.js')
+} = await import('../src/core/shop/shopStore.ts')
 
 test('der Shop verkauft nur Aussehen, Komfort und Verbrauch — nie Lerninhalte', () => {
   const erlaubteArten = new Set(['mascot', 'thema', 'klang', 'rahmen', 'verbrauch'])

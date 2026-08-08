@@ -7,8 +7,8 @@ import PrimaryButton from '../common/PrimaryButton.jsx'
 import Icon from '../icons/Icon.jsx'
 import HeloMessage from '../mascot/HeloMessage.jsx'
 import { navigiere } from '../../app/router.jsx'
-import { tagesZiel } from '../../core/progress/progressStore.js'
-import { tageszielWert } from '../../core/profile/profileStore.js'
+import { tagesZiel } from '../../core/progress/progressStore.ts'
+import { tageszielWert } from '../../core/profile/profileStore.ts'
 import {
   statistik,
   wochenAktivitaet,

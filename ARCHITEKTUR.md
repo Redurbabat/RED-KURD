@@ -61,7 +61,7 @@ Onboarding → App-Auswahl → aktive App.
 
 ### Speicherung der App-Wahl
 
-`src/features/app-mode/appModeStorage.js`, ausschließlich über `core/storage.js`:
+`src/features/app-mode/appModeStorage.js`, ausschließlich über `core/storage.ts`:
 
 - `KEYS.appAktiv` = `red-kurd-active-app-v1` — der aktuelle Schlüssel.
 - `KEYS.appBereich` = `red-kurd-active-app-mode-v1` — der ältere Schlüssel. Er wird
@@ -72,7 +72,7 @@ Onboarding → App-Auswahl → aktive App.
   plus `saveAppMode('language')`.
 - Unbekannte Werte fallen auf `language` zurück.
 
-Die Ansicht der Sprach-App steht dagegen in `red-kurd-ui-v1` (`uiStore.js`, Feld `mode`)
+Die Ansicht der Sprach-App steht dagegen in `red-kurd-ui-v1` (`uiStore.ts`, Feld `mode`)
 und landet als `data-mode` auf dem `<html>`-Element.
 
 ## App 1 — Sprache lernen
@@ -203,18 +203,18 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 
 | Datei | Aufgabe | Bindung |
 |---|---|---|
-| `storage.js` | `KEYS`, `TAB_KEYS`, `lies/schreibe/entferne`, `liesTab/schreibeTab`, Export/Import, `beiSpeicherproblem()`, `migriere()`, `migriereKarten()` | localStorage, sessionStorage |
-| `store.js` | `melden()`, `useLernstand()`, `beiFremdaenderung()` (Cache-Invalidierung über Tabs) | `window`, React |
-| `progress/progressStore.js` | **der Lernstand der Sprach-App**: XP, Serie + Schutz, Einheiten, Sterne, Karten, Tage (max. 60), Edelsteine, Schlüssel, Truhen, Lernzeit, `exportiereAlles`, `ankiZeilen` | localStorage |
+| `storage.ts` | `KEYS`, `TAB_KEYS`, `lies/schreibe/entferne`, `liesTab/schreibeTab`, Export/Import, `beiSpeicherproblem()`, `migriere()`, `migriereKarten()` | localStorage, sessionStorage |
+| `store.ts` | `melden()`, `useLernstand()`, `beiFremdaenderung()` (Cache-Invalidierung über Tabs) | `window`, React |
+| `progress/progressStore.ts` | **der Lernstand der Sprach-App**: XP, Serie + Schutz, Einheiten, Sterne, Karten, Tage (max. 60), Edelsteine, Schlüssel, Truhen, Lernzeit, `exportiereAlles`, `ankiZeilen` | localStorage |
 | `progress/progressSelectors.ts` | `statistik()`, `faelligeKarten()`, `fertigkeiten()`, `wochenAktivitaet()`, `wochenLiga()` | indirekt |
 | `lernbereiche/bereichsLernstand.js` | Lernstand-Baukasten für Code, AI-Sprache und Elektro | localStorage |
-| `session/sessionStore.js` | laufende Sitzung sichern / laden / löschen | localStorage |
-| `profile/profileStore.js` | Name, Ziel, Vorkenntnisse, Tagesziel, Variante, `standardDauer()` | localStorage |
-| `ui/uiStore.js` | Ansicht der Sprach-App, Design, Ton, Animationen, Erinnerungen; `anwenden()` setzt die `data-*`-Attribute | localStorage + `document` |
-| `tasks/taskStore.js` | 4 Tages- und 3 Wochenaufgaben, aus dem Lernstand abgeleitet | localStorage |
-| `shop/shopStore.js` | 6 Artikel in 3 Kategorien, `kaufe()`, `setzeAktiv()` — nur Kosmetik und Komfort | localStorage |
-| `achievements/achievementsStore.js` | 9 Auszeichnungen, aus `statistik()` berechnet | localStorage |
-| `courses/languageCourseStore.js` | getrennter Fortschritt der vier Nebensprachkurse | localStorage |
+| `session/sessionStore.ts` | laufende Sitzung sichern / laden / löschen | localStorage |
+| `profile/profileStore.ts` | Name, Ziel, Vorkenntnisse, Tagesziel, Variante, `standardDauer()` | localStorage |
+| `ui/uiStore.ts` | Ansicht der Sprach-App, Design, Ton, Animationen, Erinnerungen; `anwenden()` setzt die `data-*`-Attribute | localStorage + `document` |
+| `tasks/taskStore.ts` | 4 Tages- und 3 Wochenaufgaben, aus dem Lernstand abgeleitet | localStorage |
+| `shop/shopStore.ts` | 6 Artikel in 3 Kategorien, `kaufe()`, `setzeAktiv()` — nur Kosmetik und Komfort | localStorage |
+| `achievements/achievementsStore.ts` | 9 Auszeichnungen, aus `statistik()` berechnet | localStorage |
+| `courses/languageCourseStore.ts` | getrennter Fortschritt der vier Nebensprachkurse | localStorage |
 | `elektro/schuleStore.js` | Fächer, Noten, Prüfungen, Berichtsheft der Elektro-Lehre | localStorage |
 | `prompting/werkstattStore.js` | angefangener Auftrag, Bug-Report, PR-Haken | localStorage |
 | `hearts/heartsStore.js` | 5 Herzen mit 4-Stunden-Regeneration — **derzeit von keinem Modul importiert** | localStorage |
@@ -229,7 +229,7 @@ Render-Schleifen zu vermeiden.
 
 ## Speicher
 
-Alle Zugriffe laufen über `src/core/storage.js`. Jeder Speicherort im Detail — Felder,
+Alle Zugriffe laufen über `src/core/storage.ts`. Jeder Speicherort im Detail — Felder,
 Eigentümer, Größe, Export- und Migrationslage — steht in **[STORAGE.md](STORAGE.md)**;
 hier nur, was zur Architektur gehört.
 
@@ -262,7 +262,7 @@ Außerhalb von `KEYS`: `red-kurd-tab-dauer` im sessionStorage (`TAB_KEYS`,
 `liesTab`/`schreibeTab`) für die gewählte Sitzungsdauer, die eigenen Sprachaufnahmen in
 IndexedDB, die Caches des Service Workers, das Cookie `rk_session` und die D1-Tabellen.
 
-**Nicht im Export** (`NUR_LOKAL` in `storage.js`): `ohneKonto` und `sitzung`. Die
+**Nicht im Export** (`NUR_LOKAL` in `storage.ts`): `ohneKonto` und `sitzung`. Die
 Anmelde-Entscheidung gehört dem Gerät, und eine halb fertige Sitzung darf auf einem
 anderen Gerät nicht wiederbelebt werden. Alles Übrige wandert in Sicherungen mit.
 
@@ -459,8 +459,14 @@ getrennt nach dem, was sie beschreiben:
 
 | Datei | Inhalt |
 |---|---|
-| `lernstand.d.ts` | alles, was **gespeichert** wird und darum Versionen und Migrationen braucht: Lernstand, Karte, Tag, Profil, UI, Sitzung, Übung, Shop, Sprachkurse, Sicherung, Bereichs-Lernstand — die maschinenlesbare Fassung von `STORAGE.md` |
+| `lernstand.d.ts` | alles, was **gespeichert** wird und darum Versionen und Migrationen braucht: Lernstand, Karte, Tag, Profil, UI, Sitzung, Übung, Shop, Sprachkurse, Aufgaben, Auszeichnungen, Herzen, App-Wahl, Speicherstand und Sicherungsdatei, Bereichs-Lernstand — die maschinenlesbare Fassung von `STORAGE.md`. Dazu die abgeleiteten Rückgaben der Stores (`Kennzahlen`, `Levelstand`, `Aufgabenliste`, …), damit kein Modul sie neu erfindet |
 | `kurs.d.ts` | alles, was **Inhalt** ist und mit dem Build kommt: Kurseinheit, Einheit, Welt, Lektion, Lernpfad-Knoten, Bildnachweis |
+
+Zwei Ebenen werden in `lernstand.d.ts` bewusst auseinandergehalten: die **Form nach
+dem Laden** (jeder Store legt ein `STANDARD`/`LEER`-Objekt darüber, danach ist alles
+da) und die **Form auf der Platte**, die ärmer sein kann — dafür gibt es
+`GespeicherterStand`. Wer das verwechselt, schreibt Absicherungen weg, die eine
+Migration aus Version 1 noch braucht.
 
 Die Kursdaten unter `src/data/` sind noch JavaScript. Damit ein migriertes Modul
 ihre Form kennt, liegt neben `kurse.js`, `kapitelFotos.js`, `kapitelExtras.js` und
@@ -522,7 +528,7 @@ Sicherungs-Rundlauf (`sicherungRundlauf.test.js`), Konto und Worker (`auth.test.
    (`wortFotos.js`), das in den Bildaufgaben Vorrang hat; `fotoVon()` vor `bildVon()`.
 5. Jede Schaltfläche hat Text oder `aria-label`, Mindestgröße 44 × 44 px.
 6. Kurmancî-Text bekommt `lang="ku"`, arabische Schrift zusätzlich `dir="rtl"`.
-7. Alle Speicherzugriffe laufen über `src/core/storage.js`. Ausnahmen sind dokumentiert
+7. Alle Speicherzugriffe laufen über `src/core/storage.ts`. Ausnahmen sind dokumentiert
    und in [STORAGE.md](STORAGE.md) einzeln aufgeführt.
 8. Eine neue App ist ein Eintrag in `appModes.js`, ein Feature-Ordner und ein eigener
    Fortschritts-Schlüssel in `KEYS` — kein Eingriff in bestehende Apps.

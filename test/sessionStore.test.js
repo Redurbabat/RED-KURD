@@ -18,9 +18,9 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { KEYS, schreibe } = await import('../src/core/storage.js')
+const { KEYS, schreibe } = await import('../src/core/storage.ts')
 const { sitzungLaden, sitzungLoeschen, sitzungProzent, sitzungSpeichern } = await import(
-  '../src/core/session/sessionStore.js'
+  '../src/core/session/sessionStore.ts'
 )
 
 const UEBUNGEN = [{ art: 'tippen' }, { art: 'tippen' }, { art: 'tippen' }, { art: 'tippen' }]

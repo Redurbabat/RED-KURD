@@ -20,8 +20,8 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { KEYS, schreibe } = await import('../src/core/storage.js')
-const { setzeFortschritt, holeFortschritt } = await import('../src/core/progress/progressStore.js')
+const { KEYS, schreibe } = await import('../src/core/storage.ts')
+const { setzeFortschritt, holeFortschritt } = await import('../src/core/progress/progressStore.ts')
 
 const VIER_STUNDEN = 4 * 60 * 60 * 1000
 

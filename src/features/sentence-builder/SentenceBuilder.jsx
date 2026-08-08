@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { zufallsPaare } from '../../core/data/staticData.js'
 import { mische } from '../../core/session/exerciseFactory.ts'
-import { gibXp } from '../../core/progress/progressStore.js'
+import { gibXp } from '../../core/progress/progressStore.ts'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'

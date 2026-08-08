@@ -1,10 +1,10 @@
 // Lektionsablauf: Übungen abspielen, Ergebnis zeigen, Kapitelprüfung werten.
 import { useEffect, useRef, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { planeLektion } from '../../../core/session/sessionPlanner.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
-import { einheitAbgeschlossen, setzeSterne } from '../../../core/progress/progressStore.js'
+import { einheitAbgeschlossen, setzeSterne } from '../../../core/progress/progressStore.ts'
 import { BESTANDEN_AB } from '../../../core/courses/courseRepository.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'

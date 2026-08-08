@@ -1,7 +1,7 @@
 // Eine Station im Abenteuer: Einführung, Übung und Ergebnis in einer Seite.
 // Der Lernstand ist derselbe wie im Modern-Modus — nur die Erzählung ist anders.
 import { useEffect, useRef, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {
@@ -15,7 +15,7 @@ import {
   einheitAbgeschlossen,
   gibEdelsteine,
   setzeSterne,
-} from '../../../core/progress/progressStore.js'
+} from '../../../core/progress/progressStore.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'

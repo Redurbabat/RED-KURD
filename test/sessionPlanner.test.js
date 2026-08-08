@@ -1,7 +1,7 @@
 // Tests fuer den Sitzungsplaner: Mischung aus Wiederholungen und neuem Stoff.
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { setzeFortschritt } from '../src/core/progress/progressStore.js'
+import { setzeFortschritt } from '../src/core/progress/progressStore.ts'
 import { EINHEITEN, holeEinheit } from '../src/core/courses/courseRepository.ts'
 import {
   DAUERN,

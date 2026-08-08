@@ -18,7 +18,7 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { setzeFortschritt } = await import('../src/core/progress/progressStore.js')
+const { setzeFortschritt } = await import('../src/core/progress/progressStore.ts')
 const {
   faelligeKarten,
   fertigkeiten,

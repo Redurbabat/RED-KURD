@@ -4,7 +4,7 @@ import { kurse } from '../../data/kurse.js'
 import { kapitelFotos } from '../../data/kapitelFotos.js'
 import { kapitelExtras } from '../../data/kapitelExtras.js'
 import { wortFotos } from '../../data/wortFotos.js'
-import { holeFortschritt, sterneVon } from '../progress/progressStore.js'
+import { holeFortschritt, sterneVon } from '../progress/progressStore.ts'
 
 import type { GespeicherterStand, Wort } from '../../types/lernstand'
 import type {

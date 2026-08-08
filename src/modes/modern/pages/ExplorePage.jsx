@@ -1,6 +1,6 @@
 // Entdecken: Übersicht und vier Unterbereiche (Wörterbuch, Lesen, Schrift, Kultur).
 // Welcher Bereich offen ist, steht ausschliesslich in der Adresse (Prop `tab`).
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import { texte } from '../../../data/texte.js'

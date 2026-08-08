@@ -1,20 +1,28 @@
 // Shop: nur Aussehen und Komfort. Lerninhalte sind hier niemals gesperrt.
-import { KEYS, lies, schreibe } from '../storage.js'
-import { melden, beiFremdaenderung } from '../store.js'
+import { KEYS, lies, schreibe } from '../storage.ts'
+import { melden, beiFremdaenderung } from '../store.ts'
 import {
   zahleEdelsteine,
   zahleSchluessel,
   holeFortschritt,
   gibSerienSchutz,
-} from '../progress/progressStore.js'
+} from '../progress/progressStore.ts'
 
-export const KATEGORIEN = [
+import type {
+  Artikelart,
+  Kaufergebnis,
+  Shopartikel,
+  Shopkategorie,
+  Shopstand,
+} from '../../types/lernstand'
+
+export const KATEGORIEN: readonly Shopkategorie[] = [
   { id: 'edelsteine', name: 'Edelsteine', icon: 'edelstein' },
   { id: 'schluessel', name: 'Schlüssel', icon: 'schluessel' },
   { id: 'taeglich', name: 'Tägliche Belohnung', icon: 'truhe' },
 ]
 
-export const ARTIKEL = [
+export const ARTIKEL: readonly Shopartikel[] = [
   {
     id: 'helo-schal',
     name: 'Hêlo-Schal',
@@ -77,27 +85,41 @@ export const ARTIKEL = [
   },
 ]
 
-const STANDARD = { version: 1, gekauft: [], aktiv: {} }
+const STANDARD: Shopstand = { version: 1, gekauft: [], aktiv: {} }
 
-let cache
+// Anfangs `undefined`, nach einer Fremdaenderung `null` — beides faellt in
+// `holeShop()` durch dieselbe Pruefung.
+let cache: Shopstand | null | undefined
 
-export function holeShop() {
+export function holeShop(): Shopstand {
   if (cache) return cache
-  cache = { ...STANDARD, ...(lies(KEYS.shop) || {}) }
+  // `Partial`, weil auf der Platte ein aelterer oder von Hand veraenderter
+  // Stand liegen darf. Der Typ ist die Erwartung des Aufrufers, keine Zusage
+  // von `lies()` — genau deshalb bleiben die beiden Rueckfaelle darunter
+  // stehen: sie fangen auch ein ausdrueckliches `null` in der Datei ab, das
+  // kein Typ beschreibt.
+  cache = { ...STANDARD, ...(lies<Partial<Shopstand>>(KEYS.shop) || {}) }
   cache.gekauft = cache.gekauft || []
   cache.aktiv = cache.aktiv || {}
   return cache
 }
 
-function sichern(d) {
+function sichern(d: Shopstand): Shopstand {
   cache = d
   schreibe(KEYS.shop, d)
   melden()
   return d
 }
 
-/** Ganzen Shop-Stand ersetzen — nur fuer den Import. */
-export function setzeShop(ganz) {
+/**
+ * Ganzen Shop-Stand ersetzen — nur fuer den Import.
+ *
+ * `ganz` kommt aus einer fremden Datei und ist ungeprueft; `Partial` ist auch
+ * hier nur die Erwartung. `null` steht ausdruecklich im Typ, sonst saehen die
+ * drei Rueckfaelle wie toter Code aus: der heutige Aufrufer prueft zwar vorher
+ * (`ProgressPage.jsx:487`), aber die Absicherung gehoert dem Store.
+ */
+export function setzeShop(ganz: Partial<Shopstand> | null | undefined): Shopstand {
   return sichern({
     ...STANDARD,
     ...(ganz || {}),
@@ -106,17 +128,17 @@ export function setzeShop(ganz) {
   })
 }
 
-export function istGekauft(id) {
+export function istGekauft(id: string): boolean {
   return holeShop().gekauft.includes(id)
 }
 
-export function istAktiv(id) {
+export function istAktiv(id: string): boolean {
   const artikel = ARTIKEL.find((a) => a.id === id)
   if (!artikel) return false
   return holeShop().aktiv[artikel.art] === id
 }
 
-export function kannKaufen(id) {
+export function kannKaufen(id: string): boolean {
   const artikel = ARTIKEL.find((a) => a.id === id)
   if (!artikel) return false
   const stand = holeFortschritt()
@@ -124,8 +146,14 @@ export function kannKaufen(id) {
   return vorrat >= artikel.preis
 }
 
-/** @returns {'ok'|'zu-teuer'|'schon-da'|'unbekannt'} */
-export function kaufe(id) {
+/**
+ * Kauft einen Artikel und meldet, was daraus geworden ist.
+ *
+ * Verbrauchsartikel (`art === 'verbrauch'`) sind die Ausnahme: sie wirken
+ * sofort im Lernstand und landen weder in `gekauft` noch in `aktiv` — nur
+ * deshalb sind sie mehrfach kaufbar.
+ */
+export function kaufe(id: string): Kaufergebnis {
   const artikel = ARTIKEL.find((a) => a.id === id)
   if (!artikel) return 'unbekannt'
   if (artikel.art !== 'verbrauch' && istGekauft(id)) return 'schon-da'
@@ -142,7 +170,7 @@ export function kaufe(id) {
   return 'ok'
 }
 
-export function setzeAktiv(id) {
+export function setzeAktiv(id: string): boolean {
   const artikel = ARTIKEL.find((a) => a.id === id)
   if (!artikel || !istGekauft(id)) return false
   const d = { ...holeShop() }
@@ -151,7 +179,12 @@ export function setzeAktiv(id) {
   return true
 }
 
-export function aktiverArtikel(art) {
+/**
+ * Der Artikel, der gerade in diesem Slot steckt. `art` ist bewusst eng
+ * getypt: `aktiv` bildet Slot -> Artikel-ID ab, und einen fuenften Slot gibt
+ * es nicht. Unbelegte Slots und das abgewaehlte `null` liefern beide `null`.
+ */
+export function aktiverArtikel(art: Artikelart): Shopartikel | null {
   const id = holeShop().aktiv[art]
   return id ? ARTIKEL.find((a) => a.id === id) || null : null
 }

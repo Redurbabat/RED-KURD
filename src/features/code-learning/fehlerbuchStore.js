@@ -1,7 +1,7 @@
 // Das Fehlerbuch: eigene Fehler, Loesungen und Gelerntes — bleibt lokal
 // auf dem Geraet. Neueste Eintraege stehen oben.
-import { KEYS, lies, schreibe } from '../../core/storage.js'
-import { melden, beiFremdaenderung } from '../../core/store.js'
+import { KEYS, lies, schreibe } from '../../core/storage.ts'
+import { melden, beiFremdaenderung } from '../../core/store.ts'
 import { heute } from '../../core/progress/scheduler.ts'
 
 const LEER = { version: 1, naechsteId: 1, eintraege: [] }

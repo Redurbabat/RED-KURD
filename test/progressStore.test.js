@@ -42,7 +42,7 @@ const {
   vergissWort,
   zahleEdelsteine,
   zaehleAufgabe,
-} = await import('../src/core/progress/progressStore.js')
+} = await import('../src/core/progress/progressStore.ts')
 const { heute, tagPlus, tagVon } = await import('../src/core/progress/scheduler.ts')
 
 // ===== XP und Serie =====

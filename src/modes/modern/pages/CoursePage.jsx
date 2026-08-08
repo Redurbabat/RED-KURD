@@ -1,6 +1,6 @@
 // Kursübersicht: Gesamtfortschritt, aktuelle Einheit und alle Einheiten.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import {
   WELTEN,

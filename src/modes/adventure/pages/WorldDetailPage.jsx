@@ -2,7 +2,7 @@
 // Stationen, Hêlo als Wegbegleiter und darunter der Stand dieser Welt.
 // Die Lernlogik liegt in courseRepository — hier wird nur dargestellt.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {
@@ -12,7 +12,7 @@ import {
   weltFortschritt,
   weltPfad,
 } from '../../../core/courses/courseRepository.ts'
-import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.js'
+import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'

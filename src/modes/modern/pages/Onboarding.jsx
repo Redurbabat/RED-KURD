@@ -2,8 +2,8 @@
 // Die Seite läuft ausserhalb der App-Hülle — sie bringt ihren eigenen
 // zentrierten Container mit und nutzt weder Router noch Navigation.
 import { useEffect, useRef, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
-import { speichereProfil, ZIELE, KENNTNISSE, TAGESZIELE } from '../../../core/profile/profileStore.js'
+import { useLernstand } from '../../../core/store.ts'
+import { speichereProfil, ZIELE, KENNTNISSE, TAGESZIELE } from '../../../core/profile/profileStore.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../../components/common/ProgressBar.jsx'

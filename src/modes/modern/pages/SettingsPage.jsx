@@ -2,7 +2,7 @@
 // App-Modus, Design, Datenschutz und Datenverwaltung.
 // Die Seite rechnet nichts selbst — sie liest die Stores und schreibt in sie zurück.
 import { useEffect, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {
@@ -13,12 +13,12 @@ import {
   KENNTNISSE,
   VARIANTEN,
   TAGESZIELE,
-} from '../../../core/profile/profileStore.js'
-import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiStore.js'
-import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.js'
-import { holeShop } from '../../../core/shop/shopStore.js'
+} from '../../../core/profile/profileStore.ts'
+import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiStore.ts'
+import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.ts'
+import { holeShop } from '../../../core/shop/shopStore.ts'
 import { abmelden, kontoStatus } from '../../../core/auth/authApi.js'
-import { KEYS, entferne, lies } from '../../../core/storage.js'
+import { KEYS, entferne, lies } from '../../../core/storage.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'

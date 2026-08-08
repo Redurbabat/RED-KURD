@@ -78,9 +78,16 @@ dass jemand Angst um seinen Lernstand haben muss.
         Dazu kamen die Formen der Kursinhalte (`types/kurs.d.ts`) und
         Deklarationen neben den Datendateien; `test/kursdaten-form.test.js`
         prüft die echten Daten dagegen, damit eine Deklaration nicht lügen kann
-  - [ ] danach die Stores: `storage`, `store`, `progressStore`, `profileStore`,
-        `uiStore`, `sessionStore`, `taskStore`, `shopStore`, `achievementsStore`,
-        `languageCourseStore`
+  - [x] die zehn Stores der Sprach-App: `storage.ts`, `store.ts`,
+        `progressStore.ts`, `profileStore.ts`, `uiStore.ts`, `sessionStore.ts`,
+        `taskStore.ts`, `shopStore.ts`, `achievementsStore.ts`,
+        `languageCourseStore.ts` (vierte Welle; Verhalten über rund 172 000
+        Vergleiche belegt, jede Prüfung mit bestandener Gegenprobe). Verglichen
+        wurde nicht nur der Rückgabewert, sondern auch der localStorage-Inhalt
+        danach und die Zahl der `melden()`-Aufrufe
+  - [x] `@types/react` / `@types/react-dom` ergänzt — ohne sie ließ sich
+        `store.ts` (das erste Modul, das React anfasst) nicht ohne `any`
+        typisieren, und die Komponenten-Welle wäre blockiert gewesen
   - [ ] dazu die Stores der neuen Apps: `lernbereiche/bereichsLernstand`,
         `elektro/schuleStore`, `prompting/werkstattStore`, `code-learning/fehlerbuchStore`,
         `app-mode/appModeStorage`
@@ -95,8 +102,12 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] Übung als Vereinigung von Bild-, Wahl- und Tippaufgabe (zweite Welle)
   - [x] Einheit, Welt, Lektion, Lernpfad-Knoten und die Bildnachweise
         (`types/kurs.d.ts`, dritte Welle)
-  - [ ] Elektro-Schule, Prompting-Werkstatt, Fehlerbuch, App-Wahl,
-        Auszeichnungen und Aufgaben
+  - [x] Aufgaben, Auszeichnungen, Herzen, Shop-Artikel, Kapitel- und
+        Nebenkursstand, App-Wahl sowie die abgeleiteten Rückgaben der Stores
+        (`types/lernstand.d.ts`, vierte Welle)
+  - [ ] Elektro-Schule, Prompting-Werkstatt und Fehlerbuch — sie stehen in
+        `Speicherstand` bewusst noch als `unknown`, bis Welle 5 ihre Stores
+        migriert
 - [ ] Migrations-Pipeline: jede Migration eine benannte, einzeln aufrufbare Funktion mit
       Von- und Nach-Version; `migriere()` führt sie geordnet aus — heute ist es **eine**
       Funktion mit nummerierten Schritten
@@ -123,7 +134,7 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [ ] Vorschau vor dem Import: XP, Serie, Kartenzahl, Datum der Sicherung — und je
         App ihr eigener Stand, damit sichtbar ist, was zurückkommt
   - [x] Entschieden und umgesetzt: die laufende Sitzung bleibt geräte-lokal.
-        `NUR_LOKAL` in `storage.js` enthält jetzt `ohneKonto` **und** `sitzung`; ein
+        `NUR_LOKAL` in `storage.ts` enthält jetzt `ohneKonto` **und** `sitzung`; ein
         Import belebt keine halbfertige Übungsrunde eines fremden Geräts mehr
   - [x] Sicherung über alle vier Apps bewiesen: `test/sicherungRundlauf.test.js` geht
         den vollen Weg — füllen → exportieren → Gerät leeren → importieren
@@ -131,7 +142,7 @@ dass jemand Angst um seinen Lernstand haben muss.
         heute verspricht die Einstellungsseite eine Sicherung, die sie nicht enthält
   - [ ] Regel festhalten und prüfbar machen: eine neue App ohne Eintrag in `KEYS` fehlt
         still in jedem Export — heute fängt das nur der Rundlauf-Test ab
-- [x] Am zentralen `storage.js` vorbei geschriebene Stellen anbinden:
+- [x] Am zentralen `storage.ts` vorbei geschriebene Stellen anbinden:
       `SettingsPage.jsx` (dupliziertes Schlüssel-Literal `red-kurd-profile-v2`),
       `rk-dauer` in `TodayPage`/`SessionPage`, `audioService`
 - [ ] Namensdrift bereinigen: `red-kurd-ui-v1` trägt intern `version: 2`;

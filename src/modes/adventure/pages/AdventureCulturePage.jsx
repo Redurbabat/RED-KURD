@@ -3,8 +3,8 @@
 // gibt danach einen Ausdruck und einen Beispielsatz zum Mitnehmen.
 // Reihenfolge in jedem Block: Deutsch zuerst, Kurmancî darunter.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
-import { merkeWort, kennstWort } from '../../../core/progress/progressStore.js'
+import { useLernstand } from '../../../core/store.ts'
+import { merkeWort, kennstWort } from '../../../core/progress/progressStore.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import { kulturkarten } from '../../../data/kultur.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'

@@ -20,11 +20,11 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { setzeFortschritt } = await import('../src/core/progress/progressStore.js')
+const { setzeFortschritt } = await import('../src/core/progress/progressStore.ts')
 const { wochenMinutenSeitMontag, wochenStartTag, wochenSummeSeitMontag } = await import(
   '../src/core/progress/progressSelectors.ts'
 )
-const { holeAufgaben, holeBelohnung } = await import('../src/core/tasks/taskStore.js')
+const { holeAufgaben, holeBelohnung } = await import('../src/core/tasks/taskStore.ts')
 
 /** Kalendertag mit Abstand zu einem 'JJJJ-MM-TT'-Tag. */
 function tagMitAbstand(tag, tage) {

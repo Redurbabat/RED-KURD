@@ -1,7 +1,7 @@
 // Führt ein einzelnes Training aus. Die reinen Trainings speichern die Sitzung
 // bewusst nicht — sonst würde die Tagessitzung unter /session überschrieben.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import {
   planeSitzung,
@@ -9,7 +9,7 @@ import {
   planeSchwierige,
   planeTraining,
 } from '../../../core/session/sessionPlanner.ts'
-import { standardDauer } from '../../../core/profile/profileStore.js'
+import { standardDauer } from '../../../core/profile/profileStore.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'

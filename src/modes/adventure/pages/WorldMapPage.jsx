@@ -1,7 +1,7 @@
 // Weltenübersicht des Abenteuer-Modus (Designpaket Bild 2).
 // Jede Kachel zeigt Landschaft, Fortschritt und Zustand — gesperrte Welten
 // bleiben anklickbar, die Reihenfolge ist nur eine Empfehlung.
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.ts'

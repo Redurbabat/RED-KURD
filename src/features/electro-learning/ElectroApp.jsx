@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import Icon from '../../components/icons/Icon.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
-import { useLernstand } from '../../core/store.js'
+import { useLernstand } from '../../core/store.ts'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
 import { heute } from '../../core/progress/scheduler.ts'
 import * as schule from '../../core/elektro/schuleStore.js'

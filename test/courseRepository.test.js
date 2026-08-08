@@ -1,7 +1,7 @@
 // Tests fuer die Kursdaten: Vollstaendigkeit, Status-Logik, Fortschritt.
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { setzeFortschritt } from '../src/core/progress/progressStore.js'
+import { setzeFortschritt } from '../src/core/progress/progressStore.ts'
 import {
   BESTANDEN_AB,
   EINHEITEN,

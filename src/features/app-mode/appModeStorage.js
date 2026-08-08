@@ -6,8 +6,8 @@
 // red-kurd-active-app-mode-v1 wird beim Lesen uebernommen und beim
 // Speichern weiter mitgeschrieben — ein Ruecksprung auf eine aeltere
 // App-Version verliert so nichts (Regel: alte Schluessel nie loeschen).
-import { KEYS, lies, schreibe } from '../../core/storage.js'
-import { setzeAppModus } from '../../core/ui/uiStore.js'
+import { KEYS, lies, schreibe } from '../../core/storage.ts'
+import { setzeAppModus } from '../../core/ui/uiStore.ts'
 import { APP_MODES, APP_MODE_LISTE } from './appModes.js'
 
 export function isValidAppMode(mode) {

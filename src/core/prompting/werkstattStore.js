@@ -1,8 +1,8 @@
 // Die Werkstatt der AI-Sprache: angefangene Auftraege, Bug-Reports und
 // die Haken der PR-Checkliste bleiben erhalten — auch nach dem Neuladen.
 // Alles lokal ueber src/core/storage.js.
-import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { KEYS, lies, schreibe } from '../storage.ts'
+import { melden } from '../store.ts'
 
 const LEER = { version: 1, auftrag: {}, bug: {}, pr: {} }
 

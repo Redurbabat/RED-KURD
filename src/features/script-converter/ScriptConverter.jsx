@@ -1,7 +1,7 @@
 // Schrift-Umwandlung: Kurmancî zwischen lateinischer (Hawar) und arabischer
 // Schrift umwandeln, vorlesen und kopieren.
 import { useState } from 'react'
-import { useLernstand } from '../../core/store.js'
+import { useLernstand } from '../../core/store.ts'
 import {
   lateinNachArabisch,
   arabischNachLatein,

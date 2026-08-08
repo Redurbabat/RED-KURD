@@ -5,8 +5,8 @@
 // Der Status einer Lektion wird IMMER hieraus abgeleitet, nie aus den
 // Datendateien: erledigt -> 'done', die erste offene -> 'current', die
 // direkt folgende -> 'open', alles danach -> 'locked'.
-import { lies, schreibe } from '../storage.js'
-import { melden, beiFremdaenderung } from '../store.js'
+import { lies, schreibe } from '../storage.ts'
+import { melden, beiFremdaenderung } from '../store.ts'
 import { heute } from '../progress/scheduler.ts'
 import { aktualisiereSerie } from '../progress/gamification.ts'
 

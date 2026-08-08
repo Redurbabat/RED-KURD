@@ -32,7 +32,7 @@ function frischerSpeicher() {
 // eigenem Query-String liefert eine frische Instanz samt frischem Merker.
 let importZaehler = 0
 async function frischesModul() {
-  return import(`../src/core/storage.js?frisch=${++importZaehler}`)
+  return import(`../src/core/storage.ts?frisch=${++importZaehler}`)
 }
 
 // Fuer alle Tests ohne Migration reicht eine gemeinsame Modulinstanz.

@@ -1,10 +1,10 @@
 // Shop des Abenteuer-Modus (Designpaket Bild 10). Hier gibt es ausschliesslich
 // Aussehen und Komfort — alle Lerninhalte bleiben frei zugänglich.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { T } from '../../../core/texts.js'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
-import { truheBereit, truheOeffnen, gibEdelsteine } from '../../../core/progress/progressStore.js'
+import { truheBereit, truheOeffnen, gibEdelsteine } from '../../../core/progress/progressStore.ts'
 import {
   ARTIKEL,
   KATEGORIEN,
@@ -13,7 +13,7 @@ import {
   kannKaufen,
   kaufe,
   setzeAktiv,
-} from '../../../core/shop/shopStore.js'
+} from '../../../core/shop/shopStore.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'

@@ -2,8 +2,8 @@
 // und zuletzt im mitgelieferten Grundwortschatz. Treffer erscheinen als Karten
 // mit Anhören, Merken und Beispielsätzen.
 import { useRef, useState } from 'react'
-import { useLernstand } from '../../core/store.js'
-import { merkeWort, kennstWort } from '../../core/progress/progressStore.js'
+import { useLernstand } from '../../core/store.ts'
+import { merkeWort, kennstWort } from '../../core/progress/progressStore.ts'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { arabischNachLatein } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, beispieleStatisch } from '../../core/data/staticData.js'

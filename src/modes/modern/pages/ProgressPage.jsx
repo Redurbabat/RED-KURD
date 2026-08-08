@@ -2,7 +2,7 @@
 // Wochenaktivität, eine Empfehlung und die Verwaltung der eigenen Daten.
 // Die Seite rechnet nichts selbst — sie liest Selektoren des Lernstands.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
 import {
@@ -22,12 +22,12 @@ import {
   ankiZeilen,
   setzeFortschritt,
   istLernstand,
-} from '../../../core/progress/progressStore.js'
-import { importiereSpeicherstand } from '../../../core/storage.js'
+} from '../../../core/progress/progressStore.ts'
+import { importiereSpeicherstand } from '../../../core/storage.ts'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
-import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.js'
-import { holeUi, setzeUi } from '../../../core/ui/uiStore.js'
-import { holeShop, setzeShop } from '../../../core/shop/shopStore.js'
+import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.ts'
+import { holeUi, setzeUi } from '../../../core/ui/uiStore.ts'
+import { holeShop, setzeShop } from '../../../core/shop/shopStore.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'

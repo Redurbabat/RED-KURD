@@ -1,8 +1,8 @@
 // Kultur: Redewendungen zum Anhören und Merken, dazu die Kulturkarten mit
 // echten Fotos — dieselben Inhalte wie im Abenteuer-Modus, hier im ruhigen
 // Gewand des Modern-Modus.
-import { useLernstand } from '../../core/store.js'
-import { merkeWort, kennstWort } from '../../core/progress/progressStore.js'
+import { useLernstand } from '../../core/store.ts'
+import { merkeWort, kennstWort } from '../../core/progress/progressStore.ts'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { redewendungen, kulturkarten } from '../../data/kultur.js'
 import Card from '../../components/common/Card.jsx'

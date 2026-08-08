@@ -25,7 +25,7 @@ const { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } = await import(
 const { hatGespeicherteApp, isValidAppMode, loadAppMode, saveAppMode } = await import(
   '../src/features/app-mode/appModeStorage.js'
 )
-const { KEYS, lies } = await import('../src/core/storage.js')
+const { KEYS, lies } = await import('../src/core/storage.ts')
 
 // ===== App-Modus =====
 
@@ -206,7 +206,7 @@ test('jede Elektro-Uebung traegt alle Pflichtfelder', () => {
 })
 
 test('der Export nimmt die Lernstaende aller Bereiche mit', async () => {
-  const { schreibe, exportiereSpeicherstand } = await import('../src/core/storage.js')
+  const { schreibe, exportiereSpeicherstand } = await import('../src/core/storage.ts')
   schreibe(KEYS.codeFortschritt, { version: 1, xp: 20, erledigt: { 'html-1': '2026-08-05' } })
   schreibe(KEYS.electroFortschritt, { version: 1, xp: 10, erledigt: {} })
   schreibe(KEYS.fehlerbuch, { version: 1, naechsteId: 2, eintraege: [] })

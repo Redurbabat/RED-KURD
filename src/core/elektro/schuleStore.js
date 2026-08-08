@@ -1,8 +1,8 @@
 // Schule und Betrieb der Elektro-Lehre: Faecher, Noten, Pruefungen,
 // Berichtsheft. Alles lokal ueber src/core/storage.js — kein Konto, kein
 // Server. Die Oberflaeche liest hier und rechnet nie selbst.
-import { KEYS, lies, schreibe } from '../storage.js'
-import { melden } from '../store.js'
+import { KEYS, lies, schreibe } from '../storage.ts'
+import { melden } from '../store.ts'
 import { STANDARD_SKALA, durchschnitt, tageBis } from './notenRechnung.js'
 
 /** Die Faecher der Ausbildung — Startbestand, aenderbar. */

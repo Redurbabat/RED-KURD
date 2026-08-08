@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import { REDLINGO_NAV, istAktiv } from '../src/components/layout/navConfig.js'
-import { appModus, setzeAppModus } from '../src/core/ui/uiStore.js'
+import { appModus, setzeAppModus } from '../src/core/ui/uiStore.ts'
 
 test('Redlingo ist ein eigener gespeicherter Ansichtsmodus', () => {
   setzeAppModus('redlingo')

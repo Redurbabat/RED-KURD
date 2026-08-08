@@ -2,7 +2,7 @@
 // ohne Eigenschaften — ihre Daten holen sie sich aus den Stores.
 import { Suspense, lazy, useEffect } from 'react'
 import { useRoute, navigiere, passt, loeseUmleitung } from './router.jsx'
-import { appModus } from '../core/ui/uiStore.js'
+import { appModus } from '../core/ui/uiStore.ts'
 import { LoadingState } from '../components/common/EmptyState.jsx'
 
 // Der schnelle Lernpfad steckt im Start-Bundle: Heute, Sitzung, Kurs, Üben.

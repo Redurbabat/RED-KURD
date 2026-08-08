@@ -55,7 +55,7 @@ let ladeZaehler = 0
 async function neuStarten(speicher) {
   setzeSpeicher(speicher)
   ladeZaehler += 1
-  return import(`../src/core/storage.js?frisch=${ladeZaehler}`)
+  return import(`../src/core/storage.ts?frisch=${ladeZaehler}`)
 }
 
 /** Frischer Speicher + frisches Modul. */
@@ -487,7 +487,7 @@ test('wirft schon der Zugriff auf localStorage selbst, wird auch das abgefangen'
     configurable: true,
   })
   ladeZaehler += 1
-  const modul = await import(`../src/core/storage.js?frisch=${ladeZaehler}`)
+  const modul = await import(`../src/core/storage.ts?frisch=${ladeZaehler}`)
 
   assert.equal(modul.lies(modul.KEYS.profil, 'ersatz'), 'ersatz')
   assert.equal(modul.schreibe(modul.KEYS.profil, { name: 'Alan' }), false)

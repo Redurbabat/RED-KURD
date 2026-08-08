@@ -5,7 +5,7 @@ import Badge from '../../components/common/Badge.jsx'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import { useLernstand } from '../../core/store.js'
+import { useLernstand } from '../../core/store.ts'
 import * as schule from '../../core/elektro/schuleStore.js'
 
 const TON = {

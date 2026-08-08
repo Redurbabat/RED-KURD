@@ -1,13 +1,13 @@
 // Die gemischte Tagessitzung. Läuft ohne Navigation, damit nichts ablenkt.
 // Entweder wird eine gespeicherte Sitzung fortgesetzt oder eine neue geplant.
 import { useEffect, useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
-import { TAB_KEYS, liesTab } from '../../../core/storage.js'
+import { useLernstand } from '../../../core/store.ts'
+import { TAB_KEYS, liesTab } from '../../../core/storage.ts'
 import { navigiere, useRoute } from '../../../app/router.jsx'
 import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.ts'
-import { sitzungLaden } from '../../../core/session/sessionStore.js'
+import { sitzungLaden } from '../../../core/session/sessionStore.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
-import { standardDauer } from '../../../core/profile/profileStore.js'
+import { standardDauer } from '../../../core/profile/profileStore.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.jsx'

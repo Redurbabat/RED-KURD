@@ -2,9 +2,9 @@
 // besitzen eigene Inhalte, Stimmen, Fotos und lokalen Fortschritt.
 import { useEffect, useState } from 'react'
 import { navigiere } from '../../../app/router.jsx'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { SPRACHKURSE } from '../../../data/sprachkurse.js'
-import { kursStand } from '../../../core/courses/languageCourseStore.js'
+import { kursStand } from '../../../core/courses/languageCourseStore.ts'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import FlagIcon from '../../../components/common/FlagIcon.jsx'

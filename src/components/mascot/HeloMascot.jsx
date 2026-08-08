@@ -2,7 +2,7 @@
 // Alles ist ein einziges SVG, damit jede Variante stilistisch zusammenpasst
 // und in jeder Groesse scharf bleibt. Grundausstattung: Kelim-Schal um den
 // Hals (rot-gold) und traditionelle Weste mit goldener Borte.
-import { aktiverArtikel } from '../../core/shop/shopStore.js'
+import { aktiverArtikel } from '../../core/shop/shopStore.ts'
 
 // Nur Farben aus der kurdischen Farbwelt (Tokens aus tokens.css).
 const FARBEN = {

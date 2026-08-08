@@ -2,11 +2,11 @@
 // Tages- und Wochenaufgaben, Tagestruhe. Hier wird nichts zusätzlich gezählt —
 // alle Stände kommen aus dem einen gemeinsamen Lernstand.
 import { useState } from 'react'
-import { useLernstand } from '../../../core/store.js'
+import { useLernstand } from '../../../core/store.ts'
 import { T } from '../../../core/texts.js'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
-import { truheBereit, truheOeffnen } from '../../../core/progress/progressStore.js'
-import { holeAufgaben, holeBelohnung } from '../../../core/tasks/taskStore.js'
+import { truheBereit, truheOeffnen } from '../../../core/progress/progressStore.ts'
+import { holeAufgaben, holeBelohnung } from '../../../core/tasks/taskStore.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
