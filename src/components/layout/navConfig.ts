@@ -1,5 +1,5 @@
 // Die sechs Bereiche des Modern-Modus und die fünf des Abenteuer-Modus.
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 import type { Iconname } from '../icons/iconPfade.ts'
 
 /** Ein Punkt in der Haupt- oder Bottom-Navigation. */

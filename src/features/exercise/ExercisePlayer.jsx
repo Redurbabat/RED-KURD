@@ -12,7 +12,7 @@ import { istRichtigGetippt, SKILL_JE_ART } from '../../core/session/exerciseFact
 import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.ts'
 import { deutschVon, fotoVon, kurmanciVon } from '../../core/courses/courseRepository.ts'
 import { sitzungSpeichern, sitzungLoeschen } from '../../core/session/sessionStore.ts'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 
 const BUCHSTABEN = ['A', 'B', 'C', 'D']
 const XP_JE_AUFGABE = 10

@@ -18,7 +18,7 @@ import Badge from '../../../components/common/Badge.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import ProgressBar, { ProgressRing } from '../../../components/common/ProgressBar.tsx'
 import LernpfadKarte from '../../../features/app-mode/LernpfadKarte.tsx'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import './CoursePage.css'
 
 /** Klasse je Status — „begonnen“ hat bewusst keine eigene Optik. */

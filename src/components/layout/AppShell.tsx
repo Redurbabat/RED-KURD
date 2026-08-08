@@ -3,7 +3,7 @@
 import StatsHeader from './StatsHeader.tsx'
 import DesktopSidebar from './DesktopSidebar.tsx'
 import BottomNavigation from './BottomNavigation.tsx'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 import type { ReactNode } from 'react'
 import type { Navigationseintrag } from './navConfig.ts'
 import type { Navmarken } from './BottomNavigation.tsx'

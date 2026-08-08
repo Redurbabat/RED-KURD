@@ -2,7 +2,7 @@
 // Welcher Bereich offen ist, steht ausschliesslich in der Adresse (Prop `tab`).
 import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import { texte } from '../../../data/texte.js'
 import { redewendungen, kulturkarten } from '../../../data/kultur.js'
 import PageHeader from '../../../components/layout/PageHeader.tsx'

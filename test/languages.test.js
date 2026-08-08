@@ -9,7 +9,7 @@ import {
   spracheZuKurs,
   sprachAttribute,
   verfuegbareSprachen,
-} from '../src/core/languages/languages.js'
+} from '../src/core/languages/languages.ts'
 import { SPRACHKURSE } from '../src/data/sprachkurse.js'
 
 test('es gibt genau einen Hauptkurs — Kurmancî', () => {

@@ -9,7 +9,7 @@
 import { useMemo } from 'react'
 import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
-import { grussText } from '../../../core/texts.js'
+import { grussText } from '../../../core/texts.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { heute } from '../../../core/progress/scheduler.ts'
 import {

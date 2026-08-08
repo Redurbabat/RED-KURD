@@ -2,7 +2,7 @@
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.tsx'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 import type { Rundenbelohnung, Rundenergebnis } from '../../types/lernstand'
 
 /** Beide Modi zeigen dasselbe Ergebnis, nur in ihrem eigenen Gewand. */

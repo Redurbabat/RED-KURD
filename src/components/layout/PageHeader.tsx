@@ -2,7 +2,7 @@
 import HeloMascot from '../mascot/HeloMascot.tsx'
 import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 
 import type { ReactNode } from 'react'
 

@@ -3,7 +3,7 @@
 // bleiben anklickbar, die Reihenfolge ist nur eine Empfehlung.
 import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.ts'
 import Landscape from '../../../components/adventure/Landscape.tsx'
 import PageHeader from '../../../components/layout/PageHeader.tsx'

@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import {
   statistik,
   fertigkeiten,

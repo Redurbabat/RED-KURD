@@ -1,5 +1,10 @@
 // Alle wiederkehrenden Oberflaechen-Texte an einer Stelle.
 // So bleibt die Sprache einheitlich und eine Uebersetzung ist spaeter leicht.
+//
+// Bewusst OHNE `as const` und ohne ausgeschriebenen Typ: die Form ergibt sich
+// aus dem Inhalt, und jeder Zugriff wie `T.nav.heute` wird dabei geprueft.
+// Ein Tippfehler im Pfad faellt also auch so auf — und niemand muss beim
+// Ergaenzen eines Textes zwei Stellen pflegen.
 
 export const T = {
   app: {
@@ -189,7 +194,7 @@ export const T = {
 }
 
 /** Tageszeit-Begrüßung auf Kurmancî. */
-export function grussText(stunde = new Date().getHours()) {
+export function grussText(stunde: number = new Date().getHours()): string {
   if (stunde < 11) return T.gruss.morgen
   if (stunde < 18) return T.gruss.tag
   return T.gruss.abend

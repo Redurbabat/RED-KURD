@@ -9,7 +9,36 @@
 // 'kurmanci' ist der grosse Hauptkurs (courseRepository), alle anderen Ids
 // zeigen auf die Zusatzkurse in src/data/sprachkurse.js.
 
-export const SPRACHEN = [
+/** Wie eine Sprache geschrieben wird. */
+export type Schriftart = 'latin' | 'arabic'
+
+/**
+ * Eine Lernsprache. Deutsch ist immer `ausgang`; gelernt wird `ziel`.
+ *
+ * `kursId` verbindet den Eintrag mit dem Kurssystem und ist `null`, solange
+ * es keine Inhalte gibt — dann steht auch `geplant: true` daneben.
+ */
+export interface Sprache {
+  id: string
+  /** Der Name in der Sprache selbst („Français"). */
+  name: string
+  nameDeutsch: string
+  /** Sprachcode der Ausgangssprache — heute immer `'de'`. */
+  ausgang: string
+  /** Sprachcode fuer `lang="…"` im Markup. */
+  ziel: string
+  schrift: Schriftart
+  rtl: boolean
+  /** Wunschstimme der Sprachausgabe. */
+  locale: string
+  kursId: string | null
+  /** Nur bei Kurmancî gesetzt. */
+  hauptkurs?: boolean
+  /** Vorbereitet, aber noch nicht lernbar. */
+  geplant?: boolean
+}
+
+export const SPRACHEN: readonly Sprache[] = [
   {
     id: 'ku-kurmanci',
     name: 'Kurmancî',
@@ -93,37 +122,52 @@ export const SPRACHEN = [
   },
 ]
 
-/** Der Hauptkurs der App — Kurmancî. */
-export function hauptSprache() {
-  return SPRACHEN.find((s) => s.hauptkurs)
+/**
+ * Der Hauptkurs der App — Kurmancî.
+ *
+ * Kann nicht fehlen: `test/languages.test.js` prueft, dass genau ein Eintrag
+ * `hauptkurs` traegt. Der Rueckfall steht trotzdem da, weil der Pruefer den
+ * Inhalt der Liste nicht kennt — und weil ein `undefined` hier jede
+ * aufrufende Seite umwerfen wuerde.
+ */
+export function hauptSprache(): Sprache {
+  const haupt = SPRACHEN.find((s) => s.hauptkurs) ?? SPRACHEN[0]
+  if (!haupt) throw new Error('SPRACHEN ist leer — es gibt keinen Hauptkurs.')
+  return haupt
 }
 
 /** Alle Sprachen, die heute schon lernbar sind. */
-export function verfuegbareSprachen() {
+export function verfuegbareSprachen(): Sprache[] {
   return SPRACHEN.filter((s) => !s.geplant)
 }
 
 /** Sprachen, die vorbereitet, aber noch nicht lernbar sind. */
-export function geplanteSprachen() {
+export function geplanteSprachen(): Sprache[] {
   return SPRACHEN.filter((s) => s.geplant)
 }
 
-export function spracheVon(id) {
+export function spracheVon(id: string | null | undefined): Sprache | null {
   return SPRACHEN.find((s) => s.id === id) || null
 }
 
 /** Sprache zu einer Kurs-Id des bestehenden Kurssystems. */
-export function spracheZuKurs(kursId) {
+export function spracheZuKurs(kursId: string | null | undefined): Sprache | null {
   return SPRACHEN.find((s) => s.kursId === kursId) || null
+}
+
+/** Was an ein Element gehaengt wird, das Text in der Zielsprache zeigt. */
+export interface Sprachattribute {
+  lang?: string
+  dir?: 'rtl'
 }
 
 /**
  * HTML-Attribute fuer Text in einer Zielsprache: `lang` immer, `dir` nur bei
  * Rechts-nach-links-Schrift. Anwendung: <span {...sprachAttribute(sprache)}>…
  */
-export function sprachAttribute(sprache) {
+export function sprachAttribute(sprache: Sprache | null | undefined): Sprachattribute {
   if (!sprache) return {}
-  const attribute = { lang: sprache.ziel }
+  const attribute: Sprachattribute = { lang: sprache.ziel }
   if (sprache.rtl) attribute.dir = 'rtl'
   return attribute
 }

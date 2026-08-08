@@ -2,7 +2,7 @@
 // Aussehen und Komfort — alle Lerninhalte bleiben frei zugänglich.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { truheBereit, truheOeffnen, gibEdelsteine } from '../../../core/progress/progressStore.ts'
 import {

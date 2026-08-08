@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import HeloMascot from '../mascot/HeloMascot.tsx'
 import PrimaryButton from './PrimaryButton.tsx'
 import Icon from '../icons/Icon.tsx'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 
 export interface EmptyStateProps {
   titel: string

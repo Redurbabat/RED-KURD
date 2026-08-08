@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
 import { TAB_KEYS, schreibeTab } from '../../../core/storage.ts'
 import { navigiere } from '../../../app/router.jsx'
-import { T, grussText } from '../../../core/texts.js'
+import { T, grussText } from '../../../core/texts.ts'
 import {
   statistik,
   schwierigeKarten,

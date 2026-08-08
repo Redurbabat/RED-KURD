@@ -3,7 +3,7 @@
 import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { istAktiv } from './navConfig.ts'
-import { T } from '../../core/texts.js'
+import { T } from '../../core/texts.ts'
 import type { Navigationseintrag } from './navConfig.ts'
 
 /** Zahl offener Punkte je Navigations-ID; fehlt ein Eintrag, gibt es keine Marke. */

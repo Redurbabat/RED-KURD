@@ -3,7 +3,7 @@
 // alle Stände kommen aus dem einen gemeinsamen Lernstand.
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
-import { T } from '../../../core/texts.js'
+import { T } from '../../../core/texts.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { truheBereit, truheOeffnen } from '../../../core/progress/progressStore.ts'
 import { holeAufgaben, holeBelohnung } from '../../../core/tasks/taskStore.ts'
