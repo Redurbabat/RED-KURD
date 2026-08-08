@@ -8,7 +8,7 @@ import LektionModal from '../app-mode/LektionModal.jsx'
 import LektionPlayer from '../app-mode/LektionPlayer.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'
 import LernpfadKarte from '../app-mode/LernpfadKarte.jsx'
-import { codeLernstand } from './codeProgressStore.js'
+import { codeLernstand } from './codeProgressStore.ts'
 import { holeSchritte } from './data/codeSchritte.js'
 
 /**

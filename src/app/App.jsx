@@ -22,8 +22,8 @@ import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
 import AnsichtSwitcher from '../features/app-mode/AnsichtSwitcher.jsx'
 import AppLauncher from '../features/app-mode/AppLauncher.jsx'
 import AppModeSwitcher from '../features/app-mode/AppModeSwitcher.jsx'
-import { APP_MODES } from '../features/app-mode/appModes.js'
-import { hatGespeicherteApp, loadAppMode, saveAppMode } from '../features/app-mode/appModeStorage.js'
+import { APP_MODES } from '../features/app-mode/appModes.ts'
+import { hatGespeicherteApp, loadAppMode, saveAppMode } from '../features/app-mode/appModeStorage.ts'
 import { LoadingState } from '../components/common/EmptyState.jsx'
 
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.

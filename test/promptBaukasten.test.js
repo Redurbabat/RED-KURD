@@ -21,7 +21,7 @@ class SpeicherAttrappe {
 globalThis.localStorage = new SpeicherAttrappe()
 
 const bk = await import('../src/core/prompting/promptBaukasten.js')
-const werkstatt = await import('../src/core/prompting/werkstattStore.js')
+const werkstatt = await import('../src/core/prompting/werkstattStore.ts')
 const { KEYS, exportiereSpeicherstand } = await import('../src/core/storage.ts')
 
 const GUTER_AUFTRAG = {

@@ -88,14 +88,18 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] `@types/react` / `@types/react-dom` ergänzt — ohne sie ließ sich
         `store.ts` (das erste Modul, das React anfasst) nicht ohne `any`
         typisieren, und die Komponenten-Welle wäre blockiert gewesen
-  - [ ] dazu die Stores der neuen Apps: `lernbereiche/bereichsLernstand`,
-        `elektro/schuleStore`, `prompting/werkstattStore`, `code-learning/fehlerbuchStore`,
-        `app-mode/appModeStorage`
+  - [x] die Stores der drei anderen Apps: `lernbereiche/bereichsLernstand.ts`,
+        `lernbereiche/wochenUebersicht.ts`, `elektro/schuleStore.ts`,
+        `prompting/werkstattStore.ts`, `code-learning/fehlerbuchStore.ts`,
+        `hearts/heartsStore.ts`, `app-mode/appModeStorage.ts`, `app-mode/appModes.ts`
+        und die drei dünnen Hüllen der Bereichs-Lernstände (fünfte Welle;
+        Verhalten über rund 310 000 Vergleiche belegt, jede Prüfung mit
+        bestandener Gegenprobe)
   - [ ] zuletzt Komponenten und Seiten
 - [x] Zentrale Typen unter `src/types/` angelegt (`lernstand.d.ts`, reine
       Deklarationsdatei): Lernstand, Karte, Tag, Profil, UI, Sitzung, Shop,
       Sprachkurse, Sicherung — die Speicherformen der **Sprach-App**
-- [~] Typen für die drei neuen Apps ergänzen: Bereichs-Lernstand (`erledigt`, `notizen`,
+- [x] Typen für die drei neuen Apps ergänzt: Bereichs-Lernstand (`erledigt`, `notizen`,
       `xp`, `serie`, `letzterTag`, `tage`), Elektro-Schule, Prompting-Werkstatt,
       Fehlerbuch, App-Wahl; dazu Übung, Einheit, Welt und Auszeichnungen/Aufgaben
   - [x] Bereichs-Lernstand und Lektionsstatus (`types/lernstand.d.ts`)
@@ -105,9 +109,9 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] Aufgaben, Auszeichnungen, Herzen, Shop-Artikel, Kapitel- und
         Nebenkursstand, App-Wahl sowie die abgeleiteten Rückgaben der Stores
         (`types/lernstand.d.ts`, vierte Welle)
-  - [ ] Elektro-Schule, Prompting-Werkstatt und Fehlerbuch — sie stehen in
-        `Speicherstand` bewusst noch als `unknown`, bis Welle 5 ihre Stores
-        migriert
+  - [x] Elektro-Schule, Prompting-Werkstatt und Fehlerbuch (fünfte Welle) —
+        `Speicherstand` führt keine `unknown`-Felder mehr. Damit ist **jede**
+        gespeicherte Form aller vier Apps benannt
 - [ ] Migrations-Pipeline: jede Migration eine benannte, einzeln aufrufbare Funktion mit
       Von- und Nach-Version; `migriere()` führt sie geordnet aus — heute ist es **eine**
       Funktion mit nummerierten Schritten
@@ -214,7 +218,7 @@ Stand: `npm test` läuft heute mit 407 Tests grün.
 - [ ] Doppelte Konstante auflösen: `BESTEHENSGRENZE` (progressStore) und
       `BESTANDEN_AB` (courseRepository) sind beide 80, nur eine wird benutzt
 - [ ] Dead Code entfernen oder anbinden — Entscheidung je Fall dokumentieren:
-      `heartsStore.js` (von keiner Datei unter `src/` importiert, `KEYS.herzen` wandert
+      `heartsStore.ts` (von keiner Datei unter `src/` importiert, `KEYS.herzen` wandert
       trotzdem in jeden Export), `KelimBorder.jsx` (kein Aufrufer), die Route
       `/adventure/quests` (nirgends verlinkt, Dublette von `/adventure/tasks`), die
       Dublette `/adventure/world`, die toten Einträge `UMLEITUNGEN['/']` und

@@ -22,7 +22,7 @@
  *
  * Ein `version`-Feld beschreibt immer die Zahl, die das `STANDARD`-Objekt
  * setzt. Auf der Platte gewinnt der gespeicherte Wert, weil er im Spread nach
- * hinten kommt — wer eine Version *prüfen* will (wie `uiStore.js:25`), darf
+ * hinten kommt — wer eine Version *prüfen* will (wie `uiStore.ts:25`), darf
  * sich deshalb nie auf das Literal verlassen.
  */
 
@@ -68,7 +68,7 @@ export interface Karte {
 
 /**
  * Aktivität eines einzelnen Tages; auf 60 Einträge begrenzt
- * (`progressStore.js:219–221`).
+ * (`progressStore.ts:219–221`).
  *
  * ACHTUNG, historisch krumm: Diese Form beschreibt, was `LEERER_TAG`
  * (`progressStore.ts:199`) anlegt. Auf der Platte kann ein Tag deutlich ärmer
@@ -87,7 +87,7 @@ export interface Karte {
  * - `zaehleAufgabe()`/`zaehleLernzeit()` sind unbedenklich: sie legen
  *   `LEERER_TAG` zuerst und ergänzen fehlende Felder dabei.
  * - `tagesStatistik()` (`progressSelectors.ts:175`) reicht den rohen Tag
- *   durch. Deshalb schreibt `taskStore.js:71` die Standardwerte noch einmal
+ *   durch. Deshalb schreibt `taskStore.ts:71` die Standardwerte noch einmal
  *   davor. **Diese Absicherung darf beim Migrieren nicht wegfallen** — ohne
  *   sie wird aus `Math.min(tag.maxFolge, 3)` bei einem v1-Tag `NaN`, und die
  *   Tagesaufgabe „3 richtige Antworten hintereinander" ließe sich nie mehr
@@ -137,7 +137,7 @@ export interface Lernstand {
  * stammen aus den Listen im selben Modul (`KENNTNISSE`, `ZIELE`, `VARIANTEN`,
  * `TAGESZIELE`, dazu `ZEITEN` im Onboarding). Sie stehen hier trotzdem als
  * `string`/`number` und nicht als Vereinigung: **der Store prüft nichts.**
- * `setzeProfil()` (`profileStore.js:64`) nimmt beim Import beliebiges JSON
+ * `setzeProfil()` (`profileStore.ts:64`) nimmt beim Import beliebiges JSON
  * entgegen, und `speichereProfil()` schreibt jedes Teilstück durch. Eine enge
  * Vereinigung wäre eine Zusage, die der Code nicht einlöst.
  */
@@ -157,7 +157,7 @@ export interface Profil {
   /**
    * ISO-Zeitstempel — aber `null`, solange nie über `speichereProfil()`
    * geschrieben wurde. `STANDARD.erstellt` ist `null`
-   * (`profileStore.js:39`), und `setzeProfil()` beim Import füllt es nicht
+   * (`profileStore.ts:39`), und `setzeProfil()` beim Import füllt es nicht
    * nach. Erst `speichereProfil()` setzt es (`:57`).
    */
   erstellt: string | null
@@ -167,9 +167,9 @@ export interface Profil {
  * `red-kurd-ui-v1` — Oberflächeneinstellungen.
  *
  * Zwei Wahrheiten beim Namen: Der Schlüssel heißt `-v1`, `STANDARD` trägt
- * aber `version: 2` (`uiStore.js:7`). Und `migriere()` legt den Schlüssel bei
- * der Erstmigration mit `version: 1` an (`storage.js:300–308`) — genau darauf
- * reagiert die einmalige Dunkel-Migration in `uiStore.js:25`. Der Typ bleibt
+ * aber `version: 2` (`uiStore.ts:7`). Und `migriere()` legt den Schlüssel bei
+ * der Erstmigration mit `version: 1` an (`storage.ts:300–308`) — genau darauf
+ * reagiert die einmalige Dunkel-Migration in `uiStore.ts:25`. Der Typ bleibt
  * deshalb `number`, nicht `2`.
  */
 export interface UiEinstellungen {
@@ -177,7 +177,7 @@ export interface UiEinstellungen {
   mode: 'modern' | 'abenteuer' | 'redlingo'
   /**
    * `auto` bedeutet: der Gerätewunsch entscheidet. Erst `anwenden()`
-   * (`uiStore.js:59–66`) löst ihn über `prefers-color-scheme` in `light` oder
+   * (`uiStore.ts:59–66`) löst ihn über `prefers-color-scheme` in `light` oder
    * `dark` auf — an `<html data-theme>` steht nie `auto`. Die Auswahl steht in
    * `SettingsPage.jsx:33–42` und wird über `setzeUi({ theme })` gespeichert.
    */
@@ -256,10 +256,10 @@ export interface Wochentagswert {
 }
 
 /* ===== Abgeleitete Formen des Lernstands =====
-   Was progressStore.js zurückgibt, ohne dass es je gespeichert wird. Steht
+   Was progressStore.ts zurückgibt, ohne dass es je gespeichert wird. Steht
    hier, damit die Rückgabetypen beim Migrieren nicht neu erfunden werden. */
 
-/** Was `level()` liefert (`progressStore.js:87`). Level = `floor(xp / 100) + 1`. */
+/** Was `level()` liefert (`progressStore.ts:87`). Level = `floor(xp / 100) + 1`. */
 export interface Levelstand {
   stufe: number
   /** XP innerhalb der Stufe, 0–99. */
@@ -267,7 +267,7 @@ export interface Levelstand {
   bisNaechstes: number
 }
 
-/** Was `tagesZiel()` liefert (`progressStore.js:239`). */
+/** Was `tagesZiel()` liefert (`progressStore.ts:239`). */
 export interface Tageszielstand {
   /** Auf `ziel` gedeckelt — für Fortschrittsbalken. */
   erledigt: number
@@ -278,14 +278,14 @@ export interface Tageszielstand {
   belohnt: boolean
 }
 
-/** Was `holeTageszielBelohnung()` gutschreibt (`progressStore.js:251`). */
+/** Was `holeTageszielBelohnung()` gutschreibt (`progressStore.ts:251`). */
 export interface Tageszielbelohnung {
   xp: number
   edelsteine: number
 }
 
 /**
- * Was `truheOeffnen()` gutschreibt (`progressStore.js:285`). `schluessel` ist
+ * Was `truheOeffnen()` gutschreibt (`progressStore.ts:285`). `schluessel` ist
  * bewusst immer da und meist 0 — nur auf Serienstufe 4 gibt es einen.
  */
 export interface Truhenbelohnung {
@@ -365,7 +365,7 @@ export interface Sitzung {
   uebungen: Uebung[]
   /**
    * ISO-Zeitstempel, den `sitzungSpeichern()` selbst ergänzt
-   * (`sessionStore.js:7`). Grundlage der 48-Stunden-Frist in `sitzungLaden()`
+   * (`sessionStore.ts:7`). Grundlage der 48-Stunden-Frist in `sitzungLaden()`
    * (`:21–24`) — ohne sie verdrängt eine liegengebliebene Sitzung dauerhaft
    * den Tagesplan.
    *
@@ -382,19 +382,19 @@ export interface Sitzung {
 /**
  * Wohin ein Artikel ausgerüstet wird. `verbrauch` ist die Ausnahme: solche
  * Artikel wirken sofort im Lernstand und landen weder in `gekauft` noch in
- * `aktiv` (`shopStore.js:137`).
+ * `aktiv` (`shopStore.ts:137`).
  */
 export type Artikelart = 'mascot' | 'thema' | 'klang' | 'rahmen' | 'verbrauch'
 
 /** Womit bezahlt wird. Beides liegt im Lernstand, nicht im Shopstand. */
 export type Waehrung = 'edelsteine' | 'schluessel'
 
-/** Ein Artikel aus `ARTIKEL` (`shopStore.js:17`). Kursdaten, nichts Gespeichertes. */
+/** Ein Artikel aus `ARTIKEL` (`shopStore.ts:17`). Kursdaten, nichts Gespeichertes. */
 export interface Shopartikel {
   id: string
   name: string
   beschreibung: string
-  /** Gruppe im Laden, siehe `KATEGORIEN` (`shopStore.js:11`). */
+  /** Gruppe im Laden, siehe `KATEGORIEN` (`shopStore.ts:11`). */
   kategorie: 'edelsteine' | 'schluessel' | 'taeglich'
   preis: number
   waehrung: Waehrung
@@ -409,17 +409,17 @@ export interface Shopkategorie {
   icon: string
 }
 
-/** Was `kaufe()` zurückmeldet (`shopStore.js:127`). */
+/** Was `kaufe()` zurückmeldet (`shopStore.ts:127`). */
 export type Kaufergebnis = 'ok' | 'zu-teuer' | 'schon-da' | 'unbekannt'
 
 /**
  * `red-kurd-shop-v1` — gekaufte und aktive Kosmetik.
  *
  * `aktiv` ist bewusst kein vollständiger `Record` über alle Artikelarten:
- * `STANDARD.aktiv` ist `{}` (`shopStore.js:80`), ein Schlüssel entsteht erst
+ * `STANDARD.aktiv` ist `{}` (`shopStore.ts:80`), ein Schlüssel entsteht erst
  * beim ersten Ausrüsten. Und der Wert kann `null` werden — `setzeAktiv()`
  * legt den Artikel wieder ab, indem es `null` schreibt statt den Schlüssel zu
- * entfernen (`shopStore.js:149`). `aktiverArtikel()` fängt beides mit
+ * entfernen (`shopStore.ts:149`). `aktiverArtikel()` fängt beides mit
  * `id ? … : null` ab (`:155`).
  */
 export interface Shopstand {
@@ -435,7 +435,7 @@ export interface Shopstand {
 /**
  * Referenzwerte, um „heute/diese Woche abgeschlossene Einheiten" aus der
  * Gesamtzahl abzuleiten. Beide wahlfrei: sie entstehen erst beim ersten
- * Tages- bzw. Wochenwechsel (`taskStore.js:47`, `:54`), und `heutigeEinheiten()`
+ * Tages- bzw. Wochenwechsel (`taskStore.ts:47`, `:54`), und `heutigeEinheiten()`
  * fängt das Fehlen mit `??` ab (`:61`).
  */
 export interface Aufgabenbasis {
@@ -444,7 +444,7 @@ export interface Aufgabenbasis {
 }
 
 /**
- * `red-kurd-tasks-v1` — Tages- und Wochenaufgaben (`taskStore.js:15`).
+ * `red-kurd-tasks-v1` — Tages- und Wochenaufgaben (`taskStore.ts:15`).
  *
  * Gespeichert wird nur, was sich nicht ableiten lässt: die abgeholten
  * Belohnungen und die beiden Zeitmarken. Der Aufgabenfortschritt selbst kommt
@@ -464,7 +464,7 @@ export interface Aufgabenstand {
 
 /**
  * Belohnung einer Aufgabe. `xp` gibt es bei jeder, die beiden anderen nur bei
- * einigen — deshalb wahlfrei (`taskStore.js:73–133`).
+ * einigen — deshalb wahlfrei (`taskStore.ts:73–133`).
  */
 export interface Aufgabenbelohnung {
   xp: number
@@ -474,7 +474,7 @@ export interface Aufgabenbelohnung {
 
 /**
  * Eine Aufgabe mit aktuellem Stand, wie `holeAufgaben()` sie liefert
- * (`taskStore.js:69`). Nichts davon wird gespeichert außer `abgeholt`.
+ * (`taskStore.ts:69`). Nichts davon wird gespeichert außer `abgeholt`.
  */
 export interface Aufgabe {
   id: string
@@ -496,13 +496,13 @@ export interface Aufgabenliste {
 
 /* ===== Auszeichnungen ===== */
 
-/** Die Farbtöne, in denen Auszeichnungen erscheinen (`achievementsStore.js:9`). */
+/** Die Farbtöne, in denen Auszeichnungen erscheinen (`achievementsStore.ts:9`). */
 export type Auszeichnungsfarbe = 'green' | 'orange' | 'blue' | 'purple' | 'teal' | 'gold'
 
 /**
  * Der Kursausschnitt, den eine Auszeichnungsprüfung als zweites Argument
  * bekommt: `kursFortschritt()` plus die Zahl der fertigen Welten
- * (`achievementsStore.js:99–106`). Bewusst hier ausgeschrieben statt aus
+ * (`achievementsStore.ts:99–106`). Bewusst hier ausgeschrieben statt aus
  * `kurs.d.ts` importiert — dort steht, was der Kurs *ist*, hier, was die
  * Prüfung *liest*.
  */
@@ -525,7 +525,7 @@ export interface Auszeichnung {
 }
 
 /**
- * Was `holeAuszeichnungen()` liefert (`achievementsStore.js:97`): die Regel
+ * Was `holeAuszeichnungen()` liefert (`achievementsStore.ts:97`): die Regel
  * samt Ergebnis. `pruefe` bleibt am Objekt hängen, weil der Store die ganze
  * Vorlage durchspreizt (`{ ...a, frei, seit }`).
  */
@@ -537,7 +537,7 @@ export interface Auszeichnungsstatus extends Auszeichnung {
 
 /**
  * `red-kurd-achievements-v1` — der Auszeichnungsstand
- * (`achievementsStore.js:88`).
+ * (`achievementsStore.ts:88`).
  *
  * Gespeichert wird nur das **Datum**: ob eine Auszeichnung freigeschaltet
  * ist, ergibt sich immer neu aus dem Lernstand. Der Bereich ist damit bis auf
@@ -552,7 +552,7 @@ export interface Auszeichnungsstand {
 /* ===== Herzen ===== */
 
 /**
- * `red-kurd-hearts-v1` — Herzen des Abenteuer-Modus (`heartsStore.js:16`).
+ * `red-kurd-hearts-v1` — Herzen des Abenteuer-Modus (`heartsStore.ts:16`).
  *
  * Zwei Eigenheiten, die beim Migrieren zählen:
  * - `zuletzt` sind **Epoch-Millisekunden**, kein ISO-Text und kein
@@ -574,7 +574,7 @@ export interface Herzenstand {
 /* ===== Nebenkurse ===== */
 
 /**
- * Stand eines Nebenkurs-Kapitels (`languageCourseStore.js:41–47`).
+ * Stand eines Nebenkurs-Kapitels (`languageCourseStore.ts:41–47`).
  * `zuletzt` ist ein ISO-Zeitstempel, kein Tagesschlüssel.
  */
 export interface Kapitelstand {
@@ -588,19 +588,19 @@ export interface Kapitelstand {
 
 /**
  * `red-kurd-language-courses-v1` — getrennter Fortschritt der Nebensprachen
- * (`languageCourseStore.js:6`). Bewusst getrennt vom Kurmancî-Lernstand:
+ * (`languageCourseStore.ts:6`). Bewusst getrennt vom Kurmancî-Lernstand:
  * Englisch, Französisch, Türkisch und Spanisch sind Nebenkurse und erzeugen
  * keine Wiederholkarten.
  */
 export interface Sprachkursstand {
   version: 1
-  /** Schlüssel `kursId/kapitelId` (`languageCourseStore.js:23`). */
+  /** Schlüssel `kursId/kapitelId` (`languageCourseStore.ts:23`). */
   kapitel: Record<string, Kapitelstand>
   /** Zuletzt bearbeiteter Kurs; Rückgabe von `letzterSprachkurs()`. */
   letzterKurs: string | null
 }
 
-/** Was `kursStand()` über einen ganzen Nebenkurs sagt (`languageCourseStore.js:51`). */
+/** Was `kursStand()` über einen ganzen Nebenkurs sagt (`languageCourseStore.ts:51`). */
 export interface Nebenkursstand {
   /** Kapitel mit `abgeschlossen: true`. */
   fertig: number
@@ -612,7 +612,7 @@ export interface Nebenkursstand {
 /* ===== App-Wahl ===== */
 
 /**
- * Welche der vier Apps offen ist (`appModes.js:5–10`). Liegt als **roher
+ * Welche der vier Apps offen ist (`appModes.ts:5–10`). Liegt als **roher
  * String** in `red-kurd-active-app-v1` und — weiter mitgeschrieben — in
  * `red-kurd-active-app-mode-v1`; kein Objekt, kein `version`-Feld.
  * Unbekannte Werte fallen auf `language` zurück, ein kaputter Eintrag kann
@@ -623,11 +623,11 @@ export type Appbereich = 'language' | 'code' | 'prompting' | 'electro'
 /* ===== Sicherung ===== */
 
 /**
- * Was `exportiereSpeicherstand()` liefert (`storage.js:171–178`): je Eintrag
+ * Was `exportiereSpeicherstand()` liefert (`storage.ts:171–178`): je Eintrag
  * aus `KEYS` der gelesene Wert. Alle Felder wahlfrei — ein Schlüssel, der auf
  * dem Gerät nicht existiert, fehlt hier ganz (`null`-Werte werden gefiltert).
  *
- * Nicht enthalten, weil in `NUR_LOKAL` (`storage.js:169`):
+ * Nicht enthalten, weil in `NUR_LOKAL` (`storage.ts:169`):
  * - `ohneKonto` — eine Anmelde-Entscheidung dieses Geräts.
  * - `sitzung` — die laufende Übungsrunde ist flüchtig; ein Import würde auf
  *   dem neuen Gerät eine halb fertige, veraltete Sitzung wiederbeleben.
@@ -635,7 +635,7 @@ export type Appbereich = 'language' | 'code' | 'prompting' | 'electro'
  * Sicherungsdatei, die `sitzung` noch enthält, wird still übergangen.
  *
  * Die Sprachaufnahmen aus der IndexedDB fehlen ebenfalls — sie gehen an
- * `storage.js` vorbei (STORAGE.md §4.3).
+ * `storage.ts` vorbei (STORAGE.md §4.3).
  */
 export interface Speicherstand {
   fortschritt?: Lernstand
@@ -649,24 +649,21 @@ export interface Speicherstand {
   /**
    * Rohe Strings. `string` und nicht `Appbereich`, weil nichts sie beim
    * Schreiben in eine Datei oder beim Import prüft — `loadAppMode()` fängt
-   * Unbekanntes erst beim Lesen ab (`appModeStorage.js:25–39`).
+   * Unbekanntes erst beim Lesen ab (`appModeStorage.ts:25–39`).
    */
   appAktiv?: string
   appBereich?: string
   codeFortschritt?: Bereichslernstand
   promptingFortschritt?: Bereichslernstand
   electroFortschritt?: Bereichslernstand
-  /** Noch ohne Typ: Schule/Betrieb der Elektro-Lehre (`core/elektro/schuleStore.js`). */
-  electroSchule?: unknown
-  /** Noch ohne Typ: Werkstatt der AI-Sprache (`core/prompting/werkstattStore.js`). */
-  promptingWerkstatt?: unknown
-  /** Noch ohne Typ: Fehlerbuch von „Code lernen" (`features/code-learning/fehlerbuchStore.js`). */
-  fehlerbuch?: unknown
+  electroSchule?: Elektroschulstand
+  promptingWerkstatt?: Werkstattstand
+  fehlerbuch?: Fehlerbuchstand
 }
 
 /**
  * Die heruntergeladene Datei `red-kurd-lernstand.json`
- * (`progressStore.js:318–335`).
+ * (`progressStore.ts:318–335`).
  *
  * Der Lernstand steht **nur einmal** darin: `exportiereAlles()` schneidet
  * `fortschritt` aus dem `speicher`-Block heraus. Ältere Dateien *mit* der
@@ -691,15 +688,22 @@ export interface Sicherungsdatei {
 
 /* ===== Die anderen drei Apps =====
    Code lernen, AI-Sprache und Elektro-Lehre teilen sich EINE Implementierung
-   (core/lernbereiche/bereichsLernstand.js), aber je einen eigenen Schlüssel.
+   (core/lernbereiche/bereichsLernstand.ts), aber je einen eigenen Schlüssel.
    Geteilt werden die Regeln, nicht die Zahlen — siehe ADR-008. */
 
 /** Zustand einer Lektion, immer aus dem Lernstand abgeleitet, nie aus den Daten. */
 export type Lektionsstatus = 'done' | 'current' | 'open' | 'locked'
 
 /**
- * Lernstand eines App-Bereichs. Gilt für codeFortschritt,
- * promptingFortschritt und electroFortschritt gleichermaßen.
+ * Lernstand eines App-Bereichs (`bereichsLernstand.ts:17–25`, Konstante
+ * `LEER`). Gilt für codeFortschritt, promptingFortschritt und
+ * electroFortschritt gleichermaßen.
+ *
+ * Kein `serienSchutz`, obwohl die Serie hier mit derselben Funktion gerechnet
+ * wird wie in der Sprach-App: `aktualisiereSerie()` liefert ihn mit, aber
+ * `schliesseAb()` übernimmt ausdrücklich nur `serie` und `letzterTag`
+ * (`:79–81`). Wer das zu `Object.assign(neu, serie)` zusammenzieht, legt ein
+ * Feld an, das kein Leser kennt — und schreibt es in jeden Lernstand.
  */
 export interface Bereichslernstand {
   version: 1
@@ -712,6 +716,340 @@ export interface Bereichslernstand {
   letzterTag: Tagesschluessel | null
   /** Tag → an diesem Tag gesammelte XP. Wächst bisher ohne Obergrenze. */
   tage: Record<Tagesschluessel, number>
+}
+
+/**
+ * So viel einer Lektion, wie der Baukasten wirklich liest. Die Aufrufer
+ * reichen die vollen Datensätze aus `codeLessons.js`, `promptLessons.js` und
+ * `electroLessons.js` durch — die tragen Titel, Dauer und Inhalt mit, aber
+ * `statusFuer()` und `fortschrittProzent()` sehen davon nur die `id`.
+ */
+export interface Lektionskennung {
+  id: string
+}
+
+/**
+ * Was `erstelleBereichsLernstand(key)` zurückgibt
+ * (`bereichsLernstand.ts:55–139`). Die drei dünnen Hüllen
+ * `codeProgressStore.ts`, `electroProgressStore.ts` und
+ * `promptProgressStore.ts` binden nur je einen Schlüssel daran und
+ * exportieren nichts anderes — wer diese Form ändert, ändert alle drei Apps
+ * zugleich.
+ *
+ * `stand()` reicht den Modul-Zwischenspeicher **selbst** heraus, keine Kopie
+ * (`:31–42`). Wer das Ergebnis verändert, verändert stillschweigend den Stand
+ * aller Leser, ohne dass etwas geschrieben oder gemeldet wird. Unter `src/`
+ * ruft `stand()` heute niemand; nur `test/bereichsLernstand.test.js:50` liest
+ * darüber `letzterTag`.
+ */
+export interface Bereichsbaukasten {
+  stand(): Bereichslernstand
+  istErledigt(lektionsId: string): boolean
+  /**
+   * XP gibt es nur beim ersten Mal; ein zweiter Abschluss derselben ID gibt
+   * `0` zurück und schreibt nichts (`:69–84`). Ohne zweites Argument gilt
+   * `XP_JE_LEKTION`; Übungen reichen `XP_JE_UEBUNG` mit
+   * (`UebungModal.jsx:24`), Mitmach-Aufgaben `XP_JE_MITMACH`
+   * (`PraxisAufgabe.jsx:45`).
+   */
+  schliesseAb(lektionsId: string, xp?: number): number
+  xpHeute(): number
+  /** `''`, wenn nichts notiert wurde — nie `undefined` (`:91`). */
+  notiz(id: string): string
+  /** Schreibt nur bei echter Änderung und gibt bewusst nichts zurück (`:95–100`). */
+  setzeNotiz(id: string, text: string): void
+  serie(): number
+  /**
+   * Der Rückgabewert enthält jede übergebene ID. Beim Nachschlagen liefert
+   * `noUncheckedIndexedAccess` trotzdem `Lektionsstatus | undefined` —
+   * `ElektroHeute.jsx:38` vergleicht deshalb direkt mit `'current'`, statt den
+   * Wert weiterzureichen.
+   */
+  statusFuer(lektionen: readonly Lektionskennung[]): Record<string, Lektionsstatus>
+  /** 0–100, gerundet. Eine leere Liste ergibt 0 statt `NaN` (`:133–138`). */
+  fortschrittProzent(lektionen: readonly Lektionskennung[]): number
+}
+
+/* ===== Elektro-Lehre: Schule und Betrieb ===== */
+
+/** Die Stände einer Prüfung (`PRUEFUNG_STATUS`, `schuleStore.ts:20`). */
+export type Pruefungsstatus =
+  | 'Nicht begonnen'
+  | 'Am Lernen'
+  | 'Wiederholen'
+  | 'Bereit'
+  | 'Erledigt'
+
+/** Die Stände einer Berichtsheft-Woche (`BERICHT_STATUS`, `schuleStore.ts:21`). */
+export type Berichtsstatus = 'Offen' | 'Geschrieben' | 'Kontrolliert' | 'Abgegeben'
+
+/**
+ * Ein Fach der Ausbildung.
+ *
+ * ACHTUNG, `lehrer`, `raum` und `tag` sind wahlfrei — und das ist kein
+ * Randfall: **keines** der acht Startfächer aus `STANDARD_FAECHER`
+ * (`schuleStore.ts:9–18`) trägt sie. Sie entstehen nur über
+ * `fachHinzufuegen()`, das sie mit `''` vorbelegt (`:82–84`). Wer sie als
+ * gesetzt annimmt, stolpert über genau die Fächer, die jeder Nutzer hat.
+ */
+export interface Schulfach {
+  id: string
+  name: string
+  lehrer?: string
+  raum?: string
+  /** Wochentag als freier Text; kein Datum. */
+  tag?: string
+  /**
+   * Wunschnote; `null`, wenn beim Anlegen keine genannt wurde. Die Oberfläche
+   * hat kein Feld dafür — `NotenBereich.jsx:240` legt Fächer immer ohne an,
+   * gesetzt ist sie also nur bei den acht Startfächern.
+   */
+  zielnote: number | null
+}
+
+/**
+ * Eine Note. Liegt flach über allen Fächern; die Zuordnung steckt in `fachId`,
+ * und `fachEntfernen()` lässt die Noten bewusst stehen (`schuleStore.ts:94–97`).
+ *
+ * ACHTUNG, zwei Felder sind **kein `number`**:
+ * - `note` kommt roh aus dem Eingabefeld — `NotenBereich.jsx:46` reicht den
+ *   Formularstand durch, dessen `note` mit `''` startet (`:33`). Auf der
+ *   Platte liegt dort meist `'5'` oder `'4,5'`. Zahlen kommen ebenfalls vor
+ *   (`sicherungRundlauf.test.js:73`, `elektroSchule.test.js:203`).
+ * - `gewicht` ebenso: das Formular hält `'1'` als **String** (`:33`), und
+ *   `gewicht || 1` lässt ihn durch (`schuleStore.ts:120`).
+ * Gerechnet wird deshalb nie direkt, sondern über `zahl()`
+ * (`notenRechnung.js:35`), das Komma und Punkt gleich behandelt. Wer hier
+ * `number` verspricht, bringt die erste Zeile zum Absturz, die sich darauf
+ * verlässt — und `durchschnitt()` würde eine Note nach der Migration wortlos
+ * überspringen.
+ *
+ * `art` und `kommentar` legt der Store bei jedem Eintrag an, aber nichts füllt
+ * sie: die Oberfläche kennt keine Eingabe dafür. Sie stehen als leere Strings
+ * in jedem gespeicherten Eintrag.
+ */
+export interface Noteneintrag {
+  id: string
+  fachId: string
+  note: string | number
+  thema: string
+  gewicht: string | number
+  /** `JJJJ-MM-TT` aus `<input type="date">` oder `''`. */
+  datum: string
+  art: string
+  kommentar: string
+}
+
+/**
+ * Eine Prüfung.
+ *
+ * `status` steht als `string` und nicht als `Pruefungsstatus`: nur
+ * `pruefungHinzufuegen()` prüft gegen die Liste (`schuleStore.ts:161`),
+ * `pruefungAendern()` schreibt jedes Teilstück ungeprüft durch (`:168–171`),
+ * und eine eingespielte Sicherungsdatei geht an beidem vorbei. Genau darauf
+ * antwortet `TON[p.status] || 'neutral'` (`PruefungenBereich.jsx:66`) — diese
+ * Absicherung darf beim Migrieren nicht wegfallen.
+ */
+export interface Pruefungseintrag {
+  id: string
+  titel: string
+  /** `''`, wenn „— kein Fach —" gewählt wurde (`PruefungenBereich.jsx:122`). */
+  fachId: string
+  /** `JJJJ-MM-TT` oder `''`; ohne Datum fällt die Prüfung aus `naechstePruefung()`. */
+  datum: string
+  themen: string
+  status: string
+  /**
+   * Wird bei jedem Anlegen geschrieben, aber **nirgends gelesen**: kein
+   * Formular setzt sie, keine Anzeige zeigt sie. Sie bleibt in der Form, weil
+   * sie in jedem gespeicherten Eintrag steht.
+   */
+  zielnote: number | null
+}
+
+/**
+ * Eine Woche im Berichtsheft. Die neueste steht oben — `wocheHinzufuegen()`
+ * legt vorne an (`schuleStore.ts:204`).
+ *
+ * `status` ist aus demselben Grund `string` wie bei der Prüfung:
+ * `wocheAendern()` schreibt ungeprüft (`:208–211`), und
+ * `BerichtsheftBereich.jsx:46` fängt das mit `TON[w.status] || 'neutral'` ab.
+ */
+export interface Berichtswoche {
+  id: string
+  /** Freier Text wie `KW 32`; `''`, wenn nur ein Zeitraum genannt wurde (`:197`). */
+  woche: string
+  von: string
+  bis: string
+  taetigkeiten: string
+  gelernt: string
+  status: string
+}
+
+/**
+ * `red-kurd-electro-school-v1` — Schule und Betrieb der Elektro-Lehre
+ * (`schuleStore.ts:23–30`). Der inhaltsreichste Speicher der drei neuen Apps:
+ * echte Noten, echte Prüfungen, ein echtes Berichtsheft. Nichts davon lässt
+ * sich aus Kursdaten wiederherstellen, deshalb ist er vollständig im Export.
+ *
+ * Die vier Listen sind auch dann Listen, wenn auf der Platte etwas anderes
+ * steht: `laden()` prüft jede einzeln mit `Array.isArray` und ersetzt sie
+ * sonst, ohne den Rest des Standes zu verwerfen (`:40–45`). `faecher` fällt
+ * dabei auf `STANDARD_FAECHER` zurück und nicht auf `[]` — ohne Fächer gäbe es
+ * keinen Ort für eine Note.
+ *
+ * Der Store hört nicht auf `beiFremdaenderung()` (STORAGE.md §6): ein zweiter
+ * Tab arbeitet mit seinem alten Zwischenspeicher weiter. Das ist eine bekannte
+ * Lücke, keine Aufgabe der Typ-Migration.
+ */
+export interface Elektroschulstand {
+  version: 1
+  /**
+   * Id einer Notenskala (`SKALEN`, `notenRechnung.js:8`): `schweiz` oder
+   * `deutschland`. Als `string` und nicht als Vereinigung, weil nichts sie
+   * prüft — `setzeSkala()` schreibt jeden Wert durch (`:72–74`). Unbekanntes
+   * fängt erst `holeSkala()` beim Rechnen mit dem Rückfall auf die Schweizer
+   * Skala ab, und `skala()` deckt zusätzlich den leeren Wert ab (`:68–70`).
+   */
+  skala: string
+  faecher: Schulfach[]
+  /** Flach über alle Fächer, nicht je Fach gruppiert. */
+  noten: Noteneintrag[]
+  pruefungen: Pruefungseintrag[]
+  /** Neueste Woche zuerst. */
+  berichtsheft: Berichtswoche[]
+}
+
+/* ===== AI-Sprache: Werkstatt ===== */
+
+/**
+ * `red-kurd-prompting-workshop-v1` — was in der Werkstatt angefangen wurde
+ * (`werkstattStore.ts:7`), damit ein Neuladen keine halbe Arbeit verwirft.
+ *
+ * Alle drei Teile sind **unvollständige** Karten, keine vollen Records: ein
+ * Schlüssel entsteht erst beim ersten Tastendruck bzw. beim ersten Haken.
+ * Deshalb steht überall `werte[feld.id] || ''` (`WerkstattFormular.jsx:58`,
+ * `:66`) und `!!haken[punkt.id]` (`PrCheckliste.jsx:28`) — mit
+ * `noUncheckedIndexedAccess` verlangt der Prüfer genau diese Absicherungen.
+ *
+ * Kaputt gespeicherte Teile ersetzt `laden()` einzeln durch `{}` (`:17–19`):
+ * ein defekter Stand ergibt leere Formulare, keinen Absturz. Wie `schuleStore`
+ * hört auch dieser Store nicht auf `beiFremdaenderung()` (STORAGE.md §6).
+ */
+export interface Werkstattstand {
+  version: 1
+  /** Feld-Id aus `AUFTRAG_FELDER` (`promptBaukasten.js:28`) → eingegebener Text. */
+  auftrag: Record<string, string>
+  /** Feld-Id aus `BUG_FELDER` (`promptBaukasten.js:114`) → eingegebener Text. */
+  bug: Record<string, string>
+  /**
+   * Id aus `PR_CHECKLISTE` (`promptBaukasten.js:183`) → Haken. `schaltePr()`
+   * schreibt `!alt[id]` und damit immer einen echten Boolean (`:59–62`);
+   * abgewählte Haken bleiben als `false` stehen, statt zu verschwinden.
+   */
+  pr: Record<string, boolean>
+}
+
+/* ===== Code lernen: Fehlerbuch ===== */
+
+/** Ein Eintrag im Fehlerbuch (`fehlerbuchStore.ts:38–44`). */
+export interface Fehlereintrag {
+  /** `f-<naechsteId>`. Der Zähler wird nie zurückgesetzt, Ids also nie wiederverwendet. */
+  id: string
+  /** Pflichtfeld, getrimmt — leere Einträge entstehen nicht (`:34–36`). */
+  titel: string
+  /** Pflichtfeld, getrimmt. */
+  fehler: string
+  /** In der Eingabe wahlfrei, im Eintrag immer vorhanden: `''`, wenn nichts kam. */
+  loesung: string
+  datum: Tagesschluessel
+}
+
+/**
+ * `red-kurd-fehlerbuch-v1` — das Fehlerbuch von „Code lernen"
+ * (`fehlerbuchStore.ts:7`). Neueste Einträge stehen oben; nichts wird je
+ * aufgeräumt, es gibt keine Obergrenze.
+ *
+ * Anders als `schuleStore` prüft `laden()` die Liste nicht mit
+ * `Array.isArray`, sondern spreizt sie: `[...(d.eintraege || [])]` (`:14`).
+ * Ein fehlendes Feld ist damit abgedeckt, ein falsch geformtes nicht — steht
+ * dort nach einem Import von Hand ein Objekt, wirft der Spread. Das ist eine
+ * bestehende Abweichung, kein Auftrag dieser Migration: Sie gehört in einen
+ * eigenen Schritt mit Test.
+ */
+export interface Fehlerbuchstand {
+  version: 1
+  /** Zähler für die nächste Id; wächst monoton, auch über gelöschte Einträge hinweg. */
+  naechsteId: number
+  eintraege: Fehlereintrag[]
+}
+
+/* ===== Wochenübersicht über alle vier Apps =====
+   `core/lernbereiche/wochenUebersicht.ts` — reine Funktionen, kein Speicher.
+   Die Formen stehen hier, weil die Übersicht die Tageswerte aller vier
+   Lernstände liest und sie sonst an vier Stellen neu erfunden würden. */
+
+/** Ein Tag des Siebenerbands, wie `wochenTage()` ihn liefert (`:23–34`). */
+export interface Wochenbandtag {
+  datum: Tagesschluessel
+  /** Kurzform des Wochentags, z. B. `Mo`. */
+  kurz: string
+  heute: boolean
+}
+
+/**
+ * Eine App, wie die Übersicht sie entgegennimmt (`Wochenuebersicht.jsx:11–40`).
+ *
+ * `tage` trägt bewusst `unknown` je Tag: die Sprach-App legt dort einen `Tag`
+ * ab und nennt mit `feld` die Zahl darin, die drei neuen Apps legen die
+ * Tages-XP direkt als Zahl ab. Ein migrierter v1-Tag der Sprach-App kann sogar
+ * eine blanke Zahl sein (siehe `Tag`) — genau deshalb prüft `wertVon()`
+ * `typeof === 'number'` **vor** dem Feldzugriff (`wochenUebersicht.ts:37–45`),
+ * und `test/wochenUebersicht.test.js:66` reicht sogar `null` und `'viel'`
+ * hinein. Ein engerer Typ wäre eine Zusage, die keiner der vier Lernstände
+ * hält.
+ *
+ * Wer die Datei migriert, braucht für `eintrag[feld]` eine eigene
+ * Objektprüfung im Stil von `istObjekt()` (`storage.ts:70`) — aus `unknown`
+ * allein lässt sich nicht indizieren.
+ */
+export interface Wochenquelle {
+  id: string
+  name: string
+  /** Einheit der Zahl, z. B. `Aufgaben` oder `XP`. Wird bewusst nie verrechnet. */
+  einheit: string
+  tage: Record<Tagesschluessel, unknown>
+  /** Feld im Tageseintrag; fehlt es, gilt der Eintrag selbst als Zahl. */
+  feld?: string
+}
+
+/** Eine App über die Woche, wie `appWoche()` sie liefert (`:52–63`). */
+export interface Wochenappstand {
+  id: string
+  name: string
+  einheit: string
+  /** Sieben Werte, ältester zuerst — gleiche Reihenfolge wie `Wochenbild.tage`. */
+  werte: number[]
+  summe: number
+  /** Tage mit einem Wert > 0. Ein Tag mit 0 Aufgaben zählt nicht als aktiv. */
+  aktiveTage: number
+  hoechster: number
+}
+
+/**
+ * Was `wochenUebersicht()` zurückgibt (`:69–80`). Bewusst **ohne** Gesamtzahl:
+ * Aufgaben und XP dürfen nie addiert werden, und
+ * `test/wochenUebersicht.test.js:85` nagelt das fest.
+ *
+ * Alle drei Listen sind leer, wenn `heute` sich nicht als Datum lesen lässt —
+ * `wochenTage()` gibt dann `[]` zurück (`:25`).
+ */
+export interface Wochenbild {
+  tage: Wochenbandtag[]
+  apps: Wochenappstand[]
+  /** Je Tag: war in irgendeiner App etwas los? Gleiche Länge wie `tage`. */
+  tageAktiv: boolean[]
+  aktiveTage: number
 }
 
 /* ===== Gamification =====

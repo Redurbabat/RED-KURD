@@ -4,8 +4,8 @@
 import Icon from '../../components/icons/Icon.jsx'
 import { KEYS, lies } from '../../core/storage.ts'
 import { heute } from '../../core/progress/scheduler.ts'
-import { reiheGesamt, wochenUebersicht } from '../../core/lernbereiche/wochenUebersicht.js'
-import { APP_MODES, APP_MODE_LABELS } from './appModes.js'
+import { reiheGesamt, wochenUebersicht } from '../../core/lernbereiche/wochenUebersicht.ts'
+import { APP_MODES, APP_MODE_LABELS } from './appModes.ts'
 
 /** Liest die Tageswerte aller Apps direkt aus dem Speicher. */
 function sammleApps() {

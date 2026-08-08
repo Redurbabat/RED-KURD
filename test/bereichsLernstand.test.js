@@ -20,7 +20,7 @@ class SpeicherAttrappe {
 globalThis.localStorage = new SpeicherAttrappe()
 
 const { erstelleBereichsLernstand, XP_JE_LEKTION } = await import(
-  '../src/core/lernbereiche/bereichsLernstand.js'
+  '../src/core/lernbereiche/bereichsLernstand.ts'
 )
 const { heute } = await import('../src/core/progress/scheduler.ts')
 

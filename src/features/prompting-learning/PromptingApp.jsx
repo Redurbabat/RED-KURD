@@ -6,7 +6,7 @@ import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { useLernstand } from '../../core/store.ts'
-import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.js'
+import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.ts'
 import {
   AUFTRAG_FELDER,
   BUG_FELDER,
@@ -17,13 +17,13 @@ import {
   pruefeBugReport,
   pruefeMerge,
 } from '../../core/prompting/promptBaukasten.js'
-import * as werkstatt from '../../core/prompting/werkstattStore.js'
+import * as werkstatt from '../../core/prompting/werkstattStore.ts'
 import WerkstattFormular from './WerkstattFormular.jsx'
 import PrCheckliste from './PrCheckliste.jsx'
 import PromptingLearningHome from './PromptingLearningHome.jsx'
 import { promptLessons } from './data/promptLessons.js'
 import { promptExercises } from './data/promptExercises.js'
-import { promptLernstand } from './promptProgressStore.js'
+import { promptLernstand } from './promptProgressStore.ts'
 import './promptingLearning.css'
 
 const BEREICHE = [

@@ -6,12 +6,12 @@ import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import { useLernstand } from '../../core/store.ts'
 import { heute } from '../../core/progress/scheduler.ts'
-import * as schule from '../../core/elektro/schuleStore.js'
+import * as schule from '../../core/elektro/schuleStore.ts'
 import { FORMELN, SICHERHEITSREGELN } from '../../core/elektro/formeln.js'
 import { gerundet, istBestanden } from '../../core/elektro/notenRechnung.js'
 import { electroLessons } from './data/electroLessons.js'
 import { electroPraxisAufgaben } from './data/electroPraxis.js'
-import { electroLernstand } from './electroProgressStore.js'
+import { electroLernstand } from './electroProgressStore.ts'
 
 /** Eine Formel je Tag — dieselbe für alle, wechselt täglich. */
 export function formelDesTages(datum, formeln = FORMELN) {

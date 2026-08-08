@@ -19,7 +19,7 @@ class SpeicherAttrappe {
 globalThis.localStorage = new SpeicherAttrappe()
 
 const { fehlerNotieren, fehlerEntfernen, fehlerbuchEintraege } = await import(
-  '../src/features/code-learning/fehlerbuchStore.js'
+  '../src/features/code-learning/fehlerbuchStore.ts'
 )
 const { KEYS, lies } = await import('../src/core/storage.ts')
 const { heute } = await import('../src/core/progress/scheduler.ts')

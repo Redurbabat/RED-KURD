@@ -35,12 +35,12 @@ async function frischeModule() {
   const q = `?welle=${welle}`
   return {
     storage: await import(`../src/core/storage.ts${q}`),
-    code: await import(`../src/features/code-learning/codeProgressStore.js${q}`),
-    prompt: await import(`../src/features/prompting-learning/promptProgressStore.js${q}`),
-    electro: await import(`../src/features/electro-learning/electroProgressStore.js${q}`),
-    schule: await import(`../src/core/elektro/schuleStore.js${q}`),
-    werkstatt: await import(`../src/core/prompting/werkstattStore.js${q}`),
-    fehlerbuch: await import(`../src/features/code-learning/fehlerbuchStore.js${q}`),
+    code: await import(`../src/features/code-learning/codeProgressStore.ts${q}`),
+    prompt: await import(`../src/features/prompting-learning/promptProgressStore.ts${q}`),
+    electro: await import(`../src/features/electro-learning/electroProgressStore.ts${q}`),
+    schule: await import(`../src/core/elektro/schuleStore.ts${q}`),
+    werkstatt: await import(`../src/core/prompting/werkstattStore.ts${q}`),
+    fehlerbuch: await import(`../src/features/code-learning/fehlerbuchStore.ts${q}`),
   }
 }
 

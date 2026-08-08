@@ -2,7 +2,7 @@
 import Card from '../../components/common/Card.jsx'
 import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { codeLearningPaths } from './data/codeLessons.js'
-import { codeLernstand } from './codeProgressStore.js'
+import { codeLernstand } from './codeProgressStore.ts'
 
 export default function CodeLearningProgress() {
   return (

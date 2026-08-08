@@ -4,7 +4,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 const { appWoche, reiheGesamt, wochenTage, wochenUebersicht } = await import(
-  '../src/core/lernbereiche/wochenUebersicht.js'
+  '../src/core/lernbereiche/wochenUebersicht.ts'
 )
 
 test('wochenTage liefert sieben Tage, heute zuletzt', () => {

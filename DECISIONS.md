@@ -181,7 +181,7 @@ Stufe.
 - Dieselbe Regel gilt für die App-Wahl: `saveAppMode()` schreibt den neuen Schlüssel
   `red-kurd-active-app-v1` **und** den älteren `red-kurd-active-app-mode-v1`. Ein
   gespeicherter Altwert `adventure` war nie eine eigene App und wird zu „Sprache
-  lernen + Abenteuer-Ansicht" migriert (`appModeStorage.js`).
+  lernen + Abenteuer-Ansicht" migriert (`appModeStorage.ts`).
 - Migrationen sind datenverlust-kritischer Code und inzwischen abgedeckt:
   `test/storage.test.js` und `test/storage-basis.test.js` prüfen v1→v2 für Fortschritt,
   Profil, Sitzung und Modus, `migriereKarten` samt Kollisionsregel, die Idempotenz und
@@ -247,7 +247,7 @@ bleibt, sondern wo der neue Stoff hingehört.
 
 **Entscheidung**
 RED-KURD ist eine Website mit vier eigenständigen Apps. Die Liste steht in
-`src/features/app-mode/appModes.js`:
+`src/features/app-mode/appModes.ts`:
 
 | App | Kennung | Code | Lernstand |
 |---|---|---|---|
@@ -278,8 +278,8 @@ beim Laden zu „Sprache lernen + Abenteuer-Ansicht" migriert.
 
 *Was sie kostet*
 - **Geteilte Bausteine.** Was mehr als eine App braucht, liegt zentral:
-  `src/core/lernbereiche/bereichsLernstand.js` (der Lernstand-Baukasten der drei neuen
-  Apps), `src/core/lernbereiche/wochenUebersicht.js` sowie `LernpfadKarte.jsx`,
+  `src/core/lernbereiche/bereichsLernstand.ts` (der Lernstand-Baukasten der drei neuen
+  Apps), `src/core/lernbereiche/wochenUebersicht.ts` sowie `LernpfadKarte.jsx`,
   `LektionModal.jsx`, `LektionPlayer.jsx`, `UebungModal.jsx`, `PraxisAufgabe.jsx` und
   `CodeTastatur.jsx` in `src/features/app-mode/`. Der Preis: dieser Ordner ist heute
   zweierlei zugleich — App-Umschalter **und** Sammelstelle gemeinsamer Lernbausteine.
@@ -332,7 +332,7 @@ Prompt-Übung sind nicht dieselbe Einheit.
   (Sprache), `red-kurd-code-progress-v1`, `red-kurd-prompting-progress-v1`,
   `red-kurd-electro-progress-v1`.
 - **Die drei neuen Apps teilen sich eine Implementierung.**
-  `erstelleBereichsLernstand(key)` in `src/core/lernbereiche/bereichsLernstand.js` bindet
+  `erstelleBereichsLernstand(key)` in `src/core/lernbereiche/bereichsLernstand.ts` bindet
   dieselben Felder (`erledigt`, `notizen`, `xp`, `serie`, `letzterTag`, `tage`) und
   dieselben Regeln an je einen Schlüssel: XP gibt es nur beim ersten Abschluss, der
   Lektionsstatus wird immer aus dem Lernstand abgeleitet (`done` → `current` → `open` →
@@ -350,7 +350,7 @@ Prompt-Übung sind nicht dieselbe Einheit.
   wieder fällig wird.
 - **Das Tagesziel ist verschieden.** Die Sprach-App nimmt es aus dem Profil, die drei
   neuen Apps rechnen mit festen 30 XP.
-- **Zusammengezählt wird nichts.** `core/lernbereiche/wochenUebersicht.js` legt die vier
+- **Zusammengezählt wird nichts.** `core/lernbereiche/wochenUebersicht.ts` legt die vier
   Stände nebeneinander, jeder mit eigener Einheit — die Sprach-App zählt Aufgaben, die
   anderen XP. Gemeinsames Maß ist allein „an diesem Tag war irgendwo etwas los"
   (`tageAktiv`) und die daraus abgeleitete Reihe (`reiheGesamt`).
@@ -375,7 +375,7 @@ So bleibt es: **geteilt werden Regeln und Bausteine, nicht die Zahlen.** Konkret
   Serie und behält nur die Reihe der Wochenübersicht. Ob das reicht — oder ob die Reihe
   über alle Apps die sichtbare Hauptzahl werden sollte statt vier Einzelserien — ist noch
   nicht entschieden. Eine Antwort gehört als Nachtrag hierher, nicht in eine einzelne App.
-- Ein Fehler in `bereichsLernstand.js` trifft drei Apps zugleich; abgesichert durch
+- Ein Fehler in `bereichsLernstand.ts` trifft drei Apps zugleich; abgesichert durch
   `test/bereichsLernstand.test.js`, die Wochenlogik durch `test/wochenUebersicht.test.js`.
 - Jeder Lernstand wandert in die Sicherung: `exportiereSpeicherstand()` läuft über `KEYS`,
   ausgenommen `NUR_LOKAL` (`ohneKonto`, `sitzung`). Eine neue App ohne Eintrag in `KEYS`

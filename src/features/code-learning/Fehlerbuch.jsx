@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Card from '../../components/common/Card.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton, { IconButton } from '../../components/common/PrimaryButton.jsx'
-import { fehlerbuchEintraege, fehlerEntfernen, fehlerNotieren } from './fehlerbuchStore.js'
+import { fehlerbuchEintraege, fehlerEntfernen, fehlerNotieren } from './fehlerbuchStore.ts'
 
 export default function Fehlerbuch() {
   const [titel, setTitel] = useState('')

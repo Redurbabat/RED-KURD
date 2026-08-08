@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.js'
+import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.ts'
 import CodeTastatur from './CodeTastatur.jsx'
 
 /**

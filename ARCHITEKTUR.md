@@ -9,7 +9,7 @@ RED-KURD ist **eine Website mit vier eigenständigen Apps**:
 | AI-Sprache | `prompting` | AI | `src/features/prompting-learning/` | `red-kurd-prompting-progress-v1` |
 | Elektro-Lehre | `electro` | Elektro | `src/features/electro-learning/` | `red-kurd-electro-progress-v1` |
 
-Die Liste steht in `src/features/app-mode/appModes.js` (`APP_MODES`, `APP_MODE_LISTE`,
+Die Liste steht in `src/features/app-mode/appModes.ts` (`APP_MODES`, `APP_MODE_LISTE`,
 `APP_MODE_LABELS`, `APP_MODE_KURZ`). **Sichtbar ist immer genau eine App.** `App.jsx`
 rendert nach `activeMode` entweder die Sprach-App (mit Router und Hülle) oder genau
 eine der drei anderen; die drei anderen liegen hinter `React.lazy` und werden im
@@ -61,7 +61,7 @@ Onboarding → App-Auswahl → aktive App.
 
 ### Speicherung der App-Wahl
 
-`src/features/app-mode/appModeStorage.js`, ausschließlich über `core/storage.ts`:
+`src/features/app-mode/appModeStorage.ts`, ausschließlich über `core/storage.ts`:
 
 - `KEYS.appAktiv` = `red-kurd-active-app-v1` — der aktuelle Schlüssel.
 - `KEYS.appBereich` = `red-kurd-active-app-mode-v1` — der ältere Schlüssel. Er wird
@@ -113,7 +113,7 @@ ganz vorn.
   automatischer Prüfliste: 12 Grundübungen (`stufe: 'grund'`) und 17 Aufbau-Aufgaben.
 - **6 Projekt-Übungen** (`data/codeExercises.js`) ohne Autoprüfung — Aufgabe lesen,
   eigene Lösung notieren, als erledigt markieren.
-- **Fehlerbuch** (`fehlerbuchStore.js`, Schlüssel `red-kurd-fehlerbuch-v1`): eigene
+- **Fehlerbuch** (`fehlerbuchStore.ts`, Schlüssel `red-kurd-fehlerbuch-v1`): eigene
   Fehler mit Lösung, neueste oben.
 
 ## App 3 — AI-Sprache
@@ -127,7 +127,7 @@ fünf Bereichen: Heute · Auftrag · Bug-Report · PR prüfen · Lernen.
   reinen Prüffunktionen (`AUFTRAG_FELDER`, `BUG_FELDER`, `PR_CHECKLISTE`,
   `baueAuftrag`, `pruefeAuftrag`, `baueBugReport`, `pruefeBugReport`, `pruefeMerge`).
 - Angefangene Aufträge, Bug-Reports und PR-Haken liegen in
-  `core/prompting/werkstattStore.js` unter `red-kurd-prompting-workshop-v1`.
+  `core/prompting/werkstattStore.ts` unter `red-kurd-prompting-workshop-v1`.
 
 ## App 4 — Elektro-Lehre
 
@@ -142,13 +142,13 @@ sechs Bereichen: Heute · Noten · Prüfung · Bericht · Formeln · Lernen.
   `LEITWERT`, `FORMELN` und `SICHERHEITSREGELN` — reine Funktionen.
 - **Notenrechnung** (`core/elektro/notenRechnung.js`): Skalen, Durchschnitt, Rundung,
   `benoetigteNote`, `trend`, `tageBis` — ebenfalls rein.
-- **Schule und Betrieb** (`core/elektro/schuleStore.js`): 8 Standardfächer, Noten,
+- **Schule und Betrieb** (`core/elektro/schuleStore.ts`): 8 Standardfächer, Noten,
   Prüfungen und Berichtsheft unter `red-kurd-electro-school-v1`. Die Oberfläche liest
   hier und rechnet nie selbst.
 
 ## Gemeinsame Bausteine der drei neuen Apps
 
-`src/core/lernbereiche/bereichsLernstand.js` ist ein Baukasten: `erstelleBereichsLernstand(key)`
+`src/core/lernbereiche/bereichsLernstand.ts` ist ein Baukasten: `erstelleBereichsLernstand(key)`
 bindet dieselben Regeln an einen eigenen Schlüssel — erledigte Lektionen mit Datum,
 eigene Notizen, XP, Tagesserie, Tageswerte. Der Status einer Lektion wird **immer**
 daraus abgeleitet, nie aus den Datendateien: erledigt → `done`, die erste offene →
@@ -172,7 +172,7 @@ Geteilte Oberflächenteile in `src/features/app-mode/`:
 | `CodeTastatur.jsx` + `tastaturHilfen.js` | Bildschirmtastatur für Code-Zeichen und Bausteine |
 | `Wochenuebersicht.jsx` | die gemeinsame Woche über alle vier Apps |
 
-`src/core/lernbereiche/wochenUebersicht.js` rechnet dazu rein: `wochenTage`, `appWoche`,
+`src/core/lernbereiche/wochenUebersicht.ts` rechnet dazu rein: `wochenTage`, `appWoche`,
 `wochenUebersicht`, `reiheGesamt`. Bewusst wird **nicht** zu einer Zahl addiert — die
 Sprach-App zählt gelöste Aufgaben, die anderen drei zählen XP. Gezeigt wird je App der
 eigene Wert mit eigener Einheit, gemeinsames Maß sind die aktiven Tage.
@@ -192,7 +192,7 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 | `session/exerciseFactory.ts` | `baueUebungen()`, `mische()`, `istRichtigGetippt()`, `SKILL_JE_ART` |
 | `session/sessionPlanner.ts` | `planeSitzung/Lektion/Wiederholung/Schwierige/Training`, `DAUERN` |
 | `courses/courseRepository.ts` | `WELTEN` (10), `EINHEITEN` (56), `ALLE_WOERTER` (596), `LEKTIONS_ARTEN` (5), `einheitStatus`, `weltPfad`, `aktuellerKnoten` — liest den Lernstand, schreibt ihn nie |
-| `lernbereiche/wochenUebersicht.js` | die Woche über alle vier Apps, ohne Speicherzugriff |
+| `lernbereiche/wochenUebersicht.ts` | die Woche über alle vier Apps, ohne Speicherzugriff |
 | `elektro/formeln.js` | Ohm, Leistung, Energie, Spannungsfall, Mindestquerschnitt |
 | `elektro/notenRechnung.js` | Skalen, Durchschnitt, `benoetigteNote`, `trend`, `tageBis` |
 | `prompting/promptBaukasten.js` | Feldlisten und Prüffunktionen für Auftrag, Bug-Report, PR |
@@ -207,7 +207,7 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 | `store.ts` | `melden()`, `useLernstand()`, `beiFremdaenderung()` (Cache-Invalidierung über Tabs) | `window`, React |
 | `progress/progressStore.ts` | **der Lernstand der Sprach-App**: XP, Serie + Schutz, Einheiten, Sterne, Karten, Tage (max. 60), Edelsteine, Schlüssel, Truhen, Lernzeit, `exportiereAlles`, `ankiZeilen` | localStorage |
 | `progress/progressSelectors.ts` | `statistik()`, `faelligeKarten()`, `fertigkeiten()`, `wochenAktivitaet()`, `wochenLiga()` | indirekt |
-| `lernbereiche/bereichsLernstand.js` | Lernstand-Baukasten für Code, AI-Sprache und Elektro | localStorage |
+| `lernbereiche/bereichsLernstand.ts` | Lernstand-Baukasten für Code, AI-Sprache und Elektro | localStorage |
 | `session/sessionStore.ts` | laufende Sitzung sichern / laden / löschen | localStorage |
 | `profile/profileStore.ts` | Name, Ziel, Vorkenntnisse, Tagesziel, Variante, `standardDauer()` | localStorage |
 | `ui/uiStore.ts` | Ansicht der Sprach-App, Design, Ton, Animationen, Erinnerungen; `anwenden()` setzt die `data-*`-Attribute | localStorage + `document` |
@@ -215,9 +215,9 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 | `shop/shopStore.ts` | 6 Artikel in 3 Kategorien, `kaufe()`, `setzeAktiv()` — nur Kosmetik und Komfort | localStorage |
 | `achievements/achievementsStore.ts` | 9 Auszeichnungen, aus `statistik()` berechnet | localStorage |
 | `courses/languageCourseStore.ts` | getrennter Fortschritt der vier Nebensprachkurse | localStorage |
-| `elektro/schuleStore.js` | Fächer, Noten, Prüfungen, Berichtsheft der Elektro-Lehre | localStorage |
-| `prompting/werkstattStore.js` | angefangener Auftrag, Bug-Report, PR-Haken | localStorage |
-| `hearts/heartsStore.js` | 5 Herzen mit 4-Stunden-Regeneration — **derzeit von keinem Modul importiert** | localStorage |
+| `elektro/schuleStore.ts` | Fächer, Noten, Prüfungen, Berichtsheft der Elektro-Lehre | localStorage |
+| `prompting/werkstattStore.ts` | angefangener Auftrag, Bug-Report, PR-Haken | localStorage |
+| `hearts/heartsStore.ts` | 5 Herzen mit 4-Stunden-Regeneration — **derzeit von keinem Modul importiert** | localStorage |
 | `audio/audioService.js` | eigene Aufnahmen (IndexedDB), `spieleWort()` (Aufnahme → `/audio/kmr/*.mp3` → Computerstimme), `klickGefuehl()` | IndexedDB, Audio, WebAudio, `navigator.vibrate` |
 | `data/staticData.js` | Netzsuche gegen `/daten/*.json` und die Kurdish-Tech-Blöcke, `zufallsPaare()` | `fetch` |
 | `auth/authApi.js` | `kontoStatus`, `registrieren`, `anmelden`, `abmelden` gegen `/api/auth/*` | `fetch`, Cookie |
@@ -462,6 +462,9 @@ getrennt nach dem, was sie beschreiben:
 | `lernstand.d.ts` | alles, was **gespeichert** wird und darum Versionen und Migrationen braucht: Lernstand, Karte, Tag, Profil, UI, Sitzung, Übung, Shop, Sprachkurse, Aufgaben, Auszeichnungen, Herzen, App-Wahl, Speicherstand und Sicherungsdatei, Bereichs-Lernstand — die maschinenlesbare Fassung von `STORAGE.md`. Dazu die abgeleiteten Rückgaben der Stores (`Kennzahlen`, `Levelstand`, `Aufgabenliste`, …), damit kein Modul sie neu erfindet |
 | `kurs.d.ts` | alles, was **Inhalt** ist und mit dem Build kommt: Kurseinheit, Einheit, Welt, Lektion, Lernpfad-Knoten, Bildnachweis |
 
+Seit der fünften Welle ist **jede gespeicherte Form aller vier Apps benannt** —
+`Speicherstand` führt kein `unknown`-Feld mehr.
+
 Zwei Ebenen werden in `lernstand.d.ts` bewusst auseinandergehalten: die **Form nach
 dem Laden** (jeder Store legt ein `STANDARD`/`LEER`-Objekt darüber, danach ist alles
 da) und die **Form auf der Platte**, die ärmer sein kann — dafür gibt es
@@ -530,7 +533,7 @@ Sicherungs-Rundlauf (`sicherungRundlauf.test.js`), Konto und Worker (`auth.test.
 6. Kurmancî-Text bekommt `lang="ku"`, arabische Schrift zusätzlich `dir="rtl"`.
 7. Alle Speicherzugriffe laufen über `src/core/storage.ts`. Ausnahmen sind dokumentiert
    und in [STORAGE.md](STORAGE.md) einzeln aufgeführt.
-8. Eine neue App ist ein Eintrag in `appModes.js`, ein Feature-Ordner und ein eigener
+8. Eine neue App ist ein Eintrag in `appModes.ts`, ein Feature-Ordner und ein eigener
    Fortschritts-Schlüssel in `KEYS` — kein Eingriff in bestehende Apps.
 9. Der Status einer Lektion wird immer aus dem Lernstand abgeleitet, nie aus den
    Datendateien.

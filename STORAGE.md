@@ -29,7 +29,7 @@ RED-KURD ist seit den Pull Requests #5–#7 **kein einzelnes Lernprogramm mehr**
 | AI-Sprache | `prompting` | `PromptingApp.jsx` (lazy) | `red-kurd-prompting-progress-v1` |
 | Elektro-Lehre | `electro` | `ElectroApp.jsx` (lazy) | `red-kurd-electro-progress-v1` |
 
-Die Liste steht in `src/features/app-mode/appModes.js:5–35`. Umgeschaltet wird in `src/app/App.jsx:250–274`: **genau eine** App ist sichtbar, ausgewählt über den React-State `activeMode`, den `AppModeSwitcher` und `AppLauncher` setzen. Die Wahl liegt in `red-kurd-active-app-v1` und überlebt das Neuladen.
+Die Liste steht in `src/features/app-mode/appModes.ts:5–35`. Umgeschaltet wird in `src/app/App.jsx:250–274`: **genau eine** App ist sichtbar, ausgewählt über den React-State `activeMode`, den `AppModeSwitcher` und `AppLauncher` setzen. Die Wahl liegt in `red-kurd-active-app-v1` und überlebt das Neuladen.
 
 Wichtig für jede Speicherfrage: **die drei neuen Apps haben keine Routen.** `src/app/AppRouter.jsx` kennt ausschließlich Pfade der Sprach-App (`/today`, `/course/…`, `/adventure/…`, `/redlingo/…`). Code lernen, AI-Sprache und Elektro-Lehre werden in `App.jsx` **außerhalb** des `RouterProvider` gerendert; ihre Adresse ändert sich beim Bedienen nicht. Wer nach einem Speicher sucht, der zu einer Route gehört, findet für diese drei Apps nichts — ihr Zustand hängt ausschließlich am `localStorage`.
 
@@ -38,10 +38,10 @@ Innerhalb der Sprach-App gibt es drei **Ansichten** (`modern`, `abenteuer`, `red
 Daraus folgt die Fortschrittslandschaft:
 
 - **Ein** Lernstand für die Sprach-App über alle drei Ansichten (`red-kurd-progress-v2`).
-- **Je ein eigener, getrennter** Lernstand für Code lernen, AI-Sprache und Elektro-Lehre — gleiche Struktur, verschiedene Schlüssel, gebaut aus derselben Fabrik `erstelleBereichsLernstand()` (`src/core/lernbereiche/bereichsLernstand.js:28`).
+- **Je ein eigener, getrennter** Lernstand für Code lernen, AI-Sprache und Elektro-Lehre — gleiche Struktur, verschiedene Schlüssel, gebaut aus derselben Fabrik `erstelleBereichsLernstand()` (`src/core/lernbereiche/bereichsLernstand.ts:28`).
 - **Getrennt** davon die vier kleinen Nebenkurse der Sprach-App (Englisch, Französisch, Türkisch, Spanisch) in `red-kurd-language-courses-v1`.
 
-Nichts davon wird zusammengerechnet. Die Wochenübersicht (`src/core/lernbereiche/wochenUebersicht.js`) zeigt bewusst je App eine eigene Zahl mit eigener Einheit — die Sprach-App zählt gelöste Aufgaben, die anderen drei zählen XP. Ein App- oder Ansichtswechsel darf niemals Lernfortschritt kosten; das ist die wichtigste Eigenschaft der ganzen Speicherlandschaft.
+Nichts davon wird zusammengerechnet. Die Wochenübersicht (`src/core/lernbereiche/wochenUebersicht.ts`) zeigt bewusst je App eine eigene Zahl mit eigener Einheit — die Sprach-App zählt gelöste Aufgaben, die anderen drei zählen XP. Ein App- oder Ansichtswechsel darf niemals Lernfortschritt kosten; das ist die wichtigste Eigenschaft der ganzen Speicherlandschaft.
 
 ---
 
@@ -62,16 +62,16 @@ Spalte „App": zu welcher der vier Apps der Bereich gehört; „—" heißt app
 | 5 | Shop | Sprache | localStorage | `red-kurd-shop-v1` | `src/core/shop/shopStore.ts` | HeloMascot, ShopPage, AdventureProfilePage, ProgressPage, SettingsPage | ja, `version: 1` | < 300 B; höchstens 6 Artikel-IDs | ja, doppelt (`shop` + `speicher.shop`) | keine |
 | 6 | Auszeichnungen | Sprache | localStorage | `red-kurd-achievements-v1` | `src/core/achievements/achievementsStore.ts` | AdventureProfilePage, RedlingoProfilePage | ja, `version: 1` | höchstens 9 Einträge ≈ 250 B | ja (`speicher.auszeichnungen`) | keine |
 | 7 | Tages-/Wochenaufgaben | Sprache | localStorage | `red-kurd-tasks-v1` | `src/core/tasks/taskStore.ts` | App (Abzeichen), DailyTasksPage | ja, `version: 1` | höchstens 7 Marken + 2 Basiswerte ≈ 300 B; räumt sich beim Tages-/Wochenwechsel selbst auf | ja (`speicher.aufgaben`) | keine |
-| 8 | Herzen (Abenteuer) | Sprache | localStorage | `red-kurd-hearts-v1` | `src/core/hearts/heartsStore.js` | **niemand in `src/`** — nur `test/heartsStore.test.js` importiert den Store | ja, `version: 1` | ~60 B; der Schlüssel entsteht im Betrieb nie | ja (`speicher.herzen`) | keine |
+| 8 | Herzen (Abenteuer) | Sprache | localStorage | `red-kurd-hearts-v1` | `src/core/hearts/heartsStore.ts` | **niemand in `src/`** — nur `test/heartsStore.test.js` importiert den Store | ja, `version: 1` | ~60 B; der Schlüssel entsteht im Betrieb nie | ja (`speicher.herzen`) | keine |
 | 9 | Nebenkurs-Fortschritt | Sprache | localStorage | `red-kurd-language-courses-v1` | `src/core/courses/languageCourseStore.ts` | LanguagesPage, LanguageCoursePage, LanguageLessonPage | ja, `version: 1` | höchstens 40 Kapitel × ~90 B ≈ 4 KB | ja (`speicher.sprachkurse`) | keine |
-| 10 | Aktive App | — | localStorage | `red-kurd-active-app-v1` | `src/features/app-mode/appModeStorage.js:56` | `App.jsx:155` (`loadAppMode`), `App.jsx:158` (`hatGespeicherteApp`) | **nein** (roher String: `language`/`code`/`prompting`/`electro`) | < 20 B | ja (`speicher.appAktiv`) | ja: aus `appBereich`; Altwert `adventure`/`abenteuer` → App `language` + Ansicht `abenteuer` |
-| 11 | Aktive App (Alt-Schlüssel) | — | localStorage | `red-kurd-active-app-mode-v1` | `src/features/app-mode/appModeStorage.js:57` — wird **weiter mitgeschrieben** | `appModeStorage.js:28`, `:44` als Rückfallebene | **nein** (roher String) | < 20 B | ja (`speicher.appBereich`) | entfällt — er ist selbst die Rückfallebene |
-| 12 | Lernstand Code lernen | Code | localStorage | `red-kurd-code-progress-v1` | `src/features/code-learning/codeProgressStore.js` → `erstelleBereichsLernstand()` | CodeLearningHome, CodeLearningPath, CodeLearningProgress, LektionPlayer, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 78 IDs (43 Lektionen + 6 Übungen + 29 Mitmach-Aufgaben) ≈ 3 KB; `notizen` **unbegrenzt** (freier Text, auch Code); `tage` **ohne Obergrenze** | ja (`speicher.codeFortschritt`) | keine |
-| 13 | Fehlerbuch | Code | localStorage | `red-kurd-fehlerbuch-v1` | `src/features/code-learning/fehlerbuchStore.js` | `Fehlerbuch.jsx` | ja, `version: 1` | **unbegrenzt** — Einträge mit freiem Text, kein Limit, keine Aufräumung | ja (`speicher.fehlerbuch`) | keine |
-| 14 | Lernstand AI-Sprache | AI-Sprache | localStorage | `red-kurd-prompting-progress-v1` | `src/features/prompting-learning/promptProgressStore.js` → `erstelleBereichsLernstand()` | PromptingApp, PromptingLearningHome, LektionPlayer, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 19 IDs (10 Lektionen + 6 Übungen + 3 Mitmach-Aufgaben); `notizen` unbegrenzt; `tage` ohne Obergrenze | ja (`speicher.promptingFortschritt`) | keine |
-| 15 | Werkstatt | AI-Sprache | localStorage | `red-kurd-prompting-workshop-v1` | `src/core/prompting/werkstattStore.js` | PromptingApp, PrCheckliste | ja, `version: 1` | drei Objekte mit freiem Text (Auftrag, Bug-Report, PR-Haken); typisch < 5 KB, nach oben offen | ja (`speicher.promptingWerkstatt`) | keine |
-| 16 | Lernstand Elektro-Lehre | Elektro | localStorage | `red-kurd-electro-progress-v1` | `src/features/electro-learning/electroProgressStore.js` → `erstelleBereichsLernstand()` | ElectroApp, ElectroLearningHome, ElektroHeute, LektionModal, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 27 IDs (11 Lektionen + 6 Übungen + 10 Rechenaufgaben); `notizen` unbegrenzt; `tage` ohne Obergrenze | ja (`speicher.electroFortschritt`) | keine |
-| 17 | Schule und Betrieb | Elektro | localStorage | `red-kurd-electro-school-v1` | `src/core/elektro/schuleStore.js` | ElectroApp, ElektroHeute, NotenBereich, PruefungenBereich, BerichtsheftBereich | ja, `version: 1` | **unbegrenzt** — Fächer, Noten, Prüfungen und Berichtsheft wachsen mit der Ausbildung; nichts wird je gelöscht | ja (`speicher.electroSchule`) | keine |
+| 10 | Aktive App | — | localStorage | `red-kurd-active-app-v1` | `src/features/app-mode/appModeStorage.ts:56` | `App.jsx:155` (`loadAppMode`), `App.jsx:158` (`hatGespeicherteApp`) | **nein** (roher String: `language`/`code`/`prompting`/`electro`) | < 20 B | ja (`speicher.appAktiv`) | ja: aus `appBereich`; Altwert `adventure`/`abenteuer` → App `language` + Ansicht `abenteuer` |
+| 11 | Aktive App (Alt-Schlüssel) | — | localStorage | `red-kurd-active-app-mode-v1` | `src/features/app-mode/appModeStorage.ts:57` — wird **weiter mitgeschrieben** | `appModeStorage.ts:28`, `:44` als Rückfallebene | **nein** (roher String) | < 20 B | ja (`speicher.appBereich`) | entfällt — er ist selbst die Rückfallebene |
+| 12 | Lernstand Code lernen | Code | localStorage | `red-kurd-code-progress-v1` | `src/features/code-learning/codeProgressStore.ts` → `erstelleBereichsLernstand()` | CodeLearningHome, CodeLearningPath, CodeLearningProgress, LektionPlayer, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 78 IDs (43 Lektionen + 6 Übungen + 29 Mitmach-Aufgaben) ≈ 3 KB; `notizen` **unbegrenzt** (freier Text, auch Code); `tage` **ohne Obergrenze** | ja (`speicher.codeFortschritt`) | keine |
+| 13 | Fehlerbuch | Code | localStorage | `red-kurd-fehlerbuch-v1` | `src/features/code-learning/fehlerbuchStore.ts` | `Fehlerbuch.jsx` | ja, `version: 1` | **unbegrenzt** — Einträge mit freiem Text, kein Limit, keine Aufräumung | ja (`speicher.fehlerbuch`) | keine |
+| 14 | Lernstand AI-Sprache | AI-Sprache | localStorage | `red-kurd-prompting-progress-v1` | `src/features/prompting-learning/promptProgressStore.ts` → `erstelleBereichsLernstand()` | PromptingApp, PromptingLearningHome, LektionPlayer, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 19 IDs (10 Lektionen + 6 Übungen + 3 Mitmach-Aufgaben); `notizen` unbegrenzt; `tage` ohne Obergrenze | ja (`speicher.promptingFortschritt`) | keine |
+| 15 | Werkstatt | AI-Sprache | localStorage | `red-kurd-prompting-workshop-v1` | `src/core/prompting/werkstattStore.ts` | PromptingApp, PrCheckliste | ja, `version: 1` | drei Objekte mit freiem Text (Auftrag, Bug-Report, PR-Haken); typisch < 5 KB, nach oben offen | ja (`speicher.promptingWerkstatt`) | keine |
+| 16 | Lernstand Elektro-Lehre | Elektro | localStorage | `red-kurd-electro-progress-v1` | `src/features/electro-learning/electroProgressStore.ts` → `erstelleBereichsLernstand()` | ElectroApp, ElectroLearningHome, ElektroHeute, LektionModal, UebungModal, PraxisAufgabe, Wochenübersicht | ja, `version: 1` | `erledigt` höchstens 27 IDs (11 Lektionen + 6 Übungen + 10 Rechenaufgaben); `notizen` unbegrenzt; `tage` ohne Obergrenze | ja (`speicher.electroFortschritt`) | keine |
+| 17 | Schule und Betrieb | Elektro | localStorage | `red-kurd-electro-school-v1` | `src/core/elektro/schuleStore.ts` | ElectroApp, ElektroHeute, NotenBereich, PruefungenBereich, BerichtsheftBereich | ja, `version: 1` | **unbegrenzt** — Fächer, Noten, Prüfungen und Berichtsheft wachsen mit der Ausbildung; nichts wird je gelöscht | ja (`speicher.electroSchule`) | keine |
 | 18 | „Ohne Konto lernen" | — | localStorage | `red-kurd-ohne-konto-v1` | `src/app/App.jsx:199` | `App.jsx:189`, `SettingsPage.jsx:211` | **nein** (roher Boolean) | 4 B | **nein — bewusst ausgeschlossen** (`NUR_LOKAL`, `storage.ts:169`) | keine |
 | 19 | Sitzungsdauer-Wahl | Sprache | **sessionStorage** | `red-kurd-tab-dauer` (`TAB_KEYS.dauer`) | `TodayPage.jsx:33` über `schreibeTab()` | `SessionPage.jsx:19` über `liesTab()` | **nein** (roher String) | ~10 B, an den Tab gebunden | nein — `TAB_KEYS` steht bewusst nicht in `KEYS` | keine |
 | 20 | Eigene Sprachaufnahmen | Sprache | **IndexedDB** | DB `red-kurd-audio` v1, Store `aufnahmen` | `src/core/audio/audioService.js`, aufgerufen aus `PronunciationStudio.jsx:137` | audioService (`spieleWort`), PronunciationStudio | **nein** — Version nur an der Datenbank, kein Feld im Datensatz | **unbegrenzt**: ein Audio-Blob je Wort, 20 KB bis 1 MB; kann alle anderen Bereiche zusammen um Größenordnungen übersteigen | **nein** | keine (`onupgradeneeded` legt nur den Store an) |
@@ -194,7 +194,7 @@ Quelle: `src/core/ui/uiStore.ts:6–14`. Hier liegt ausschließlich die Darstell
 | `remindersEnabled` | `boolean` | Erinnerungen |
 | `preferredVariant` | `string` | Sprachvariante der Oberfläche |
 
-`mode` und die App-Wahl (§3.10) sind zwei verschiedene Dinge und dürfen nicht verwechselt werden: `mode` entscheidet, **wie** die Sprach-App aussieht (Modern, Abenteuer, Redlingo — alle auf demselben Lernstand); `red-kurd-active-app-v1` entscheidet, **welche der vier Apps** überhaupt sichtbar ist. Solange eine andere App als „Sprache lernen" offen ist, hat `mode` keine Wirkung. Geschrieben wird `mode` von `AnsichtSwitcher.jsx:34`, dem Ansichtswechsel in `App.jsx:86` und — als Migration eines Altwerts — von `appModeStorage.js:30`.
+`mode` und die App-Wahl (§3.10) sind zwei verschiedene Dinge und dürfen nicht verwechselt werden: `mode` entscheidet, **wie** die Sprach-App aussieht (Modern, Abenteuer, Redlingo — alle auf demselben Lernstand); `red-kurd-active-app-v1` entscheidet, **welche der vier Apps** überhaupt sichtbar ist. Solange eine andere App als „Sprache lernen" offen ist, hat `mode` keine Wirkung. Geschrieben wird `mode` von `AnsichtSwitcher.jsx:34`, dem Ansichtswechsel in `App.jsx:86` und — als Migration eines Altwerts — von `appModeStorage.ts:30`.
 
 ### 3.4 `red-kurd-session-v2` — laufende Sitzung
 
@@ -268,7 +268,7 @@ Der Aufgabenfortschritt selbst wird nicht gespeichert, sondern aus dem Lernstand
 
 ### 3.8 `red-kurd-hearts-v1` — Herzen
 
-Quelle: `src/core/hearts/heartsStore.js:16` (Konstante `LEER`). Der Store hat derzeit keinen Aufrufer (§6).
+Quelle: `src/core/hearts/heartsStore.ts:16` (Konstante `LEER`). Der Store hat derzeit keinen Aufrufer (§6).
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -299,13 +299,13 @@ Quelle: `src/core/courses/languageCourseStore.ts:6`. Dieser Fortschritt gehört 
 
 ### 3.10 `red-kurd-active-app-v1` und `red-kurd-active-app-mode-v1` — welche App offen ist
 
-Eigentümer: `src/features/app-mode/appModeStorage.js`. Beide Werte sind **rohe Strings**, kein Objekt, kein `version`-Feld:
+Eigentümer: `src/features/app-mode/appModeStorage.ts`. Beide Werte sind **rohe Strings**, kein Objekt, kein `version`-Feld:
 
-`'language'` · `'code'` · `'prompting'` · `'electro'` (`APP_MODES` in `appModes.js:5–10`)
+`'language'` · `'code'` · `'prompting'` · `'electro'` (`APP_MODES` in `appModes.ts:5–10`)
 
-`saveAppMode()` schreibt **beide** Schlüssel (`appModeStorage.js:56–57`); der Rückgabewert stammt vom neuen. `loadAppMode()` liest den neuen zuerst, fällt auf den alten zurück und schreibt den alten Wert dabei in den neuen Schlüssel um. Unbekannte Werte fallen auf `'language'` zurück — ein kaputter Eintrag kann die App also nie unbenutzbar machen.
+`saveAppMode()` schreibt **beide** Schlüssel (`appModeStorage.ts:56–57`); der Rückgabewert stammt vom neuen. `loadAppMode()` liest den neuen zuerst, fällt auf den alten zurück und schreibt den alten Wert dabei in den neuen Schlüssel um. Unbekannte Werte fallen auf `'language'` zurück — ein kaputter Eintrag kann die App also nie unbenutzbar machen.
 
-Ein Sonderfall ist in `istAbenteuerAltwert()` (`appModeStorage.js:20–22`) festgehalten: Die Werte `'adventure'` und `'abenteuer'` stammen aus der Zeit, als Abenteuer noch als eigener Bereich galt. Sie werden zu „App `language` + Ansicht `abenteuer`" umgeschrieben, indem `setzeAppModus('abenteuer')` in den UI-Bereich (§3.3) schreibt und die App auf `language` gesetzt wird.
+Ein Sonderfall ist in `istAbenteuerAltwert()` (`appModeStorage.ts:20–22`) festgehalten: Die Werte `'adventure'` und `'abenteuer'` stammen aus der Zeit, als Abenteuer noch als eigener Bereich galt. Sie werden zu „App `language` + Ansicht `abenteuer`" umgeschrieben, indem `setzeAppModus('abenteuer')` in den UI-Bereich (§3.3) schreibt und die App auf `language` gesetzt wird.
 
 `hatGespeicherteApp()` entscheidet, ob beim Start die App-Auswahl (`AppLauncher`) erscheint oder direkt die zuletzt genutzte App. Wer beide Schlüssel löscht, bekommt die Auswahl wieder — Lernstand geht dabei keiner verloren.
 
@@ -313,13 +313,13 @@ Beide Schlüssel stehen **im Export**. Eine eingespielte Sicherung bestimmt dami
 
 ### 3.11 Lernstand der Bereiche — Code lernen, AI-Sprache, Elektro-Lehre
 
-Drei Schlüssel, **eine** Struktur. Quelle: `src/core/lernbereiche/bereichsLernstand.js:17–25` (Konstante `LEER`); `erstelleBereichsLernstand(key)` bindet sie an einen Schlüssel.
+Drei Schlüssel, **eine** Struktur. Quelle: `src/core/lernbereiche/bereichsLernstand.ts:17–25` (Konstante `LEER`); `erstelleBereichsLernstand(key)` bindet sie an einen Schlüssel.
 
 | App | Schlüssel | Bindende Datei |
 |-----|-----------|----------------|
-| Code lernen | `red-kurd-code-progress-v1` | `src/features/code-learning/codeProgressStore.js` |
-| AI-Sprache | `red-kurd-prompting-progress-v1` | `src/features/prompting-learning/promptProgressStore.js` |
-| Elektro-Lehre | `red-kurd-electro-progress-v1` | `src/features/electro-learning/electroProgressStore.js` |
+| Code lernen | `red-kurd-code-progress-v1` | `src/features/code-learning/codeProgressStore.ts` |
+| AI-Sprache | `red-kurd-prompting-progress-v1` | `src/features/prompting-learning/promptProgressStore.ts` |
+| Elektro-Lehre | `red-kurd-electro-progress-v1` | `src/features/electro-learning/electroProgressStore.ts` |
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -331,7 +331,7 @@ Drei Schlüssel, **eine** Struktur. Quelle: `src/core/lernbereiche/bereichsLerns
 | `letzterTag` | `string \| null` | `"JJJJ-MM-TT"`, letzter aktiver Tag |
 | `tage` | `Record<string, number>` | Tag → an diesem Tag verdiente XP; Grundlage für „XP heute" und für die Wochenübersicht |
 
-XP-Sätze (`bereichsLernstand.js:13–14`, `PraxisAufgabe.jsx:16`): 10 XP je Lektion, 15 XP je Übung, 20 XP je Mitmach-Aufgabe. XP gibt es **nur beim ersten Abschluss**; ein zweiter Abschluss derselben ID ist ein stilles Nichts (`schliesseAb()` gibt dann `0` zurück).
+XP-Sätze (`bereichsLernstand.ts:13–14`, `PraxisAufgabe.jsx:16`): 10 XP je Lektion, 15 XP je Übung, 20 XP je Mitmach-Aufgabe. XP gibt es **nur beim ersten Abschluss**; ein zweiter Abschluss derselben ID ist ein stilles Nichts (`schliesseAb()` gibt dann `0` zurück).
 
 Zwei Eigenschaften unterscheiden diese Bereiche vom Sprach-Lernstand und sind beim nächsten Umbau zu beachten:
 
@@ -342,7 +342,7 @@ Wie viele IDs in `erledigt` höchstens landen können, ergibt sich aus dem heuti
 
 ### 3.12 `red-kurd-fehlerbuch-v1` — Fehlerbuch (Code lernen)
 
-Quelle: `src/features/code-learning/fehlerbuchStore.js:7`. Eigene Fehler, ihre Lösung und das Gelernte — neueste Einträge stehen oben.
+Quelle: `src/features/code-learning/fehlerbuchStore.ts:7`. Eigene Fehler, ihre Lösung und das Gelernte — neueste Einträge stehen oben.
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -357,14 +357,14 @@ Quelle: `src/features/code-learning/fehlerbuchStore.js:7`. Eigene Fehler, ihre L
 | `id` | `string` | `"f-1"`, `"f-2"`, … |
 | `titel` | `string` | Pflichtfeld, getrimmt |
 | `fehler` | `string` | Pflichtfeld — was schiefging |
-| `loesung` | `string` | Optional |
+| `loesung` | `string` | In der **Eingabe** wahlfrei, im gespeicherten Eintrag immer vorhanden: `fehlerNotieren()` schreibt `''`, wenn nichts kam (`:42`) |
 | `datum` | `string` | `"JJJJ-MM-TT"` aus `heute()` |
 
 `fehlerNotieren()` gibt `null` zurück, wenn Titel oder Fehlerbeschreibung leer sind — leere Einträge entstehen nicht. Der Bereich hat keine Obergrenze und räumt sich nicht auf; er ist reiner, selbst geschriebener Nutzerinhalt und deshalb vollständig im Export.
 
 ### 3.13 `red-kurd-prompting-workshop-v1` — Werkstatt (AI-Sprache)
 
-Quelle: `src/core/prompting/werkstattStore.js:7`. Hält fest, was in der Werkstatt angefangen wurde, damit ein Neuladen keine halbe Arbeit verwirft.
+Quelle: `src/core/prompting/werkstattStore.ts:7`. Hält fest, was in der Werkstatt angefangen wurde, damit ein Neuladen keine halbe Arbeit verwirft.
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -373,11 +373,11 @@ Quelle: `src/core/prompting/werkstattStore.js:7`. Hält fest, was in der Werksta
 | `bug` | `Record<string, string>` | Felder des Bug-Reports |
 | `pr` | `Record<string, boolean>` | Haken der PR-Checkliste; ID → gesetzt ja/nein |
 
-Alle drei Teilobjekte werden beim Laden auf ein echtes Objekt normalisiert (`werkstattStore.js:17–19`) — ein kaputter Stand ergibt leere Formulare, keinen Absturz. `leereAuftrag()`, `leereBug()` und `leerePr()` setzen je einen Teil zurück; ein gemeinsames Zurücksetzen gibt es nicht.
+Alle drei Teilobjekte werden beim Laden auf ein echtes Objekt normalisiert (`werkstattStore.ts:17–19`) — ein kaputter Stand ergibt leere Formulare, keinen Absturz. `leereAuftrag()`, `leereBug()` und `leerePr()` setzen je einen Teil zurück; ein gemeinsames Zurücksetzen gibt es nicht.
 
 ### 3.14 `red-kurd-electro-school-v1` — Schule und Betrieb (Elektro-Lehre)
 
-Quelle: `src/core/elektro/schuleStore.js:23–30`. Der inhaltsreichste der neuen Bereiche: Fächer, Noten, Prüfungen und Berichtsheft einer laufenden Ausbildung.
+Quelle: `src/core/elektro/schuleStore.ts:23–30`. Der inhaltsreichste der neuen Bereiche: Fächer, Noten, Prüfungen und Berichtsheft einer laufenden Ausbildung.
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -388,14 +388,17 @@ Quelle: `src/core/elektro/schuleStore.js:23–30`. Der inhaltsreichste der neuen
 | `pruefungen` | `Pruefung[]` | Anstehende und erledigte Prüfungen |
 | `berichtsheft` | `Woche[]` | Wocheneinträge, neueste oben |
 
-**`Fach`**: `id`, `name`, `lehrer`, `raum`, `tag`, `zielnote`.
-**`Note`**: `id`, `fachId`, `note`, `thema`, `gewicht` (Standard 1), `datum`, `art`, `kommentar`.
-**`Pruefung`**: `id`, `titel`, `fachId`, `datum`, `themen`, `status` aus `PRUEFUNG_STATUS` (`Nicht begonnen`, `Am Lernen`, `Wiederholen`, `Bereit`, `Erledigt`), `zielnote`.
-**`Woche`**: `id`, `woche`, `von`, `bis`, `taetigkeiten`, `gelernt`, `status` aus `BERICHT_STATUS` (`Offen`, `Geschrieben`, `Kontrolliert`, `Abgegeben`).
+**`Fach`**: `id`, `name`, `zielnote` (`number | null`) — dazu **wahlfrei** `lehrer`, `raum`, `tag`. Die drei sind kein Randfall: **keines** der acht Startfächer aus `STANDARD_FAECHER` (`schuleStore.ts:9–18`) trägt sie, sie entstehen nur über `fachHinzufuegen()` (`:82–84`). Wer sie als gesetzt annimmt, stolpert über genau die Fächer, die jeder Nutzer hat.
 
-IDs entstehen in `neueId()` (`schuleStore.js:59–62`) aus Präfix, Zeitstempel und einem Modulzähler — ohne Zufall, damit zwei Einträge in derselben Millisekunde nicht kollidieren.
+**`Note`**: `id`, `fachId`, `note`, `thema`, `gewicht`, `datum`, `art`, `kommentar`. **`note` und `gewicht` sind `string | number`, nicht `number`:** beide kommen roh aus dem Formular, dessen `gewicht` als String `'1'` startet (`NotenBereich.jsx:33`, durchgereicht in `:46`); `gewicht || 1` lässt ihn durch (`schuleStore.ts:120`). Gerechnet wird deshalb nie direkt, sondern über `zahl()` (`notenRechnung.js:35`), das Komma und Punkt gleich behandelt. `art` und `kommentar` legt der Store bei jedem Eintrag an, aber keine Eingabe füllt sie — sie stehen überall als `''`.
 
-Zwei bewusste Entscheidungen: `fachEntfernen()` löscht **nur das Fach**, seine Noten bleiben in der Liste stehen (`schuleStore.js:94–97`); und fehlende oder kaputte Listen starten leer, während der Rest des Standes erhalten bleibt (`:40–45`). Berechnungen — Fachschnitt, Gesamtschnitt, nächste Prüfung, offene Wochen — liegen im Store, nicht in der Oberfläche.
+**`Pruefung`**: `id`, `titel`, `fachId`, `datum`, `themen`, `status`, `zielnote`. Der `status` wird **nur beim Anlegen** gegen `PRUEFUNG_STATUS` (`Nicht begonnen`, `Am Lernen`, `Wiederholen`, `Bereit`, `Erledigt`) geprüft (`:161`); `pruefungAendern()` schreibt jedes Teilstück ungeprüft durch (`:168–171`), und ein Import geht an beidem vorbei. Darauf antwortet `TON[p.status] || 'neutral'` (`PruefungenBereich.jsx:66`) — diese Absicherung darf nicht wegfallen. `zielnote` wird geschrieben, aber nirgends gelesen: kein Formular setzt sie, keine Anzeige zeigt sie.
+
+**`Woche`**: `id`, `woche`, `von`, `bis`, `taetigkeiten`, `gelernt`, `status` aus `BERICHT_STATUS` (`Offen`, `Geschrieben`, `Kontrolliert`, `Abgegeben`) — mit derselben Lücke wie oben: `wocheAendern()` prüft nicht (`:208–211`), `BerichtsheftBereich.jsx:46` fängt das mit `TON[w.status] || 'neutral'` ab.
+
+IDs entstehen in `neueId()` (`schuleStore.ts:59–62`) aus Präfix, Zeitstempel und einem Modulzähler — ohne Zufall, damit zwei Einträge in derselben Millisekunde nicht kollidieren.
+
+Zwei bewusste Entscheidungen: `fachEntfernen()` löscht **nur das Fach**, seine Noten bleiben in der Liste stehen (`schuleStore.ts:94–97`); und eine fehlende oder kaputte Liste wird einzeln ersetzt, während der Rest des Standes erhalten bleibt (`:40–45`). Wichtig dabei: `noten`, `pruefungen` und `berichtsheft` starten leer, **`faecher` fällt dagegen auf `STANDARD_FAECHER` zurück** — ohne Fächer gäbe es keinen Ort für eine Note; `test/elektroSchule.test.js:240–245` nagelt das fest. Berechnungen — Fachschnitt, Gesamtschnitt, nächste Prüfung, offene Wochen — liegen im Store, nicht in der Oberfläche.
 
 Dieser Bereich ist Nutzerinhalt, der nirgendwo sonst existiert: echte Noten und ein echtes Berichtsheft. Er ist vollständig im Export.
 
@@ -517,13 +520,13 @@ r.onupgradeneeded = () => r.result.createObjectStore('aufnahmen')
 
 ### 4.4 Bringen die neuen Apps neue Umgehungen mit?
 
-**Keine echte.** Alle vier neuen Bereichsspeicher gehen über `storage.ts`, alle stehen in `KEYS`, alle sind im Export. `appModeStorage.js:1–3` begründet das sogar ausdrücklich im Kopfkommentar. Drei Punkte sind trotzdem festzuhalten, weil sie die Regeln aus §5 dehnen:
+**Keine echte.** Alle vier neuen Bereichsspeicher gehen über `storage.ts`, alle stehen in `KEYS`, alle sind im Export. `appModeStorage.ts:1–3` begründet das sogar ausdrücklich im Kopfkommentar. Drei Punkte sind trotzdem festzuhalten, weil sie die Regeln aus §5 dehnen:
 
-**Zwei Eigentümer liegen nicht unter `src/core/`.** `codeProgressStore.js`, `promptProgressStore.js` und `electroProgressStore.js` liegen unter `src/features/…/` — sie sind allerdings nur zweizeilige Bindungen an die Fabrik in `src/core/lernbereiche/bereichsLernstand.js`, die Logik steht im Kern. `fehlerbuchStore.js` ist der echte Ausreißer: ein vollständiger Store mit eigenem Cache und eigener Schreiblogik unter `src/features/code-learning/`. Regel 1 in §5 verlangt `src/core/`, weil Feature-Ordner umgebaut und umbenannt werden, Speicher aber bleiben. Ein Verschieben nach `src/core/` wäre die naheliegende Aufräumarbeit; die Eigentümerschaft selbst ist eindeutig, es liest niemand sonst den Schlüssel.
+**Zwei Eigentümer liegen nicht unter `src/core/`.** `codeProgressStore.ts`, `promptProgressStore.ts` und `electroProgressStore.ts` liegen unter `src/features/…/` — sie sind allerdings nur zweizeilige Bindungen an die Fabrik in `src/core/lernbereiche/bereichsLernstand.ts`, die Logik steht im Kern. `fehlerbuchStore.ts` ist der echte Ausreißer: ein vollständiger Store mit eigenem Cache und eigener Schreiblogik unter `src/features/code-learning/`. Regel 1 in §5 verlangt `src/core/`, weil Feature-Ordner umgebaut und umbenannt werden, Speicher aber bleiben. Ein Verschieben nach `src/core/` wäre die naheliegende Aufräumarbeit; die Eigentümerschaft selbst ist eindeutig, es liest niemand sonst den Schlüssel.
 
 **Die Wochenübersicht liest vier fremde Speicher direkt.** `src/features/app-mode/Wochenuebersicht.jsx:12–37` holt sich die Tageswerte aller vier Apps mit `lies(KEYS.fortschritt)`, `lies(KEYS.codeFortschritt)`, `lies(KEYS.promptingFortschritt)` und `lies(KEYS.electroFortschritt)` — statt über die vier Eigentümer-Module. Das läuft über `storage.ts` und ist damit keine Umgehung im technischen Sinn, aber es überspringt die Normalisierung der Stores: Fehlende oder kaputte Werte werden hier mit `|| {}` selbst abgefangen. Ändert je ein Store den Ort seiner Tageswerte, muss diese Datei mitgezogen werden, ohne dass ein Import es erzwingt. Sauberer wäre eine Funktion `tageswerte()` je Lernstand, die die Übersicht aufruft.
 
-**`saveAppMode()` schreibt zwei Schlüssel.** `appModeStorage.js:56–57` beschreibt bei jedem App-Wechsel `appAktiv` *und* `appBereich`. Das ist Absicht und kommentiert (Rücksprung auf ältere Versionen), aber es ist die einzige Stelle im Projekt, an der ein Vorgang zwei `KEYS`-Einträge gleichzeitig pflegt. Der Rückgabewert stammt nur vom ersten Schreibvorgang.
+**`saveAppMode()` schreibt zwei Schlüssel.** `appModeStorage.ts:56–57` beschreibt bei jedem App-Wechsel `appAktiv` *und* `appBereich`. Das ist Absicht und kommentiert (Rücksprung auf ältere Versionen), aber es ist die einzige Stelle im Projekt, an der ein Vorgang zwei `KEYS`-Einträge gleichzeitig pflegt. Der Rückgabewert stammt nur vom ersten Schreibvorgang.
 
 ### 4.5 Grenzfälle: formal korrekt, Eigentümer-Regel aufgeweicht
 
@@ -532,7 +535,7 @@ Diese Stellen laufen über `storage.ts`, brechen aber die Erwartung, dass Lesen 
 - `src/core/ui/uiStore.ts:25–28` — `holeUi()` ist ein Getter, der beim ersten Aufruf die Dark-Migration schreibt.
 - `src/core/achievements/achievementsStore.ts:114–118` — `holeAuszeichnungen()` schreibt während des React-Renderns; bewusst ohne `melden()`, sonst entsteht eine Renderschleife.
 - `src/core/tasks/taskStore.ts:39–60` — `pruefeTag()` schreibt während des Renderns, ebenfalls „still" (`sichern(neu, true)`).
-- `src/features/app-mode/appModeStorage.js:25–39` — `loadAppMode()` heißt wie ein Getter, schreibt aber: Es hebt den Altwert in `appAktiv` und schreibt bei einem Abenteuer-Altwert zusätzlich in den UI-Bereich. Das ist eine Migration im Lesepfad und läuft bei jedem App-Start.
+- `src/features/app-mode/appModeStorage.ts:25–39` — `loadAppMode()` heißt wie ein Getter, schreibt aber: Es hebt den Altwert in `appAktiv` und schreibt bei einem Abenteuer-Altwert zusätzlich in den UI-Bereich. Das ist eine Migration im Lesepfad und läuft bei jedem App-Start.
 - `src/core/storage.ts:296` — `migriere()` liest `red-kurd-modus` mit rohem `localStorage.getItem`, weil der Altwert ein Klartext-String und kein JSON ist. Legitim, aber die einzige Stelle im Modul selbst, die an `lies()` vorbeigeht.
 
 ---
@@ -541,7 +544,7 @@ Diese Stellen laufen über `storage.ts`, brechen aber die Erwartung, dass Lesen 
 
 Wer einen neuen persistenten Bereich anlegt, arbeitet diese fünf Punkte ab. Sie sind aus den Problemen in §4 und §6 abgeleitet.
 
-**1. Eigentümer benennen.** Genau ein Modul unter `src/core/` schreibt. Alle anderen lesen über exportierte Funktionen dieses Moduls, nie über `lies()` mit einem Schlüssel. Eine Seite in `src/modes/` ist niemals Eigentümer eines Speichers — Seiten kommen und gehen, Speicher bleiben. Für die vier Apps gilt dasselbe: Ein Feature-Ordner unter `src/features/` darf einen Speicher benutzen und an einen Schlüssel binden, aber die Schreiblogik gehört in den Kern (siehe `bereichsLernstand.js` als Vorbild und `fehlerbuchStore.js` als Gegenbeispiel, §4.4). Der Eigentümer gehört in die Tabelle in §2, bevor der Code gemergt wird.
+**1. Eigentümer benennen.** Genau ein Modul unter `src/core/` schreibt. Alle anderen lesen über exportierte Funktionen dieses Moduls, nie über `lies()` mit einem Schlüssel. Eine Seite in `src/modes/` ist niemals Eigentümer eines Speichers — Seiten kommen und gehen, Speicher bleiben. Für die vier Apps gilt dasselbe: Ein Feature-Ordner unter `src/features/` darf einen Speicher benutzen und an einen Schlüssel binden, aber die Schreiblogik gehört in den Kern (siehe `bereichsLernstand.ts` als Vorbild und `fehlerbuchStore.ts` als Gegenbeispiel, §4.4). Der Eigentümer gehört in die Tabelle in §2, bevor der Code gemergt wird.
 
 **2. `version`-Feld von Anfang an.** Der Wert ist immer ein Objekt, nie ein roher Boolean oder String, und das erste Feld ist `version: 1`. Auch wenn es heute nichts zu migrieren gibt: Ohne Feld hat die erste Migration keinen Anknüpfungspunkt und muss am Inhalt raten. Die Version gehört in den **Wert**, nicht in den Schlüsselnamen — den Namen mitzuversionieren erzeugt beim Heben zwei Wahrheiten (siehe `red-kurd-ui-v1` mit `version: 2`).
 
@@ -558,7 +561,7 @@ Beim Import ist zusätzlich der Modul-Cache zu leeren, sonst zeigt die App bis z
 
 **5. Migration als reine Funktion.** Die Umformung von altem auf neues Format ist eine Funktion `(alt) => neu` ohne Zugriff auf `localStorage`, ohne `Date.now()` in der Kernlogik und ohne Seiteneffekte. Nur so ist sie mit `node:test` prüfbar — die Testumgebung hat kein DOM und keinen `localStorage`. `migriereKarten()` (`storage.ts:213`) ist das Vorbild: sie nimmt ein Objekt, gibt ein Objekt zurück und meldet, wie viel sie geändert hat. `migriere()` ruft sie auf und kümmert sich allein um das Lesen und Schreiben.
 
-Zusätzlich gilt: Migrationen **kopieren, sie verschieben nicht**. Der alte Schlüssel bleibt liegen, damit ein Rückschritt auf eine ältere App-Version nichts verliert. `appModeStorage.js` geht noch einen Schritt weiter und schreibt den alten Schlüssel dauerhaft mit — das ist die strengere Auslegung derselben Regel. Und Migrationen sind idempotent: `migriere()` sichert das über das Modulflag `migriert` (`storage.ts:235`) und darüber, dass jeder Schritt nur läuft, wenn das Ziel `null` ist.
+Zusätzlich gilt: Migrationen **kopieren, sie verschieben nicht**. Der alte Schlüssel bleibt liegen, damit ein Rückschritt auf eine ältere App-Version nichts verliert. `appModeStorage.ts` geht noch einen Schritt weiter und schreibt den alten Schlüssel dauerhaft mit — das ist die strengere Auslegung derselben Regel. Und Migrationen sind idempotent: `migriere()` sichert das über das Modulflag `migriert` (`storage.ts:235`) und darüber, dass jeder Schritt nur läuft, wenn das Ziel `null` ist.
 
 ---
 
@@ -566,7 +569,7 @@ Zusätzlich gilt: Migrationen **kopieren, sie verschieben nicht**. Der alte Schl
 
 Diese Punkte sind bekannt und stehen hier, damit sie nicht als Neuentdeckung wieder aufschlagen. Keiner davon ist heute ein akuter Fehler.
 
-**Zwei neue Stores hören nicht auf Änderungen aus anderen Tabs.** `src/core/elektro/schuleStore.js` und `src/core/prompting/werkstattStore.js` importieren nur `melden` aus `store.ts`, nicht `beiFremdaenderung`. Beide halten aber einen Modul-Cache. Wer die Elektro-Lehre in zwei Tabs offen hat und in Tab A eine Note einträgt, arbeitet Tab B weiter mit dem alten Stand — und überschreibt die neue Note beim nächsten Speichern. Alle anderen Stores, einschließlich `bereichsLernstand` (`:51–53`) und `fehlerbuchStore` (`:58–60`), melden sich korrekt an. Das ist die konkreteste Datenverlustlücke der neuen Apps und mit drei Zeilen je Datei behoben.
+**Zwei neue Stores hören nicht auf Änderungen aus anderen Tabs.** `src/core/elektro/schuleStore.ts` und `src/core/prompting/werkstattStore.ts` importieren nur `melden` aus `store.ts`, nicht `beiFremdaenderung`. Beide halten aber einen Modul-Cache. Wer die Elektro-Lehre in zwei Tabs offen hat und in Tab A eine Note einträgt, arbeitet Tab B weiter mit dem alten Stand — und überschreibt die neue Note beim nächsten Speichern. Alle anderen Stores, einschließlich `bereichsLernstand` (`:51–53`) und `fehlerbuchStore` (`:58–60`), melden sich korrekt an. Das ist die konkreteste Datenverlustlücke der neuen Apps und mit drei Zeilen je Datei behoben.
 
 **Kein `version`-Feld bei `sitzung`, `ohneKonto` und der App-Wahl.** `red-kurd-session-v2` trägt die Version nur im Schlüsselnamen; der Inhalt hat kein Feld. Ändert sich der Aufbau von `Uebung`, gibt es keinen Weg, alte von neuen Ständen zu unterscheiden. `red-kurd-ohne-konto-v1` ist ein roher Boolean, `red-kurd-active-app-v1` und `red-kurd-active-app-mode-v1` sind rohe Strings — alle drei sind nicht erweiterbar. Heute verkraftbar: Eine laufende Sitzung darf notfalls verworfen werden, und die anderen tragen eine einzige Entscheidung, die im Zweifel auf einen Standard zurückfällt. Bei der nächsten Änderung an einem dieser Bereiche gehört das Feld nachgezogen.
 
@@ -576,7 +579,7 @@ Diese Punkte sind bekannt und stehen hier, damit sie nicht als Neuentdeckung wie
 
 **Alt-Schlüssel bleiben liegen — bewusst.** `red-kurd-fortschritt-v1`, `red-kurd-profil-v1`, `red-kurd-session-v1` und `red-kurd-modus` werden von `migriere()` kopiert, nie gelöscht (Kommentar in `storage.ts:233–234`). Der Preis ist ein paar hundert Kilobyte, die nie aufgeräumt werden und nicht im Export stehen. Der Gegenwert: Wer auf eine ältere App-Version zurückgeht, findet seinen Lernstand vor. Diese Abwägung ist bewusst so getroffen. Sie sollte erst kippen, wenn die Rückschrittmöglichkeit praktisch keine Rolle mehr spielt — und dann in einem eigenen, sichtbaren Schritt, nicht nebenbei. Einzige Ausnahme: `red-kurd-profil-v1` wird bei „Onboarding neu durchlaufen" gelöscht, weil die Migration es sonst sofort wiederherstellte (§4.1).
 
-**`heartsStore` ist tot.** `src/core/hearts/heartsStore.js` wird von keiner Datei unter `src/` importiert — nur `test/heartsStore.test.js` benutzt ihn. `red-kurd-hearts-v1` entsteht im Betrieb dadurch nie, der Schlüssel steht aber in `KEYS`, im Export und im Import. Solange das so bleibt, führt die Datei ein Konzept mit, das die App nicht benutzt. Zwei saubere Auswege: den Store an die Abenteuer-Ansicht anbinden, wie ursprünglich gedacht, oder ihn samt `KEYS.herzen` entfernen. Was nicht geht: den Schlüssel aus `KEYS` nehmen und die Datei liegen lassen — dann bricht der Import älterer Sicherungen still an dieser Stelle ab, ohne dass es jemand merkt.
+**`heartsStore` ist tot.** `src/core/hearts/heartsStore.ts` wird von keiner Datei unter `src/` importiert — nur `test/heartsStore.test.js` benutzt ihn. `red-kurd-hearts-v1` entsteht im Betrieb dadurch nie, der Schlüssel steht aber in `KEYS`, im Export und im Import. Solange das so bleibt, führt die Datei ein Konzept mit, das die App nicht benutzt. Zwei saubere Auswege: den Store an die Abenteuer-Ansicht anbinden, wie ursprünglich gedacht, oder ihn samt `KEYS.herzen` entfernen. Was nicht geht: den Schlüssel aus `KEYS` nehmen und die Datei liegen lassen — dann bricht der Import älterer Sicherungen still an dieser Stelle ab, ohne dass es jemand merkt.
 
 **Weitere kleinere Auffälligkeiten**, ohne Handlungsdruck:
 - `red-kurd-ui-v1` trägt intern `version: 2`. Schlüsselname und Inhaltsversion sind entkoppelt (siehe Regel 2 in §5).

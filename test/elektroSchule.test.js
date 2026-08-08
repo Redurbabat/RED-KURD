@@ -22,7 +22,7 @@ globalThis.localStorage = new SpeicherAttrappe()
 
 const rechnung = await import('../src/core/elektro/notenRechnung.js')
 const formeln = await import('../src/core/elektro/formeln.js')
-const schule = await import('../src/core/elektro/schuleStore.js')
+const schule = await import('../src/core/elektro/schuleStore.ts')
 const { KEYS } = await import('../src/core/storage.ts')
 
 // ===== Noten =====

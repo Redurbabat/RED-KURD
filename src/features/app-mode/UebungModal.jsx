@@ -5,7 +5,7 @@ import Badge from '../../components/common/Badge.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import Modal from '../../components/common/Modal.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import { XP_JE_UEBUNG } from '../../core/lernbereiche/bereichsLernstand.js'
+import { XP_JE_UEBUNG } from '../../core/lernbereiche/bereichsLernstand.ts'
 
 /**
  * @param {{uebung:Object|null, lernstand:Object, schliessen:Function}} props

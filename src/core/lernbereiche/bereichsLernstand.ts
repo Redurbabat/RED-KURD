@@ -10,11 +10,18 @@ import { melden, beiFremdaenderung } from '../store.ts'
 import { heute } from '../progress/scheduler.ts'
 import { aktualisiereSerie } from '../progress/gamification.ts'
 
+import type {
+  Bereichsbaukasten,
+  Bereichslernstand,
+  Lektionskennung,
+  Lektionsstatus,
+} from '../../types/lernstand'
+
 export const XP_JE_LEKTION = 10
 export const XP_JE_UEBUNG = 15
 export const TAGESZIEL_XP = 30
 
-const LEER = {
+const LEER: Bereichslernstand = {
   version: 1,
   erledigt: {}, // { lektionsId/uebungsId: 'JJJJ-MM-TT' }
   notizen: {}, // { uebungsId: 'eigene Loesung/Notiz' }
@@ -25,12 +32,16 @@ const LEER = {
 }
 
 /** Einen Bereichs-Lernstand an einen Speicherschluessel binden. */
-export function erstelleBereichsLernstand(key) {
-  let cache = null
+export function erstelleBereichsLernstand(key: string): Bereichsbaukasten {
+  let cache: Bereichslernstand | null = null
 
-  function laden() {
+  function laden(): Bereichslernstand {
     if (cache) return cache
-    const d = lies(key) || {}
+    // `Partial`, weil auf der Platte ein aelterer oder von Hand veraenderter
+    // Stand liegen darf. Der Typ ist die Erwartung dieser Stelle, keine Zusage
+    // von `lies()` — deshalb bleiben die drei Rueckfaelle darunter stehen: sie
+    // fangen auch ein ausdrueckliches `null` in der Datei ab.
+    const d: Partial<Bereichslernstand> = lies<Partial<Bereichslernstand>>(key) || {}
     cache = {
       ...LEER,
       ...d,
@@ -41,7 +52,7 @@ export function erstelleBereichsLernstand(key) {
     return cache
   }
 
-  function sichern(d) {
+  function sichern(d: Bereichslernstand): Bereichslernstand {
     cache = d
     schreibe(key, d)
     melden()
@@ -53,29 +64,33 @@ export function erstelleBereichsLernstand(key) {
   })
 
   return {
-    stand() {
+    stand(): Bereichslernstand {
       return laden()
     },
 
-    istErledigt(lektionsId) {
+    istErledigt(lektionsId: string): boolean {
       return !!laden().erledigt[lektionsId]
     },
 
     /**
      * Lektion abschliessen. XP gibt es nur beim ersten Mal — ein zweiter
      * Abschluss derselben Lektion ist ein stilles Nichts.
-     * @returns {number} gutgeschriebene XP (0 wenn schon erledigt)
+     * @returns gutgeschriebene XP (0 wenn schon erledigt)
      */
-    schliesseAb(lektionsId, xp = XP_JE_LEKTION) {
+    schliesseAb(lektionsId: string, xp: number = XP_JE_LEKTION): number {
       const d = laden()
       if (d.erledigt[lektionsId]) return 0
       const t = heute()
-      const neu = {
+      const neu: Bereichslernstand = {
         ...d,
         erledigt: { ...d.erledigt, [lektionsId]: t },
         xp: (d.xp || 0) + xp,
         tage: { ...d.tage, [t]: (d.tage[t] || 0) + xp },
       }
+      // Nur `serie` und `letzterTag` werden uebernommen: `aktualisiereSerie()`
+      // liefert zusaetzlich `serienSchutz` und `schutzBenutzt`, doch der
+      // Bereichs-Lernstand kennt beide nicht. Wer das zu einem `Object.assign`
+      // zusammenzieht, schreibt in alle drei Apps Felder, die kein Leser kennt.
       const serie = aktualisiereSerie(neu, t)
       neu.serie = serie.serie
       neu.letzterTag = serie.letzterTag
@@ -83,34 +98,33 @@ export function erstelleBereichsLernstand(key) {
       return xp
     },
 
-    xpHeute() {
+    xpHeute(): number {
       return laden().tage[heute()] || 0
     },
 
     /** Eigene Loesung/Notiz zu einer Uebung — bleibt lokal. */
-    notiz(id) {
+    notiz(id: string): string {
       return laden().notizen[id] || ''
     },
 
-    setzeNotiz(id, text) {
+    setzeNotiz(id: string, text: string): void {
       const d = laden()
+      // Die Umwandlung bleibt, obwohl der Typ `string` verspricht: die
+      // Aufrufer sind noch ungepruefte .jsx-Seiten, und was hier ankommt,
+      // landet unveraendert auf der Platte.
       const wert = String(text || '')
       if ((d.notizen[id] || '') === wert) return
       sichern({ ...d, notizen: { ...d.notizen, [id]: wert } })
     },
 
-    serie() {
+    serie(): number {
       return laden().serie || 0
     },
 
-    /**
-     * Status jeder Lektion einer geordneten Liste ableiten.
-     * @param {Array<{id:string}>} lektionen
-     * @returns {Object} { lektionsId: 'done'|'current'|'open'|'locked' }
-     */
-    statusFuer(lektionen) {
+    /** Status jeder Lektion einer geordneten Liste ableiten. */
+    statusFuer(lektionen: readonly Lektionskennung[]): Record<string, Lektionsstatus> {
       const d = laden()
-      const aus = {}
+      const aus: Record<string, Lektionsstatus> = {}
       let aktuelleVergeben = false
       let offeneVergeben = false
       for (const l of lektionen) {
@@ -130,7 +144,7 @@ export function erstelleBereichsLernstand(key) {
     },
 
     /** Fortschritt einer Lektionsliste in Prozent (0–100). */
-    fortschrittProzent(lektionen) {
+    fortschrittProzent(lektionen: readonly Lektionskennung[]): number {
       if (!lektionen.length) return 0
       const d = laden()
       const fertig = lektionen.filter((l) => d.erledigt[l.id]).length

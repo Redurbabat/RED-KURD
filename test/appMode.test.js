@@ -20,10 +20,10 @@ class SpeicherAttrappe {
 globalThis.localStorage = new SpeicherAttrappe()
 
 const { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } = await import(
-  '../src/features/app-mode/appModes.js'
+  '../src/features/app-mode/appModes.ts'
 )
 const { hatGespeicherteApp, isValidAppMode, loadAppMode, saveAppMode } = await import(
-  '../src/features/app-mode/appModeStorage.js'
+  '../src/features/app-mode/appModeStorage.ts'
 )
 const { KEYS, lies } = await import('../src/core/storage.ts')
 

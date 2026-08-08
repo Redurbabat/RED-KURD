@@ -4,7 +4,7 @@ import Badge from '../../components/common/Badge.jsx'
 import Icon from '../../components/icons/Icon.jsx'
 import Modal from '../../components/common/Modal.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.js'
+import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.ts'
 
 /**
  * @param {{lektion:Object|null, erledigt:boolean, schliessen:Function,

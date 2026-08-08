@@ -4,7 +4,7 @@
 import Icon from '../../components/icons/Icon.jsx'
 import PrimaryButton from '../../components/common/PrimaryButton.jsx'
 import Wochenuebersicht from './Wochenuebersicht.jsx'
-import { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.js'
+import { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.ts'
 import './appMode.css'
 
 const KARTEN = {

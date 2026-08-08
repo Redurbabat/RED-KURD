@@ -29,7 +29,7 @@ let zaehler = 0
 async function frischeHerzen(stand) {
   if (stand !== undefined) schreibe(KEYS.herzen, stand)
   else globalThis.localStorage.removeItem(KEYS.herzen)
-  return import(`../src/core/hearts/heartsStore.js?frisch=${++zaehler}`)
+  return import(`../src/core/hearts/heartsStore.ts?frisch=${++zaehler}`)
 }
 
 test('ohne Vorgeschichte sind alle fuenf Herzen da', async () => {
