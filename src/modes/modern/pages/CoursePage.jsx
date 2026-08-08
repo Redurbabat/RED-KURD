@@ -2,7 +2,6 @@
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import {
-  EINHEITEN,
   WELTEN,
   aktuelleEinheit,
   einheitenDerWelt,

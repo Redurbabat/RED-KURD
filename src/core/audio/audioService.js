@@ -72,7 +72,10 @@ export async function spieleWort(wort) {
   const idx = await ladeAudioIndex()
   const datei = idx[wort.toLowerCase()]
   if (datei) {
-    new Audio('/audio/kmr/' + datei).play()
+    // Ohne catch wirft eine vom Browser blockierte Wiedergabe (Autoplay-Regel,
+    // fehlende Nutzergeste) einen unbehandelten Fehler — die Uebung laeuft
+    // dann zwar weiter, aber die Konsole meldet einen Absturz.
+    new Audio('/audio/kmr/' + datei).play().catch(() => {})
     return 'muttersprachler'
   }
   sprich(wort)

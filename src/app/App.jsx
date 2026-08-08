@@ -158,10 +158,10 @@ export default function App() {
       const knopf = ereignis.target?.closest?.('button, [role="button"]')
       if (knopf && !knopf.disabled && navigator.vibrate) navigator.vibrate(8)
     }
-    medien && medien.addEventListener && medien.addEventListener('change', auf)
+    medien?.addEventListener?.('change', auf)
     document.addEventListener('pointerdown', druecken, { passive: true })
     return () => {
-      medien && medien.removeEventListener && medien.removeEventListener('change', auf)
+      medien?.removeEventListener?.('change', auf)
       document.removeEventListener('pointerdown', druecken)
     }
   }, [])

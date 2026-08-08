@@ -10,7 +10,12 @@
     "test": "node --test",
     "data:check": "node scripts/upload-cloud-data.mjs --dry-run",
     "data:upload": "node scripts/upload-cloud-data.mjs",
-    "app:upload": "node scripts/upload-cloud-data.mjs dist --prefix=app --exclude=server,daten,.openai"
+    "app:upload": "node scripts/upload-cloud-data.mjs dist --prefix=app --exclude=server,daten,.openai",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src test scripts server.js sites",
+    "test:e2e": "node scripts/e2e.mjs",
+    "content:check": "node --test test/course-content.test.js test/language-courses.test.js",
+    "check": "npm run typecheck && npm run lint && npm test && npm run build"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",
@@ -20,6 +25,8 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "drizzle-kit": "^0.31.10",
+    "oxlint": "^1.77.0",
+    "typescript": "^5.9.3",
     "vite": "^5.4.11"
   }
 }

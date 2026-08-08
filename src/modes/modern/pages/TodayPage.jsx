@@ -3,6 +3,7 @@
 // und den Sitzungsplaner.
 import { useMemo, useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
+import { TAB_KEYS, schreibeTab } from '../../../core/storage.js'
 import { navigiere } from '../../../app/router.jsx'
 import { T, grussText } from '../../../core/texts.js'
 import {
@@ -26,15 +27,10 @@ import { ErrorState } from '../../../components/common/EmptyState.jsx'
 import HeloMessage from '../../../components/mascot/HeloMessage.jsx'
 import './TodayPage.css'
 
-const SCHLUESSEL_DAUER = 'rk-dauer'
 
-/** Die gewählte Dauer für die Sitzungsseite hinterlegen. */
+/** Die gewählte Dauer für die Sitzungsseite hinterlegen (nur für diesen Tab). */
 function merkeDauer(id) {
-  try {
-    window.sessionStorage.setItem(SCHLUESSEL_DAUER, id)
-  } catch {
-    /* Im privaten Modus kann das fehlschlagen — dann gilt der Wert aus dem Profil. */
-  }
+  schreibeTab(TAB_KEYS.dauer, id)
 }
 
 /** Ein Wort je Bedeutung, auch wenn es zu mehreren Fertigkeiten fällig ist. */

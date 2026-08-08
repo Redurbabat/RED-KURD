@@ -1,0 +1,31 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "unicorn",
+    "typescript"
+  ],
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "eqeqeq": "warn",
+    "no-var": "error",
+    "react/jsx-key": "error",
+    "react/no-danger": "error",
+    "react/jsx-no-target-blank": "error",
+    "react-hooks/exhaustive-deps": "off"
+  },
+  "ignorePatterns": [
+    "dist",
+    "node_modules",
+    "local-data",
+    "db",
+    "drizzle",
+    "public"
+  ]
+}

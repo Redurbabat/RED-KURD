@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    /* Strikt von Anfang an — neue und migrierte Dateien werden nicht
+       nachträglich verschärft, das wäre viel teurer. */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Der Bestand ist JS/JSX. allowJs lässt Imports aus .js zu, checkJs bleibt
+       aus: geprüft wird nur, was schon nach TypeScript migriert ist. So kann
+       Modul für Modul umgestellt werden, ohne dass die Prüfung rot wird.
+       Reihenfolge laut ROADMAP: Kernlogik → Stores → Komponenten. */
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+
+    "allowImportingTsExtensions": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/types/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "sites", "scripts"]
+}

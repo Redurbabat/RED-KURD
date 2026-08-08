@@ -2,6 +2,7 @@
 // Entweder wird eine gespeicherte Sitzung fortgesetzt oder eine neue geplant.
 import { useEffect, useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
+import { TAB_KEYS, liesTab } from '../../../core/storage.js'
 import { navigiere, useRoute } from '../../../app/router.jsx'
 import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.js'
 import { sitzungLaden } from '../../../core/session/sessionStore.js'
@@ -11,17 +12,12 @@ import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.jsx'
 
-const SCHLUESSEL_DAUER = 'rk-dauer'
 const XP_JE_AUFGABE = 10
 
 /** Die auf der Startseite gewählte Dauer, sonst der Vorschlag aus dem Profil. */
 function gewaehlteDauer() {
-  try {
-    const id = window.sessionStorage.getItem(SCHLUESSEL_DAUER)
-    if (id && DAUERN.some((d) => d.id === id)) return id
-  } catch {
-    /* Kein sessionStorage verfügbar — dann gilt der Wert aus dem Profil. */
-  }
+  const id = liesTab(TAB_KEYS.dauer)
+  if (id && DAUERN.some((d) => d.id === id)) return id
   return standardDauer()
 }
 

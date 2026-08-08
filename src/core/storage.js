@@ -54,6 +54,35 @@ export function schreibe(key, wert) {
   }
 }
 
+/**
+ * Kurzlebige Werte, die nur fuer diesen Tab gelten und den Lernstand nicht
+ * beruehren — z. B. die auf der Startseite gewaehlte Sitzungsdauer. Sie
+ * gehoeren bewusst NICHT in KEYS: sie ueberleben den Tab nicht und wandern
+ * nie in eine Sicherung.
+ */
+export const TAB_KEYS = {
+  dauer: 'red-kurd-tab-dauer',
+}
+
+export function liesTab(key, ersatz = null) {
+  try {
+    const roh = sessionStorage.getItem(key)
+    return roh === null ? ersatz : roh
+  } catch {
+    return ersatz
+  }
+}
+
+export function schreibeTab(key, wert) {
+  try {
+    sessionStorage.setItem(key, String(wert))
+    return true
+  } catch {
+    // Privater Modus — die App laeuft weiter, nur ohne Merken.
+    return false
+  }
+}
+
 export function entferne(key) {
   if (!verfuegbar()) return
   try {
@@ -106,6 +135,13 @@ const UMBENANNT = {
   'Möchtest du Tee?|Tu çay dixwazî?': 'Möchtest du Tee?|Tu çayê dixwazî?',
 }
 
+/** Stufe einer Karte robust lesen — auch bei fehlenden oder kaputten Werten. */
+function stufeVon(karte) {
+  if (!karte || typeof karte !== 'object') return 0
+  const stufe = Number(karte.stufe)
+  return Number.isFinite(stufe) ? stufe : 0
+}
+
 /** Karten auf die aktuellen Schreibweisen umschreiben, Stufe und Faelligkeit behalten. */
 export function migriereKarten(karten) {
   if (!karten || typeof karten !== 'object') return { karten, geaendert: 0 }
@@ -115,16 +151,13 @@ export function migriereKarten(karten) {
     const teile = schluessel.split('|')
     const paar = teile.slice(0, 2).join('|')
     const ziel = UMBENANNT[paar]
-    if (!ziel) {
-      neu[schluessel] = wert
-      continue
-    }
-    const neuerSchluessel = [ziel, ...teile.slice(2)].join('|')
-    // Gibt es die neue Karte schon, gewinnt der weiter fortgeschrittene Stand.
+    const neuerSchluessel = ziel ? [ziel, ...teile.slice(2)].join('|') : schluessel
+    if (ziel) geaendert += 1
+    // Treffen beide Schreibweisen aufeinander, gewinnt der weiter fortgeschrittene
+    // Stand — unabhaengig davon, welche Schreibweise zuerst gespeichert wurde.
     const vorhanden = neu[neuerSchluessel]
     neu[neuerSchluessel] =
-      vorhanden && (vorhanden.stufe || 0) >= (wert.stufe || 0) ? vorhanden : wert
-    geaendert += 1
+      vorhanden !== undefined && stufeVon(vorhanden) >= stufeVon(wert) ? vorhanden : wert
   }
   return { karten: neu, geaendert }
 }
