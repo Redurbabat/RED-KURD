@@ -16,7 +16,31 @@ import { tonAn } from '../ui/uiStore.ts'
 const DB_NAME = 'red-kurd-audio'
 const DB_VERSION = 2
 
-function oeffne() {
+/** Was zu einer Aufnahme im Speicher `angaben` steht. */
+export interface Aufnahmeangabe {
+  wort: string
+  /** ISO-Zeitpunkt der Aufnahme. */
+  zeit: string
+  groesse: number
+  /** MIME-Typ des Blobs, z. B. `audio/webm`. */
+  typ: string
+}
+
+/** Eine Aufnahme, wie die Datenverwaltung sie auflistet. */
+export interface Aufnahmezeile {
+  wort: string
+  groesse: number
+  /** `null` bei Aufnahmen aus Datenbank-Version 1 — die kannte keine Angaben. */
+  zeit: string | null
+}
+
+/** Woher der gespielte Ton kam. */
+export type Tonquelle = 'aus' | 'aufnahme' | 'muttersprachler' | 'tts'
+
+/** Wie `klickGefuehl()` klingen soll. */
+export type Klickart = 'normal' | 'richtig' | 'falsch'
+
+function oeffne(): Promise<IDBDatabase> {
   return new Promise((res, rej) => {
     const r = indexedDB.open(DB_NAME, DB_VERSION)
     r.onupgradeneeded = () => {
@@ -31,8 +55,15 @@ function oeffne() {
   })
 }
 
-/** Eine Anfrage auf einen Objektspeicher als Versprechen. */
-function ausLesen(db, speicher, arbeit) {
+/**
+ * Eine Anfrage auf einen Objektspeicher als Versprechen.
+ * `null`, wenn etwas schiefgeht — der Aufrufer prueft ohnehin jede Form.
+ */
+function ausLesen<T>(
+  db: IDBDatabase,
+  speicher: string,
+  arbeit: (s: IDBObjectStore) => IDBRequest<T>
+): Promise<T | null> {
   return new Promise((res) => {
     try {
       const anfrage = arbeit(db.transaction(speicher).objectStore(speicher))
@@ -46,9 +77,9 @@ function ausLesen(db, speicher, arbeit) {
   })
 }
 
-export async function speichereAufnahme(wort, blob) {
+export async function speichereAufnahme(wort: string, blob: Blob): Promise<boolean> {
   const db = await oeffne()
-  return new Promise((res, rej) => {
+  return new Promise<boolean>((res, rej) => {
     const t = db.transaction(['aufnahmen', 'angaben'], 'readwrite')
     t.objectStore('aufnahmen').put(blob, wort)
     // Blob.size ist die Groesse in Bytes; `type` hilft spaeter beim Ausgeben.
@@ -61,10 +92,10 @@ export async function speichereAufnahme(wort, blob) {
   })
 }
 
-export async function holeAufnahme(wort) {
+export async function holeAufnahme(wort: string): Promise<Blob | null> {
   try {
     const db = await oeffne()
-    const wert = await ausLesen(db, 'aufnahmen', (s) => s.get(wort))
+    const wert = await ausLesen<Blob>(db, 'aufnahmen', (s) => s.get(wort))
     return wert || null
   } catch {
     return null
@@ -78,12 +109,12 @@ export async function holeAufnahme(wort) {
  * angestossen und die Funktion kehrte sofort zurueck; wer danach die Liste neu
  * las, sah die Aufnahme unter Umstaenden noch.
  *
- * @returns {Promise<boolean>} ob es geklappt hat
+ * Gibt zurueck, ob es geklappt hat.
  */
-export async function loescheAufnahme(wort) {
+export async function loescheAufnahme(wort: string): Promise<boolean> {
   try {
     const db = await oeffne()
-    return await new Promise((res) => {
+    return await new Promise<boolean>((res) => {
       const t = db.transaction(['aufnahmen', 'angaben'], 'readwrite')
       t.objectStore('aufnahmen').delete(wort)
       t.objectStore('angaben').delete(wort)
@@ -97,10 +128,10 @@ export async function loescheAufnahme(wort) {
 }
 
 /** Alle Aufnahmen loeschen. Der Weg fuer „Aufnahmen entfernen" in den Daten. */
-export async function loescheAlleAufnahmen() {
+export async function loescheAlleAufnahmen(): Promise<boolean> {
   try {
     const db = await oeffne()
-    return await new Promise((res) => {
+    return await new Promise<boolean>((res) => {
       const t = db.transaction(['aufnahmen', 'angaben'], 'readwrite')
       t.objectStore('aufnahmen').clear()
       t.objectStore('angaben').clear()
@@ -121,18 +152,22 @@ export async function loescheAlleAufnahmen() {
  * tauchen trotzdem auf, nur ohne Zeitpunkt — sonst waeren sie unsichtbar und
  * damit unloeschbar.
  */
-export async function alleAufnahmen() {
+export async function alleAufnahmen(): Promise<Aufnahmezeile[]> {
   try {
     const db = await oeffne()
-    const woerter = await ausLesen(db, 'aufnahmen', (s) => s.getAllKeys())
+    const woerter = await ausLesen<IDBValidKey[]>(db, 'aufnahmen', (s) => s.getAllKeys())
     if (!Array.isArray(woerter)) return []
-    const blobs = await ausLesen(db, 'aufnahmen', (s) => s.getAll())
-    const angaben = await ausLesen(db, 'angaben', (s) => s.getAll())
-    const nachWort = new Map(
-      (Array.isArray(angaben) ? angaben : []).map((a) => [a?.wort, a]).filter(([w]) => w)
-    )
+    const blobs = await ausLesen<Blob[]>(db, 'aufnahmen', (s) => s.getAll())
+    const angaben = await ausLesen<Partial<Aufnahmeangabe>[]>(db, 'angaben', (s) => s.getAll())
+    const nachWort = new Map<string, Partial<Aufnahmeangabe>>()
+    for (const a of Array.isArray(angaben) ? angaben : []) {
+      if (a?.wort) nachWort.set(a.wort, a)
+    }
 
-    const liste = woerter.map((wort, i) => {
+    const liste: Aufnahmezeile[] = woerter.map((rohWort, i) => {
+      // Der Schluessel ist immer das Kurmanci-Wort; IndexedDB verspricht nur
+      // `IDBValidKey`, deshalb hier einmal in Text gewandelt.
+      const wort = String(rohWort)
       const a = nachWort.get(wort)
       const blob = Array.isArray(blobs) ? blobs[i] : null
       return {
@@ -157,7 +192,7 @@ export async function alleAufnahmen() {
 }
 
 /** Anzahl und Gesamtgroesse aller Aufnahmen. */
-export async function aufnahmenBilanz() {
+export async function aufnahmenBilanz(): Promise<{ anzahl: number; bytes: number }> {
   const liste = await alleAufnahmen()
   return {
     anzahl: liste.length,
@@ -169,7 +204,7 @@ export async function aufnahmenBilanz() {
  * Bytes als lesbaren Text. Rein, ohne Speicherzugriff — deshalb testbar ohne
  * IndexedDB, die es in Node gar nicht gibt.
  */
-export function groesseText(bytes) {
+export function groesseText(bytes: unknown): string {
   const zahl = Number(bytes)
   if (!Number.isFinite(zahl) || zahl <= 0) return '0 KB'
   if (zahl < 1024) return '1 KB'
@@ -181,7 +216,7 @@ export function groesseText(bytes) {
  * Einen Blob abspielen und die Object-URL danach wieder freigeben —
  * sonst haelt jede abgespielte Aufnahme Speicher fest, bis die Seite neu laedt.
  */
-export function spieleBlob(blob) {
+export function spieleBlob(blob: Blob): HTMLAudioElement {
   const adresse = URL.createObjectURL(blob)
   const ton = new Audio(adresse)
   const aufraeumen = () => URL.revokeObjectURL(adresse)
@@ -192,23 +227,30 @@ export function spieleBlob(blob) {
 }
 
 // Verzeichnis echter Muttersprachler-Aufnahmen (Lingua Libre, CC BY-SA)
-let audioIndex = null
-async function ladeAudioIndex() {
+/** Wort (klein geschrieben) → Dateiname unter `/audio/kmr/`. */
+type Audioverzeichnis = Readonly<Record<string, string | undefined>>
+
+let audioIndex: Audioverzeichnis | null = null
+async function ladeAudioIndex(): Promise<Audioverzeichnis> {
   if (audioIndex) return audioIndex
   try {
     const r = await fetch('/audio/index.json')
     // Fehlversuch nicht dauerhaft merken — nach kurzem Netzaussetzer soll der
     // naechste Aufruf wieder echte Stimmen finden.
     if (!r.ok) return {}
-    audioIndex = await r.json()
+    // Ueber eine lokale Variable, damit der Rueckgabewert nicht wieder
+    // `| null` ist — gemerkt wird derselbe Wert. Ungeprueft wie jedes
+    // `json()`; die Datei liegt in `public/audio/`.
+    const geladen: Audioverzeichnis = await r.json()
+    audioIndex = geladen
+    return geladen
   } catch {
     return {}
   }
-  return audioIndex
 }
 
 // Prioritaet: 1. eigene Aufnahme, 2. echte Muttersprachler-Datei, 3. Computerstimme
-export async function spieleWort(wort) {
+export async function spieleWort(wort: string): Promise<Tonquelle> {
   if (!tonAn()) return 'aus'
   const b = await holeAufnahme(wort)
   if (b) {
@@ -230,20 +272,20 @@ export async function spieleWort(wort) {
   return 'tts'
 }
 
-export async function hatEchteStimme(wort) {
+export async function hatEchteStimme(wort: string): Promise<boolean> {
   const idx = await ladeAudioIndex()
   return !!idx[wort.toLowerCase()]
 }
 
 /** Text mit einer zum Kurs passenden, lokal verfügbaren Systemstimme sprechen. */
-export function spieleText(text, locale = 'de-DE') {
+export function spieleText(text: string, locale = 'de-DE'): 'aus' | 'systemstimme' | 'standardstimme' {
   if (!tonAn() || typeof speechSynthesis === 'undefined' || !text) return 'aus'
   speechSynthesis.cancel()
   const ausgabe = new SpeechSynthesisUtterance(String(text))
   ausgabe.lang = locale
   ausgabe.rate = 0.86
   ausgabe.pitch = 1
-  const kurz = locale.toLowerCase().split('-')[0]
+  const kurz = locale.toLowerCase().split('-')[0] ?? ''
   const stimmen = speechSynthesis.getVoices()
   const stimme =
     stimmen.find((eintrag) => eintrag.lang?.toLowerCase() === locale.toLowerCase()) ||
@@ -253,8 +295,17 @@ export function spieleText(text, locale = 'de-DE') {
   return stimme ? 'systemstimme' : 'standardstimme'
 }
 
+// Aelteres iOS-Safari kennt AudioContext nur unter dem Webkit-Namen. Als
+// Ergaenzung des Fenster-Typs statt als Typzusicherung an der Fundstelle:
+// so steht die Ausnahme einmal erklaert da und nicht mitten im Code.
+declare global {
+  interface Window {
+    webkitAudioContext?: typeof AudioContext
+  }
+}
+
 /** Ein kurzer lokaler Tastenton plus Gerätevibration für spürbares Feedback. */
-export function klickGefuehl(art = 'normal') {
+export function klickGefuehl(art: Klickart = 'normal'): void {
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
     navigator.vibrate(art === 'richtig' ? [12, 28, 18] : art === 'falsch' ? [30, 25, 30] : 8)
   }

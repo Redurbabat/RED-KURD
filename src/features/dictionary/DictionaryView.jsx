@@ -4,7 +4,7 @@
 import { useRef, useState } from 'react'
 import { useLernstand } from '../../core/store.ts'
 import { merkeWort, kennstWort } from '../../core/progress/progressStore.ts'
-import { spieleWort } from '../../core/audio/audioService.js'
+import { spieleWort } from '../../core/audio/audioService.ts'
 import { arabischNachLatein } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, beispieleStatisch } from '../../core/data/staticData.ts'
 import { woerter as grundwortschatz } from '../../data/woerter.js'

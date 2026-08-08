@@ -3,7 +3,7 @@
 // Gewand des Modern-Modus.
 import { useLernstand } from '../../core/store.ts'
 import { merkeWort, kennstWort } from '../../core/progress/progressStore.ts'
-import { spieleWort } from '../../core/audio/audioService.js'
+import { spieleWort } from '../../core/audio/audioService.ts'
 import { redewendungen, kulturkarten } from '../../data/kultur.js'
 import Card from '../../components/common/Card.tsx'
 import Badge from '../../components/common/Badge.tsx'

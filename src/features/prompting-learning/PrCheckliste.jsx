@@ -5,7 +5,7 @@ import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
-import { PR_CHECKLISTE, pruefeMerge } from '../../core/prompting/promptBaukasten.js'
+import { PR_CHECKLISTE, pruefeMerge } from '../../core/prompting/promptBaukasten.ts'
 import { holePr, leerePr, schaltePr } from '../../core/prompting/werkstattStore.ts'
 
 export default function PrCheckliste() {

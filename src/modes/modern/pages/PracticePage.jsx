@@ -11,7 +11,7 @@ import {
   fertigkeitStufe,
   schwaechsteFertigkeit,
 } from '../../../core/progress/progressSelectors.ts'
-import { spieleWort } from '../../../core/audio/audioService.js'
+import { spieleWort } from '../../../core/audio/audioService.ts'
 import PageHeader from '../../../components/layout/PageHeader.tsx'
 import Card from '../../../components/common/Card.tsx'
 import Icon from '../../../components/icons/Icon.tsx'

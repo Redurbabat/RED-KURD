@@ -31,7 +31,7 @@ import {
   loescheAufnahme,
   spieleBlob,
   holeAufnahme,
-} from '../../../core/audio/audioService.js'
+} from '../../../core/audio/audioService.ts'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
 import { holeProfil } from '../../../core/profile/profileStore.ts'
 

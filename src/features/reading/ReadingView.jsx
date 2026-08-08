@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useLernstand } from '../../core/store.ts'
 import { gibXp, merkeWort, holeFortschritt } from '../../core/progress/progressStore.ts'
-import { spieleWort } from '../../core/audio/audioService.js'
+import { spieleWort } from '../../core/audio/audioService.ts'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, zufallsPaare } from '../../core/data/staticData.ts'
 import { ALLE_WOERTER } from '../../core/courses/courseRepository.ts'

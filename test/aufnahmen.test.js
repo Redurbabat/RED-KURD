@@ -15,7 +15,7 @@ class SpeicherAttrappe {
 }
 globalThis.localStorage = new SpeicherAttrappe()
 
-const { groesseText } = await import('../src/core/audio/audioService.js')
+const { groesseText } = await import('../src/core/audio/audioService.ts')
 
 test('Groessen werden lesbar und ohne Nachkommastellen-Unsinn ausgegeben', () => {
   assert.equal(groesseText(0), '0 KB')
@@ -50,7 +50,7 @@ test('das Modul laedt ohne IndexedDB und ohne Browser', async () => {
   // indexedDB zugreifen — sonst bricht jeder Test, der audioService nur
   // mitimportiert (z. B. ueber ExercisePlayer).
   assert.equal(typeof globalThis.indexedDB, 'undefined')
-  const modul = await import('../src/core/audio/audioService.js')
+  const modul = await import('../src/core/audio/audioService.ts')
   for (const name of [
     'speichereAufnahme',
     'holeAufnahme',
@@ -68,7 +68,7 @@ test('ohne IndexedDB liefern die Lesewege leere Ergebnisse statt zu werfen', asy
   // Auf einem Geraet ohne IndexedDB (privater Modus mancher Browser) darf die
   // Fortschrittsseite nicht weiss bleiben.
   const { alleAufnahmen, aufnahmenBilanz, holeAufnahme, loescheAufnahme, loescheAlleAufnahmen } =
-    await import('../src/core/audio/audioService.js')
+    await import('../src/core/audio/audioService.ts')
   assert.deepEqual(await alleAufnahmen(), [])
   assert.deepEqual(await aufnahmenBilanz(), { anzahl: 0, bytes: 0 })
   assert.equal(await holeAufnahme('silav'), null)

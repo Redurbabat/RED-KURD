@@ -16,7 +16,7 @@ import {
   pruefeAuftrag,
   pruefeBugReport,
   pruefeMerge,
-} from '../../core/prompting/promptBaukasten.js'
+} from '../../core/prompting/promptBaukasten.ts'
 import * as werkstatt from '../../core/prompting/werkstattStore.ts'
 import WerkstattFormular from './WerkstattFormular.jsx'
 import PrCheckliste from './PrCheckliste.jsx'

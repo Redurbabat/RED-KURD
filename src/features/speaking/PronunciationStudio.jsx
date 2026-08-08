@@ -9,7 +9,7 @@ import {
   speichereAufnahme,
   holeAufnahme,
   loescheAufnahme,
-} from '../../core/audio/audioService.js'
+} from '../../core/audio/audioService.ts'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { gibXp } from '../../core/progress/progressStore.ts'
 import Card from '../../components/common/Card.tsx'

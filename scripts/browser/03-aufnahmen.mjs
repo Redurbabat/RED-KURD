@@ -112,6 +112,61 @@ await page.waitForTimeout(1000)
 const text3 = await page.evaluate(() => document.body.innerText)
 ok('die neue Aufnahme wird mitgezaehlt', /3 Aufnahmen/.test(text3), text3.match(/.{0,30}Aufnahme.{0,40}/)?.[0] || '')
 
+// --- 5b. Reihenfolge und Zeitpunkte ---------------------------------------
+// Aufgefallen bei einer Gegenprobe: `alleAufnahmen()` durfte den Speicher
+// `angaben` vollstaendig ignorieren, ohne dass eine Pruefung es merkte. Die
+// Liste haette dann alle Zeitpunkte verloren und ihre Sortierung gleich mit —
+// sichtbar nur als „die Reihenfolge ist irgendwie komisch".
+//
+// Das Wort ist mit Bedacht `zer`: es steht alphabetisch HINTER silav, spas und
+// roj. Nur wenn wirklich nach Zeit sortiert wird, steht es oben. Mein erster
+// Versuch nahm dafuer `roj` — das steht alphabetisch ohnehin vorn und haette
+// beide Reihenfolgen gleich aussehen lassen.
+await page.evaluate(async () => {
+  const db = await new Promise((res) => {
+    const r = indexedDB.open('red-kurd-audio')
+    r.onsuccess = () => res(r.result)
+  })
+  await new Promise((res) => {
+    const t = db.transaction(['aufnahmen', 'angaben'], 'readwrite')
+    t.objectStore('aufnahmen').put(new Blob([new Uint8Array(2048)], { type: 'audio/webm' }), 'zer')
+    t.objectStore('angaben').put(
+      { wort: 'zer', zeit: new Date(Date.now() + 60000).toISOString(), groesse: 2048, typ: 'audio/webm' },
+      'zer'
+    )
+    t.oncomplete = res
+  })
+  db.close()
+})
+await page.reload({ waitUntil: 'networkidle' })
+await page.waitForTimeout(900)
+await page.getByRole('button', { name: /Aufnahmen anzeigen/i }).click()
+await page.waitForTimeout(600)
+const reihenfolge = await page.locator('.fp-aufnahme-wort').allInnerTexts()
+ok('die neueste Aufnahme steht oben, nicht die alphabetisch erste',
+  reihenfolge[0] === 'zer', reihenfolge.join(','))
+ok('danach kommt die zweitneueste', reihenfolge[1] === 'roj', reihenfolge.join(','))
+ok('Aufnahmen ohne Zeitpunkt stehen hinten, dort alphabetisch',
+  reihenfolge.slice(2).join(',') === 'silav,spas', reihenfolge.join(','))
+
+// Die Testaufnahme wieder entfernen und die Liste zuklappen — Schritt 6
+// erwartet drei Aufnahmen und einen zugeklappten Bereich.
+await page.evaluate(async () => {
+  const db = await new Promise((res) => {
+    const r = indexedDB.open('red-kurd-audio')
+    r.onsuccess = () => res(r.result)
+  })
+  await new Promise((res) => {
+    const t = db.transaction(['aufnahmen', 'angaben'], 'readwrite')
+    t.objectStore('aufnahmen').delete('zer')
+    t.objectStore('angaben').delete('zer')
+    t.oncomplete = res
+  })
+  db.close()
+})
+await page.reload({ waitUntil: 'networkidle' })
+await page.waitForTimeout(900)
+
 // --- 6. Einzeln loeschen ---------------------------------------------------
 await page.getByRole('button', { name: /Aufnahmen anzeigen/i }).click()
 await page.waitForTimeout(500)

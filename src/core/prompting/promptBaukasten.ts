@@ -4,12 +4,12 @@
 // Idee: Wer die Felder ausfuellt, schreibt automatisch einen guten Prompt.
 // Die Pruefliste sagt live, welcher Baustein noch fehlt.
 
-function sauber(wert) {
+function sauber(wert: unknown): string {
   return String(wert ?? '').trim()
 }
 
 /** Zeilen aus einem Textfeld: leere Zeilen fliegen raus. */
-function zeilen(wert) {
+function zeilen(wert: unknown): string[] {
   return sauber(wert)
     .split('\n')
     .map((z) => z.replace(/^[-*•]\s*/, '').trim())
@@ -17,15 +17,42 @@ function zeilen(wert) {
 }
 
 /** Als Aufzaehlung ausgeben — eine Zeile, ein Strich. */
-function liste(wert) {
+function liste(wert: unknown): string {
   return zeilen(wert)
     .map((z) => `- ${z}`)
     .join('\n')
 }
 
+/** Ein Eingabefeld des Baukastens. */
+export interface Baukastenfeld {
+  id: string
+  label: string
+  /** Die Frage ueber dem Feld — sie sagt, was hineingehoert. */
+  frage: string
+  platzhalter: string
+  /** Textbereich statt einzeiligem Feld. */
+  mehrzeilig?: boolean
+}
+
+/**
+ * Der Formularstand: Feld-Id → eingetippter Text.
+ *
+ * Ein Schluessel entsteht erst beim ersten Tastendruck, deshalb ueberall
+ * `Partial` — die Werkstatt speichert unvollstaendige Karten (siehe
+ * `Werkstattstand` in lernstand.d.ts).
+ */
+export type Baukastenwerte = Readonly<Record<string, string | undefined>>
+
+/** Ein Punkt einer Pruefliste: erfuellt oder noch offen. */
+export interface Pruefpunkt {
+  id: string
+  text: string
+  ok: boolean
+}
+
 // ===== Claude-Code-Auftrag =====
 
-export const AUFTRAG_FELDER = [
+export const AUFTRAG_FELDER: readonly Baukastenfeld[] = [
   {
     id: 'ziel',
     label: 'Ziel',
@@ -64,8 +91,8 @@ export const AUFTRAG_FELDER = [
 ]
 
 /** Baut aus den Feldern den fertigen Auftrag zum Kopieren. */
-export function baueAuftrag(felder = {}) {
-  const teile = []
+export function baueAuftrag(felder: Baukastenwerte = {}): string {
+  const teile: string[] = []
   if (sauber(felder.ziel)) teile.push(`ZIEL\n${sauber(felder.ziel)}`)
   if (sauber(felder.ort)) teile.push(`ERLAUBT (nur hier arbeiten)\n${liste(felder.ort)}`)
   if (sauber(felder.verboten)) teile.push(`NICHT ERLAUBT\n${liste(felder.verboten)}`)
@@ -74,11 +101,8 @@ export function baueAuftrag(felder = {}) {
   return teile.join('\n\n')
 }
 
-/**
- * Die Pruefliste zum Auftrag — jeder Punkt sagt, warum er zaehlt.
- * @returns {Array<{id:string, text:string, ok:boolean}>}
- */
-export function pruefeAuftrag(felder = {}) {
+/** Die Pruefliste zum Auftrag — jeder Punkt sagt, warum er zaehlt. */
+export function pruefeAuftrag(felder: Baukastenwerte = {}): Pruefpunkt[] {
   const ziel = sauber(felder.ziel)
   return [
     {
@@ -111,7 +135,7 @@ export function pruefeAuftrag(felder = {}) {
 
 // ===== Bug-Report =====
 
-export const BUG_FELDER = [
+export const BUG_FELDER: readonly Baukastenfeld[] = [
   {
     id: 'passiert',
     label: 'Was passiert?',
@@ -149,7 +173,7 @@ export const BUG_FELDER = [
   },
 ]
 
-export function baueBugReport(felder = {}) {
+export function baueBugReport(felder: Baukastenwerte = {}): string {
   const teile = []
   if (sauber(felder.passiert)) teile.push(`WAS PASSIERT\n${sauber(felder.passiert)}`)
   if (sauber(felder.erwartet)) teile.push(`ERWARTET\n${sauber(felder.erwartet)}`)
@@ -164,7 +188,7 @@ export function baueBugReport(felder = {}) {
   return teile.join('\n\n')
 }
 
-export function pruefeBugReport(felder = {}) {
+export function pruefeBugReport(felder: Baukastenwerte = {}): Pruefpunkt[] {
   return [
     { id: 'passiert', text: 'Was passiert, steht da', ok: sauber(felder.passiert).length >= 10 },
     { id: 'erwartet', text: 'Was erwartet war, steht da', ok: sauber(felder.erwartet).length >= 10 },
@@ -180,7 +204,13 @@ export function pruefeBugReport(felder = {}) {
 // ===== Pull Request pruefen =====
 
 /** Die Fragen, die vor jedem Merge zu beantworten sind. */
-export const PR_CHECKLISTE = [
+/** Ein Punkt der Merge-Checkliste — ohne `ok`, den setzt der Nutzer. */
+export interface Checklistenpunkt {
+  id: string
+  text: string
+}
+
+export const PR_CHECKLISTE: readonly Checklistenpunkt[] = [
   { id: 'verstanden', text: 'Ich verstehe, was der PR ändert — in einem Satz erklärbar' },
   { id: 'ziel', text: 'Er macht genau das, was im Auftrag stand — nicht mehr' },
   { id: 'grenzen', text: 'Nur erlaubte Dateien wurden angefasst' },
@@ -191,12 +221,19 @@ export const PR_CHECKLISTE = [
   { id: 'handy', text: 'Auf dem Handy geprüft (oder Screenshot gesehen)' },
 ]
 
+/** Die Empfehlung am Ende der Checkliste. */
+export interface Mergerat {
+  mergen: boolean
+  text: string
+  /** Wie viele Punkte noch offen sind. */
+  offen: number
+}
+
 /**
- * Empfehlung aus den abgehakten Punkten. „tests“ und „verbote“ sind
+ * Empfehlung aus den abgehakten Punkten. „tests" und „verbote" sind
  * Ausschlusskriterien — ohne sie wird nicht gemergt.
- * @returns {{mergen:boolean, text:string, offen:number}}
  */
-export function pruefeMerge(abgehakt = {}) {
+export function pruefeMerge(abgehakt: Readonly<Record<string, boolean | undefined>> = {}): Mergerat {
   const offen = PR_CHECKLISTE.filter((p) => !abgehakt[p.id])
   const hartOffen = offen.filter((p) => p.id === 'tests' || p.id === 'verbote')
   if (hartOffen.length) {

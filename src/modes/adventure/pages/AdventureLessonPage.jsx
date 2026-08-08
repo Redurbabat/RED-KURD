@@ -17,7 +17,7 @@ import {
   setzeSterne,
 } from '../../../core/progress/progressStore.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
-import { spieleWort } from '../../../core/audio/audioService.js'
+import { spieleWort } from '../../../core/audio/audioService.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
