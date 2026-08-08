@@ -33,17 +33,24 @@ const MUSTER = {
   ),
 }
 
-/**
- * @param {{muster?:'rauten'|'elibelinde'|'berge'|'sterne', hoehe?:number,
- *          farbe?:string, hintergrund?:string, className?:string}} props
- */
+/** Die vier Kelim-Motive, die es wirklich gibt. */
+export type Kelimmuster = keyof typeof MUSTER
+
+export interface KelimBorderProps {
+  muster?: Kelimmuster
+  hoehe?: number
+  farbe?: string
+  hintergrund?: string
+  className?: string
+}
+
 export default function KelimBorder({
   muster = 'rauten',
   hoehe = 14,
   farbe = 'var(--adv-brown)',
   hintergrund = 'transparent',
   className = '',
-}) {
+}: KelimBorderProps) {
   const id = `kelim-${muster}-${hoehe}`
   return (
     <svg
@@ -60,6 +67,7 @@ export default function KelimBorder({
         <pattern id={id} width="24" height="24" patternUnits="userSpaceOnUse">
           <rect width="24" height="24" fill={hintergrund} />
           <g fill={farbe} stroke={farbe} strokeLinejoin="round">
+            {/* Der Rueckfall bleibt fuer Aufrufer, die noch JavaScript sind. */}
             {MUSTER[muster] || MUSTER.rauten}
           </g>
         </pattern>
@@ -74,7 +82,13 @@ export default function KelimBorder({
  * Nutzt ein Hintergrundbild statt <svg>, damit sie sich beliebig oft
  * wiederholt, ohne verzerrt zu werden.
  */
-export function KelimBand({ hoehe = 12, farbe = '#7a4b28', className = '' }) {
+export interface KelimBandProps {
+  hoehe?: number
+  farbe?: string
+  className?: string
+}
+
+export function KelimBand({ hoehe = 12, farbe = '#7a4b28', className = '' }: KelimBandProps) {
   const svg = encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="14" viewBox="0 0 28 14">` +
       `<g fill="${farbe}">` +

@@ -25,7 +25,7 @@ import Icon from '../../../components/icons/Icon.tsx'
 import Card from '../../../components/common/Card.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import { ErrorState } from '../../../components/common/EmptyState.tsx'
-import Landscape from '../../../components/adventure/Landscape.jsx'
+import Landscape from '../../../components/adventure/Landscape.tsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import './AdventureHomePage.css'
 

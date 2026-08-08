@@ -9,77 +9,49 @@
 // Fantasy-Inseln, Kuppel- oder Minarett-Silhouetten.
 // Rein dekorativ (aria-hidden) — alle Informationen stehen im Text daneben.
 import { useId } from 'react'
+import type { ReactElement } from 'react'
 
-/* ---------- Farbhilfen ---------- */
-
-function zuRgb(hex) {
-  const roh = String(hex || '').trim().replace('#', '')
-  const voll = roh.length === 3 ? roh.split('').map((z) => z + z).join('') : roh
-  if (!/^[0-9a-fA-F]{6}$/.test(voll)) return [37, 139, 87]
-  const zahl = parseInt(voll, 16)
-  return [(zahl >> 16) & 255, (zahl >> 8) & 255, zahl & 255]
-}
-
-function mische(hex, zielHex, anteil) {
-  const a = zuRgb(hex)
-  const b = zuRgb(zielHex)
-  const t = Math.max(0, Math.min(1, anteil))
-  return '#' + a.map((w, i) => Math.round(w + (b[i] - w) * t).toString(16).padStart(2, '0')).join('')
-}
-
-const heller = (hex, anteil) => mische(hex, '#ffffff', anteil)
-const dunkler = (hex, anteil) => mische(hex, '#000000', anteil)
+import {
+  TOKEN,
+  dunkler,
+  heller,
+  loeseFarbe,
+  mische,
+} from './farben.ts'
 
 /**
- * Die kurdische Farbwelt als Hex — Spiegel der Tokens aus tokens.css.
- * Flächen dürfen `var(--…)` tragen; für berechnete Kanten, Fugen und Schatten
- * brauchen wir die Werte aber als Zahl.
+ * Fast jeder Baustein wird gesetzt und skaliert. Die Vorgaben stehen bei den
+ * Bausteinen selbst, damit eine Szene nur nennt, was sie wirklich abweicht.
  */
-const TOKEN = {
-  nacht: '#081c24',
-  fels: '#31454b',
-  tuerkis: '#00aeb3',
-  gold: '#e8b83e',
-  kelim: '#b72d32',
-  gruen: '#258b57',
-  erde: '#8a5835',
-  pergament: '#f3e4bd',
-  creme: '#fffaf0',
-  granat: '#9e2233',
-  mohn: '#c62f2a',
-  orange: '#d9822b',
-  himmel: '#7fc4de',
+interface Platz {
+  x?: number
+  y?: number
+  skala?: number
 }
 
-/** Die Welten geben ihre Farbe als Token an — hier wird daraus ein Hex. */
-const TOKEN_HEX = {
-  '--rk-night': TOKEN.nacht,
-  '--rk-stone': TOKEN.fels,
-  '--rk-turquoise': TOKEN.tuerkis,
-  '--rk-gold': TOKEN.gold,
-  '--rk-kelim-red': TOKEN.kelim,
-  '--rk-kurd-green': TOKEN.gruen,
-  '--rk-earth': TOKEN.erde,
-  '--rk-parchment': TOKEN.pergament,
-  '--rk-cream': TOKEN.creme,
-  '--adv-teal': TOKEN.tuerkis,
-  '--adv-gold': TOKEN.gold,
-  '--adv-green': TOKEN.gruen,
-  '--adv-red': TOKEN.kelim,
-  '--adv-earth': TOKEN.erde,
-  '--adv-granat': TOKEN.granat,
-  '--adv-poppy': TOKEN.mohn,
-  '--adv-orange': TOKEN.orange,
-  '--adv-sky': TOKEN.himmel,
-  '--adv-blue': '#3f9fc4',
-  '--adv-purple': '#7b5ea8',
+/** Ein Baustein aus Stein — Farbe und Kante lassen sich je Szene tauschen. */
+interface Steinplatz extends Platz {
+  stein?: string
+  kante?: string
 }
 
-function loeseFarbe(wert, ersatz) {
-  const text = String(wert || '').trim()
-  const treffer = text.match(/^var\(\s*(--[\w-]+)/)
-  if (treffer) return TOKEN_HEX[treffer[1]] || ersatz
-  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(text) ? text : ersatz
+/** Ein Streupunkt: `[x, y, groesse]`. Als Tupel, damit die Zerlegung sicher ist. */
+type Streupunkt = readonly [number, number, number]
+
+/** Nur Ort, ohne Groesse — Sterne und Funken. */
+type Ort = readonly [number, number]
+
+/**
+ * Die berechneten Farben einer Szene. Sie entstehen einmal in `Landscape` aus
+ * der Weltfarbe und werden an jede Szene durchgereicht.
+ */
+export interface Szenenfarben {
+  bergFern: string
+  hangFern: string
+  wiese: string
+  wieseDunkel: string
+  /** Hochformat für die Weltkarte statt Querformat für das Band. */
+  hoch: boolean
 }
 
 /* ---------- Abgeleitete Materialfarben ---------- */
@@ -95,9 +67,17 @@ const PFLASTER = mische(TOKEN.pergament, TOKEN.erde, 0.4)
 const TEE = mische(TOKEN.kelim, TOKEN.erde, 0.45)
 const SCHATTEN = dunkler(TOKEN.erde, 0.55)
 
+/** Die Fackelkette den Berghang hinauf — das Feuer wird weitergetragen. */
+const FACKELKETTE: readonly Ort[] = [
+  [44, 116],
+  [78, 106],
+  [116, 98],
+  [156, 92],
+]
+
 /* ---------- Bausteine ---------- */
 
-function Wolken({ opazitaet = 0.7 }) {
+function Wolken({ opazitaet = 0.7 }: { opazitaet?: number }) {
   return (
     <g fill="#ffffff" opacity={opazitaet}>
       <ellipse cx="68" cy="28" rx="26" ry="9" />
@@ -110,9 +90,16 @@ function Wolken({ opazitaet = 0.7 }) {
 
 /** Sternenhimmel für die Newroz-Nacht. */
 function Sternenhimmel() {
-  const punkte = [
+  // Als Tupelliste ausgezeichnet: sonst sind `px` und `py` beim Zerlegen
+  // `number | undefined` und jede Rechnung damit ergaebe `NaN` im Pfad.
+  const punkte: readonly Ort[] = [
     [34, 24], [72, 40], [110, 18], [148, 46], [186, 22], [224, 38],
     [262, 16], [300, 44], [338, 26], [376, 48], [58, 66], [286, 70],
+  ]
+  const GROSSE_STERNE: readonly Ort[] = [
+    [92, 32],
+    [244, 54],
+    [330, 62],
   ]
   return (
     <g>
@@ -122,7 +109,7 @@ function Sternenhimmel() {
         ))}
       </g>
       <g fill={TOKEN.gold} opacity=".9">
-        {[[92, 32], [244, 54], [330, 62]].map(([px, py], i) => (
+        {GROSSE_STERNE.map(([px, py], i) => (
           <path
             key={i}
             d={`M${px} ${py - 5} L${px + 1.6} ${py - 1.6} L${px + 5} ${py} L${px + 1.6} ${py + 1.6} L${px} ${py + 5} L${px - 1.6} ${py + 1.6} L${px - 5} ${py} L${px - 1.6} ${py - 1.6} Z`}
@@ -134,7 +121,7 @@ function Sternenhimmel() {
 }
 
 /** Ferne Bergkette mit Schneekappen — das Rückgrat fast jeder Szene. */
-function Schneeberge({ farbe, y = 0 }) {
+function Schneeberge({ farbe, y = 0 }: { farbe: string; y?: number }) {
   return (
     <g transform={`translate(0 ${y})`}>
       <path
@@ -160,7 +147,7 @@ function Schneeberge({ farbe, y = 0 }) {
  * gestaffelt am Hang, mit Bogenfenstern, vorstehenden Holzbalken,
  * Aussentreppe und einem Kelim über der Brüstung.
  */
-function Steindorf({ x = 240, y = 78, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }) {
+function Steindorf({ x = 240, y = 78, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }: Steinplatz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       <g fill={stein} stroke={kante} strokeWidth="0.9">
@@ -201,7 +188,7 @@ function Steindorf({ x = 240, y = 78, skala = 1, stein = KALKSTEIN, kante = KALK
  * vorstehende Holzbalken, Aussentreppe aufs Dach und ein Kelim, der über der
  * Brüstung hängt.
  */
-function Bergdorfhaus({ x = 140, y = 100, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }) {
+function Bergdorfhaus({ x = 140, y = 100, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }: Steinplatz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       {/* Baukörper */}
@@ -267,7 +254,7 @@ function Bergdorfhaus({ x = 140, y = 100, skala = 1, stein = KALKSTEIN, kante = 
  * Torbogen. Ohne Zinnenkranz, Spitztürmchen, Kuppel oder Minarett — das wäre
  * eine europäische Burg oder eine fremde Silhouette, keine Kela.
  */
-function Kela({ x = 150, y = 60, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }) {
+function Kela({ x = 150, y = 60, skala = 1, stein = KALKSTEIN, kante = KALKSTEIN_KANTE }: Steinplatz) {
   const haus = heller(stein, 0.07)
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
@@ -363,7 +350,7 @@ function Bogenbruecke({
   )
 }
 
-function Fluss({ farbe = WASSER }) {
+function Fluss({ farbe = WASSER }: { farbe?: string }) {
   const d =
     'M-10 178 C 60 162, 92 150, 152 142 C 212 134, 252 120, 302 104 C 342 92, 380 86, 410 84'
   return (
@@ -375,7 +362,7 @@ function Fluss({ farbe = WASSER }) {
 }
 
 /** Mandelbaum in Blüte — der kurdische Frühling. */
-function Mandelbaum({ x = 40, y = 130, skala = 1 }) {
+function Mandelbaum({ x = 40, y = 130, skala = 1 }: Platz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       <path
@@ -402,8 +389,8 @@ function Mandelbaum({ x = 40, y = 130, skala = 1 }) {
 }
 
 /** Granatapfelbaum — dunkelgrüne Krone, im Herbst voller roter Früchte. */
-function Granatapfelbaum({ x = 60, y = 130, skala = 1 }) {
-  const fruechte = [
+function Granatapfelbaum({ x = 60, y = 130, skala = 1 }: Platz) {
+  const fruechte: readonly Ort[] = [
     [-11, 8],
     [4, 2],
     [15, 9],
@@ -448,7 +435,7 @@ function Granatapfelbaum({ x = 60, y = 130, skala = 1 }) {
 }
 
 /** Mohnfeld — die roten Tupfer im Vordergrund. */
-function Mohn({ punkte }) {
+function Mohn({ punkte }: { punkte: readonly Streupunkt[] }) {
   return (
     <g>
       {punkte.map(([x, y, r], i) => (
@@ -463,7 +450,7 @@ function Mohn({ punkte }) {
 }
 
 /** Istikan — das schlanke Teeglas mit der typischen Taille. */
-function Istikan({ x = 0, y = 0, skala = 1, farbe = TEE }) {
+function Istikan({ x = 0, y = 0, skala = 1, farbe = TEE }: Platz & { farbe?: string }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       <ellipse cx="1.7" cy="8.6" rx="4.4" ry="1.5" fill={heller(KUPFER, 0.34)} />
@@ -474,7 +461,7 @@ function Istikan({ x = 0, y = 0, skala = 1, farbe = TEE }) {
 }
 
 /** Kelim mit Çay-Service — das Herzstück kurdischer Gastfreundschaft. */
-function KelimMitCay({ x = 26, y = 152, skala = 1 }) {
+function KelimMitCay({ x = 26, y = 152, skala = 1 }: Platz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       <path d="M0 18 L54 6 L74 16 L20 30 Z" fill={TOKEN.kelim} />
@@ -505,7 +492,7 @@ function KelimMitCay({ x = 26, y = 152, skala = 1 }) {
  * Kupfertablett mit bauchiger Kanne und zwei Istikan-Gläsern —
  * so wird in jedem Haus Tee gereicht.
  */
-function Kupfertablett({ x = 300, y = 176, skala = 1 }) {
+function Kupfertablett({ x = 300, y = 176, skala = 1 }: Platz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       {/* Rundes Tablett */}
@@ -541,7 +528,7 @@ function Kupfertablett({ x = 300, y = 176, skala = 1 }) {
  * Basarstand: gestreifte Kelim-Plane über dem Gerüst, Theke mit Kelim-Behang,
  * Gewürzkegel, Körbe und ein hängender Kelim.
  */
-function Basarstand({ x = 40, y = 180, skala = 1, planeA = TOKEN.kelim, planeB = TOKEN.pergament }) {
+function Basarstand({ x = 40, y = 180, skala = 1, planeA = TOKEN.kelim, planeB = TOKEN.pergament }: Platz & { planeA?: string; planeB?: string }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       {/* Pfosten */}
@@ -610,7 +597,7 @@ function Basarstand({ x = 40, y = 180, skala = 1, planeA = TOKEN.kelim, planeB =
 }
 
 /** Menschen-Silhouetten — Leben auf Gasse und Platz. */
-function Menschen({ punkte, farbe = SCHATTEN, opazitaet = 0.78 }) {
+function Menschen({ punkte, farbe = SCHATTEN, opazitaet = 0.78 }: { punkte: readonly Streupunkt[]; farbe?: string; opazitaet?: number }) {
   return (
     <g fill={farbe} opacity={opazitaet}>
       {punkte.map(([x, y, h], i) => (
@@ -629,7 +616,7 @@ function Menschen({ punkte, farbe = SCHATTEN, opazitaet = 0.78 }) {
  * Govend — der Reihentanz: Silhouetten, die sich an den Händen halten,
  * der Vortänzer schwingt das Destmal.
  */
-function Govend({ x = 100, y = 178, skala = 1, anzahl = 5, farbe = SCHATTEN, destmal = true }) {
+function Govend({ x = 100, y = 178, skala = 1, anzahl = 5, farbe = SCHATTEN, destmal = true }: Platz & { anzahl?: number; farbe?: string; destmal?: boolean }) {
   const leute = Array.from({ length: anzahl }, (_, i) => i)
   const abstand = 22
   return (
@@ -669,7 +656,7 @@ function Govend({ x = 100, y = 178, skala = 1, anzahl = 5, farbe = SCHATTEN, des
  * drei Flammenzungen in Gold, Orange und Kelim-Rot, Funken darüber,
  * davor die Govend-Reihe.
  */
-function NewrozFeuer({ x = 200, y = 168, skala = 1 }) {
+function NewrozFeuer({ x = 200, y = 168, skala = 1 }: Platz) {
   const funken = [
     [-22, -46, 2],
     [20, -56, 2.4],
@@ -712,7 +699,7 @@ function NewrozFeuer({ x = 200, y = 168, skala = 1 }) {
   )
 }
 
-function Nadelwald({ punkte, farbe = LAUB_HELL, dunkelFarbe = LAUB }) {
+function Nadelwald({ punkte, farbe = LAUB_HELL, dunkelFarbe = LAUB }: { punkte: readonly Streupunkt[]; farbe?: string; dunkelFarbe?: string }) {
   return (
     <g>
       {punkte.map(([x, y, h], i) => (
@@ -734,7 +721,7 @@ function Nadelwald({ punkte, farbe = LAUB_HELL, dunkelFarbe = LAUB }) {
 }
 
 /** Verfallene Steinmauer — die alten Wege Kurdistans. */
-function Ruine({ x = 320, y = 128, skala = 1, stein = mische(KALKSTEIN, TOKEN.erde, 0.14) }) {
+function Ruine({ x = 320, y = 128, skala = 1, stein = mische(KALKSTEIN, TOKEN.erde, 0.14) }: Steinplatz) {
   return (
     <g
       transform={`translate(${x} ${y}) scale(${skala})`}
@@ -750,7 +737,7 @@ function Ruine({ x = 320, y = 128, skala = 1, stein = mische(KALKSTEIN, TOKEN.er
 }
 
 /** Schafherde — der Alltag im Hochland. */
-function Herde({ x = 60, y = 176, skala = 1 }) {
+function Herde({ x = 60, y = 176, skala = 1 }: Platz) {
   return (
     <g transform={`translate(${x} ${y}) scale(${skala})`}>
       <g fill={TOKEN.creme} stroke={mische(TOKEN.erde, TOKEN.pergament, 0.55)} strokeWidth="0.8">
@@ -772,7 +759,32 @@ function Herde({ x = 60, y = 176, skala = 1 }) {
 
 /* ---------- Szenen ---------- */
 
-const SZENEN = {
+/**
+ * Die Landschaften, die es wirklich gibt. Die Welten waehlen ueber
+ * `welt.landschaft` daraus (`courseRepository`); acht der zwoelf sind heute
+ * vergeben, die uebrigen stehen fuer neue Welten bereit.
+ */
+export type Landschaftsart =
+  | 'dorf'
+  | 'familienhaus'
+  | 'basar'
+  | 'bruecke'
+  | 'newroz'
+  | 'kela'
+  | 'felder'
+  | 'stadt'
+  | 'see'
+  | 'berge'
+  | 'wald'
+  | 'hochland'
+
+// Jede Szene wird als Komponente gerendert (`<Szene {...f} />`), bekommt die
+// Farben also als Eigenschaften — nicht als Argument. Deshalb `ReactElement`
+// und nicht `ReactNode`: nur das darf JSX zurueckgeben.
+//
+// Der Schluesseltyp ist die Vereinigung und keine Index-Signatur: nur so ist
+// `SZENEN.dorf` nachweislich vorhanden und taugt als Rueckfall.
+const SZENEN: Readonly<Record<Landschaftsart, (f: Szenenfarben) => ReactElement>> = {
   /* Welt 1 — das Bergdorf am Fluss. */
   dorf: (f) => (
     <>
@@ -902,12 +914,7 @@ const SZENEN = {
       />
       {/* Fackelkette den Berghang hinauf — das Feuer wird weitergetragen */}
       <g>
-        {[
-          [44, 116],
-          [78, 106],
-          [116, 98],
-          [156, 92],
-        ].map(([fx, fy], i) => (
+        {FACKELKETTE.map(([fx, fy], i) => (
           <g key={i}>
             <path d={`M${fx} ${fy} v10`} stroke={HOLZ} strokeWidth="2" strokeLinecap="round" />
             <path d={`M${fx} ${fy - 8} q4 5 0 8 q-4 -3 0 -8 z`} fill={TOKEN.gold} />
@@ -1139,8 +1146,8 @@ const SZENEN = {
  * Talgrund unterhalb der Szene — damit die hohe Kartenfläche gefüllt ist,
  * ohne die Landschaft zu strecken.
  */
-function Talgrund({ f, art }) {
-  const streu = [
+function Talgrund({ f, art }: { f: Szenenfarben; art: string }) {
+  const streu: readonly Streupunkt[] = [
     [34, 250, 3.4],
     [96, 286, 3],
     [312, 262, 3.6],
@@ -1218,15 +1225,32 @@ function Talgrund({ f, art }) {
  *          format?:'band'|'karte'}} props
  * `band` ist das flache Kopfbild, `karte` die hohe Fläche der Weltkarte.
  */
+function istLandschaft(wert: string): wert is Landschaftsart {
+  return wert in SZENEN
+}
+
+export interface LandscapeProps {
+  /** Name aus `welt.landschaft`; unbekannte Namen zeigen das Bergdorf. */
+  art?: string
+  /** CSS-Token oder Hex — siehe `loeseFarbe()` in `farben.ts`. */
+  farbe?: string
+  himmel?: string
+  className?: string
+  /** `band` fuer die Startseite (400×200), `karte` fuer die Weltkarte (400×800). */
+  format?: 'band' | 'karte'
+}
+
 export default function Landscape({
   art = 'dorf',
   farbe = 'var(--rk-kurd-green)',
   himmel = 'var(--adv-sky)',
   className = '',
   format = 'band',
-}) {
+}: LandscapeProps) {
   const id = useId().replace(/:/g, '')
-  const Szene = SZENEN[art] || SZENEN.dorf
+  // `art` kommt aus den Weltdaten und ist dort blosser Text; unbekannte Namen
+  // landen im Bergdorf statt in einem leeren Rahmen.
+  const Szene = istLandschaft(art) ? SZENEN[art] : SZENEN.dorf
   const hoch = format === 'karte'
   // Die Welten liefern Tokens — für Verläufe und Mischungen brauchen wir Hex.
   const grund = loeseFarbe(farbe, TOKEN.gruen)
