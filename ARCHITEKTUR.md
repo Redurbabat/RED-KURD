@@ -215,6 +215,7 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 | `shop/shopStore.ts` | 6 Artikel in 3 Kategorien, `kaufe()`, `setzeAktiv()` — nur Kosmetik und Komfort | localStorage |
 | `achievements/achievementsStore.ts` | 9 Auszeichnungen, aus `statistik()` berechnet | localStorage |
 | `courses/languageCourseStore.ts` | getrennter Fortschritt der vier Nebensprachkurse | localStorage |
+| `backup/sicherung.ts` | Sicherungsdateien prüfen (`pruefeSicherung`), beschreiben (Vorschau) und einspielen (`spieleSicherungEin`) — Prüfung und Schreiben sind getrennt | localStorage |
 | `elektro/schuleStore.ts` | Fächer, Noten, Prüfungen, Berichtsheft der Elektro-Lehre | localStorage |
 | `prompting/werkstattStore.ts` | angefangener Auftrag, Bug-Report, PR-Haken | localStorage |
 | `hearts/heartsStore.ts` | 5 Herzen mit 4-Stunden-Regeneration — **derzeit von keinem Modul importiert** | localStorage |

@@ -453,13 +453,22 @@ Erzeugt von `progressStore.exportiereAlles()` (`progressStore.ts:318–335`), au
     // Elektro-Lehre:
     "electroFortschritt": {}, "electroSchule": {}
   },
-  "profil": {}, "ui": {}, "shop": {}   // zusätzlich, redundant zu speicher.*
 }
 ```
 
-**Der Lernstand steht nur noch einmal in der Datei.** `exportiereAlles()` schneidet `fortschritt` aus dem `speicher`-Block heraus (`progressStore.ts:322`), weil die Kopie den größten Teil der Datei verdoppelte und vom Modul-Cache abweichen konnte. Ältere Sicherungsdateien *mit* der Kopie bleiben importierbar.
+**Jeder Bereich steht genau einmal in der Datei.** `exportiereAlles()` schneidet `fortschritt` aus dem `speicher`-Block heraus, weil die Kopie den größten Teil der Datei verdoppelte und vom Modul-Cache abweichen konnte. `profil`, `ui` und `shop` standen bis vor kurzem zusätzlich auf oberster Ebene — auch das ist weg, `ProgressPage.jsx` ruft `exportiereAlles()` jetzt ohne `extra` auf.
 
-Doppelt stehen weiterhin `profil`, `ui` und `shop` — sie werden von den beiden Aufrufern als `extra` auf oberster Ebene ergänzt. Beim Import gewinnen die Felder auf oberster Ebene, weil sie **nach** `importiereSpeicherstand()` geschrieben werden (`ProgressPage.jsx:481–488`). Danach folgt zwingend ein `window.location.reload()`, weil `importiereSpeicherstand()` die Modul-Caches der übrigen Stores nicht leert.
+Ältere Sicherungsdateien **mit** den Kopien bleiben lesbar: `pruefeSicherung()` liest die oberen Felder weiter, und dort haben sie Vorrang, weil eine ältere App-Version sie genau so geschrieben hat.
+
+Nach dem Einspielen folgt zwingend ein `window.location.reload()`, weil `importiereSpeicherstand()` die Modul-Caches der übrigen Stores nicht leert.
+
+**Geprüft wird vor dem Schreiben, nicht dabei.** Bis zur Einführung von `src/core/backup/sicherung.ts` lief der Import mitten in der Prüfung: erst `speicher`, dann `fortschritt`, dann `profil`, `ui`, `shop` — stolperte etwas in der Mitte, war der Lernstand des Geräts schon überschrieben und der aus der Datei nur halb da. Jetzt gilt:
+
+- `pruefeSicherung(text)` liest, beurteilt und beschreibt — und **schreibt nichts**. Abgelehnt werden: kein JSON, kein Objekt, ein fremdes `app`-Feld, ein `fortschritt`, der `istLernstand()` nicht besteht, und ein `speicher`, der kein Objekt ist.
+- Einzelne Felder von `profil`, `ui` und `shop` werden Feld für Feld auf ihre Art geprüft. Was nicht passt, wird **weggelassen** statt übernommen — die Stores füllen es aus ihrem `STANDARD` auf. Vorher reichte `setzeProfil(daten.profil)` auch `name: 42` durch.
+- `spieleSicherungEin(datei)` nimmt nur das Ergebnis einer bestandenen Prüfung entgegen. Es gibt keinen Weg, etwas Ungeprüftes einzuspielen.
+
+**Vor dem Ersetzen steht eine Vorschau.** `ProgressPage` liest die Datei beim Auswählen, nicht erst nach der Rückfrage, und stellt XP, Serie, gelernte Wörter, Karten, Kapitel und Edelsteine **neben den aktuellen Stand des Geräts** (`vorschauVomGeraet()`). Eine ärmere Sicherung wird als „(weniger)" gekennzeichnet — im Text, nicht nur in der Farbe (WCAG 1.4.1). Je enthaltener App steht eine eigene Zeile darunter, damit sichtbar ist, was zurückkommt.
 
 **`NUR_LOKAL` enthält jetzt zwei Bereiche** (`storage.ts:169`):
 

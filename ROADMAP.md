@@ -132,14 +132,20 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [ ] Löschweg für Aufnahmen in der Oberfläche (`loescheAufnahme()` existiert, hat
         aber keinen Aufrufer)
   - [ ] Obergrenze oder wenigstens eine sichtbare Größenanzeige für Aufnahmen
-- [ ] Versioniertes Backup-Format mit Validierung und Vorschau
-  - [ ] eine Version im Dateikopf, klar getrennt von der Schemaversion je Speicher
-  - [ ] Redundanz auflösen: heute stehen `fortschritt`, `profil`, `ui` und `shop`
-        doppelt in der Datei (einmal oben, einmal unter `speicher`)
-  - [ ] Prüfung vor dem Schreiben: fremde oder kaputte Datei wird abgelehnt statt
-        halb eingespielt
-  - [ ] Vorschau vor dem Import: XP, Serie, Kartenzahl, Datum der Sicherung — und je
-        App ihr eigener Stand, damit sichtbar ist, was zurückkommt
+- [~] Versioniertes Backup-Format mit Validierung und Vorschau
+  - [x] eine Version im Dateikopf (`version: 2`, `app: 'RED-KURD'`), klar getrennt von
+        der Schemaversion je Speicher
+  - [x] Redundanz aufgelöst: `profil`, `ui` und `shop` stehen nicht mehr doppelt in der
+        Datei (`fortschritt` war es schon vorher). Ältere Dateien **mit** der Kopie
+        bleiben lesbar — dort haben die oberen Werte Vorrang
+  - [x] Prüfung vor dem Schreiben: `pruefeSicherung()` liest und beurteilt, ohne etwas
+        zu schreiben; erst `spieleSicherungEin()` schreibt und nimmt nur ein geprüftes
+        Ergebnis entgegen. Eine fremde oder kaputte Datei wird abgelehnt statt halb
+        eingespielt (`src/core/backup/sicherung.ts`, `test/sicherung.test.js`)
+  - [x] Vorschau vor dem Import: XP, Serie, gelernte Wörter, Karten, Kapitel,
+        Edelsteine und Datum — **neben dem, was gerade auf dem Gerät liegt**, damit
+        sichtbar ist, was man aufgibt. Je enthaltener App eine eigene Zeile; eine
+        ärmere Sicherung wird als „(weniger)" gekennzeichnet, nicht nur farbig
   - [x] Entschieden und umgesetzt: die laufende Sitzung bleibt geräte-lokal.
         `NUR_LOKAL` in `storage.ts` enthält jetzt `ohneKonto` **und** `sitzung`; ein
         Import belebt keine halbfertige Übungsrunde eines fremden Geräts mehr

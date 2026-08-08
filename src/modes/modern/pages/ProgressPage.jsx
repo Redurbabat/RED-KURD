@@ -17,17 +17,16 @@ import {
   wochenMinuten,
   lernzeitText,
 } from '../../../core/progress/progressSelectors.ts'
+import { exportiereAlles, ankiZeilen } from '../../../core/progress/progressStore.ts'
 import {
-  exportiereAlles,
-  ankiZeilen,
-  setzeFortschritt,
-  istLernstand,
-} from '../../../core/progress/progressStore.ts'
-import { importiereSpeicherstand } from '../../../core/storage.ts'
+  pruefeSicherung,
+  spieleSicherungEin,
+  vorschauVomGeraet,
+} from '../../../core/backup/sicherung.ts'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
-import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.ts'
-import { holeUi, setzeUi } from '../../../core/ui/uiStore.ts'
-import { holeShop, setzeShop } from '../../../core/shop/shopStore.ts'
+import { holeProfil } from '../../../core/profile/profileStore.ts'
+
+
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import Modal from '../../../components/common/Modal.jsx'
@@ -407,9 +406,85 @@ function Empfehlung({ werte }) {
   )
 }
 
+/** Ein Datum aus der Sicherung lesbar machen; „unbekannt", wenn keins drinsteht. */
+function datumText(iso) {
+  if (!iso) return 'ohne Datum'
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return 'ohne Datum'
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })
+}
+
+/**
+ * Was auf diesem Gerät liegt, neben dem, was aus der Datei käme.
+ *
+ * Bewusst beide Seiten: Eine Vorschau, die nur die Datei zeigt, beantwortet
+ * die eigentliche Frage nicht — nämlich ob man gerade mehr aufgibt, als man
+ * bekommt. Die Spalte „jetzt" steht deshalb zuerst.
+ */
+function Sicherungsvergleich({ vorher, nachher }) {
+  const zeilen = [
+    { name: 'XP', jetzt: vorher.xp, datei: nachher.xp },
+    { name: 'Serie (Tage)', jetzt: vorher.serie, datei: nachher.serie },
+    { name: 'Gelernte Wörter', jetzt: vorher.woerter, datei: nachher.woerter },
+    { name: 'Wiederholkarten', jetzt: vorher.karten, datei: nachher.karten },
+    { name: 'Kapitel mit Ergebnis', jetzt: vorher.einheiten, datei: nachher.einheiten },
+    { name: 'Edelsteine', jetzt: vorher.edelsteine, datei: nachher.edelsteine },
+  ]
+
+  return (
+    <div className="fp-vergleich">
+      <p className="fp-vergleich-datum">Sicherung vom {datumText(nachher.exportiert)}</p>
+
+      <table className="fp-vergleich-tabelle">
+        <caption className="nur-sr">
+          Vergleich: aktueller Lernstand auf diesem Gerät und Lernstand aus der Datei
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">&nbsp;</th>
+            <th scope="col">Jetzt</th>
+            <th scope="col">Aus der Datei</th>
+          </tr>
+        </thead>
+        <tbody>
+          {zeilen.map((z) => (
+            <tr key={z.name} className={z.datei < z.jetzt ? 'fp-vergleich-weniger' : undefined}>
+              <th scope="row">{z.name}</th>
+              <td>{z.jetzt}</td>
+              <td>
+                {z.datei}
+                {/* Weniger als jetzt: das ist der Fall, in dem jemand aus
+                    Versehen eine alte Sicherung einspielt. Nicht nur farbig
+                    markieren — das Wort steht auch für Screenreader da. */}
+                {z.datei < z.jetzt && <span className="fp-vergleich-marke"> (weniger)</span>}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {nachher.bereiche.length > 0 && (
+        <>
+          <p className="fp-vergleich-titel">Ebenfalls in der Datei:</p>
+          <ul className="fp-vergleich-liste" role="list">
+            {nachher.bereiche.map((b) => (
+              <li key={b.name}>
+                {b.name}: <span className="gedaempft">{b.wert}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  )
+}
+
 /** Export, Import und Anki-Export. Alles bleibt im Gerät. */
 function Datenverwaltung() {
   const [datei, setDatei] = useState(null)
+  // Das Prüfergebnis samt Vorschau — gesetzt, sobald die Datei gelesen ist,
+  // und Voraussetzung dafür, dass „Ersetzen" überhaupt etwas tut.
+  const [geprueft, setGeprueft] = useState(null)
   const [frageOffen, setFrageOffen] = useState(false)
   const [laden, setLaden] = useState(false)
   const [fehler, setFehler] = useState(null)
@@ -419,7 +494,11 @@ function Datenverwaltung() {
     try {
       setFehler(null)
       ladeHerunter(
-        exportiereAlles({ profil: holeProfil(), ui: holeUi(), shop: holeShop() }),
+        // Profil, Oberfläche und Shop stehen bereits unter `speicher` — sie
+        // hier ein zweites Mal oben mitzugeben, verdoppelte sie in der Datei
+        // und die beiden Fassungen konnten auseinanderlaufen. Ältere Dateien
+        // MIT der Kopie bleiben lesbar (siehe pruefeSicherung).
+        exportiereAlles(),
         'red-kurd-lernstand.json',
         'application/json'
       )
@@ -451,48 +530,52 @@ function Datenverwaltung() {
     if (!gewaehlt) return
     setFehler(null)
     setHinweis('')
-    setDatei(gewaehlt)
-    setFrageOffen(true)
+    setLaden(true)
+
+    // Erst lesen und prüfen, dann fragen. Vorher stand die Rückfrage vor dem
+    // Lesen — sie konnte also gar nicht zeigen, was in der Datei steckt, und
+    // eine untaugliche Datei fiel erst nach dem „Ersetzen" auf.
+    const leser = new FileReader()
+    leser.onerror = () => {
+      setLaden(false)
+      setFehler('Die Datei konnte nicht gelesen werden.')
+    }
+    leser.onload = () => {
+      setLaden(false)
+      const ergebnis = pruefeSicherung(String(leser.result))
+      if (!ergebnis.ok) {
+        setFehler(
+          `${ergebnis.grund} Bitte wähle eine Datei vom Typ red-kurd-lernstand.json.`
+        )
+        return
+      }
+      setDatei(gewaehlt)
+      setGeprueft(ergebnis)
+      setFrageOffen(true)
+    }
+    leser.readAsText(gewaehlt)
   }
 
   function abbrechen() {
     setFrageOffen(false)
     setDatei(null)
+    setGeprueft(null)
   }
 
   function importiere() {
-    if (!datei) return
+    if (!geprueft || !geprueft.ok) return
     setFrageOffen(false)
     setLaden(true)
-    const leser = new FileReader()
-    leser.onerror = () => {
+    try {
+      spieleSicherungEin(geprueft.datei)
+      window.location.reload()
+    } catch {
+      // Geprüft ist geprüft — hierher kommt nur, wer keinen Speicher mehr hat.
       setLaden(false)
       setDatei(null)
-      setFehler('Die Datei konnte nicht gelesen werden.')
+      setGeprueft(null)
+      setFehler('Der Lernstand liess sich nicht schreiben. Ist der Speicher voll?')
     }
-    leser.onload = () => {
-      try {
-        const daten = JSON.parse(String(leser.result))
-        // Formpruefung vor dem Schreiben: Ein kaputter oder fremder Inhalt
-        // darf den echten Lernstand niemals ueberschreiben.
-        if (!daten || typeof daten !== 'object' || !istLernstand(daten.fortschritt)) {
-          throw new Error('kein Lernstand')
-        }
-        if (daten.speicher) importiereSpeicherstand(daten.speicher)
-        setzeFortschritt(daten.fortschritt)
-        if (daten.profil) setzeProfil(daten.profil)
-        if (daten.ui) setzeUi(daten.ui)
-        // Der Export enthält den Shop — beim Import muss er auch zurückkommen,
-        // sonst sind gekaufte Artikel nach dem Geräte-Wechsel weg.
-        if (daten.shop) setzeShop(daten.shop)
-        window.location.reload()
-      } catch {
-        setLaden(false)
-        setDatei(null)
-        setFehler('Diese Datei enthält keinen RED-KURD-Lernstand. Bitte wähle eine Datei vom Typ red-kurd-lernstand.json.')
-      }
-    }
-    leser.readAsText(datei)
   }
 
   return (
@@ -549,6 +632,9 @@ function Datenverwaltung() {
           gelten danach — der bisherige Stand auf diesem Gerät geht verloren.
         </p>
         {datei && <p className="gedaempft">Gewählte Datei: {datei.name}</p>}
+        {geprueft?.ok && (
+          <Sicherungsvergleich vorher={vorschauVomGeraet()} nachher={geprueft.vorschau} />
+        )}
       </Modal>
     </Card>
   )

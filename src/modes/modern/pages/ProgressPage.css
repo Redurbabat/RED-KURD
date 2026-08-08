@@ -252,3 +252,70 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* ===== Vorschau vor dem Einspielen einer Sicherung ===== */
+/* Zwei Spalten, damit sichtbar ist, was man aufgibt — nicht nur, was kommt. */
+
+.fp-vergleich {
+  margin-top: var(--space-4);
+}
+
+.fp-vergleich-datum {
+  color: var(--rk-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.fp-vergleich-tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  /* 16px, damit iOS-Safari beim Antippen nicht zoomt. */
+  font-size: 1rem;
+}
+
+.fp-vergleich-tabelle th,
+.fp-vergleich-tabelle td {
+  padding: var(--space-2) var(--space-1);
+  text-align: right;
+  border-bottom: 1px solid var(--rk-border);
+}
+
+.fp-vergleich-tabelle thead th {
+  color: var(--rk-text-muted);
+  font-weight: 700;
+}
+
+/* Die Merkmalsspalte links, die Zahlen rechts — so lassen sie sich vergleichen. */
+.fp-vergleich-tabelle tbody th,
+.fp-vergleich-tabelle thead th:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.fp-vergleich-tabelle tbody td:last-child {
+  font-weight: 800;
+}
+
+/* Weniger als jetzt: der Fall, in dem jemand versehentlich eine alte
+   Sicherung einspielt. Die Farbe ist nur die Verstärkung — das Wort
+   „(weniger)" steht ohnehin da, damit die Warnung nicht allein an der
+   Farbe hängt (WCAG 1.4.1). */
+.fp-vergleich-weniger td:last-child {
+  color: var(--rk-error);
+}
+
+.fp-vergleich-marke {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.fp-vergleich-titel {
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  font-weight: 700;
+}
+
+.fp-vergleich-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
