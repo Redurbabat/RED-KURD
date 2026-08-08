@@ -1,13 +1,24 @@
 // Reine Texthilfen fuer die Code-Tastatur: Einfuegen und Loeschen an der
 // Cursorposition. Ohne DOM, damit sich alles einfach testen laesst.
 
+/** Ergebnis einer Textaenderung: der neue Text und wohin der Cursor gehoert. */
+export interface Textaenderung {
+  wert: string
+  cursor: number
+}
+
 /**
  * Fuegt `vor` (und optional `nach`) an der Cursorposition ein.
  * Ist Text markiert (start != ende), wird er von vor/nach umschlossen —
  * so kann man z. B. ein Wort markieren und mit <h1>…</h1> einfassen.
- * @returns {{wert:string, cursor:number}} neuer Text + neue Cursorposition
  */
-export function fuegeEin(wert, start, ende, vor, nach = '') {
+export function fuegeEin(
+  wert: string,
+  start: number,
+  ende: number,
+  vor: string,
+  nach = ''
+): Textaenderung {
   const von = Math.max(0, Math.min(start, ende))
   const bis = Math.min(wert.length, Math.max(start, ende))
   const auswahl = wert.slice(von, bis)
@@ -17,11 +28,8 @@ export function fuegeEin(wert, start, ende, vor, nach = '') {
   return { wert: neu, cursor: von + vor.length + auswahl.length }
 }
 
-/**
- * Loescht die Auswahl — oder ohne Auswahl das Zeichen vor dem Cursor.
- * @returns {{wert:string, cursor:number}}
- */
-export function loescheZurueck(wert, start, ende) {
+/** Loescht die Auswahl — oder ohne Auswahl das Zeichen vor dem Cursor. */
+export function loescheZurueck(wert: string, start: number, ende: number): Textaenderung {
   const von = Math.max(0, Math.min(start, ende))
   const bis = Math.min(wert.length, Math.max(start, ende))
   if (von !== bis) {

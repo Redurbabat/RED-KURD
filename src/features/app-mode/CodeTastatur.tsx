@@ -4,24 +4,33 @@
 // color:. Eingefuegt wird immer an der Cursorposition; markierter Text wird
 // von Bausteinen umschlossen.
 import { useState } from 'react'
-import { fuegeEin, loescheZurueck } from './tastaturHilfen.js'
+import type { PointerEvent, MouseEvent, ReactElement, RefObject } from 'react'
+import { fuegeEin, loescheZurueck } from './tastaturHilfen.ts'
 
-const REIHEN_ABC = [
+const REIHEN_ABC: readonly (readonly string[])[] = [
   ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p'],
   ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
 ]
-const ABC_UNTEN = ['y', 'x', 'c', 'v', 'b', 'n', 'm']
+const ABC_UNTEN: readonly string[] = ['y', 'x', 'c', 'v', 'b', 'n', 'm']
 
-const REIHEN_ZIFFERN = [
+const REIHEN_ZIFFERN: readonly (readonly string[])[] = [
   ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
   ['-', '/', ':', ';', '(', ')', '"', "'", '=', '+'],
 ]
-const ZIFFERN_UNTEN = ['ä', 'ö', 'ü', 'ß', '.', ',', '?', '!']
+const ZIFFERN_UNTEN: readonly string[] = ['ä', 'ö', 'ü', 'ß', '.', ',', '?', '!']
 
-const CODE_ZEICHEN = ['<', '>', '/', '=', '"', '.', '#']
+const CODE_ZEICHEN: readonly string[] = ['<', '>', '/', '=', '"', '.', '#']
+
+/** Ein fertiger Code-Baustein. Der Cursor landet zwischen `vor` und `nach`. */
+interface Baustein {
+  label: string
+  vor: string
+  /** Leer, wenn der Baustein nichts umschliesst (z. B. `px`). */
+  nach: string
+}
 
 // Bausteine: vor + (Auswahl) + nach — der Cursor landet in der Mitte.
-const BAUSTEINE = [
+const BAUSTEINE: readonly Baustein[] = [
   { label: '<h1>…</h1>', vor: '<h1>', nach: '</h1>' },
   { label: '<p>…</p>', vor: '<p>', nach: '</p>' },
   { label: '<button>', vor: '<button type="button">', nach: '</button>' },
@@ -54,15 +63,29 @@ const BAUSTEINE = [
   { label: '{ … }', vor: ' {\n  ', nach: '\n}' },
 ]
 
-/**
- * @param {{feldRef:Object, wert:string, aendern:Function,
- *          zurGeraetetastatur:Function, ausblenden:Function}} props
- */
-export default function CodeTastatur({ feldRef, wert, aendern, zurGeraetetastatur, ausblenden }) {
-  const [ebene, setEbene] = useState('code')
+/** Welche Tastenreihen gerade zu sehen sind. */
+type Ebene = 'abc' | 'ziffern' | 'code'
+
+export interface CodeTastaturProps {
+  /** Das Textfeld, in das geschrieben wird — fuer Cursorposition und Fokus. */
+  feldRef: RefObject<HTMLTextAreaElement | null>
+  wert: string
+  aendern: (neu: string) => void
+  zurGeraetetastatur: () => void
+  ausblenden: () => void
+}
+
+export default function CodeTastatur({
+  feldRef,
+  wert,
+  aendern,
+  zurGeraetetastatur,
+  ausblenden,
+}: CodeTastaturProps) {
+  const [ebene, setEbene] = useState<Ebene>('code')
   const [gross, setGross] = useState(false)
 
-  function cursorSetzen(pos) {
+  function cursorSetzen(pos: number): void {
     requestAnimationFrame(() => {
       const feld = feldRef.current
       if (!feld) return
@@ -71,7 +94,7 @@ export default function CodeTastatur({ feldRef, wert, aendern, zurGeraetetastatu
     })
   }
 
-  function einfuegen(vor, nach = '') {
+  function einfuegen(vor: string, nach = ''): void {
     const feld = feldRef.current
     const start = feld ? feld.selectionStart : wert.length
     const ende = feld ? feld.selectionEnd : wert.length
@@ -80,12 +103,12 @@ export default function CodeTastatur({ feldRef, wert, aendern, zurGeraetetastatu
     cursorSetzen(neu.cursor)
   }
 
-  function buchstabe(z) {
+  function buchstabe(z: string): void {
     einfuegen(gross ? z.toUpperCase() : z)
     if (gross) setGross(false)
   }
 
-  function loeschen() {
+  function loeschen(): void {
     const feld = feldRef.current
     const start = feld ? feld.selectionStart : wert.length
     const ende = feld ? feld.selectionEnd : wert.length
@@ -96,9 +119,9 @@ export default function CodeTastatur({ feldRef, wert, aendern, zurGeraetetastatu
 
   // Tasten duerfen dem Textfeld nicht den Fokus stehlen — sonst springt die
   // Cursorposition weg und iOS klappt Fokus-Zustaende um.
-  const halteFokus = (e) => e.preventDefault()
+  const halteFokus = (e: PointerEvent | MouseEvent): void => e.preventDefault()
 
-  const zeichenTaste = (z) => (
+  const zeichenTaste = (z: string): ReactElement => (
     <button
       key={z}
       type="button"

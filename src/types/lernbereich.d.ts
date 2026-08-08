@@ -54,6 +54,119 @@ export interface Bereichsuebung {
   task: string
 }
 
+/* ===== Mitmach-Aufgaben ===== */
+
+/**
+ * Wie eine Mitmach-Aufgabe bedient wird. Bestimmt, welches Eingabefeld
+ * `PraxisAufgabe` zeigt — und ob es die Live-Vorschau und die Code-Tastatur
+ * dazu gibt (nur bei `'html'`).
+ */
+export type Praxisart = 'html' | 'text' | 'zahl'
+
+/**
+ * Ein Punkt der Pruefliste. `pruefe` bekommt den aktuellen Feldinhalt und
+ * sagt, ob der Punkt erfuellt ist; erst wenn alle erfuellt sind, laesst sich
+ * die Aufgabe abschliessen.
+ */
+export interface Praxischeck {
+  id: string
+  text: string
+  pruefe: (wert: string) => boolean
+}
+
+/**
+ * Eine Mitmach-Aufgabe aus `codePraxis.js`, `promptPraxis.js` oder
+ * `electroPraxis.js`.
+ *
+ * Welche der wahlfreien Felder gesetzt sind, haengt an `art` — heute
+ * ausnahmslos (nachgezaehlt ueber alle 54 Aufgaben): `einheit` nur bei
+ * `'zahl'`, `skript` und `huelle` nur bei `'html'`, `startCode` bei `'html'`
+ * und `'text'`. Als abhaengige Union geschrieben waere das strenger, aber
+ * auch sproeder — die Datendateien sind JavaScript, und `PraxisAufgabe`
+ * fragt ohnehin jedes Feld einzeln ab.
+ */
+export interface Praxisaufgabe {
+  id: string
+  art: Praxisart
+  title: string
+  topic: string
+  estimatedMinutes: number
+  description: string
+  /** Der Aufgabentext ueber dem Eingabefeld. */
+  auftrag: string
+  tipp: string
+  checks: readonly Praxischeck[]
+  /** Besteht alle `checks` — das sichern die Tests ab. */
+  musterloesung: string
+  /** Vorbelegung des Feldes. Bei `'zahl'`-Aufgaben nicht gesetzt. */
+  startCode?: string
+  /** Nur `'zahl'`: die Einheit hinter dem Ergebnis (A, Ω, W …). */
+  einheit?: string
+  /** Nur `'html'`: erlaubt JavaScript in der Vorschau (`sandbox`-Rechte). */
+  skript?: boolean
+  /** Nur `'html'`: Rahmen-HTML, `{{code}}` wird durch die Eingabe ersetzt. */
+  huelle?: string
+  /** `'grund'` sortiert die Grunduebungen in der Oberflaeche nach vorn. */
+  stufe?: string
+}
+
+/* ===== Interaktive Lektionsschritte (codeSchritte.js) ===== */
+
+/**
+ * Ein Schritt zum Ankreuzen. `richtig` ist der Index in `optionen`.
+ */
+export interface Wahlschritt {
+  art: 'wahl'
+  frage: string
+  optionen: readonly string[]
+  richtig: number
+  /**
+   * Warum die Antwort richtig ist. Steht in allen 90 Wahlschritten
+   * (nachgezaehlt) — `LektionPlayer` zeigt sie heute nirgends an.
+   */
+  erklaerung: string
+  /** Optionen in Nichtproportionalschrift setzen (`<code>`). */
+  code?: boolean
+}
+
+/** Was sich Tipp- und Bauschritte teilen: Auftrag, Vorschau, Tipp. */
+interface Vorschaufaehig {
+  auftrag: string
+  /** `false` blendet die Live-Vorschau aus; sonst ist sie da. */
+  vorschau?: boolean
+  /** Erlaubt JavaScript in der Vorschau (`sandbox="allow-scripts"`). */
+  skript?: boolean
+  /** Rahmen-HTML, `{{code}}` wird durch das Ergebnis ersetzt. */
+  huelle?: string
+  /** Wird bei falscher Antwort in der Fussleiste gezeigt. */
+  tipp?: string
+}
+
+/** Selber schreiben, mit Pruefliste und Code-Tastatur. */
+export interface Tippenschritt extends Vorschaufaehig {
+  art: 'tippen'
+  checks: readonly Praxischeck[]
+  /** Besteht alle `checks`. Von `LektionPlayer` nicht gelesen. */
+  musterloesung: string
+  /** Vorbelegung des Feldes. */
+  startText?: string
+}
+
+/** Code aus vorgegebenen Bausteinen zusammensetzen. */
+export interface Bauenschritt extends Vorschaufaehig {
+  art: 'bauen'
+  /** Absichtlich in falscher Reihenfolge. */
+  bausteine: readonly string[]
+  /** Der fertige Code — damit wird das Zusammengebaute verglichen. */
+  loesung: string
+}
+
+/**
+ * Ein Schritt einer interaktiven Lektion. Unterschieden wird ueber `art`;
+ * `LektionPlayer` verzweigt genau daran.
+ */
+export type Lektionsschritt = Wahlschritt | Tippenschritt | Bauenschritt
+
 /** Ein Lernpfad buendelt Lektionen zu einem Thema (`codeLearningPaths`). */
 export interface Lernpfad {
   id: string

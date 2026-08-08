@@ -10,24 +10,69 @@ import { useEffect, useRef, useState } from 'react'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.ts'
-import CodeTastatur from './CodeTastatur.jsx'
+import CodeTastatur from './CodeTastatur.tsx'
+import type { Bereichsbaukasten } from '../../types/lernstand'
+import type { Bereichslektion, Lektionsschritt } from '../../types/lernbereich'
+
+/** Welche Tastatur das Code-Feld gerade bedient. */
+type Tastaturart = 'code' | 'system'
+
+/** Ergebnis der letzten Pruefung; `null` heisst: noch nicht geprueft. */
+type Ergebnis = 'richtig' | 'falsch' | null
+
+export interface LektionPlayerProps {
+  lektion: Bereichslektion
+  /** Mindestens ein Schritt — ohne Schritte zeigen die Seiten das Lese-Modal. */
+  schritte: readonly Lektionsschritt[]
+  lernstand: Bereichsbaukasten
+  schliessen: () => void
+}
 
 /**
- * @param {{lektion:Object, schritte:Array, lernstand:Object, schliessen:Function}} props
+ * Die Vorbelegung des Eingabefelds. Nur Tippschritte haben eine; bei allen
+ * anderen Arten startet das Feld leer — genau wie vorher, als `startText`
+ * auf jedem Schritt nachgeschlagen wurde und dort `undefined` war.
  */
-export default function LektionPlayer({ lektion, schritte, lernstand, schliessen }) {
+function startTextVon(schritt: Lektionsschritt | undefined): string {
+  return schritt?.art === 'tippen' ? schritt.startText || '' : ''
+}
+
+/**
+ * Steht nur da, damit `schritte[index]` nicht `Lektionsschritt | undefined`
+ * ist. Erreichbar waere er ausschliesslich mit einer leeren Schrittliste —
+ * und die zeigen die Seiten gar nicht erst im Player an.
+ */
+const ERSTER_ERSATZ: Lektionsschritt = {
+  art: 'wahl',
+  frage: '',
+  optionen: [],
+  richtig: 0,
+  erklaerung: '',
+}
+
+export default function LektionPlayer({
+  lektion,
+  schritte,
+  lernstand,
+  schliessen,
+}: LektionPlayerProps) {
   const [index, setIndex] = useState(0)
-  const [antwort, setAntwort] = useState(null)
-  const [gebaut, setGebaut] = useState([])
-  const [text, setText] = useState(() => schritte[0].startText || '')
-  const [ergebnis, setErgebnis] = useState(null) // null | 'richtig' | 'falsch'
-  const wurzel = useRef(null)
+  // Index der gewaehlten Antwortkarte; `null` heisst: nichts angetippt.
+  const [antwort, setAntwort] = useState<number | null>(null)
+  // Die angetippten Bausteine in der Reihenfolge, in der sie gesetzt wurden.
+  const [gebaut, setGebaut] = useState<readonly number[]>([])
+  const [text, setText] = useState<string>(() => startTextVon(schritte[0]))
+  const [ergebnis, setErgebnis] = useState<Ergebnis>(null)
+  const wurzel = useRef<HTMLDivElement>(null)
   // Schreib-Schritte: eigenes Feld mit der Code-Tastatur (wie Mitmach-Aufgaben)
-  const feldRef = useRef(null)
-  const [tastaturArt, setTastaturArt] = useState('code')
+  const feldRef = useRef<HTMLTextAreaElement>(null)
+  const [tastaturArt, setTastaturArt] = useState<Tastaturart>('code')
   const [tastaturOffen, setTastaturOffen] = useState(false)
 
-  const schritt = schritte[index]
+  // `schritte` ist nie leer (die Seiten zeigen sonst das Lese-Modal), aber
+  // die Laenge kennt der Pruefer nicht. Der Rueckfall auf den ersten Schritt
+  // ist unerreichbar und haelt nur `Lektionsschritt | undefined` von hier fern.
+  const schritt = schritte[index] ?? ERSTER_ERSATZ
   const letzter = index === schritte.length - 1
   const erledigt = lernstand.istErledigt(lektion.id)
 
@@ -37,7 +82,7 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
   schliessenRef.current = schliessen
   useEffect(() => {
     wurzel.current?.focus()
-    function taste(e) {
+    function taste(e: KeyboardEvent): void {
       if (e.key === 'Escape') schliessenRef.current()
     }
     document.addEventListener('keydown', taste)
@@ -49,13 +94,22 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
     }
   }, [])
 
-  const zusammengebaut =
-    schritt.art === 'tippen' ? text : gebaut.map((i) => schritt.bausteine[i]).join('')
-  const checks =
-    schritt.art === 'tippen' ? schritt.checks.map((c) => ({ ...c, ok: !!c.pruefe(text) })) : []
+  // Die drei Arten einmal aufgeloest, statt weiter unten immer wieder zu
+  // fragen. `null` heisst schlicht: dieser Schritt ist von anderer Art.
+  const tippschritt = schritt.art === 'tippen' ? schritt : null
+  const bauschritt = schritt.art === 'bauen' ? schritt : null
+
+  const zusammengebaut = tippschritt
+    ? text
+    : bauschritt
+      ? gebaut.map((i) => bauschritt.bausteine[i]).join('')
+      : ''
+  const checks = tippschritt
+    ? tippschritt.checks.map((c) => ({ ...c, ok: !!c.pruefe(text) }))
+    : []
   const alleChecksOk = checks.length > 0 && checks.every((c) => c.ok)
 
-  function pruefen() {
+  function pruefen(): void {
     if (schritt.art === 'wahl') {
       setErgebnis(antwort === schritt.richtig ? 'richtig' : 'falsch')
     } else if (schritt.art === 'tippen') {
@@ -65,7 +119,7 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
     }
   }
 
-  function weiter() {
+  function weiter(): void {
     if (letzter) {
       lernstand.schliesseAb(lektion.id)
       schliessen()
@@ -74,37 +128,37 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
     setIndex(index + 1)
     setAntwort(null)
     setGebaut([])
-    setText(schritte[index + 1].startText || '')
+    setText(startTextVon(schritte[index + 1]))
     setTastaturOffen(false)
     setErgebnis(null)
   }
 
-  function bausteinTippen(i) {
+  function bausteinTippen(i: number): void {
     if (gebaut.includes(i)) return
     setGebaut([...gebaut, i])
     setErgebnis(null)
   }
 
-  function zurueck() {
+  function zurueck(): void {
     setGebaut(gebaut.slice(0, -1))
     setErgebnis(null)
   }
 
-  function neuStarten() {
+  function neuStarten(): void {
     setGebaut([])
     setErgebnis(null)
   }
 
-  const pruefbar =
-    schritt.art === 'wahl'
-      ? antwort !== null
-      : schritt.art === 'tippen'
-        ? text.trim().length > 0
-        : gebaut.length === schritt.bausteine.length
+  const pruefbar = bauschritt
+    ? gebaut.length === bauschritt.bausteine.length
+    : tippschritt
+      ? text.trim().length > 0
+      : antwort !== null
 
-  const vorschauInhalt = schritt.huelle
-    ? schritt.huelle.replace('{{code}}', zusammengebaut)
-    : zusammengebaut
+  // Wahlschritte haben keine Huelle und zeigen auch keine Vorschau; fuer sie
+  // bleibt der Wert wie bisher der leere zusammengebaute Text.
+  const huelle = tippschritt?.huelle ?? bauschritt?.huelle
+  const vorschauInhalt = huelle ? huelle.replace('{{code}}', zusammengebaut) : zusammengebaut
 
   return (
     <div
@@ -333,7 +387,12 @@ export default function LektionPlayer({ lektion, schritte, lernstand, schliessen
         {ergebnis === 'falsch' && (
           <p className="lp-feedback falsch">
             <Icon name="kreuz" groesse={18} /> Nicht ganz — versuch es noch einmal.
-            {schritt.tipp ? ` Tipp: ${schritt.tipp}` : ''}
+            {/* Wahlschritte tragen keinen `tipp` — sie tragen `erklaerung`,
+                und die wird hier nicht gezeigt. Das war schon vorher so:
+                `schritt.tipp` war bei einer falschen Antwortkarte immer
+                undefined, nur sah man es dem Code nicht an. Bewusst nicht
+                mitgeaendert, weil das eine Verhaltensaenderung waere. */}
+            {schritt.art !== 'wahl' && schritt.tipp ? ` Tipp: ${schritt.tipp}` : ''}
           </p>
         )}
         {ergebnis === 'richtig' ? (

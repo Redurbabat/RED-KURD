@@ -11,6 +11,12 @@ const browser = await chromium.launch({ executablePath: process.env.CHROME })
 const ctx = await browser.newContext({ viewport: { width: 428, height: 926 } })
 const heute = new Date().toISOString().slice(0, 10)
 await ctx.addInitScript((tag) => {
+  // Playwright spielt dieses Skript in JEDEN Rahmen ein — auch in die
+  // sandboxed Live-Vorschau der Code-Aufgaben. Die hat kein
+  // allow-same-origin, jeder localStorage-Zugriff wirft dort, und der
+  // Wurf landet als „JS-Fehler" im Ergebnis, obwohl die App fehlerfrei
+  // ist. Nur der oberste Rahmen wird geseedet.
+  if (window.top !== window.self) return
   if (localStorage.getItem('pruef-geseedet')) return
   localStorage.setItem('pruef-geseedet', '1')
   localStorage.setItem('red-kurd-active-app-v1', JSON.stringify('language'))

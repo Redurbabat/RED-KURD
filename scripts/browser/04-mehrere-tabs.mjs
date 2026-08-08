@@ -24,6 +24,12 @@ const heute = new Date().toISOString().slice(0, 10)
 // sonst auch sie, und die naechste Navigation saet alles neu — dann prueft der
 // Test seinen eigenen Aufbau statt der App. (Genau das ist mir hier passiert.)
 await ctx.addInitScript((tag) => {
+  // Playwright spielt dieses Skript in JEDEN Rahmen ein — auch in die
+  // sandboxed Live-Vorschau der Code-Aufgaben. Die hat kein
+  // allow-same-origin, jeder localStorage-Zugriff wirft dort, und der
+  // Wurf landet als „JS-Fehler" im Ergebnis, obwohl die App fehlerfrei
+  // ist. Nur der oberste Rahmen wird geseedet.
+  if (window.top !== window.self) return
   if (sessionStorage.getItem('pruef-geseedet')) return
   sessionStorage.setItem('pruef-geseedet', '1')
   localStorage.setItem('red-kurd-active-app-v1', JSON.stringify('language'))

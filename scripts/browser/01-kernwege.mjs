@@ -30,6 +30,12 @@ function fehlerSammler(page, topf) {
 {
   const ctx = await browser.newContext({ viewport: { width: 428, height: 926 } })
   await ctx.addInitScript((tag) => {
+  // Playwright spielt dieses Skript in JEDEN Rahmen ein — auch in die
+  // sandboxed Live-Vorschau der Code-Aufgaben. Die hat kein
+  // allow-same-origin, jeder localStorage-Zugriff wirft dort, und der
+  // Wurf landet als „JS-Fehler" im Ergebnis, obwohl die App fehlerfrei
+  // ist. Nur der oberste Rahmen wird geseedet.
+  if (window.top !== window.self) return
     localStorage.setItem('red-kurd-active-app-v1', JSON.stringify('language'))
     localStorage.setItem('red-kurd-ohne-konto-v1', JSON.stringify(true))
     localStorage.setItem('red-kurd-profile-v2', JSON.stringify({
@@ -96,6 +102,12 @@ const APPS = [
 for (const [id, name] of APPS) {
   const ctx = await browser.newContext({ viewport: { width: 428, height: 926 } })
   await ctx.addInitScript(([app, tag]) => {
+  // Playwright spielt dieses Skript in JEDEN Rahmen ein — auch in die
+  // sandboxed Live-Vorschau der Code-Aufgaben. Die hat kein
+  // allow-same-origin, jeder localStorage-Zugriff wirft dort, und der
+  // Wurf landet als „JS-Fehler" im Ergebnis, obwohl die App fehlerfrei
+  // ist. Nur der oberste Rahmen wird geseedet.
+  if (window.top !== window.self) return
     localStorage.setItem('red-kurd-active-app-v1', JSON.stringify(app))
     localStorage.setItem('red-kurd-ohne-konto-v1', JSON.stringify(true))
     localStorage.setItem('red-kurd-profile-v2', JSON.stringify({
@@ -120,6 +132,12 @@ for (const [id, name] of APPS) {
 {
   const ctx = await browser.newContext()
   await ctx.addInitScript(() => {
+  // Playwright spielt dieses Skript in JEDEN Rahmen ein — auch in die
+  // sandboxed Live-Vorschau der Code-Aufgaben. Die hat kein
+  // allow-same-origin, jeder localStorage-Zugriff wirft dort, und der
+  // Wurf landet als „JS-Fehler" im Ergebnis, obwohl die App fehlerfrei
+  // ist. Nur der oberste Rahmen wird geseedet.
+  if (window.top !== window.self) return
     localStorage.setItem('red-kurd-fortschritt-v1', JSON.stringify({
       xp: 340, serie: 5, letzterTag: '2026-01-10',
       lektionen: { begruessung: 100 },

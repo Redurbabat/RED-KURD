@@ -3,7 +3,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-const { fuegeEin, loescheZurueck } = await import('../src/features/app-mode/tastaturHilfen.js')
+const { fuegeEin, loescheZurueck } = await import('../src/features/app-mode/tastaturHilfen.ts')
 
 test('fuegeEin: Zeichen landet an der Cursorposition', () => {
   const e = fuegeEin('ab', 1, 1, 'X')

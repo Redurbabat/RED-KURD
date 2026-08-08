@@ -16,6 +16,11 @@ import { promptLessons } from '../src/features/prompting-learning/data/promptLes
 import { promptExercises } from '../src/features/prompting-learning/data/promptExercises.js'
 import { electroLessons } from '../src/features/electro-learning/data/electroLessons.js'
 import { electroExercises } from '../src/features/electro-learning/data/electroExercises.js'
+import { codeGrunduebungen, codePraxisAufgaben } from '../src/features/code-learning/data/codePraxis.js'
+import { promptPraxisAufgaben } from '../src/features/prompting-learning/data/promptPraxis.js'
+import { electroPraxisAufgaben } from '../src/features/electro-learning/data/electroPraxis.js'
+
+const PRAXIS_ARTEN = ['html', 'text', 'zahl']
 
 function istText(wert) {
   return typeof wert === 'string' && wert.length > 0
@@ -91,6 +96,79 @@ test('alle Uebungen der drei Bereiche haben dieselbe Form', () => {
     codeExercises.length > 0 && promptExercises.length > 0 && electroExercises.length > 0,
     'ein Bereich hat keine Uebungen'
   )
+})
+
+test('die Mitmach-Aufgaben haben die Form, die Praxisaufgabe zusagt', () => {
+  const alle = [
+    ['Code', [...codeGrunduebungen, ...codePraxisAufgaben]],
+    ['AI-Sprache', promptPraxisAufgaben],
+    ['Elektro-Lehre', electroPraxisAufgaben],
+  ]
+  for (const [bereich, liste] of alle) {
+    assert.ok(Array.isArray(liste) && liste.length > 0, `${bereich}: keine Mitmach-Aufgaben`)
+    for (const a of liste) {
+      const wo = `${bereich} / ${a?.id}`
+      for (const feld of ['id', 'title', 'topic', 'description', 'auftrag', 'tipp', 'musterloesung']) {
+        assert.ok(istText(a?.[feld]), `${wo}: ${feld} fehlt`)
+      }
+      assert.ok(PRAXIS_ARTEN.includes(a.art), `${wo}: art „${a.art}" ist keine der drei Arten`)
+      assert.ok(istZahl(a.estimatedMinutes), `${wo}: estimatedMinutes ist keine positive Zahl`)
+      assert.ok(istTextOderFehlt(a.startCode) || a.startCode === '', `${wo}: startCode ist kein Text`)
+      assert.ok(istTextOderFehlt(a.einheit), `${wo}: einheit ist weder Text noch abwesend`)
+      assert.ok(istTextOderFehlt(a.huelle), `${wo}: huelle ist weder Text noch abwesend`)
+      assert.ok(istTextOderFehlt(a.stufe), `${wo}: stufe ist weder Text noch abwesend`)
+      assert.ok(
+        a.skript === undefined || typeof a.skript === 'boolean',
+        `${wo}: skript ist weder Wahrheitswert noch abwesend`
+      )
+      assert.ok(Array.isArray(a.checks) && a.checks.length > 0, `${wo}: keine Pruefliste`)
+      for (const c of a.checks) {
+        assert.ok(istText(c?.id), `${wo}: ein Check ohne id`)
+        assert.ok(istText(c.text), `${wo} / ${c.id}: text fehlt`)
+        assert.equal(typeof c.pruefe, 'function', `${wo} / ${c.id}: pruefe ist keine Funktion`)
+        // `Praxischeck.pruefe` sagt `boolean` zu. Die Datendateien pruefen mit
+        // Regex-Treffern und Laengenvergleichen; gaebe eine Funktion etwas
+        // Wahrheitsaehnliches statt true/false zurueck, waere die Zusage
+        // falsch — PraxisAufgabe.tsx verlaesst sich darauf.
+        const ergebnis = c.pruefe(a.musterloesung)
+        assert.equal(
+          typeof ergebnis,
+          'boolean',
+          `${wo} / ${c.id}: pruefe gibt ${typeof ergebnis} zurueck, nicht boolean`
+        )
+      }
+    }
+  }
+})
+
+test('nur html-Aufgaben tragen huelle und skript, nur zahl-Aufgaben eine einheit', () => {
+  // Die Zusage in lernbereich.d.ts nennt diese Zuordnung ausdruecklich als
+  // heute ausnahmslos gueltig. Wird sie gebrochen, gehoert der Kommentar
+  // dort geaendert — und `PraxisAufgabe` neu angesehen: die Live-Vorschau
+  // haengt an `huelle`, und `einheit` steht nur im Zahlenfeld.
+  const alle = [...codeGrunduebungen, ...codePraxisAufgaben, ...promptPraxisAufgaben, ...electroPraxisAufgaben]
+  for (const a of alle) {
+    if (a.art !== 'html') {
+      assert.equal(a.huelle, undefined, `${a.id} (${a.art}): huelle wird nur bei html gelesen`)
+      assert.equal(a.skript, undefined, `${a.id} (${a.art}): skript wird nur bei html gelesen`)
+    }
+    if (a.art !== 'zahl') {
+      assert.equal(a.einheit, undefined, `${a.id} (${a.art}): einheit steht nur im Zahlenfeld`)
+    }
+    if (a.art === 'zahl') {
+      assert.equal(a.startCode, undefined, `${a.id}: Zahlenaufgaben haben keinen startCode`)
+    }
+  }
+})
+
+test('jede huelle hat den Platzhalter, den PraxisAufgabe ersetzt', () => {
+  // Ohne {{code}} zeigt die Vorschau die Huelle unveraendert — die Eingabe
+  // des Lernenden verschwindet spurlos. Sichtbar waere nur „nichts passiert".
+  for (const a of [...codeGrunduebungen, ...codePraxisAufgaben]) {
+    if (a.huelle !== undefined) {
+      assert.ok(a.huelle.includes('{{code}}'), `${a.id}: huelle ohne {{code}}-Platzhalter`)
+    }
+  }
 })
 
 test('IDs sind je Bereich eindeutig — der Lernstand haengt daran', () => {

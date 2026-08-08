@@ -11,42 +11,56 @@ import Badge from '../../components/common/Badge.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import Modal from '../../components/common/Modal.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
-import CodeTastatur from './CodeTastatur.jsx'
+import CodeTastatur from './CodeTastatur.tsx'
+import type { Bereichsbaukasten } from '../../types/lernstand'
+import type { Praxisaufgabe } from '../../types/lernbereich'
 
 export const XP_JE_MITMACH = 20
 
-/**
- * @param {{aufgabe:Object|null, lernstand:Object, schliessen:Function}} props
- */
-export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }) {
-  const [wert, setWert] = useState(() => {
+/** Welche Tastatur das Code-Feld gerade bedient. */
+type Tastaturart = 'code' | 'system'
+
+export interface PraxisAufgabeProps {
+  /** `null`, solange keine Aufgabe offen ist — dann rendert nichts. */
+  aufgabe: Praxisaufgabe | null
+  /** Der Lernstand des jeweiligen Bereichs (Code, AI-Sprache, Elektro). */
+  lernstand: Bereichsbaukasten
+  schliessen: () => void
+}
+
+export default function PraxisAufgabe({ aufgabe, lernstand, schliessen }: PraxisAufgabeProps) {
+  const [wert, setWert] = useState<string>(() => {
     if (!aufgabe) return ''
     const gespeichert = lernstand.notiz(aufgabe.id)
     return gespeichert || aufgabe.startCode || ''
   })
   // Code-Aufgaben: eigene Bildschirm-Tastatur statt der Geraetetastatur —
   // auf dem Handy sind < > " = sonst muehsam zu erreichen.
-  const feldRef = useRef(null)
-  const [tastaturArt, setTastaturArt] = useState('code')
+  const feldRef = useRef<HTMLTextAreaElement>(null)
+  const [tastaturArt, setTastaturArt] = useState<Tastaturart>('code')
   const [tastaturOffen, setTastaturOffen] = useState(false)
   if (!aufgabe) return null
 
+  // Nach der Abfrage oben steht fest, dass es eine Aufgabe gibt. Die Konstante
+  // haelt das fuer die Rueckrufe unten fest — in ihnen waere `aufgabe` sonst
+  // wieder `Praxisaufgabe | null`.
+  const offen: Praxisaufgabe = aufgabe
   const erledigt = lernstand.istErledigt(aufgabe.id)
   const checks = (aufgabe.checks || []).map((c) => ({ ...c, ok: !!c.pruefe(wert) }))
   const alleOk = checks.length > 0 && checks.every((c) => c.ok)
 
-  function wertSichern() {
-    lernstand.setzeNotiz(aufgabe.id, wert)
+  function wertSichern(): void {
+    lernstand.setzeNotiz(offen.id, wert)
   }
 
-  function abschliessen() {
+  function abschliessen(): void {
     if (!alleOk) return
     wertSichern()
-    lernstand.schliesseAb(aufgabe.id, XP_JE_MITMACH)
+    lernstand.schliesseAb(offen.id, XP_JE_MITMACH)
     schliessen()
   }
 
-  function zu() {
+  function zu(): void {
     wertSichern()
     schliessen()
   }
