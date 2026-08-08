@@ -13,7 +13,6 @@
     "app:upload": "node scripts/upload-cloud-data.mjs dist --prefix=app --exclude=server,daten,.openai",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src test scripts server.js sites",
-    "test:e2e": "node scripts/e2e.mjs",
     "content:check": "node --test test/course-content.test.js test/language-courses.test.js",
     "check": "npm run typecheck && npm run lint && npm test && npm run build"
   },

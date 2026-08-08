@@ -357,7 +357,11 @@ test('exportiereSpeicherstand und importiereSpeicherstand bilden einen vollstän
   }
 
   const sicherung = modul.exportiereSpeicherstand()
-  const erwartet = Object.keys(modul.KEYS).filter((name) => name !== 'ohneKonto')
+  // Geraete-lokale bzw. fluechtige Bereiche gehoeren nicht in eine Sicherung:
+  // 'ohneKonto' ist eine Geraeteentscheidung, 'sitzung' eine halbfertige
+  // Uebungsrunde, die auf einem anderen Geraet nichts zu suchen hat.
+  const nurLokal = new Set(['ohneKonto', 'sitzung'])
+  const erwartet = Object.keys(modul.KEYS).filter((name) => !nurLokal.has(name))
   assert.deepEqual(Object.keys(sicherung).sort(), erwartet.sort())
 
   // Auf einem leeren Gerät einspielen.
