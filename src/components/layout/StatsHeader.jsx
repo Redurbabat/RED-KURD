@@ -4,7 +4,7 @@ import Icon from '../icons/Icon.jsx'
 import HeloMascot from '../mascot/HeloMascot.jsx'
 import LanguageSwitch from './LanguageSwitch.jsx'
 import { navigiere } from '../../app/router.jsx'
-import { statistik } from '../../core/progress/progressSelectors.js'
+import { statistik } from '../../core/progress/progressSelectors.ts'
 import { T } from '../../core/texts.js'
 
 function Wert({ icon, ton, wert, label, kurzLabel }) {

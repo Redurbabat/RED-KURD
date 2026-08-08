@@ -5,7 +5,7 @@ import {
   LEKTIONS_ARTEN,
   WELTEN,
   ALLE_WOERTER,
-} from '../src/core/courses/courseRepository.js'
+} from '../src/core/courses/courseRepository.ts'
 import { planeLektion } from '../src/core/session/sessionPlanner.ts'
 
 test('der Kurs waechst nur, er schrumpft nie', () => {

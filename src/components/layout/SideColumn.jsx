@@ -16,8 +16,8 @@ import {
   fertigkeiten,
   fertigkeitStufe,
   lernzeitText,
-} from '../../core/progress/progressSelectors.js'
-import { aktuelleEinheit, einheitProzent } from '../../core/courses/courseRepository.js'
+} from '../../core/progress/progressSelectors.ts'
+import { aktuelleEinheit, einheitProzent } from '../../core/courses/courseRepository.ts'
 
 const FERTIGKEIT_NAMEN = {
   erkennen: 'Erkennen',

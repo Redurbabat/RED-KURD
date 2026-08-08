@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { T } from '../../../core/texts.js'
-import { statistik } from '../../../core/progress/progressSelectors.js'
+import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { truheBereit, truheOeffnen } from '../../../core/progress/progressStore.js'
 import { holeAufgaben, holeBelohnung } from '../../../core/tasks/taskStore.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'

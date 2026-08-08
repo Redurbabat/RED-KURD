@@ -6,7 +6,7 @@ import { gibXp, merkeWort, holeFortschritt } from '../../core/progress/progressS
 import { spieleWort } from '../../core/audio/audioService.js'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, zufallsPaare } from '../../core/data/staticData.js'
-import { ALLE_WOERTER } from '../../core/courses/courseRepository.js'
+import { ALLE_WOERTER } from '../../core/courses/courseRepository.ts'
 import { woerter as grundwortschatz } from '../../data/woerter.js'
 import { texte } from '../../data/texte.js'
 import Card from '../../components/common/Card.jsx'

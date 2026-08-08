@@ -5,7 +5,7 @@ import {
   alleKurmanciVon,
   bildVon,
   fotoVon,
-} from '../courses/courseRepository.js'
+} from '../courses/courseRepository.ts'
 
 import type {
   Aufgabenart,

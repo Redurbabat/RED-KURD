@@ -109,6 +109,68 @@ export interface UiEinstellungen {
   preferredVariant: string
 }
 
+/**
+ * Der Lernstand, wie er wirklich aus dem Speicher kommt. `holeFortschritt()`
+ * liefert heute `any` — progressStore ist noch JavaScript und die Form
+ * entsteht aus `JSON.parse`.
+ *
+ * Bewusst `Partial`: auf dem Gerät kann ein älterer oder beschädigter Stand
+ * liegen, dem einzelne Felder fehlen. Genau deshalb steht im Auswertungscode
+ * überall `|| 0` und `|| {}` — mit diesem Typ verlangt der Prüfer diese
+ * Absicherungen, statt sie überflüssig erscheinen zu lassen.
+ */
+export type GespeicherterStand = Partial<Lernstand>
+
+/**
+ * Eine fällige Karte, wie `faelligeKarten()` sie liefert: der zerlegte
+ * Schlüssel, die Stufe und der Kartenstand selbst.
+ */
+export interface Faelligkarte extends Kartenteile {
+  /** Aus `karte.stufe`, aber nie `undefined` — fehlt sie, ist es 0. */
+  stufe: number
+  karte: Karte
+}
+
+/**
+ * Das Fertigkeitsprofil: je Fertigkeit ein Prozentwert und daneben die Zahl
+ * der Karten, aus denen er stammt (`erkennen` und `erkennenAnzahl`).
+ */
+export type Fertigkeitsprofil = Record<Fertigkeit, number> &
+  Record<`${Fertigkeit}Anzahl`, number>
+
+/** Die Einordnung eines Prozentwerts in Worte. */
+export type Fertigkeitsstufe = 'Stark' | 'Fortgeschritten' | 'Auf dem Weg' | 'Am Anfang'
+
+/** Kernzahlen für Kopfleiste und Fortschrittsseite. */
+export interface Kennzahlen {
+  xp: number
+  serie: number
+  serienSchutz: number
+  letzterSchutz: Tagesschluessel | null
+  edelsteine: number
+  schluessel: number
+  level: number
+  /** Zahl der gelernten Wortpaare — Karten derselben Vokabel zählen einmal. */
+  gelernt: number
+  /** Zahl aller Karten, also Wortpaar × Fertigkeit. */
+  karten: number
+  sicher: number
+  faellig: number
+  lernzeit: number
+  einheiten: Record<string, number>
+}
+
+/** Ein Tag im Wochenband. */
+export interface Wochentagswert {
+  /** Kurzform des Wochentags, z. B. `Mo`. */
+  tag: string
+  datum: Tagesschluessel
+  anzahl: number
+  richtig: number
+  sekunden: number
+  heute: boolean
+}
+
 /** Ein Wortpaar des Kurses. `bild` ist meist ein Emoji, manchmal ein Foto. */
 export interface Wort {
   de: string

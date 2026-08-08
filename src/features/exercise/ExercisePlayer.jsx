@@ -10,7 +10,7 @@ import ProgressBar from '../../components/common/ProgressBar.jsx'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { istRichtigGetippt, SKILL_JE_ART } from '../../core/session/exerciseFactory.ts'
 import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.js'
-import { deutschVon, fotoVon, kurmanciVon } from '../../core/courses/courseRepository.js'
+import { deutschVon, fotoVon, kurmanciVon } from '../../core/courses/courseRepository.ts'
 import { sitzungSpeichern, sitzungLoeschen } from '../../core/session/sessionStore.js'
 import { T } from '../../core/texts.js'
 

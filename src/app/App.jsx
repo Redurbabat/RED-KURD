@@ -15,7 +15,7 @@ import { KEYS, beiSpeicherproblem, entferne, lies, migriere, schreibe } from '..
 import { useLernstand } from '../core/store.js'
 import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
-import { statistik } from '../core/progress/progressSelectors.js'
+import { statistik } from '../core/progress/progressSelectors.ts'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
 import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'

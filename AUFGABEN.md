@@ -42,7 +42,7 @@ Herkunft: die Liste stammt aus der Auswertung von 23 offenen Lern- und Sprachpro
       dort auch „alle Wörter merken".
 - [x] **Lernstatistik** — Fertigkeiten (Erkennen, Abrufen, Schreiben, Hören),
       Wochentabelle mit Aufgaben und davon richtig, gelernte und sichere Wörter,
-      Lernzeit, Wochenliga (`progressSelectors.js`, `/progress`).
+      Lernzeit, Wochenliga (`progressSelectors.ts`, `/progress`).
 
 ### Lesen und Texte
 - [x] **Lese-Modus** — kurdische Texte, jedes Wort anklickbar, Übersetzung und

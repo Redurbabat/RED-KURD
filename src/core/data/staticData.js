@@ -104,7 +104,7 @@ export async function sucheKurdishTech(q) {
 /** Die geprüften Beispielsätze der Kapitel — offline immer verfügbar. */
 async function lokalePaare() {
   // Spät geladen, damit staticData keine harte Abhängigkeit zum Kursbaum hat.
-  const { EINHEITEN } = await import('../courses/courseRepository.js')
+  const { EINHEITEN } = await import('../courses/courseRepository.ts')
   return EINHEITEN.flatMap((e) => e.saetze || []).map((s) => ({
     satz: s.ku,
     uebersetzung: s.de,

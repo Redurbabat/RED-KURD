@@ -181,13 +181,17 @@ eigene Wert mit eigener Einheit, gemeinsames Maß sind die aktiven Tage.
 
 ### Reine Logik — ohne DOM, testbar
 
+Kein Zugriff auf `document`, `window` oder `speechSynthesis`; im Test genügt eine
+Attrappe für `localStorage`. `sessionPlanner` und `courseRepository` **lesen** den
+Lernstand über `progressStore`, geschrieben wird hier nichts.
+
 | Datei | Aufgabe |
 |---|---|
 | `progress/gamification.ts` | `tageZwischen`, `aktualisiereSerie`, `WOCHENLIGEN`, `ligaFuerAufgaben` — nach TypeScript migriert (erste Welle, zusammen mit scheduler.ts) (ADR-006) |
 | `progress/scheduler.ts` | Wiederholsystem (SM-2-vereinfacht): `ABSTAENDE`, `naechsteKarte`, `kartenSchluessel`, `tagVon`, `heute` — nach TypeScript migriert (ADR-006) |
 | `session/exerciseFactory.ts` | `baueUebungen()`, `mische()`, `istRichtigGetippt()`, `SKILL_JE_ART` |
 | `session/sessionPlanner.ts` | `planeSitzung/Lektion/Wiederholung/Schwierige/Training`, `DAUERN` |
-| `courses/courseRepository.js` | `WELTEN` (10), `EINHEITEN` (56), `ALLE_WOERTER` (596), `LEKTIONS_ARTEN` (5), `einheitStatus`, `weltPfad`, `aktuellerKnoten` |
+| `courses/courseRepository.ts` | `WELTEN` (10), `EINHEITEN` (56), `ALLE_WOERTER` (596), `LEKTIONS_ARTEN` (5), `einheitStatus`, `weltPfad`, `aktuellerKnoten` — liest den Lernstand, schreibt ihn nie |
 | `lernbereiche/wochenUebersicht.js` | die Woche über alle vier Apps, ohne Speicherzugriff |
 | `elektro/formeln.js` | Ohm, Leistung, Energie, Spannungsfall, Mindestquerschnitt |
 | `elektro/notenRechnung.js` | Skalen, Durchschnitt, `benoetigteNote`, `trend`, `tageBis` |
@@ -202,7 +206,7 @@ eigene Wert mit eigener Einheit, gemeinsames Maß sind die aktiven Tage.
 | `storage.js` | `KEYS`, `TAB_KEYS`, `lies/schreibe/entferne`, `liesTab/schreibeTab`, Export/Import, `beiSpeicherproblem()`, `migriere()`, `migriereKarten()` | localStorage, sessionStorage |
 | `store.js` | `melden()`, `useLernstand()`, `beiFremdaenderung()` (Cache-Invalidierung über Tabs) | `window`, React |
 | `progress/progressStore.js` | **der Lernstand der Sprach-App**: XP, Serie + Schutz, Einheiten, Sterne, Karten, Tage (max. 60), Edelsteine, Schlüssel, Truhen, Lernzeit, `exportiereAlles`, `ankiZeilen` | localStorage |
-| `progress/progressSelectors.js` | `statistik()`, `faelligeKarten()`, `fertigkeiten()`, `wochenAktivitaet()`, `wochenLiga()` | indirekt |
+| `progress/progressSelectors.ts` | `statistik()`, `faelligeKarten()`, `fertigkeiten()`, `wochenAktivitaet()`, `wochenLiga()` | indirekt |
 | `lernbereiche/bereichsLernstand.js` | Lernstand-Baukasten für Code, AI-Sprache und Elektro | localStorage |
 | `session/sessionStore.js` | laufende Sitzung sichern / laden / löschen | localStorage |
 | `profile/profileStore.js` | Name, Ziel, Vorkenntnisse, Tagesziel, Variante, `standardDauer()` | localStorage |
@@ -447,6 +451,23 @@ Unter `public/` liegen 154 Fotos (48 Kapitel + 8 Lernwelt + 98 Wörter, je mit
 `credits.json`) und 321 Aussprache-Aufnahmen in `audio/index.json` → `audio/kmr/*.mp3`
 (Lingua Libre, CC BY-SA). `test/audioIndex.test.js` hält Index und Dateien in beide
 Richtungen deckungsgleich.
+
+## Typen (`src/types`)
+
+Die Formen liegen an einer Stelle, nicht in jedem Modul neu. Zwei Dateien, klar
+getrennt nach dem, was sie beschreiben:
+
+| Datei | Inhalt |
+|---|---|
+| `lernstand.d.ts` | alles, was **gespeichert** wird und darum Versionen und Migrationen braucht: Lernstand, Karte, Tag, Profil, UI, Sitzung, Übung, Shop, Sprachkurse, Sicherung, Bereichs-Lernstand — die maschinenlesbare Fassung von `STORAGE.md` |
+| `kurs.d.ts` | alles, was **Inhalt** ist und mit dem Build kommt: Kurseinheit, Einheit, Welt, Lektion, Lernpfad-Knoten, Bildnachweis |
+
+Die Kursdaten unter `src/data/` sind noch JavaScript. Damit ein migriertes Modul
+ihre Form kennt, liegt neben `kurse.js`, `kapitelFotos.js`, `kapitelExtras.js` und
+`wortFotos.js` je eine `.d.ts`, die auf `kurs.d.ts` zeigt. Eine solche Deklaration
+wächst nicht von selbst mit — deshalb prüft `test/kursdaten-form.test.js` die echten
+Daten gegen genau diese Zusagen. Ohne diesen Test könnte die Deklaration lügen,
+ohne dass der Typprüfer etwas merkt.
 
 ## Werkzeuge und Prüfungen
 

@@ -27,7 +27,7 @@ const {
   schwierigeKarten,
   statistik,
   wochenAktivitaet,
-} = await import('../src/core/progress/progressSelectors.js')
+} = await import('../src/core/progress/progressSelectors.ts')
 const { heute, tagPlus } = await import('../src/core/progress/scheduler.ts')
 
 test('statistik zaehlt Woerter als Paare, Karten je Fertigkeit', () => {

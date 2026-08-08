@@ -10,7 +10,7 @@ import {
   fertigkeiten,
   fertigkeitStufe,
   schwaechsteFertigkeit,
-} from '../../../core/progress/progressSelectors.js'
+} from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Card from '../../../components/common/Card.jsx'

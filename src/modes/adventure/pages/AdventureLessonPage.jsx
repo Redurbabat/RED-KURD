@@ -8,7 +8,7 @@ import {
   BESTANDEN_AB,
   einheitProzent,
   holeEinheit,
-} from '../../../core/courses/courseRepository.js'
+} from '../../../core/courses/courseRepository.ts'
 import { planeLektion } from '../../../core/session/sessionPlanner.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import {
@@ -16,7 +16,7 @@ import {
   gibEdelsteine,
   setzeSterne,
 } from '../../../core/progress/progressStore.js'
-import { statistik } from '../../../core/progress/progressSelectors.js'
+import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'

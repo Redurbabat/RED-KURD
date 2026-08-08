@@ -1,41 +1,16 @@
 // Der Sitzungsplaner stellt die taegliche Mischung zusammen:
 // faellige Wiederholungen zuerst, dann neue Wörter aus der aktuellen Einheit.
-import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.js'
-import { EINHEITEN, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.js'
+import { faelligeKarten, schwierigeKarten } from '../progress/progressSelectors.ts'
+import { EINHEITEN, aktuelleEinheit, bildVon, fotoVon, holeEinheit } from '../courses/courseRepository.ts'
 import { SKILL_JE_ART, baueUebungen, mische } from './exerciseFactory.ts'
 
-import type { Aufgabenart, Uebung, Uebungswort, Wort } from '../../types/lernstand'
+import type { Aufgabenart, Faelligkarte, Uebung, Uebungswort, Wort } from '../../types/lernstand'
+import type { Einheit, Lektion } from '../../types/kurs'
 
-/**
- * Eine Kurseinheit, so weit der Planer sie braucht. courseRepository ist noch
- * JavaScript — die Form steht hier, bis das Modul selbst migriert ist.
- */
-export interface Einheit {
-  id: string
-  name: string
-  woerter: readonly Wort[]
-  lektionen: readonly Lektion[]
-}
-
-/** Ein Abschnitt einer Einheit. `arten` ist blosser Text aus den Kursdaten. */
-export interface Lektion {
-  id: string
-  name: string
-  anzahl: number
-  arten?: readonly string[]
-}
-
-/**
- * Was `faelligeKarten()` und `schwierigeKarten()` liefern: der zerlegte
- * Kartenschluessel samt Kartenstand. progressSelectors ist noch JavaScript.
- */
-interface Faelligkarte {
-  de: string
-  /** Fehlt, wenn der Kartenschluessel gar kein `|` enthaelt — siehe schluesselTeile(). */
-  ku: string | undefined
-  /** `gemischt`, eine Fertigkeit oder etwas Unbekanntes. */
-  skill: string
-}
+// Einheit und Lektion standen bis zur dritten Welle als eigene Notloesung
+// hier, weil courseRepository noch JavaScript war. Jetzt kommen sie aus der
+// gemeinsamen Quelle — der Planer beschreibt die Kursdaten nicht mehr selbst.
+export type { Einheit, Lektion } from '../../types/kurs'
 
 /** Eine der drei Sitzungslaengen. */
 export interface Dauerstufe {
@@ -110,7 +85,10 @@ function alsWort(karte: Faelligkarte): Uebungswort {
   // Daten. Bisher wanderte das `undefined` unbemerkt bis in Frage und Antwort
   // einer Aufgabe, jetzt steht dort ein leerer Text — fuer die Lernende
   // dasselbe leere Feld. Die Luecke selbst bleibt und ist gemeldet.
-  return { de: karte.de, ku: karte.ku ?? '', bild: bildVon(karte.ku), skill: karte.skill }
+  // Auch die Bildsuche laeuft ueber denselben Wert: kein Kurswort heisst ""
+  // und kein Kurswort heisst `undefined`, beide Wege finden also nichts.
+  const ku = karte.ku ?? ''
+  return { de: karte.de, ku, bild: bildVon(ku), skill: karte.skill }
 }
 
 /**

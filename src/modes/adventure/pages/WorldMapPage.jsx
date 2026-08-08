@@ -4,7 +4,7 @@
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
-import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.js'
+import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.ts'
 import Landscape from '../../../components/adventure/Landscape.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'

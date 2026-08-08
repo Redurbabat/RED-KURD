@@ -3,9 +3,9 @@
 // dem einen gemeinsamen Lernstand.
 import { useLernstand } from '../../../core/store.js'
 import { Link } from '../../../app/router.jsx'
-import { statistik, wochenAktivitaet } from '../../../core/progress/progressSelectors.js'
+import { statistik, wochenAktivitaet } from '../../../core/progress/progressSelectors.ts'
 import { level } from '../../../core/progress/progressStore.js'
-import { WELTEN, weltFortschritt } from '../../../core/courses/courseRepository.js'
+import { WELTEN, weltFortschritt } from '../../../core/courses/courseRepository.ts'
 import { holeProfil } from '../../../core/profile/profileStore.js'
 import { holeAuszeichnungen } from '../../../core/achievements/achievementsStore.js'
 import { aktiverArtikel } from '../../../core/shop/shopStore.js'

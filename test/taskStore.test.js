@@ -22,7 +22,7 @@ globalThis.localStorage = new SpeicherAttrappe()
 
 const { setzeFortschritt } = await import('../src/core/progress/progressStore.js')
 const { wochenMinutenSeitMontag, wochenStartTag, wochenSummeSeitMontag } = await import(
-  '../src/core/progress/progressSelectors.js'
+  '../src/core/progress/progressSelectors.ts'
 )
 const { holeAufgaben, holeBelohnung } = await import('../src/core/tasks/taskStore.js')
 

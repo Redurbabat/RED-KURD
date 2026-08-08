@@ -3,7 +3,7 @@
 // die deutsche Bedeutung darunter.
 // Bewusst ohne Bewertung durch die App — du hörst selbst, was noch anders klingt.
 import { useEffect, useRef, useState } from 'react'
-import { EINHEITEN } from '../../core/courses/courseRepository.js'
+import { EINHEITEN } from '../../core/courses/courseRepository.ts'
 import { spieleWort, speichereAufnahme, holeAufnahme } from '../../core/audio/audioService.js'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { gibXp } from '../../core/progress/progressStore.js'

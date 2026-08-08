@@ -8,7 +8,7 @@ import {
   einheitSterne,
   einheitStatus,
   holeEinheit,
-} from '../../../core/courses/courseRepository.js'
+} from '../../../core/courses/courseRepository.ts'
 import { kennstWort, merkeWort } from '../../../core/progress/progressStore.js'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import PageHeader from '../../../components/layout/PageHeader.jsx'

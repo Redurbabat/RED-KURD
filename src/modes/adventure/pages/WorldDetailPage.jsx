@@ -11,7 +11,7 @@ import {
   holeWelt,
   weltFortschritt,
   weltPfad,
-} from '../../../core/courses/courseRepository.js'
+} from '../../../core/courses/courseRepository.ts'
 import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.js'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'

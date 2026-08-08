@@ -15,7 +15,7 @@ import {
   kursFortschritt,
   weltPfad,
   weltStatus,
-} from '../src/core/courses/courseRepository.js'
+} from '../src/core/courses/courseRepository.ts'
 
 // ===== Datenvollstaendigkeit =====
 

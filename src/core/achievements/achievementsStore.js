@@ -2,9 +2,9 @@
 // Auszeichnungen bleiben sichtbar, damit klar ist, was als Naechstes kommt.
 import { KEYS, lies, schreibe } from '../storage.js'
 import { melden, beiFremdaenderung } from '../store.js'
-import { statistik } from '../progress/progressSelectors.js'
+import { statistik } from '../progress/progressSelectors.ts'
 import { heute } from '../progress/scheduler.ts'
-import { kursFortschritt, WELTEN, weltFortschritt } from '../courses/courseRepository.js'
+import { kursFortschritt, WELTEN, weltFortschritt } from '../courses/courseRepository.ts'
 
 export const AUSZEICHNUNGEN = [
   {

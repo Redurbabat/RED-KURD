@@ -11,12 +11,12 @@ import {
   schwierigeKarten,
   gesternStatistik,
   lernzeitText,
-} from '../../../core/progress/progressSelectors.js'
+} from '../../../core/progress/progressSelectors.ts'
 import { tagesZiel, holeTageszielBelohnung } from '../../../core/progress/progressStore.js'
 import { standardDauer, tageszielWert } from '../../../core/profile/profileStore.js'
 import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.ts'
 import { sitzungLaden, sitzungLoeschen, sitzungProzent } from '../../../core/session/sessionStore.js'
-import { einheitProzent } from '../../../core/courses/courseRepository.js'
+import { einheitProzent } from '../../../core/courses/courseRepository.ts'
 import Icon from '../../../components/icons/Icon.jsx'
 import Card from '../../../components/common/Card.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'

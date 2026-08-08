@@ -16,7 +16,7 @@ import {
   wochenSumme,
   wochenMinuten,
   lernzeitText,
-} from '../../../core/progress/progressSelectors.js'
+} from '../../../core/progress/progressSelectors.ts'
 import {
   exportiereAlles,
   ankiZeilen,
@@ -24,7 +24,7 @@ import {
   istLernstand,
 } from '../../../core/progress/progressStore.js'
 import { importiereSpeicherstand } from '../../../core/storage.js'
-import { kursFortschritt } from '../../../core/courses/courseRepository.js'
+import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
 import { holeProfil, setzeProfil } from '../../../core/profile/profileStore.js'
 import { holeUi, setzeUi } from '../../../core/ui/uiStore.js'
 import { holeShop, setzeShop } from '../../../core/shop/shopStore.js'

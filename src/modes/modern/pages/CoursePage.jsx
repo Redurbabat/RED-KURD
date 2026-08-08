@@ -11,7 +11,7 @@ import {
   einheitStatus,
   kursFortschritt,
   weltFortschritt,
-} from '../../../core/courses/courseRepository.js'
+} from '../../../core/courses/courseRepository.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'

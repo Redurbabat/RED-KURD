@@ -2,7 +2,7 @@
 // kleinen Runden — erst die Regel lesen, dann zwei Kontrollfragen dazu
 // beantworten. Die Fragen liegen geprüft in grammatikUebungen.js.
 import { useMemo, useState } from 'react'
-import { EINHEITEN } from '../../core/courses/courseRepository.js'
+import { EINHEITEN } from '../../core/courses/courseRepository.ts'
 import { grammatikUebungen } from '../../data/grammatikUebungen.js'
 import { mische } from '../../core/session/exerciseFactory.ts'
 import { gibXp } from '../../core/progress/progressStore.js'

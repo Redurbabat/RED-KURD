@@ -10,14 +10,14 @@ import { useMemo } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import { grussText } from '../../../core/texts.js'
-import { statistik } from '../../../core/progress/progressSelectors.js'
+import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { heute } from '../../../core/progress/scheduler.ts'
 import {
   aktuelleEinheit,
   aktuelleWelt,
   aktuellerKnoten,
   weltPfad,
-} from '../../../core/courses/courseRepository.js'
+} from '../../../core/courses/courseRepository.ts'
 import { planeSitzung } from '../../../core/session/sessionPlanner.ts'
 import { standardDauer } from '../../../core/profile/profileStore.js'
 import { kulturkarten } from '../../../data/kultur.js'

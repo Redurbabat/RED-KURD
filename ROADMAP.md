@@ -73,7 +73,11 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] restliche Kernlogik ohne Browser-Bindung: `session/exerciseFactory.ts`,
         `session/sessionPlanner.ts`, `schrift/transliteration.ts` (zweite Welle;
         Verhalten über rund 130 000 Vergleiche belegt)
-  - [ ] danach `courses/courseRepository` und `progress/progressSelectors`
+  - [x] `courses/courseRepository.ts` und `progress/progressSelectors.ts` (dritte
+        Welle; Verhalten über rund 493 000 Vergleiche mit drei Saaten belegt).
+        Dazu kamen die Formen der Kursinhalte (`types/kurs.d.ts`) und
+        Deklarationen neben den Datendateien; `test/kursdaten-form.test.js`
+        prüft die echten Daten dagegen, damit eine Deklaration nicht lügen kann
   - [ ] danach die Stores: `storage`, `store`, `progressStore`, `profileStore`,
         `uiStore`, `sessionStore`, `taskStore`, `shopStore`, `achievementsStore`,
         `languageCourseStore`
@@ -84,9 +88,15 @@ dass jemand Angst um seinen Lernstand haben muss.
 - [x] Zentrale Typen unter `src/types/` angelegt (`lernstand.d.ts`, reine
       Deklarationsdatei): Lernstand, Karte, Tag, Profil, UI, Sitzung, Shop,
       Sprachkurse, Sicherung — die Speicherformen der **Sprach-App**
-- [ ] Typen für die drei neuen Apps ergänzen: Bereichs-Lernstand (`erledigt`, `notizen`,
+- [~] Typen für die drei neuen Apps ergänzen: Bereichs-Lernstand (`erledigt`, `notizen`,
       `xp`, `serie`, `letzterTag`, `tage`), Elektro-Schule, Prompting-Werkstatt,
       Fehlerbuch, App-Wahl; dazu Übung, Einheit, Welt und Auszeichnungen/Aufgaben
+  - [x] Bereichs-Lernstand und Lektionsstatus (`types/lernstand.d.ts`)
+  - [x] Übung als Vereinigung von Bild-, Wahl- und Tippaufgabe (zweite Welle)
+  - [x] Einheit, Welt, Lektion, Lernpfad-Knoten und die Bildnachweise
+        (`types/kurs.d.ts`, dritte Welle)
+  - [ ] Elektro-Schule, Prompting-Werkstatt, Fehlerbuch, App-Wahl,
+        Auszeichnungen und Aufgaben
 - [ ] Migrations-Pipeline: jede Migration eine benannte, einzeln aufrufbare Funktion mit
       Von- und Nach-Version; `migriere()` führt sie geordnet aus — heute ist es **eine**
       Funktion mit nummerierten Schritten
@@ -138,7 +148,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 375 Tests grün.
+Stand: `npm test` läuft heute mit 407 Tests grün.
 
 *Sprach-App*
 

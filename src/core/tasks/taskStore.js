@@ -9,8 +9,8 @@ import {
   wochenMinutenSeitMontag,
   wochenStartTag,
   wochenSummeSeitMontag,
-} from '../progress/progressSelectors.js'
-import { kursFortschritt } from '../courses/courseRepository.js'
+} from '../progress/progressSelectors.ts'
+import { kursFortschritt } from '../courses/courseRepository.ts'
 
 const STANDARD = { version: 1, abgeholt: {}, tag: null, wochenStart: null, basis: {} }
 

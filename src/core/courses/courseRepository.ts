@@ -6,8 +6,43 @@ import { kapitelExtras } from '../../data/kapitelExtras.js'
 import { wortFotos } from '../../data/wortFotos.js'
 import { holeFortschritt, sterneVon } from '../progress/progressStore.js'
 
+import type { GespeicherterStand, Wort } from '../../types/lernstand'
+import type {
+  Einheit,
+  Einheitsstatus,
+  Knotenart,
+  Kursfortschritt,
+  Lektion,
+  Lektionsart,
+  Lernknoten,
+  Pfadknoten,
+  Welt,
+  Weltfortschritt,
+  Weltstatus,
+  Wortfoto,
+} from '../../types/kurs'
+
+export type {
+  Einheit,
+  Einheitsstatus,
+  Lektion,
+  Pfadknoten,
+  Welt,
+  Weltstatus,
+} from '../../types/kurs'
+
+/**
+ * progressStore ist noch JavaScript und liefert `any`. Der Zugriff läuft
+ * deshalb über diese eine Stelle, die die Form einmal benennt — dann prüft
+ * TypeScript den Rest der Datei wirklich. Wandert der Store selbst nach
+ * TypeScript, fällt die Hilfsfunktion ersatzlos weg.
+ */
+function standLesen(): GespeicherterStand {
+  return holeFortschritt()
+}
+
 /** Jede Einheit besteht aus fünf abwechslungsreichen Abschnitten. */
-export const LEKTIONS_ARTEN = [
+export const LEKTIONS_ARTEN: readonly Lektionsart[] = [
   {
     id: 'lernen',
     nr: 1,
@@ -68,7 +103,7 @@ export const LEKTIONS_ARTEN = [
  * späteren Welten vertiefen Wortschatz und Alltagssprache, ohne vorhandenen
  * Fortschritt oder alte Einheiten umzubenennen.
  */
-export const WELTEN = [
+export const WELTEN: readonly Welt[] = [
   {
     id: 'w1',
     nr: 1,
@@ -199,10 +234,10 @@ function sortiereEinheiten() {
   return sortiert
 }
 
-const WELT_VON_EINHEIT = new Map()
+const WELT_VON_EINHEIT = new Map<string, string>()
 WELTEN.forEach((w) => w.einheiten.forEach((id) => WELT_VON_EINHEIT.set(id, w.id)))
 
-export const EINHEITEN = sortiereEinheiten().map((k, i) => ({
+export const EINHEITEN: readonly Einheit[] = sortiereEinheiten().map((k, i) => ({
   ...k,
   nr: i + 1,
   weltId: WELT_VON_EINHEIT.get(k.id) || null,
@@ -212,16 +247,18 @@ export const EINHEITEN = sortiereEinheiten().map((k, i) => ({
   // Beispielsätze und Grammatik-Notiz: direkt am Kapitel oder aus den Extras.
   saetze: k.saetze || kapitelExtras[k.id]?.saetze || null,
   grammatik: k.grammatik || kapitelExtras[k.id]?.grammatik || null,
-  lektionen: LEKTIONS_ARTEN.map((l) => ({ ...l, einheitId: k.id, id: `${k.id}-${l.id}` })),
+  lektionen: LEKTIONS_ARTEN.map(
+    (l): Lektion => ({ ...l, einheitId: k.id, id: `${k.id}-${l.id}` })
+  ),
 }))
 
-export const ALLE_WOERTER = EINHEITEN.flatMap((e) => e.woerter)
+export const ALLE_WOERTER: readonly Wort[] = EINHEITEN.flatMap((e) => e.woerter)
 
 // Manche Wörter kommen mehrfach vor: „roj" heisst Tag UND Sonne. Eine einfache
 // Map würde die erste Bedeutung überschreiben und im Untertitel die falsche
 // zeigen — deshalb sammeln wir alle und nennen sie gemeinsam.
-function sammle(schluessel, wert) {
-  const map = new Map()
+function sammle(schluessel: 'de' | 'ku', wert: 'de' | 'ku') {
+  const map = new Map<string, string[]>()
   for (const w of ALLE_WOERTER) {
     const k = w[schluessel]
     const v = w[wert]
@@ -233,21 +270,23 @@ function sammle(schluessel, wert) {
   return map
 }
 
-const BILD_VON_KU = new Map(ALLE_WOERTER.filter((w) => w.bild).map((w) => [w.ku, w.bild]))
+const BILD_VON_KU = new Map(
+  ALLE_WOERTER.filter((w) => w.bild).map((w) => [w.ku, w.bild] as const)
+)
 const DE_VON_KU = sammle('ku', 'de')
 const KU_VON_DE = sammle('de', 'ku')
 
-export function bildVon(ku) {
+export function bildVon(ku: string): string | undefined {
   return BILD_VON_KU.get(ku)
 }
 
 /** Echtes Foto zu einem Kurswort — oder null, wenn nur das Emoji da ist. */
-export function fotoVon(ku) {
+export function fotoVon(ku: string): Wortfoto | null {
   return wortFotos[ku] || null
 }
 
 /** Alle deutschen Bedeutungen eines Kurmancî-Worts, z. B. „Tag / Sonne". */
-export function deutschVon(ku) {
+export function deutschVon(ku: string): string | undefined {
   const treffer = DE_VON_KU.get(ku)
   return treffer ? treffer.join(' / ') : undefined
 }
@@ -256,37 +295,41 @@ export function deutschVon(ku) {
  * Rohlisten fuer die Aufgaben-Fabrik: Bei Homonymen („roj" = Tag UND Sonne)
  * darf keine der weiteren richtigen Bedeutungen als falsche Option erscheinen.
  */
-export function alleDeutschVon(ku) {
+export function alleDeutschVon(ku: string): readonly string[] {
   return DE_VON_KU.get(ku) || []
 }
 
-export function alleKurmanciVon(de) {
+export function alleKurmanciVon(de: string): readonly string[] {
   return KU_VON_DE.get(de) || []
 }
 
-export function kurmanciVon(de) {
+export function kurmanciVon(de: string): string | undefined {
   const treffer = KU_VON_DE.get(de)
   return treffer ? treffer.join(' / ') : undefined
 }
 
-export function holeEinheit(id) {
+export function holeEinheit(id: string): Einheit | null {
   return EINHEITEN.find((e) => e.id === id) || null
 }
 
-export function holeLektion(einheitId, lektionId) {
+export function holeLektion(einheitId: string, lektionId: string): Lektion | null {
   const e = holeEinheit(einheitId)
   if (!e) return null
   return e.lektionen.find((l) => l.id === lektionId || l.id === `${einheitId}-${lektionId}`) || null
 }
 
-export function holeWelt(id) {
+export function holeWelt(id: string): Welt | null {
   return WELTEN.find((w) => w.id === id) || null
 }
 
-export function einheitenDerWelt(weltId) {
+export function einheitenDerWelt(weltId: string): readonly Einheit[] {
   const w = holeWelt(weltId)
   if (!w) return []
-  return w.einheiten.map(holeEinheit).filter(Boolean)
+  // `filter(Boolean)` allein überzeugt den Prüfer nicht, dass die null-Werte
+  // weg sind — die Einschränkung steht deshalb ausgeschrieben.
+  return w.einheiten
+    .map(holeEinheit)
+    .filter((e): e is Einheit => e !== null)
 }
 
 export const BESTANDEN_AB = 80
@@ -295,42 +338,50 @@ export const BESTANDEN_AB = 80
  * Status einer Einheit: 'fertig' | 'aktuell' | 'begonnen' | 'gesperrt'.
  * Gesperrt ist nur eine Empfehlung — die Oberflaeche laesst das Oeffnen zu.
  */
-export function einheitStatus(einheitId) {
-  const stand = holeFortschritt()
+export function einheitStatus(einheitId: string): Einheitsstatus {
+  const stand = standLesen()
   const index = EINHEITEN.findIndex((e) => e.id === einheitId)
   if (index < 0) return 'gesperrt'
-  const wert = stand.einheiten[einheitId] || 0
+  const wert = stand.einheiten?.[einheitId] || 0
   if (wert >= BESTANDEN_AB) return 'fertig'
   const vorherFertig = EINHEITEN.slice(0, index).every(
-    (e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB
+    (e) => (stand.einheiten?.[e.id] || 0) >= BESTANDEN_AB
   )
   if (wert > 0) return vorherFertig ? 'aktuell' : 'begonnen'
   return vorherFertig ? 'aktuell' : 'gesperrt'
 }
 
-export function einheitProzent(einheitId) {
-  return holeFortschritt().einheiten[einheitId] || 0
+export function einheitProzent(einheitId: string): number {
+  return standLesen().einheiten?.[einheitId] || 0
 }
 
-export function einheitSterne(einheitId) {
+export function einheitSterne(einheitId: string): number {
   return sterneVon(einheitId)
 }
 
-/** Die Einheit, an der weitergelernt werden soll. */
-export function aktuelleEinheit() {
-  const stand = holeFortschritt()
-  return EINHEITEN.find((e) => (stand.einheiten[e.id] || 0) < BESTANDEN_AB) || EINHEITEN[EINHEITEN.length - 1]
+/**
+ * Die Einheit, an der weitergelernt werden soll — die erste noch nicht
+ * bestandene, sonst die letzte des Kurses. `undefined` nur, wenn es gar keine
+ * Einheiten gibt; die Oberflaechen fangen diesen Fall ab.
+ */
+export function aktuelleEinheit(): Einheit | undefined {
+  const stand = standLesen()
+  return (
+    EINHEITEN.find((e) => (stand.einheiten?.[e.id] || 0) < BESTANDEN_AB) ||
+    EINHEITEN[EINHEITEN.length - 1]
+  )
 }
 
-export function aktuelleWelt() {
+export function aktuelleWelt(): Welt | undefined {
   const e = aktuelleEinheit()
-  return holeWelt(e.weltId) || WELTEN[0]
+  if (!e) return WELTEN[0]
+  return (e.weltId ? holeWelt(e.weltId) : null) || WELTEN[0]
 }
 
 /** Gesamtfortschritt des Kurses in Prozent. */
-export function kursFortschritt() {
-  const stand = holeFortschritt()
-  const fertig = EINHEITEN.filter((e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB).length
+export function kursFortschritt(): Kursfortschritt {
+  const stand = standLesen()
+  const fertig = EINHEITEN.filter((e) => (stand.einheiten?.[e.id] || 0) >= BESTANDEN_AB).length
   return {
     fertig,
     gesamt: EINHEITEN.length,
@@ -338,11 +389,11 @@ export function kursFortschritt() {
   }
 }
 
-export function weltFortschritt(weltId) {
+export function weltFortschritt(weltId: string): Weltfortschritt {
   const einheiten = einheitenDerWelt(weltId)
-  const stand = holeFortschritt()
-  const fertig = einheiten.filter((e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB).length
-  const sterne = einheiten.reduce((s, e) => s + (stand.sterne[e.id] || 0), 0)
+  const stand = standLesen()
+  const fertig = einheiten.filter((e) => (stand.einheiten?.[e.id] || 0) >= BESTANDEN_AB).length
+  const sterne = einheiten.reduce((s, e) => s + (stand.sterne?.[e.id] || 0), 0)
   return {
     fertig,
     gesamt: einheiten.length,
@@ -358,7 +409,7 @@ export function weltFortschritt(weltId) {
  * Nur `lektion` und `pruefung` sind echte Lerninhalte; Truhe und Bonusspiel
  * sind Beiwerk und sperren nie etwas.
  */
-export const KNOTEN_ARTEN = {
+export const KNOTEN_ARTEN: Readonly<Record<Knotenart, { name: string; icon: string }>> = {
   lektion: { name: 'Lektion', icon: 'stern' },
   wiederholen: { name: 'Wiederholen', icon: 'wiederholen' },
   hoeren: { name: 'Hören', icon: 'kopfhoerer' },
@@ -371,14 +422,13 @@ export const KNOTEN_ARTEN = {
 /**
  * Baut den Lernpfad einer Welt: die Einheiten als Stationen, dazwischen
  * eine Truhe und ein Bonusspiel, am Ende Prüfung und Abschluss.
- * @returns {Array<{id, art, name, untertitel, einheitId, status, prozent, sterne, icon, symbol}>}
  */
-export function weltPfad(weltId) {
+export function weltPfad(weltId: string): Pfadknoten[] {
   const einheiten = einheitenDerWelt(weltId)
   if (!einheiten.length) return []
 
-  const stand = holeFortschritt()
-  const knoten = []
+  const stand = standLesen()
+  const knoten: Pfadknoten[] = []
 
   einheiten.forEach((e, i) => {
     const letzte = i === einheiten.length - 1
@@ -390,8 +440,8 @@ export function weltPfad(weltId) {
       untertitel: letzte ? 'Prüfung dieser Welt' : `Einheit ${e.nr}`,
       einheitId: e.id,
       status,
-      prozent: stand.einheiten[e.id] || 0,
-      sterne: stand.sterne[e.id] || 0,
+      prozent: stand.einheiten?.[e.id] || 0,
+      sterne: stand.sterne?.[e.id] || 0,
       symbol: e.symbol,
       icon: letzte ? KNOTEN_ARTEN.pruefung.icon : KNOTEN_ARTEN.lektion.icon,
     })
@@ -418,7 +468,7 @@ export function weltPfad(weltId) {
     }
   })
 
-  const alleFertig = einheiten.every((e) => (stand.einheiten[e.id] || 0) >= BESTANDEN_AB)
+  const alleFertig = einheiten.every((e) => (stand.einheiten?.[e.id] || 0) >= BESTANDEN_AB)
   knoten.push({
     id: `${weltId}-abschluss`,
     art: 'abschluss',
@@ -436,11 +486,13 @@ export function weltPfad(weltId) {
  * Truhe und Bonusspiel zaehlen nicht — Hêlo wartet dort, wo wirklich gelernt
  * wird, sonst steht er neben einer Belohnung statt neben der naechsten Lektion.
  */
-const LERN_ARTEN = ['lektion', 'pruefung']
+function istLernknoten(k: Pfadknoten): k is Lernknoten {
+  return k.art === 'lektion' || k.art === 'pruefung'
+}
 
-export function aktuellerKnoten(weltId) {
+export function aktuellerKnoten(weltId: string): Lernknoten | null {
   const pfad = weltPfad(weltId)
-  const lernen = pfad.filter((k) => LERN_ARTEN.includes(k.art))
+  const lernen = pfad.filter(istLernknoten)
   return (
     lernen.find((k) => k.status === 'aktuell') ||
     lernen.find((k) => k.status === 'begonnen') ||
@@ -455,7 +507,7 @@ export function aktuellerKnoten(weltId) {
  * wenn wenigstens eine ihrer Einheiten wirklich erreichbar ist. Sonst stünde
  * „Aktuell" über einer Welt, deren Stationen alle ein Schloss tragen.
  */
-export function weltStatus(weltId) {
+export function weltStatus(weltId: string): Weltstatus {
   const index = WELTEN.findIndex((w) => w.id === weltId)
   const eigen = weltFortschritt(weltId)
   if (!eigen.offen) return 'fertig'
@@ -464,6 +516,10 @@ export function weltStatus(weltId) {
   if (index <= 0) return 'aktuell'
   if (eigen.fertig > 0 || hatOffeneStation) return 'aktuell'
 
-  const vorher = weltFortschritt(WELTEN[index - 1].id)
+  // index > 0 ist hier sicher, also gibt es einen Vorgaenger. Der Pruefer sieht
+  // das nicht — statt eines `!` steht die Bedingung ausgeschrieben da.
+  const vorige = WELTEN[index - 1]
+  if (!vorige) return 'gesperrt'
+  const vorher = weltFortschritt(vorige.id)
   return vorher.fertig >= Math.ceil(vorher.gesamt / 2) && hatOffeneStation ? 'aktuell' : 'gesperrt'
 }
