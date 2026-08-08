@@ -319,3 +319,63 @@
   flex-direction: column;
   gap: var(--space-1);
 }
+
+/* ===== Sprachaufnahmen verwalten ===== */
+
+.fp-aufnahmen-zahl {
+  font-size: 1.125rem;
+}
+
+.fp-aufnahmen-hinweis {
+  margin-top: var(--space-2);
+}
+
+.fp-aufnahmen-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.fp-aufnahmen-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-4);
+}
+
+.fp-aufnahme {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--rk-border);
+}
+
+.fp-aufnahme-text {
+  display: flex;
+  flex-direction: column;
+  /* Damit lange Wörter die beiden Knöpfe nicht aus der Zeile drücken. */
+  min-width: 0;
+  flex: 1;
+}
+
+.fp-aufnahme-wort {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.fp-aufnahme-angabe {
+  font-size: 0.875rem;
+}
+
+/* 44 px ist das Mindestmaß für eine Tap-Fläche (CLAUDE.md, iPhone-Regeln). */
+.fp-aufnahme-knopf {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

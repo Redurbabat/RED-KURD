@@ -128,10 +128,15 @@ dass jemand Angst um seinen Lernstand haben muss.
 - [ ] IndexedDB-Umzug für Lernstand, Sitzungen und Aufnahmen — bestehende Daten werden
       **kopiert, nie gelöscht** (ADR-005); der localStorage-Bestand bleibt vorerst als
       Rückfallebene stehen
-  - [ ] Aufnahmen (`red-kurd-audio`) bekommen Metadaten: Wort, Zeitpunkt, Größe
-  - [ ] Löschweg für Aufnahmen in der Oberfläche (`loescheAufnahme()` existiert, hat
-        aber keinen Aufrufer)
-  - [ ] Obergrenze oder wenigstens eine sichtbare Größenanzeige für Aufnahmen
+  - [x] Aufnahmen (`red-kurd-audio`) bekommen Metadaten: Wort, Zeitpunkt, Größe —
+        in einem **eigenen** Objektspeicher `angaben`, damit `aufnahmen` weiterhin
+        rohe Blobs enthält und eine ältere App-Version sie lesen kann (Grundsatz 3)
+  - [x] Löschweg in der Oberfläche: einzeln im Aussprache-Studio, dazu Liste und
+        „Alle löschen" in den Daten auf `/progress`. `loescheAufnahme()` wartet
+        jetzt auch wirklich, bis gelöscht ist
+  - [x] Sichtbare Größenanzeige: Anzahl und Gesamtgröße stehen in den Daten, je
+        Aufnahme Größe und Datum. Eine harte Obergrenze bleibt bewusst aus —
+        erst soll sichtbar sein, wie groß das überhaupt wird
 - [~] Versioniertes Backup-Format mit Validierung und Vorschau
   - [x] eine Version im Dateikopf (`version: 2`, `app: 'RED-KURD'`), klar getrennt von
         der Schemaversion je Speicher
@@ -151,7 +156,9 @@ dass jemand Angst um seinen Lernstand haben muss.
         Import belebt keine halbfertige Übungsrunde eines fremden Geräts mehr
   - [x] Sicherung über alle vier Apps bewiesen: `test/sicherungRundlauf.test.js` geht
         den vollen Weg — füllen → exportieren → Gerät leeren → importieren
-  - [ ] Aufnahmen in den Export aufnehmen oder in der Oberfläche klar ausschließen;
+  - [x] Aufnahmen sind in der Oberfläche klar ausgeschlossen: die Daten-Karte sagt,
+        dass sie **nicht** Teil der Sicherungsdatei sind und bei einem Gerätewechsel
+        zurückbleiben. In den Export aufzunehmen wäre der nächste Schritt —
         heute verspricht die Einstellungsseite eine Sicherung, die sie nicht enthält
   - [ ] Regel festhalten und prüfbar machen: eine neue App ohne Eintrag in `KEYS` fehlt
         still in jedem Export — heute fängt das nur der Rundlauf-Test ab

@@ -1,7 +1,7 @@
 // Fortschrittsseite des Modern-Modus: Kursstand, Fertigkeiten, Kennzahlen,
 // Wochenaktivität, eine Empfehlung und die Verwaltung der eigenen Daten.
 // Die Seite rechnet nichts selbst — sie liest Selektoren des Lernstands.
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
 import { navigiere } from '../../../app/router.jsx'
 import { T } from '../../../core/texts.js'
@@ -23,6 +23,15 @@ import {
   spieleSicherungEin,
   vorschauVomGeraet,
 } from '../../../core/backup/sicherung.ts'
+import {
+  alleAufnahmen,
+  aufnahmenBilanz,
+  groesseText,
+  loescheAlleAufnahmen,
+  loescheAufnahme,
+  spieleBlob,
+  holeAufnahme,
+} from '../../../core/audio/audioService.js'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
 import { holeProfil } from '../../../core/profile/profileStore.ts'
 
@@ -349,6 +358,7 @@ export default function ProgressPage() {
       <section className="rk-abschnitt">
         <h2 className="rk-abschnitt-titel">Sichern und übertragen</h2>
         <Datenverwaltung />
+        <Aufnahmenverwaltung />
       </section>
     </div>
   )
@@ -476,6 +486,145 @@ function Sicherungsvergleich({ vorher, nachher }) {
         </>
       )}
     </div>
+  )
+}
+
+/**
+ * Sprachaufnahmen verwalten.
+ *
+ * Sie liegen als einzige Nutzerdaten in der IndexedDB und nicht im
+ * localStorage — deshalb sind sie **nicht** in der Sicherungsdatei. Das stand
+ * bisher nirgends in der App, und es gab auch keinen Weg, eine Aufnahme wieder
+ * loszuwerden: `loescheAufnahme()` existierte, hatte aber keinen einzigen
+ * Aufrufer. Beides wird hier nachgeholt.
+ */
+function Aufnahmenverwaltung() {
+  const [liste, setListe] = useState(null)
+  const [bilanz, setBilanz] = useState({ anzahl: 0, bytes: 0 })
+  const [offen, setOffen] = useState(false)
+  const [frageAlle, setFrageAlle] = useState(false)
+  const [hinweis, setHinweis] = useState('')
+
+  async function laden() {
+    const [neu, summe] = await Promise.all([alleAufnahmen(), aufnahmenBilanz()])
+    setListe(neu)
+    setBilanz(summe)
+  }
+
+  useEffect(() => {
+    let lebt = true
+    aufnahmenBilanz().then((summe) => {
+      if (lebt) setBilanz(summe)
+    })
+    return () => {
+      lebt = false
+    }
+  }, [])
+
+  async function aufklappen() {
+    if (!offen && liste === null) await laden()
+    setOffen((o) => !o)
+  }
+
+  async function entferne(wort) {
+    await loescheAufnahme(wort)
+    await laden()
+    setHinweis(`Die Aufnahme zu „${wort}" wurde gelöscht.`)
+  }
+
+  async function entferneAlle() {
+    setFrageAlle(false)
+    await loescheAlleAufnahmen()
+    await laden()
+    setHinweis('Alle Aufnahmen wurden gelöscht.')
+  }
+
+  async function anhoeren(wort) {
+    const blob = await holeAufnahme(wort)
+    if (blob) spieleBlob(blob)
+  }
+
+  return (
+    <Card titel="Sprachaufnahmen" icon="mikrofon">
+      <p className="fp-aufnahmen-zahl">
+        <strong>{bilanz.anzahl}</strong>{' '}
+        {bilanz.anzahl === 1 ? 'Aufnahme' : 'Aufnahmen'} · {groesseText(bilanz.bytes)}
+      </p>
+      <p className="gedaempft fp-aufnahmen-hinweis">
+        Deine eigenen Aussprache-Aufnahmen liegen im Gerät und sind{' '}
+        <strong>nicht Teil der Sicherungsdatei</strong> — bei einem Gerätewechsel bleiben
+        sie zurück.
+      </p>
+
+      {bilanz.anzahl > 0 && (
+        <div className="fp-aufnahmen-knoepfe">
+          <PrimaryButton art="still" icon={offen ? 'pfeilHoch' : 'pfeilRunter'} onClick={aufklappen}>
+            {offen ? 'Liste schließen' : 'Aufnahmen anzeigen'}
+          </PrimaryButton>
+          <PrimaryButton art="still" icon="muell" onClick={() => setFrageAlle(true)}>
+            Alle löschen
+          </PrimaryButton>
+        </div>
+      )}
+
+      {offen && liste && (
+        <ul className="fp-aufnahmen-liste" role="list">
+          {liste.map((a) => (
+            <li key={a.wort} className="fp-aufnahme">
+              <div className="fp-aufnahme-text">
+                <span lang="ku" className="fp-aufnahme-wort">
+                  {a.wort}
+                </span>
+                <span className="gedaempft fp-aufnahme-angabe">
+                  {groesseText(a.groesse)}
+                  {a.zeit ? ` · ${datumText(a.zeit)}` : ''}
+                </span>
+              </div>
+              <button
+                type="button"
+                className="rk-knopf rk-knopf-still fp-aufnahme-knopf"
+                onClick={() => anhoeren(a.wort)}
+                aria-label={`Aufnahme zu ${a.wort} anhören`}
+              >
+                <Icon name="lautsprecher" groesse={20} />
+              </button>
+              <button
+                type="button"
+                className="rk-knopf rk-knopf-still fp-aufnahme-knopf"
+                onClick={() => entferne(a.wort)}
+                aria-label={`Aufnahme zu ${a.wort} löschen`}
+              >
+                <Icon name="muell" groesse={20} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div aria-live="polite">{hinweis && <p className="gedaempft">{hinweis}</p>}</div>
+
+      <Modal
+        offen={frageAlle}
+        titel="Alle Aufnahmen löschen?"
+        schliessen={() => setFrageAlle(false)}
+        fussleiste={
+          <>
+            <PrimaryButton art="still" onClick={() => setFrageAlle(false)}>
+              {T.allgemein.abbrechen}
+            </PrimaryButton>
+            <PrimaryButton art="gefahr" icon="muell" onClick={entferneAlle}>
+              Löschen
+            </PrimaryButton>
+          </>
+        }
+      >
+        <p>
+          {bilanz.anzahl} {bilanz.anzahl === 1 ? 'Aufnahme wird' : 'Aufnahmen werden'} vom
+          Gerät entfernt ({groesseText(bilanz.bytes)}). Das lässt sich nicht rückgängig
+          machen — sie sind in keiner Sicherung enthalten.
+        </p>
+      </Modal>
+    </Card>
   )
 }
 

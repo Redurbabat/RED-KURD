@@ -219,7 +219,7 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 | `elektro/schuleStore.ts` | Fächer, Noten, Prüfungen, Berichtsheft der Elektro-Lehre | localStorage |
 | `prompting/werkstattStore.ts` | angefangener Auftrag, Bug-Report, PR-Haken | localStorage |
 | `hearts/heartsStore.ts` | 5 Herzen mit 4-Stunden-Regeneration — **derzeit von keinem Modul importiert** | localStorage |
-| `audio/audioService.js` | eigene Aufnahmen (IndexedDB), `spieleWort()` (Aufnahme → `/audio/kmr/*.mp3` → Computerstimme), `klickGefuehl()` | IndexedDB, Audio, WebAudio, `navigator.vibrate` |
+| `audio/audioService.js` | eigene Aufnahmen (IndexedDB, zwei Stores: rohe Blobs in `aufnahmen`, Wort/Zeit/Größe in `angaben`), `alleAufnahmen()`/`aufnahmenBilanz()`/`loescheAufnahme()`/`loescheAlleAufnahmen()`, `spieleWort()` (Aufnahme → `/audio/kmr/*.mp3` → Computerstimme), `klickGefuehl()` | IndexedDB, Audio, WebAudio, `navigator.vibrate` |
 | `data/staticData.js` | Netzsuche gegen `/daten/*.json` und die Kurdish-Tech-Blöcke, `zufallsPaare()` | `fetch` |
 | `auth/authApi.js` | `kontoStatus`, `registrieren`, `anmelden`, `abmelden` gegen `/api/auth/*` | `fetch`, Cookie |
 

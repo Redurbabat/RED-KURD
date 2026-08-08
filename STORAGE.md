@@ -414,20 +414,26 @@ Roher String `'kurz' | 'standard' | 'intensiv'` — kein JSON, kein Wrapper, kei
 
 Der Schlüssel steht in `TAB_KEYS` (`storage.ts:128–130`) und wird über `liesTab()` / `schreibeTab()` gelesen und geschrieben — er geht also **nicht mehr** am zentralen `storage.ts` vorbei. `TAB_KEYS` ist bewusst von `KEYS` getrennt: Der Wert überlebt den Tab nicht und gehört in keine Sicherung.
 
-### 3.17 IndexedDB `red-kurd-audio` / Store `aufnahmen`
+### 3.17 IndexedDB `red-kurd-audio` — Stores `aufnahmen` und `angaben`
 
-Quelle: `src/core/audio/audioService.js:5–38`.
+Quelle: `src/core/audio/audioService.js`.
 
 | Merkmal | Wert |
 |---------|------|
-| Datenbank | `red-kurd-audio`, Version `1` |
-| Object Store | `aufnahmen`, **ohne `keyPath` und ohne `autoIncrement`** → Out-of-line Keys |
-| Schlüssel | Das kurmancî Wort als String (`u.ku`), gesetzt in `PronunciationStudio.jsx:137` |
-| Wert | `Blob` — die rohe MediaRecorder-Ausgabe |
-| Metadaten | **keine** — kein Zeitstempel, kein Format, keine Version, keine Zuordnung zur Einheit |
-| `onupgradeneeded` | Legt nur den Store an; es gibt keine Migrationslogik |
+| Datenbank | `red-kurd-audio`, **Version `2`** |
+| Store `aufnahmen` | ohne `keyPath` und ohne `autoIncrement` → Out-of-line Keys |
+| Schlüssel | Das kurmancî Wort als String (`w.ku`), gesetzt im Aussprache-Studio |
+| Wert | `Blob` — die rohe MediaRecorder-Ausgabe, unverändert |
+| Store `angaben` | derselbe Schlüssel; Wert `{ wort, zeit, groesse, typ }` |
+| `onupgradeneeded` | Legt fehlende Stores an — **vorhandene Aufnahmen bleiben unberührt** |
 
-Dieser Bereich ist der einzige Nutzerinhalt, der in keiner Sicherung landet — die eigene Stimme. Die selbst geschriebenen Inhalte der neuen Apps (Notizen, Fehlerbuch, Werkstatt, Noten und Berichtsheft) sind im Export enthalten; die Aufnahmen sind es nicht (§4, §6).
+**Warum zwei Stores und nicht ein Objekt je Aufnahme.** Die Angaben könnten neben dem Blob in *einem* Wert liegen. Sie tun es bewusst nicht: eine ältere App-Version liest `aufnahmen` und erwartet dort einen `Blob`. Bekäme sie ein Objekt, würde `URL.createObjectURL()` werfen und **jede Aufnahme wäre für sie verloren** — ein Rückschritt auf eine ältere Version darf nichts verlieren (§5, Regel 3). So sieht die ältere Version die Angaben einfach nicht und spielt weiter wie bisher. Die Hebung von Version 1 auf 2 ist im Browser geprüft: die Aufnahmen sind danach byteweise dieselben.
+
+**Aufnahmen aus der Zeit vor den Angaben** haben keinen Eintrag in `angaben`. `alleAufnahmen()` liest deshalb die Schlüssel aus `aufnahmen` — nicht aus `angaben` — und ergänzt, was da ist. Solche Aufnahmen erscheinen ohne Datum, aber sie erscheinen; sonst wären sie unsichtbar und damit unlöschbar.
+
+**Löschwege** gibt es seit Kurzem überhaupt: einzeln im Aussprache-Studio, dazu Liste und „Alle löschen" in der Daten-Karte auf `/progress`. `loescheAufnahme()` existierte vorher zwar, hatte aber keinen Aufrufer — und kehrte zurück, bevor die Transaktion fertig war, sodass eine direkt danach gelesene Liste den Eintrag noch zeigen konnte.
+
+Dieser Bereich ist der einzige Nutzerinhalt, der in keiner Sicherung landet — die eigene Stimme. Die selbst geschriebenen Inhalte der neuen Apps (Notizen, Fehlerbuch, Werkstatt, Noten und Berichtsheft) sind im Export enthalten; die Aufnahmen sind es nicht (§4, §6). **Das steht jetzt auch in der App**, in der Daten-Karte, statt nur hier.
 
 ### 3.18 Sicherungsdatei `red-kurd-lernstand.json`
 

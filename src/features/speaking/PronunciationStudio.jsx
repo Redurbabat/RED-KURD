@@ -4,7 +4,12 @@
 // Bewusst ohne Bewertung durch die App — du hörst selbst, was noch anders klingt.
 import { useEffect, useRef, useState } from 'react'
 import { EINHEITEN } from '../../core/courses/courseRepository.ts'
-import { spieleWort, speichereAufnahme, holeAufnahme } from '../../core/audio/audioService.js'
+import {
+  spieleWort,
+  speichereAufnahme,
+  holeAufnahme,
+  loescheAufnahme,
+} from '../../core/audio/audioService.js'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { gibXp } from '../../core/progress/progressStore.ts'
 import Card from '../../components/common/Card.jsx'
@@ -172,6 +177,16 @@ export default function PronunciationStudio() {
     if (lauf && lauf.catch) lauf.catch(() => URL.revokeObjectURL(adresse))
   }
 
+  async function entferneAufnahme(wort) {
+    await loescheAufnahme(wort)
+    if (!lebt.current) return
+    setHatAufnahme((h) => {
+      const neu = { ...h }
+      delete neu[wort]
+      return neu
+    })
+  }
+
   /** Erst die Vorlage, kurz danach die eigene Aufnahme. */
   function vergleiche(wort) {
     sprich(wort)
@@ -333,6 +348,19 @@ export default function PronunciationStudio() {
                           onClick={() => vergleiche(w.ku)}
                         >
                           Vergleichen
+                        </PrimaryButton>
+                        {/* Bis hierher gab es keinen Weg, eine misslungene
+                            Aufnahme wieder loszuwerden — man konnte sie nur
+                            überschreiben. Ohne Rückfrage: neu aufnehmen kostet
+                            zwei Sekunden, und die Vorlage bleibt ohnehin. */}
+                        <PrimaryButton
+                          groesse="klein"
+                          art="still"
+                          icon="muell"
+                          aria-label={`Meine Aufnahme von ${w.ku} löschen`}
+                          onClick={() => entferneAufnahme(w.ku)}
+                        >
+                          Löschen
                         </PrimaryButton>
                       </>
                     )}
