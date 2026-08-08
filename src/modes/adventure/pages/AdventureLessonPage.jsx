@@ -19,7 +19,7 @@ import {
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
-import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
+import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Badge from '../../../components/common/Badge.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'

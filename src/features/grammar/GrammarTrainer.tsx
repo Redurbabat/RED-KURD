@@ -13,18 +13,37 @@ import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import ProgressBar from '../../components/common/ProgressBar.tsx'
 import EmptyState from '../../components/common/EmptyState.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.tsx'
+import type { Einheit, Grammatiknotiz } from '../../types/kurs'
+import type { Grammatikfrage } from '../../data/grammatikUebungen'
 import './GrammarTrainer.css'
 
 const REGELN_JE_RUNDE = 5
 const XP_JE_FRAGE = 15
 
-/** Kapitel mit Notiz UND geprüften Fragen, in zufälliger Reihenfolge. */
-function zieheRegeln() {
-  const passend = EINHEITEN.filter((e) => e.grammatik && grammatikUebungen[e.id]?.length)
-  return mische(passend).slice(0, REGELN_JE_RUNDE).map((e) => ({
-    einheit: e,
-    fragen: grammatikUebungen[e.id],
-  }))
+/** Eine Regel dieser Runde: das Kapitel, seine Notiz und ihre Fragen. */
+interface Regelrunde {
+  einheit: Einheit
+  /** Immer da — `zieheRegeln()` nimmt nur Kapitel MIT Notiz auf. */
+  note: Grammatiknotiz
+  fragen: readonly Grammatikfrage[]
+}
+
+/**
+ * Kapitel mit Notiz UND geprüften Fragen, in zufälliger Reihenfolge.
+ *
+ * Notiz und Fragen werden hier gleich mitgenommen statt nur gefiltert: sonst
+ * müsste jede Stelle weiter unten noch einmal prüfen, ob es sie gibt,
+ * obwohl der Filter das längst entschieden hat.
+ */
+function zieheRegeln(): Regelrunde[] {
+  const passend: Regelrunde[] = []
+  for (const einheit of EINHEITEN) {
+    const note = einheit.grammatik
+    const fragen = grammatikUebungen[einheit.id]
+    if (!note || !fragen?.length) continue
+    passend.push({ einheit, note, fragen })
+  }
+  return mische(passend).slice(0, REGELN_JE_RUNDE)
 }
 
 export default function GrammarTrainer() {
@@ -34,7 +53,7 @@ export default function GrammarTrainer() {
   // Position im Ablauf: welche Regel, und darin Regelkarte (-1) oder Frage 0/1.
   const [regelNr, setRegelNr] = useState(0)
   const [frageNr, setFrageNr] = useState(-1)
-  const [antwort, setAntwort] = useState(null)
+  const [antwort, setAntwort] = useState<number | null>(null)
   const [punkte, setPunkte] = useState(0)
 
   const aktuelle = regeln[regelNr] || null
@@ -52,10 +71,12 @@ export default function GrammarTrainer() {
     setPunkte(0)
   }
 
-  function antworten(index) {
-    if (antwort !== null) return
+  function antworten(index: number): void {
+    // `aktuelle` und die Frage stehen fest, sobald die Antwortknöpfe zu sehen
+    // sind — die Abfragen sind unerreichbar und halten nur `| null` fern.
+    if (antwort !== null || !aktuelle) return
     setAntwort(index)
-    const richtig = index === aktuelle.fragen[frageNr].richtig
+    const richtig = index === aktuelle.fragen[frageNr]?.richtig
     klickGefuehl(richtig ? 'richtig' : 'falsch')
     if (richtig) {
       setPunkte((p) => p + 1)
@@ -63,7 +84,8 @@ export default function GrammarTrainer() {
     }
   }
 
-  function weiter() {
+  function weiter(): void {
+    if (!aktuelle) return
     if (frageNr + 1 < aktuelle.fragen.length) {
       setFrageNr((n) => n + 1)
     } else {
@@ -100,8 +122,7 @@ export default function GrammarTrainer() {
     )
   }
 
-  const { einheit } = aktuelle
-  const note = einheit.grammatik
+  const { einheit, note } = aktuelle
 
   // Schritt 1: die Regel in Ruhe lesen.
   if (frageNr === -1) {
@@ -146,7 +167,10 @@ export default function GrammarTrainer() {
   }
 
   // Schritt 2: die Kontrollfragen.
-  const frage = aktuelle.fragen[frageNr]
+  // Der Rückfall ist unerreichbar: `frageNr` läuft nur bis `fragen.length - 1`
+  // und springt danach auf -1 der nächsten Regel.
+  const frage = aktuelle.fragen[frageNr] ?? aktuelle.fragen[0]
+  if (!frage) return null
 
   return (
     <div className="gt-spiel">

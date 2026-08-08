@@ -14,7 +14,10 @@ import SegmentedControl from '../../components/common/SegmentedControl.tsx'
 import SpecialChars from '../../components/common/SpecialChars.tsx'
 import './ScriptConverter.css'
 
-const RICHTUNGEN = [
+/** In welche Richtung umgewandelt wird. */
+type Richtung = 'lat-arab' | 'arab-lat'
+
+const RICHTUNGEN: readonly { id: Richtung; name: string }[] = [
   { id: 'lat-arab', name: 'Latein → Arabisch' },
   { id: 'arab-lat', name: 'Arabisch → Latein' },
 ]
@@ -22,20 +25,20 @@ const RICHTUNGEN = [
 export default function ScriptConverter() {
   useLernstand()
 
-  const [richtung, setRichtung] = useState('lat-arab')
+  const [richtung, setRichtung] = useState<Richtung>('lat-arab')
   const [eingabe, setEingabe] = useState('')
   const [ergebnis, setErgebnis] = useState('')
   const [meldung, setMeldung] = useState('')
 
   const nachArabisch = richtung === 'lat-arab'
 
-  function wechsle(id) {
+  function wechsle(id: Richtung): void {
     setRichtung(id)
     setErgebnis('')
     setMeldung('')
   }
 
-  function umwandeln() {
+  function umwandeln(): void {
     const t = eingabe.trim()
     if (!t) {
       setErgebnis('')
@@ -46,7 +49,7 @@ export default function ScriptConverter() {
     setMeldung('Text umgewandelt.')
   }
 
-  function vorlesen() {
+  function vorlesen(): void {
     // Vorgelesen wird immer die lateinische Fassung — dafuer gibt es Stimmen.
     const t = (nachArabisch ? eingabe : ergebnis || arabischNachLatein(eingabe)).trim()
     if (!t) {

@@ -9,7 +9,7 @@ import { sitzungLaden } from '../../../core/session/sessionStore.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import { standardDauer } from '../../../core/profile/profileStore.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
-import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
+import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.tsx'
 
 const XP_JE_AUFGABE = 10

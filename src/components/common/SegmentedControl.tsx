@@ -1,33 +1,39 @@
 // Segmentierter Schalter (z. B. Kurz · Standard · Intensiv).
 // Als Radiogruppe umgesetzt, damit die Pfeiltasten funktionieren.
 
-export interface Segmentoption {
-  id: string
+/**
+ * Über die ID generisch: Aufrufer, die statt beliebigem Text eine feste
+ * Auswahl führen (`'lat-arab' | 'arab-lat'`), bekommen sie in `aendern`
+ * zurück, statt sie mit einer Typzusicherung zurückholen zu müssen.
+ * Ohne Angabe bleibt es `string` wie bisher.
+ */
+export interface Segmentoption<Id extends string = string> {
+  id: Id
   name: string
   zusatz?: string
 }
 
-export interface SegmentedControlProps {
+export interface SegmentedControlProps<Id extends string = string> {
   /** Wird für die Element-IDs gebraucht; muss auf der Seite einmalig sein. */
   name: string
   /** Beschriftung der ganzen Gruppe (`aria-label`). */
   label: string
-  wert: string
-  optionen: readonly Segmentoption[]
-  aendern: (id: string) => void
+  wert: Id
+  optionen: readonly Segmentoption<Id>[]
+  aendern: (id: Id) => void
   className?: string
 }
 
-export default function SegmentedControl({
+export default function SegmentedControl<Id extends string = string>({
   name,
   label,
   wert,
   optionen,
   aendern,
   className = '',
-}: SegmentedControlProps) {
+}: SegmentedControlProps<Id>) {
   /** Auswahl UND Fokus wechseln — sonst haengt der Fokus auf der alten Option. */
-  function waehleUndFokussiere(id: string) {
+  function waehleUndFokussiere(id: Id): void {
     aendern(id)
     if (typeof document === 'undefined') return
     requestAnimationFrame(() => {

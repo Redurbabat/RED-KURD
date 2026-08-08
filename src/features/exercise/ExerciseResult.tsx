@@ -3,13 +3,26 @@ import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.tsx'
 import { T } from '../../core/texts.js'
+import type { Rundenbelohnung, Rundenergebnis } from '../../types/lernstand'
 
-/**
- * @param {{ergebnis:{prozent:number,richtig:number,gesamt:number,fehler:Array},
- *          sterne?:number, belohnung?:{xp?:number,edelsteine?:number,serie?:number},
- *          stil?:'modern'|'abenteuer', weiter:()=>void, wiederholen?:()=>void,
- *          fehlerUeben?:()=>void, titel?:string}} props
- */
+/** Beide Modi zeigen dasselbe Ergebnis, nur in ihrem eigenen Gewand. */
+export type Ergebnisstil = 'modern' | 'abenteuer'
+
+export interface ExerciseResultProps {
+  ergebnis: Rundenergebnis
+  /** `null` blendet die Sternzeile aus — nur Prüfungen vergeben Sterne. */
+  sterne?: number | null
+  belohnung?: Rundenbelohnung
+  stil?: Ergebnisstil
+  weiter: () => void
+  /** Fehlt, wenn die Runde nicht wiederholbar ist (freie Sitzung). */
+  wiederholen?: () => void
+  /** Fehlt, wenn es nichts nachzuüben gibt. */
+  fehlerUeben?: () => void
+  /** Überschreibt die Standardüberschrift. */
+  titel?: string
+}
+
 export default function ExerciseResult({
   ergebnis,
   sterne = null,
@@ -19,7 +32,7 @@ export default function ExerciseResult({
   wiederholen,
   fehlerUeben,
   titel,
-}) {
+}: ExerciseResultProps) {
   const gut = ergebnis.prozent >= 80
   return (
     <div className={`rk-ergebnis rk-ergebnis-${stil}`} role="status" aria-live="polite">

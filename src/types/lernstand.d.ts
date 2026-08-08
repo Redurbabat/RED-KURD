@@ -350,6 +350,39 @@ export interface Tippaufgabe extends Aufgabenkern {
 export type Uebung = Bildaufgabe | Wahlaufgabe | Tippaufgabe
 
 /**
+ * Ein falsch beantwortetes Wort einer Runde (`ExercisePlayer.jsx:184`).
+ * Bewusst kein `Uebungswort`: gesammelt werden nur die drei Felder, die
+ * `ExerciseResult` und die Fehlerrunde danach brauchen.
+ */
+export interface Rundenfehler {
+  de: string
+  ku: string
+  bild?: string
+}
+
+/**
+ * Was am Ende einer Übungsrunde herauskommt (`ExercisePlayer.jsx:137–141`).
+ * `prozent` ist gerundet; bei einer leeren Runde 0 statt `NaN`.
+ */
+export interface Rundenergebnis {
+  prozent: number
+  richtig: number
+  gesamt: number
+  fehler: readonly Rundenfehler[]
+}
+
+/**
+ * Was eine Runde gutschreibt. Alle drei Felder sind wahlfrei — der
+ * Modern-Modus reicht nur `xp` mit, der Abenteuer-Modus alle drei.
+ * `ExerciseResult` blendet jede fehlende oder null-Zeile aus.
+ */
+export interface Rundenbelohnung {
+  xp?: number
+  edelsteine?: number
+  serie?: number
+}
+
+/**
  * `red-kurd-session-v2` — laufende Sitzung. Hat bisher kein version-Feld
  * (bekannte Lücke, STORAGE.md §6).
  *

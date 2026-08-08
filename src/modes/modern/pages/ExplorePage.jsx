@@ -11,8 +11,8 @@ import Badge from '../../../components/common/Badge.tsx'
 import { ClickCard } from '../../../components/common/Card.tsx'
 import DictionaryView from '../../../features/dictionary/DictionaryView.jsx'
 import ReadingView from '../../../features/reading/ReadingView.jsx'
-import ScriptConverter from '../../../features/script-converter/ScriptConverter.jsx'
-import CultureView from '../../../features/culture/CultureView.jsx'
+import ScriptConverter from '../../../features/script-converter/ScriptConverter.tsx'
+import CultureView from '../../../features/culture/CultureView.tsx'
 import './ExplorePage.css'
 
 const TABS = [
