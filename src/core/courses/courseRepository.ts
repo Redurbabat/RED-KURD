@@ -188,7 +188,9 @@ export const WELTEN: readonly Welt[] = [
     untertitel: 'Rojane bi hûrgulî',
     ort: 'Wohnviertel',
     landschaft: 'dorf',
-    farbe: 'var(--rk-blue)',
+    // `--rk-blue` gehoert dem Modern-Modus; die Landschaft kennt nur die
+    // kurdische Farbwelt und liess w8 deshalb still im Gruen von w1 stehen.
+    farbe: 'var(--adv-blue)',
     himmel: '#65bde2',
     einheiten: ['wochentage', 'wetter', 'wohnung', 'kueche', 'obst', 'gemuese', 'sport'],
   },
@@ -199,7 +201,9 @@ export const WELTEN: readonly Welt[] = [
     untertitel: 'Bi ewlehî biaxive',
     ort: 'Stadtzentrum',
     landschaft: 'kela',
-    farbe: 'var(--rk-purple)',
+    // Wie w8: `--rk-purple` ist Modern-Modus. Die Farbwelt setzt Violett auf
+    // Granatapfel (`--adv-purple: var(--adv-granat)`).
+    farbe: 'var(--adv-purple)',
     himmel: '#9a91dc',
     einheiten: ['digital', 'restaurant', 'gespraech', 'zahlen-gross', 'notfall'],
   },

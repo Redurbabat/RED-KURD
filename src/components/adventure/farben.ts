@@ -76,8 +76,13 @@ export const TOKEN = {
   himmel: '#7fc4de',
 }
 
-/** Die Welten geben ihre Farbe als Token an — hier wird daraus ein Hex. */
-const TOKEN_HEX: Readonly<Record<string, string>> = {
+/**
+ * Die Welten geben ihre Farbe als Token an — hier wird daraus ein Hex.
+ * Exportiert, damit `test/landschaftsfarben.test.js` jede Zeile gegen
+ * `src/styles/tokens.css` halten kann: eine Tabelle, die von Hand gepflegt
+ * wird, laeuft sonst irgendwann still auseinander.
+ */
+export const TOKEN_HEX: Readonly<Record<string, string>> = {
   '--rk-night': TOKEN.nacht,
   '--rk-stone': TOKEN.fels,
   '--rk-turquoise': TOKEN.tuerkis,
@@ -96,8 +101,13 @@ const TOKEN_HEX: Readonly<Record<string, string>> = {
   '--adv-poppy': TOKEN.mohn,
   '--adv-orange': TOKEN.orange,
   '--adv-sky': TOKEN.himmel,
-  '--adv-blue': '#3f9fc4',
-  '--adv-purple': '#7b5ea8',
+  // tokens.css: „Die Farbwelt kennt kein Blau, Violett oder Rosa." Beide Rollen
+  // zeigen dort auf Toene der Farbwelt — `--adv-blue: var(--rk-turquoise)` und
+  // `--adv-purple: var(--adv-granat)`. Hier standen noch die Hex-Werte von vor
+  // dem kurdischen Umbau; `test/landschaftsfarben.test.js` vergleicht die
+  // Tabelle jetzt Zeile fuer Zeile mit tokens.css.
+  '--adv-blue': TOKEN.tuerkis,
+  '--adv-purple': TOKEN.granat,
 }
 
 /**
