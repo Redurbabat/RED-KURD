@@ -115,10 +115,13 @@
   border-radius: var(--radius-medium);
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
-.rk-trainingskachel:hover {
-  transform: translateY(-2px);
-  border-color: var(--rk-primary);
-  box-shadow: var(--shadow-card);
+/* Nur mit echter Maus — auf Touch bliebe der Schwebezustand haengen. */
+@media (hover: hover) {
+  .rk-trainingskachel:hover {
+    transform: translateY(-2px);
+    border-color: var(--rk-primary);
+    box-shadow: var(--shadow-card);
+  }
 }
 .rk-trainingskachel-icon {
   display: flex;
@@ -193,9 +196,12 @@
   min-height: 68px;
   transition: transform var(--motion-fast) ease, border-color var(--motion-fast) ease;
 }
-.rk-einheit:hover {
-  transform: translateY(-2px);
-  border-color: var(--rk-primary);
+/* Nur mit echter Maus — auf Touch bliebe der Schwebezustand haengen. */
+@media (hover: hover) {
+  .rk-einheit:hover {
+    transform: translateY(-2px);
+    border-color: var(--rk-primary);
+  }
 }
 .rk-einheit.aktuell {
   border-color: var(--rk-primary);

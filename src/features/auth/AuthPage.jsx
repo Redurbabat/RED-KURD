@@ -66,7 +66,7 @@ export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut, onOhn
           </span>
           <span>
             <strong>RED-KURD</strong>
-            <small>Zimanê xwe bibêje, pêş ve biçin</small>
+            <small lang="ku">Zimanê xwe bibêje, pêş ve biçin</small>
           </span>
         </div>
 

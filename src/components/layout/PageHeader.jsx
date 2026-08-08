@@ -2,6 +2,7 @@
 import HeloMascot from '../mascot/HeloMascot.jsx'
 import Icon from '../icons/Icon.jsx'
 import { navigiere } from '../../app/router.jsx'
+import { T } from '../../core/texts.js'
 
 /**
  * @param {{titel:string, untertitel?:string, variante?:string,
@@ -13,7 +14,7 @@ export default function PageHeader({
   untertitel,
   variante = 'ruhig',
   zurueck,
-  zurueckText = 'Zurück',
+  zurueckText = T.allgemein.zurueck,
   aktion,
   ohneMaskottchen = false,
 }) {

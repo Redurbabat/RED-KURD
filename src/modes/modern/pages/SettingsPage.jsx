@@ -28,6 +28,9 @@ import { ErrorState } from '../../../components/common/EmptyState.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
 import './SettingsPage.css'
 
+/** Alt-Schlüssel des v1-Profils — nur beim bewussten Onboarding-Neustart relevant. */
+const ALT_PROFIL_SCHLUESSEL = 'red-kurd-profil-v1'
+
 const DESIGNS = [
   { id: 'light', name: 'Hell', beschreibung: 'Heller Hintergrund, dunkle Schrift', icon: 'sonne' },
   { id: 'dark', name: 'Dunkel', beschreibung: 'Dunkler Hintergrund, helle Schrift', icon: 'mond' },
@@ -189,7 +192,7 @@ function KontoKarte() {
     }
   }
 
-  // Ohne Anmelde-Server (lokal, Vercel, offline) gibt es kein Konto —
+  // Ohne Anmelde-Server (lokal, statischer Host, offline) gibt es kein Konto —
   // der Lernstand liegt dann vollstaendig im Browser.
   if (!stand.backend) {
     return (
@@ -605,7 +608,7 @@ function ModusKarte() {
           frage === 'abenteuer'
             ? T.einstellungen.zuAbenteuer
             : frage === 'redlingo'
-              ? 'Zu Redlingo wechseln?'
+              ? T.einstellungen.zuRedlingo
               : T.einstellungen.zuModern
         }
         schliessen={() => setFrage(null)}
@@ -736,8 +739,11 @@ function DatenKarte() {
 
   function onboardingNeu() {
     setFrageOffen(false)
-    // Ueber storage.js, damit der Schluesselname nur an einer Stelle steht.
     entferne(KEYS.profil)
+    // Auch das v1-Profil muss weg: Die Migration wuerde es beim Neustart sonst
+    // sofort wiederherstellen und das Onboarding erschiene nie. Das ist ein
+    // bewusster Nutzerwunsch — der Lernstand selbst bleibt unberuehrt.
+    entferne(ALT_PROFIL_SCHLUESSEL)
     window.location.assign('/')
   }
 

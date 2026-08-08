@@ -11,6 +11,21 @@ export const KEYS = {
   aufgaben: 'red-kurd-tasks-v1',
   herzen: 'red-kurd-hearts-v1',
   sprachkurse: 'red-kurd-language-courses-v1',
+  // Aktiver App-Bereich (Sprache lernen / Code lernen / AI-Sprache).
+  // appBereich ist der alte Schluessel — er wird weiter beschrieben, damit
+  // ein Ruecksprung auf eine aeltere App-Version nichts verliert.
+  appBereich: 'red-kurd-active-app-mode-v1',
+  appAktiv: 'red-kurd-active-app-v1',
+  // Lernstand der neuen Bereiche — getrennt vom Sprach-Lernstand.
+  codeFortschritt: 'red-kurd-code-progress-v1',
+  promptingFortschritt: 'red-kurd-prompting-progress-v1',
+  electroFortschritt: 'red-kurd-electro-progress-v1',
+  // Schule und Betrieb der Elektro-Lehre: Faecher, Noten, Pruefungen,
+  // Berichtsheft. Bleibt lokal, wandert aber in Sicherungen mit.
+  electroSchule: 'red-kurd-electro-school-v1',
+  // Werkstatt der AI-Sprache: begonnene Auftraege, Bug-Reports, PR-Haken.
+  promptingWerkstatt: 'red-kurd-prompting-workshop-v1',
+  fehlerbuch: 'red-kurd-fehlerbuch-v1',
   // Bewusste Entscheidung „ohne Konto lernen“ — ueberlebt das Neuladen,
   // bleibt aber geraete-lokal (siehe NUR_LOKAL) und wandert nie in Sicherungen.
   ohneKonto: 'red-kurd-ohne-konto-v1',
@@ -34,22 +49,72 @@ function verfuegbar() {
 
 export function lies(key, ersatz = null) {
   if (!verfuegbar()) return ersatz
+  let roh = null
   try {
-    const roh = localStorage.getItem(key)
+    roh = localStorage.getItem(key)
     if (roh === null) return ersatz
     return JSON.parse(roh)
   } catch {
+    sichereDefekt(key, roh)
     return ersatz
   }
 }
 
+/**
+ * Kaputte Rohdaten nicht dem naechsten schreibe() opfern: Der erste
+ * Lesefehler legt den Rohtext unter `<key>-defekt` ab. So bleibt ein evtl.
+ * noch rettbarer Lernstand fuer eine Handrettung erhalten, statt still von
+ * einem frischen Leerzustand ueberschrieben zu werden.
+ */
+function sichereDefekt(key, roh) {
+  if (typeof roh !== 'string' || !roh) return
+  try {
+    const backupKey = `${key}-defekt`
+    // Ein bestehendes Backup gewinnt — es ist naeher am letzten guten Stand.
+    if (localStorage.getItem(backupKey) === null) localStorage.setItem(backupKey, roh)
+  } catch {
+    /* voller Speicher — mehr ist hier nicht zu retten */
+  }
+}
+
+// ===== Sichtbares Speicherversagen =====
+// Scheitert das Schreiben (Speicher voll, privater Modus), zeigt die UI
+// sonst Fortschritt, der beim naechsten Neuladen weg ist. Deshalb wird der
+// erste Fehlschlag genau einmal gemeldet, damit die App warnen kann.
+let problemGemeldet = false
+let problemHoerer = null
+
+/** Einen Melder fuer Speicherprobleme anmelden; liefert die Abmeldung. */
+export function beiSpeicherproblem(fn) {
+  problemHoerer = fn
+  // War das Problem schon vor der Anmeldung da, sofort nachreichen.
+  if (problemGemeldet && fn) fn()
+  return () => {
+    if (problemHoerer === fn) problemHoerer = null
+  }
+}
+
+function meldeProblem() {
+  if (problemGemeldet) return
+  problemGemeldet = true
+  try {
+    problemHoerer?.()
+  } catch {
+    /* ein defekter Hoerer aendert nichts am Speicherproblem */
+  }
+}
+
 export function schreibe(key, wert) {
-  if (!verfuegbar()) return false
+  if (!verfuegbar()) {
+    meldeProblem()
+    return false
+  }
   try {
     localStorage.setItem(key, JSON.stringify(wert))
     return true
   } catch {
     // Speicher voll oder privater Modus — die App laeuft weiter, nur ohne Sicherung.
+    meldeProblem()
     return false
   }
 }
@@ -96,10 +161,12 @@ export function entferne(key) {
  * Vollständige, lokale Sicherung aller bekannten App-Speicher.
  * Es werden nur RED-KURD-Schlüssel gelesen; fremde Browserdaten bleiben unberührt.
  */
-// Geraete-lokale Entscheidungen (z. B. „ohne Konto lernen") sind kein
-// Lernstand und wandern nicht in Sicherungen — sonst wuerde ein Import die
-// Anmelde-Entscheidung eines anderen Geraets uebernehmen.
-const NUR_LOKAL = new Set(['ohneKonto'])
+// Geraete-lokale Zustaende wandern nicht in Sicherungen:
+// - „ohne Konto lernen" ist eine Anmelde-Entscheidung dieses Geraets — ein
+//   Import darf sie nicht von einem anderen Geraet uebernehmen.
+// - Die laufende Sitzung ist fluechtig — ein Import wuerde sonst auf dem
+//   neuen Geraet eine halb fertige, veraltete Sitzung wiederbeleben.
+const NUR_LOKAL = new Set(['ohneKonto', 'sitzung'])
 
 export function exportiereSpeicherstand() {
   return Object.fromEntries(

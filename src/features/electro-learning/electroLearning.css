@@ -1,0 +1,279 @@
+/* ===== Bereich „Elektro-Lehre" — gold/gelber Akzent, ruhig und klar ===== */
+
+.bereich-electro h1 {
+  color: var(--rk-orange-dark);
+}
+
+.el-text {
+  color: var(--rk-text-muted);
+}
+
+.el-heute {
+  line-height: 1.6;
+}
+
+.el-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Lektionen (anklickbare Karten) --- */
+.el-lektion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+}
+.el-lektion:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.el-lektion-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.el-lektion-titel {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.el-lektion-status {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.el-lektion.status-done .el-lektion-status {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.el-lektion.status-current .el-lektion-status {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-yellow);
+  background: var(--rk-yellow-soft);
+}
+
+/* --- Uebungen --- */
+.el-uebung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.el-uebung-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* ===== Eigene Navigation der Elektro-App ===== */
+
+.el-nav {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  margin-bottom: var(--space-4);
+  scrollbar-width: none;
+}
+.el-nav::-webkit-scrollbar {
+  display: none;
+}
+.el-nav-knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  min-height: 46px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+.el-nav-knopf.aktiv {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-yellow);
+  background: var(--rk-yellow-soft);
+}
+
+/* ===== Noten, Prüfungen, Berichtsheft ===== */
+
+.el-noten,
+.el-pruefungen,
+.el-berichtsheft,
+.el-formeln,
+.el-heute-seite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.el-gross {
+  font-size: var(--text-lg);
+}
+.el-fach-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.el-ziel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--rk-orange-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.el-notenliste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-2) 0;
+}
+.el-notenliste li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+}
+.el-note-wert {
+  min-width: 2.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.el-note-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.el-loeschen {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--rk-text-light);
+  border-radius: var(--radius-small);
+}
+.el-loeschen-breit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: auto;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+.el-formular {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+.el-formular-reihe {
+  display: flex;
+  gap: var(--space-2);
+}
+.el-formular-reihe > span {
+  flex: 1;
+  min-width: 0;
+}
+.el-formular-knoepfe {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+.el-skala {
+  max-width: 22rem;
+}
+
+/* ===== Rechner und Formeln ===== */
+
+.el-rechner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.el-rechner-feld {
+  flex: 1 1 8rem;
+  min-width: 0;
+}
+.el-ergebnis {
+  margin-top: var(--space-2);
+  font-size: var(--text-base);
+}
+.el-ergebnisse {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+.el-formel-gross code,
+.el-formelliste code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--rk-surface-soft);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+.el-formel-gross code {
+  font-size: var(--text-lg);
+}
+.el-formelliste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.el-formelliste li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.el-regeln {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-2) 0;
+}
+.el-regeln li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.el-regel-nummer {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--rk-yellow-soft);
+  color: var(--rk-orange-dark);
+  font-weight: 800;
+}

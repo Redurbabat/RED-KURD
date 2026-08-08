@@ -1,6 +1,7 @@
-// Einstiegspunkt: Migration, Design anwenden, Onboarding, dann die Hülle
-// des jeweiligen Modus mit der passenden Seite.
-import { useEffect, useState } from 'react'
+// Einstiegspunkt: Migration, Design anwenden, Onboarding, dann der aktive
+// App-Bereich — Sprache lernen (die bisherige App), Code lernen oder
+// AI-Sprache. Sichtbar ist immer genau ein Bereich.
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { RouterProvider, useRoute, navigiere } from './router.jsx'
 import AppRouter, { istAbenteuerPfad, istRedlingoPfad } from './AppRouter.jsx'
 import AppShell from '../components/layout/AppShell.jsx'
@@ -10,7 +11,7 @@ import PrimaryButton from '../components/common/PrimaryButton.jsx'
 import Onboarding from '../modes/modern/pages/Onboarding.jsx'
 import { T } from '../core/texts.js'
 import { MODERN_NAV, ABENTEUER_NAV, REDLINGO_NAV } from '../components/layout/navConfig.js'
-import { KEYS, entferne, lies, migriere, schreibe } from '../core/storage.js'
+import { KEYS, beiSpeicherproblem, entferne, lies, migriere, schreibe } from '../core/storage.js'
 import { useLernstand } from '../core/store.js'
 import { anwenden, appModus, setzeAppModus } from '../core/ui/uiStore.js'
 import { istEingerichtet } from '../core/profile/profileStore.js'
@@ -18,6 +19,20 @@ import { statistik } from '../core/progress/progressSelectors.js'
 import { offeneBelohnungen } from '../core/tasks/taskStore.js'
 import { kontoStatus } from '../core/auth/authApi.js'
 import AuthPage, { AuthLoading } from '../features/auth/AuthPage.jsx'
+import AnsichtSwitcher from '../features/app-mode/AnsichtSwitcher.jsx'
+import AppLauncher from '../features/app-mode/AppLauncher.jsx'
+import AppModeSwitcher from '../features/app-mode/AppModeSwitcher.jsx'
+import { APP_MODES } from '../features/app-mode/appModes.js'
+import { hatGespeicherteApp, loadAppMode, saveAppMode } from '../features/app-mode/appModeStorage.js'
+import { LoadingState } from '../components/common/EmptyState.jsx'
+
+// Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
+const ladeCode = () => import('../features/code-learning/CodeLearningHome.jsx')
+const ladePrompting = () => import('../features/prompting-learning/PromptingApp.jsx')
+const ladeElectro = () => import('../features/electro-learning/ElectroApp.jsx')
+const CodeLearningHome = lazy(ladeCode)
+const PromptingApp = lazy(ladePrompting)
+const ElectroApp = lazy(ladeElectro)
 
 import '../styles/tokens.css'
 import '../styles/global.css'
@@ -33,6 +48,10 @@ function Rahmen() {
   useLernstand()
   const { pfad } = useRoute()
   const [frage, setFrage] = useState(null)
+  // Scheitert das Speichern (voll/privater Modus), muss die Lernende das
+  // erfahren — sonst zeigt die App Fortschritt, der beim Neuladen weg ist.
+  const [speicherProblem, setSpeicherProblem] = useState(false)
+  useEffect(() => beiSpeicherproblem(() => setSpeicherProblem(true)), [])
   const modus = istAbenteuerPfad(pfad)
     ? 'abenteuer'
     : istRedlingoPfad(pfad)
@@ -92,6 +111,11 @@ function Rahmen() {
       ohneNav={ohneNav}
       aside={mitZusatz && !nichtZusatz ? <SideColumn modus={modus} /> : null}
     >
+      {speicherProblem && (
+        <p className="rk-fehler" role="alert">
+          {T.allgemein.speicherProblem}
+        </p>
+      )}
       <AppRouter />
 
       <Modal
@@ -100,7 +124,7 @@ function Rahmen() {
           frage === 'abenteuer'
             ? T.einstellungen.zuAbenteuer
             : frage === 'redlingo'
-              ? 'Zu Redlingo wechseln?'
+              ? T.einstellungen.zuRedlingo
               : T.einstellungen.zuModern
         }
         schliessen={() => setFrage(null)}
@@ -127,10 +151,37 @@ function Rahmen() {
 export default function App() {
   const [eingerichtet, setEingerichtet] = useState(() => istEingerichtet())
   const [konto, setKonto] = useState({ status: 'laedt', wert: null, fehler: '' })
+  // Der aktive App-Bereich (Sprache/Code/AI/Elektro) — ueberlebt das Neuladen.
+  const [activeMode, setActiveMode] = useState(() => loadAppMode())
+  // Beim allerersten Start zeigt RED-KURD die App-Auswahl; danach oeffnet
+  // sich direkt die zuletzt genutzte App. „Apps" holt die Auswahl zurueck.
+  const [launcherOffen, setLauncherOffen] = useState(() => !hatGespeicherteApp())
+
+  function handleModeChange(nextMode) {
+    setActiveMode(nextMode)
+    saveAppMode(nextMode)
+    setLauncherOffen(false)
+  }
+
+  // Die anderen Bereiche im Leerlauf nachladen, damit der Service Worker sie
+  // fuer den Offline-Betrieb einsammelt (gleiches Muster wie im AppRouter).
+  useEffect(() => {
+    const alles = () => {
+      ladeCode().catch(() => {})
+      ladePrompting().catch(() => {})
+      ladeElectro().catch(() => {})
+    }
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(alles, { timeout: 8000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const id = window.setTimeout(alles, 4000)
+    return () => window.clearTimeout(id)
+  }, [])
 
   async function kontoPruefen() {
     setKonto((alt) => ({ ...alt, status: 'laedt', fehler: '' }))
-    // Local-first: gibt es keinen Anmelde-Server (lokal, Vercel, offline),
+    // Local-first: gibt es keinen Anmelde-Server (lokal, statischer Host, offline),
     // läuft die App ohne Konto weiter — der Lernstand liegt ohnehin im Browser.
     // Nur wenn der Server da ist, verlangt sie eine Anmeldung — es sei denn,
     // die Nutzerin hat sich ausdrücklich für „ohne Konto lernen“ entschieden.
@@ -187,9 +238,39 @@ export default function App() {
     return <Onboarding fertig={() => setEingerichtet(true)} />
   }
 
+  // Die App-Auswahl ist eine eigene Vollbild-Seite — waehrend sie offen ist,
+  // ist keine der Apps sichtbar.
+  if (launcherOffen) {
+    return <AppLauncher oeffnen={handleModeChange} />
+  }
+
+  // Genau EINE App ist sichtbar. Der Sprachbereich ist die bisherige App
+  // mit Router und Huelle — an ihr aendert sich nichts, sie wird nur bei
+  // Bedarf ein- und ausgeblendet.
   return (
-    <RouterProvider>
-      <Rahmen />
-    </RouterProvider>
+    <div className="app-bereiche">
+      <AppModeSwitcher
+        activeMode={activeMode}
+        onChangeMode={handleModeChange}
+        onOpenLauncher={() => setLauncherOffen(true)}
+      />
+
+      {activeMode === APP_MODES.LANGUAGE && (
+        <RouterProvider>
+          {/* Modern/Abenteuer/Redlingo sind ANSICHTEN der Sprach-App —
+              keine eigenen Apps. Der Wechsel lebt deshalb nur hier. */}
+          <AnsichtSwitcher />
+          <Rahmen />
+        </RouterProvider>
+      )}
+
+      {activeMode !== APP_MODES.LANGUAGE && (
+        <Suspense fallback={<LoadingState />}>
+          {activeMode === APP_MODES.CODE && <CodeLearningHome />}
+          {activeMode === APP_MODES.PROMPTING && <PromptingApp />}
+          {activeMode === APP_MODES.ELECTRO && <ElectroApp />}
+        </Suspense>
+      )}
+    </div>
   )
 }

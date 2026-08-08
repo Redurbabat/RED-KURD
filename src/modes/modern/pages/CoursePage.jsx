@@ -1,4 +1,5 @@
 // Kursübersicht: Gesamtfortschritt, aktuelle Einheit und alle Einheiten.
+import { useState } from 'react'
 import { useLernstand } from '../../../core/store.js'
 import { navigiere } from '../../../app/router.jsx'
 import {
@@ -16,6 +17,7 @@ import Icon from '../../../components/icons/Icon.jsx'
 import Badge from '../../../components/common/Badge.jsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
 import ProgressBar, { ProgressRing } from '../../../components/common/ProgressBar.jsx'
+import LernpfadKarte from '../../../features/app-mode/LernpfadKarte.jsx'
 import { T } from '../../../core/texts.js'
 import './CoursePage.css'
 
@@ -114,6 +116,8 @@ function EinheitKarte({ einheit }) {
 }
 
 export default function CoursePage() {
+  // Zwei Darstellungen derselben Einheiten: Liste oder Wegkarte.
+  const [alsKarte, setAlsKarte] = useState(false)
   useLernstand()
 
   const gesamt = kursFortschritt()
@@ -194,6 +198,27 @@ export default function CoursePage() {
           {T.kurs.alleEinheiten}
         </h2>
 
+        {/* Dieselben Einheiten, zwei Darstellungen — die Wegkarte zeigt den
+            Weg durch eine Welt als Knotenkette. */}
+        <div className="pfad-ansicht-wahl" role="group" aria-label="Darstellung der Einheiten">
+          <button
+            type="button"
+            className={`pfad-ansicht-knopf${!alsKarte ? ' aktiv' : ''}`}
+            aria-pressed={!alsKarte}
+            onClick={() => setAlsKarte(false)}
+          >
+            Liste
+          </button>
+          <button
+            type="button"
+            className={`pfad-ansicht-knopf${alsKarte ? ' aktiv' : ''}`}
+            aria-pressed={alsKarte}
+            onClick={() => setAlsKarte(true)}
+          >
+            Wegkarte
+          </button>
+        </div>
+
         <div className="kurs-welten">
           {WELTEN.map((welt) => {
             const weltStand = weltFortschritt(welt.id)
@@ -209,11 +234,22 @@ export default function CoursePage() {
                     {weltStand.fertig}/{weltStand.gesamt}
                   </Badge>
                 </header>
-                <ul className="rk-einheitenliste" role="list">
-                  {einheitenDerWelt(welt.id).map((einheit) => (
-                    <EinheitKarte key={einheit.id} einheit={einheit} />
-                  ))}
-                </ul>
+                {alsKarte ? (
+                  <LernpfadKarte
+                    lessons={einheitenDerWelt(welt.id).map((e) => ({ ...e, title: e.name }))}
+                    status={Object.fromEntries(
+                      einheitenDerWelt(welt.id).map((e) => [e.id, einheitStatus(e.id)])
+                    )}
+                    meta={(e) => `${e.lektionen.length} Lektionen`}
+                    oeffnen={(e) => navigiere('/course/' + e.id)}
+                  />
+                ) : (
+                  <ul className="rk-einheitenliste" role="list">
+                    {einheitenDerWelt(welt.id).map((einheit) => (
+                      <EinheitKarte key={einheit.id} einheit={einheit} />
+                    ))}
+                  </ul>
+                )}
               </section>
             )
           })}

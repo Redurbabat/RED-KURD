@@ -1,0 +1,173 @@
+/* ===== Bereich „AI-Sprache" — rot/oranger Akzent, ruhig und klar ===== */
+
+.bereich-prompting h1 {
+  color: var(--rk-orange-dark);
+}
+
+.pl-text {
+  color: var(--rk-text-muted);
+}
+
+.pl-heute {
+  line-height: 1.6;
+}
+
+.pl-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* --- Lektionen (anklickbare Karten) --- */
+.pl-lektion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+  width: 100%;
+  text-align: left;
+}
+.pl-lektion:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.pl-lektion-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.pl-lektion-titel {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--rk-text);
+}
+.pl-lektion-status {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.pl-lektion.status-done .pl-lektion-status {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.pl-lektion.status-current .pl-lektion-status {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-orange);
+  background: var(--rk-orange-soft);
+}
+.pl-lektion.status-locked {
+  opacity: 0.65;
+}
+
+/* --- Uebungen --- */
+.pl-uebung {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pl-uebung-kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.pl-uebung-aufgabe {
+  padding: var(--space-3);
+  border-left: 3px solid var(--rk-orange);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-size: var(--text-sm);
+}
+
+/* ===== Werkstatt der AI-Sprache (Baukasten, PR-Checkliste) ===== */
+
+.pl-werkstatt,
+.pl-pr,
+.pl-heute-seite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.pl-gross {
+  font-size: var(--text-lg);
+}
+.pl-feld-karte .rk-feld {
+  margin-top: var(--space-1);
+}
+.pl-ergebnis {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(15px, var(--text-sm));
+  line-height: 1.5;
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  border: 1.5px solid var(--rk-border);
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
+  margin-bottom: var(--space-3);
+  max-height: 22rem;
+  overflow-y: auto;
+}
+.pl-werkstatt-knoepfe {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+.pl-checkliste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.pl-check-knopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-2) var(--space-3);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  text-align: left;
+  font-size: var(--text-sm);
+}
+.pl-check-knopf.an {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.pl-check-kasten {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  border: 2px solid var(--rk-border-strong);
+}
+.pl-check-knopf.an .pl-check-kasten {
+  border-color: var(--rk-green);
+  background: var(--rk-green);
+  color: #ffffff;
+}
+.pl-urteil {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}

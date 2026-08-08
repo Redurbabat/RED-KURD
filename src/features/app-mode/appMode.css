@@ -1,0 +1,918 @@
+/* ===== App-Umschalter: Sprache lernen · Code lernen · AI-Sprache ===== */
+
+.app-umschalter {
+  display: flex;
+  gap: var(--space-1);
+  justify-content: center;
+  padding: var(--space-2) var(--space-3);
+  /* Der Umschalter ist das oberste Element — er traegt die Notch-Polsterung. */
+  padding-top: calc(var(--space-2) + env(safe-area-inset-top, 0px));
+  background: var(--rk-surface);
+  border-bottom: 2px solid var(--rk-border);
+}
+
+.app-umschalter-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  color: var(--rk-text-muted);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.app-umschalter-knopf.aktiv {
+  color: var(--rk-text);
+  background: var(--rk-surface-soft);
+  border-color: var(--rk-border-strong);
+}
+
+/* Jeder Bereich traegt seine Farbe — aber nur als Akzent, nicht als Laerm. */
+.app-umschalter-knopf.bereich-language.aktiv {
+  color: var(--rk-primary-dark);
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+/* Code lernen: blau/violett. */
+.app-umschalter-knopf.bereich-code.aktiv {
+  color: var(--rk-purple-dark);
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
+}
+/* AI-Sprache: rot/orange. */
+.app-umschalter-knopf.bereich-prompting.aktiv {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-red);
+  background: var(--rk-orange-soft);
+}
+.app-umschalter-knopf.bereich-electro.aktiv {
+  color: var(--rk-orange-dark);
+  border-color: var(--rk-yellow);
+  background: var(--rk-yellow-soft);
+}
+
+.app-umschalter-apps {
+  color: var(--rk-text);
+  border-color: var(--rk-border);
+}
+
+/* Schmale Bildschirme: „Sprache | Code | AI" statt der langen Namen. */
+.app-umschalter-kurz {
+  display: none;
+}
+@media (max-width: 560px) {
+  .app-umschalter {
+    gap: var(--space-1);
+    padding-left: var(--space-2);
+    padding-right: var(--space-2);
+  }
+  .app-umschalter-knopf {
+    flex: 1;
+    padding: var(--space-2) var(--space-2);
+  }
+  .app-umschalter-lang {
+    display: none;
+  }
+  .app-umschalter-kurz {
+    display: inline;
+  }
+}
+
+/* ===== Ansichts-Umschalter der Sprach-App (Modern/Abenteuer/Redlingo) ===== */
+
+.ansicht-umschalter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--rk-surface);
+  border-bottom: 1.5px solid var(--rk-border);
+}
+.ansicht-umschalter-wort {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid transparent;
+  color: var(--rk-text-muted);
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+.ansicht-umschalter-knopf.aktiv {
+  color: var(--rk-primary-dark);
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+
+/* ===== App-Auswahl (Launcher): mehrere Apps in einer Website ===== */
+
+.app-launcher {
+  min-height: 100dvh;
+  padding: calc(var(--space-5) + env(safe-area-inset-top, 0px)) var(--space-4)
+    calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 44rem;
+  margin: 0 auto;
+}
+.app-launcher-marke {
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--rk-primary-dark);
+}
+.app-launcher-kopf h1 {
+  font-size: var(--text-xl, 1.4rem);
+  margin-top: var(--space-2);
+}
+.app-launcher-text {
+  color: var(--rk-text-muted);
+  margin-top: var(--space-1);
+}
+.app-launcher-karten {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.app-launcher-karte {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+}
+.app-launcher-symbol {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+}
+.app-launcher-inhalt {
+  flex: 1;
+  min-width: 0;
+}
+.app-launcher-inhalt h2 {
+  font-size: var(--text-base);
+}
+.app-launcher-inhalt p {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  margin-top: 2px;
+}
+.app-launcher-zusatz {
+  color: var(--rk-primary-dark);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-top: 2px;
+}
+.app-launcher-fuss {
+  color: var(--rk-text-light);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+/* Jede App traegt ihre Identitaet schon in der Auswahl. */
+.app-launcher-karte.bereich-language {
+  border-color: var(--rk-primary);
+}
+.app-launcher-karte.bereich-language .app-launcher-symbol {
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.app-launcher-karte.bereich-code {
+  border-color: var(--rk-purple);
+}
+.app-launcher-karte.bereich-code .app-launcher-symbol {
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+}
+.app-launcher-karte.bereich-prompting {
+  border-color: var(--rk-red);
+}
+.app-launcher-karte.bereich-prompting .app-launcher-symbol {
+  background: var(--rk-orange-soft);
+  color: var(--rk-orange-dark);
+}
+.app-launcher-karte.bereich-electro {
+  border-color: var(--rk-yellow);
+}
+.app-launcher-karte.bereich-electro .app-launcher-symbol {
+  background: var(--rk-yellow-soft);
+  color: var(--rk-orange-dark);
+}
+@media (max-width: 560px) {
+  .app-launcher-karte {
+    flex-wrap: wrap;
+  }
+  .app-launcher-karte .rk-knopf {
+    width: 100%;
+  }
+}
+
+/* ===== Gemeinsame Huelle der neuen Bereiche (Code, AI-Sprache) ===== */
+
+.bereich-seite {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px) + var(--space-6));
+}
+
+.bereich-kopf {
+  margin-bottom: var(--space-5);
+}
+.bereich-kopf h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.bereich-kopf p {
+  margin-top: var(--space-2);
+  color: var(--rk-text-muted);
+  max-width: 46rem;
+}
+
+/* Statistik-Zeile: XP heute, Reihe, offene Uebungen. */
+.bereich-werte {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 var(--space-5);
+}
+.bereich-wert {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.bereich-wert strong {
+  color: var(--rk-text);
+}
+
+.bereich-abschnitt {
+  margin-top: var(--space-6);
+}
+.bereich-abschnitt > h2 {
+  margin-bottom: var(--space-3);
+}
+
+/* Kartenraster: mobil untereinander, ab Tablet zweispaltig. */
+.bereich-raster {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+@media (min-width: 720px) {
+  .bereich-raster {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ===== Geoeffnete Lektion (Modal) ===== */
+
+.lektion-inhalt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lektion-beispiel {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rk-border);
+  border-left: 3px solid var(--rk-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.lektion-merke {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-yellow-soft);
+  color: var(--rk-text);
+}
+.lektion-merke .rk-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.uebung-modal-aufgabe {
+  padding: var(--space-3);
+  border-left: 3px solid var(--rk-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+}
+.lektion-inhalt textarea.rk-feld {
+  resize: vertical;
+}
+
+/* ===== Mitmach-Aufgaben (PraxisAufgabe) ===== */
+
+.praxis-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(16px, var(--text-sm));
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  resize: vertical;
+}
+.praxis-vorschau {
+  display: block;
+  width: 100%;
+  height: 170px;
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: #ffffff; /* Vorschau bleibt bewusst hell — wie eine echte Seite */
+}
+.praxis-zahl-feld {
+  max-width: 14rem;
+  font-variant-numeric: tabular-nums;
+}
+.praxis-checks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.praxis-checks li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.praxis-check-zeichen {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--rk-border-strong);
+  color: var(--rk-text-muted);
+}
+.praxis-checks li.ok {
+  color: var(--rk-green-dark);
+}
+.praxis-checks li.ok .praxis-check-zeichen {
+  color: var(--rk-green-dark);
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.praxis-checks li.offen {
+  color: var(--rk-text-muted);
+}
+.praxis-hinweis {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-1);
+}
+.praxis-tastatur-chip {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--rk-border-strong);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--rk-surface-soft);
+  color: var(--rk-text);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* ===== Lektions-Player (ein Schritt pro Bildschirm) ===== */
+
+.lektion-player {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: var(--rk-bg);
+  outline: none;
+}
+.lp-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: calc(var(--space-3) + env(safe-area-inset-top)) var(--space-4) var(--space-3);
+}
+.lp-zu {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  color: var(--rk-text-muted);
+}
+.lp-fortschritt {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rk-border);
+  overflow: hidden;
+}
+.lp-fortschritt-balken {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--rk-primary);
+  transition: width 250ms ease;
+}
+.lp-inhalt {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+/* Kinder nie zusammendruecken — bei Platzmangel scrollt der Bereich. */
+.lp-inhalt > * {
+  flex-shrink: 0;
+}
+.lp-frage {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.45;
+}
+.lp-hinweis {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.lp-optionen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lp-option {
+  min-height: 56px;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-size: max(16px, var(--text-base));
+  text-align: left;
+}
+.lp-option code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--rk-surface-soft);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.lp-option.gewaehlt {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+}
+.lp-option.richtig {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.lp-option.falsch {
+  border-color: var(--rk-red);
+  background: var(--rk-red-soft);
+}
+.lp-datei {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small) var(--radius-small) 0 0;
+  background: var(--rk-surface-soft);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  border: 1.5px solid var(--rk-border);
+  border-bottom: none;
+}
+.lp-editor {
+  min-height: 72px;
+  padding: var(--space-3);
+  border: 1.5px solid var(--rk-border);
+  border-radius: 0 0 var(--radius-small) var(--radius-small);
+  background: var(--rk-surface);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 6px;
+}
+.lp-cursor {
+  width: 10px;
+  height: 26px;
+  border-radius: 3px;
+  background: var(--rk-primary);
+  animation: lp-blinken 1s steps(1) infinite;
+}
+@keyframes lp-blinken {
+  50% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-cursor { animation: none; }
+}
+.lp-chip-fest,
+.lp-chip {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(16px, var(--text-sm));
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.lp-chip-fest {
+  background: var(--rk-primary-soft);
+  color: var(--rk-text);
+  border: 1px solid var(--rk-primary);
+}
+.lp-vorschau {
+  height: 150px;
+}
+.lp-werkzeuge {
+  display: flex;
+  gap: var(--space-2);
+}
+.lp-werkzeug {
+  min-width: 52px;
+  min-height: 44px;
+  border: 1.5px solid var(--rk-border-strong);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-size: 18px;
+}
+.lp-werkzeug:disabled {
+  opacity: 0.4;
+}
+.lp-bausteine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.lp-chip {
+  min-height: 48px;
+  border: 1px solid var(--rk-border);
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  box-shadow: 0 1px 0 var(--rk-border-strong);
+}
+.lp-chip:disabled {
+  opacity: 0.35;
+}
+.lp-fuss {
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  border-top: 1.5px solid var(--rk-border);
+  background: var(--rk-surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.lp-fuss.richtig {
+  border-top-color: var(--rk-green);
+  background: var(--rk-green-soft);
+}
+.lp-fuss.falsch {
+  border-top-color: var(--rk-red);
+  background: var(--rk-red-soft);
+}
+.lp-feedback {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+}
+.lp-feedback.richtig {
+  color: var(--rk-green-dark);
+}
+.lp-feedback.falsch {
+  color: var(--rk-red-dark);
+}
+.lp-fuss .rk-knopf {
+  width: 100%;
+}
+
+/* ===== Code-Tastatur (Bildschirm-Tastatur der Code-Aufgaben) ===== */
+
+.code-tastatur {
+  margin-top: var(--space-2);
+  padding: var(--space-2);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  user-select: none;
+  touch-action: manipulation;
+}
+.ct-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.ct-titel {
+  flex: 1;
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.ct-schalter {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--rk-border-strong);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.ct-reihe {
+  display: flex;
+  gap: 5px;
+}
+.ct-taste {
+  flex: 1;
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid var(--rk-border);
+  border-radius: 8px;
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(16px, var(--text-base));
+  box-shadow: 0 1px 0 var(--rk-border-strong);
+}
+.ct-taste:active {
+  background: var(--rk-primary-soft);
+  transform: translateY(1px);
+}
+.ct-aktion {
+  flex: 1.4;
+  background: var(--rk-surface-soft);
+  font-size: var(--text-sm);
+}
+.ct-aktiv {
+  background: var(--rk-primary-soft);
+  border-color: var(--rk-primary);
+  color: var(--rk-primary-dark);
+}
+.ct-leertaste {
+  flex: 3.5;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--rk-text-muted);
+}
+.ct-bausteine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 158px;
+  overflow-y: auto;
+  padding-bottom: 2px;
+}
+.ct-baustein {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--rk-border);
+  border-radius: 8px;
+  background: var(--rk-surface);
+  color: var(--rk-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: max(16px, var(--text-sm));
+  box-shadow: 0 1px 0 var(--rk-border-strong);
+}
+.ct-baustein:active {
+  background: var(--rk-primary-soft);
+  transform: translateY(1px);
+}
+
+/* Tagesziel in der Kopfzeile der Bereiche */
+.bereich-tagesziel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: 26rem;
+  margin-top: var(--space-3);
+}
+.bereich-tagesziel .rk-balken-zeile {
+  flex: 1;
+}
+.bereich-tagesziel-text {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+/* ===== Gemeinsame Wochenübersicht auf der App-Auswahl ===== */
+
+.woche-uebersicht {
+  padding: var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface);
+}
+.woche-uebersicht h2 {
+  font-size: var(--text-base);
+  margin-bottom: var(--space-3);
+}
+.woche-tage {
+  list-style: none;
+  display: flex;
+  gap: var(--space-1);
+  justify-content: space-between;
+}
+.woche-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.woche-tag-punkt {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--rk-border);
+  color: transparent;
+}
+.woche-tag.aktiv .woche-tag-punkt {
+  border-color: var(--rk-primary);
+  background: var(--rk-primary-soft);
+  color: var(--rk-primary-dark);
+}
+.woche-tag.heute .woche-tag-punkt {
+  box-shadow: 0 0 0 2px var(--rk-primary);
+}
+.woche-tag-name {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-tag.heute .woche-tag-name {
+  color: var(--rk-text);
+  font-weight: 700;
+}
+.woche-zusammenfassung {
+  margin-top: var(--space-3);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}
+.woche-apps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.woche-app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-small);
+  background: var(--rk-surface-soft);
+  border-left: 4px solid var(--rk-border-strong);
+  font-size: var(--text-sm);
+}
+.woche-app.bereich-language { border-left-color: var(--rk-primary); }
+.woche-app.bereich-code { border-left-color: var(--rk-purple); }
+.woche-app.bereich-prompting { border-left-color: var(--rk-red); }
+.woche-app.bereich-electro { border-left-color: var(--rk-yellow); }
+.woche-app-wert {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.woche-app-tage {
+  color: var(--rk-text-muted);
+  font-weight: 400;
+}
+
+/* ===== Wegkarte: Lektionen als Knoten auf einem Pfad ===== */
+
+.pfad-ansicht-wahl {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+}
+.pfad-ansicht-knopf {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--rk-border);
+  border-radius: var(--radius-pill);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+.pfad-ansicht-knopf.aktiv {
+  color: var(--rk-purple-dark);
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
+}
+
+.pfadkarte {
+  list-style: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+}
+.pfadkarte-punkt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 72px;
+}
+/* Abwechselnd links und rechts — daraus entsteht der Zickzack-Weg. */
+.pfadkarte-punkt.links {
+  padding-left: 8px;
+}
+.pfadkarte-punkt.rechts {
+  padding-left: 72px;
+}
+/* Die Linie verbindet diesen Knoten mit dem darüber. */
+.pfadkarte-linie {
+  position: absolute;
+  left: 36px;
+  top: -12px;
+  width: 2px;
+  height: 28px;
+  background: var(--rk-border-strong);
+}
+.pfadkarte-punkt.rechts .pfadkarte-linie {
+  left: 100px;
+}
+.pfadkarte-punkt:first-child .pfadkarte-linie {
+  display: none;
+}
+.pfadkarte-punkt.done .pfadkarte-linie {
+  background: var(--rk-green);
+}
+.pfadkarte-knoten {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2.5px solid var(--rk-border-strong);
+  background: var(--rk-surface);
+  color: var(--rk-text-muted);
+}
+.pfadkarte-nummer {
+  font-weight: 800;
+  font-size: var(--text-base);
+}
+.pfadkarte-punkt.done .pfadkarte-knoten {
+  border-color: var(--rk-green);
+  background: var(--rk-green-soft);
+  color: var(--rk-green-dark);
+}
+.pfadkarte-punkt.current .pfadkarte-knoten {
+  border-color: var(--rk-purple);
+  background: var(--rk-purple-soft);
+  color: var(--rk-purple-dark);
+  box-shadow: 0 0 0 5px var(--rk-purple-soft);
+}
+.pfadkarte-punkt.locked .pfadkarte-knoten {
+  opacity: 0.55;
+}
+.pfadkarte-knoten:disabled {
+  cursor: not-allowed;
+}
+.pfadkarte-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.pfadkarte-punkt.locked .pfadkarte-text {
+  color: var(--rk-text-light);
+}
+.pfadkarte-meta {
+  color: var(--rk-text-muted);
+  font-size: var(--text-sm);
+}

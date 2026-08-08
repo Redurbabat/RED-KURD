@@ -118,14 +118,16 @@ export default function ExercisePlayer({
       sitzungLoeschen()
       return
     }
+    // `punkte` enthaelt den Treffer bereits: setAntwort und setPunkte laufen
+    // im selben Batch, dieser Effekt sieht also schon den erhoehten Stand.
     const erledigt = antwort !== null
     sitzungSpeichern({
       titel,
       index: erledigt ? index + 1 : index,
-      punkte: erledigt && antwort === u.antwort ? punkte + 1 : punkte,
+      punkte,
       uebungen: schlank(uebungen),
     })
-  }, [index, antwort, amEnde, speichern, titel])
+  }, [index, antwort, punkte, amEnde, speichern, titel])
 
   // Ergebnis genau einmal melden.
   useEffect(() => {

@@ -299,14 +299,34 @@ export function truheOeffnen() {
 
 // ===== Export / Import =====
 
+/**
+ * Sieht dieser Wert wie ein RED-KURD-Lernstand aus? Schuetzt den Import:
+ * setzeFortschritt wuerde sonst auch einen String oder eine Liste zu
+ * Muell-Eigenschaften spreaden und den echten Stand ueberschreiben.
+ */
+export function istLernstand(wert) {
+  if (!wert || typeof wert !== 'object' || Array.isArray(wert)) return false
+  const kennt = ['xp', 'karten', 'einheiten', 'serie', 'tage'].some((k) => k in wert)
+  if (!kennt) return false
+  for (const feld of ['karten', 'einheiten', 'tage', 'sterne']) {
+    const w = wert[feld]
+    if (w !== undefined && (typeof w !== 'object' || w === null || Array.isArray(w))) return false
+  }
+  return true
+}
+
 export function exportiereAlles(extra = {}) {
+  // Der Fortschritt steht nur einmal in der Datei (top-level) — die Kopie in
+  // `speicher` verdoppelte den groessten Teil und konnte vom Cache abweichen.
+  // Alte Exportdateien MIT der Kopie bleiben trotzdem importierbar.
+  const { fortschritt: _doppelt, ...speicher } = exportiereSpeicherstand()
   return JSON.stringify(
     {
       version: 2,
       app: 'RED-KURD',
       exportiert: new Date().toISOString(),
       fortschritt: laden(),
-      speicher: exportiereSpeicherstand(),
+      speicher,
       ...extra,
     },
     null,

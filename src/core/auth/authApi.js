@@ -47,7 +47,7 @@ export async function kontoStatus() {
     return { backend: false, konto: null }
   }
   const { response, daten } = ergebnis
-  // 404/405: dieser Betrieb (z. B. Vercel oder `vite preview`) hat gar keinen
+  // 404/405: dieser Betrieb (z. B. `vite preview` oder ein statischer Host) hat gar keinen
   // Anmelde-Server — dann gibt es auch nichts anzumelden.
   if (response.status === 404 || response.status === 405) return { backend: false, konto: null }
   if (response.status === 401) return { backend: true, konto: null }
