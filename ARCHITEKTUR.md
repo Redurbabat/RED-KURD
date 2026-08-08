@@ -203,7 +203,7 @@ Lernstand über `progressStore`, geschrieben wird hier nichts.
 
 | Datei | Aufgabe | Bindung |
 |---|---|---|
-| `storage.ts` | `KEYS`, `TAB_KEYS`, `lies/schreibe/entferne`, `liesTab/schreibeTab`, Export/Import, `beiSpeicherproblem()`, `migriere()`, `migriereKarten()` | localStorage, sessionStorage |
+| `storage.ts` | `KEYS`, `TAB_KEYS`, `lies/schreibe/entferne`, `liesTab/schreibeTab`, Export/Import, `beiSpeicherproblem()`, `migriereKarten()`; dazu die Migrations-Pipeline `MIGRATIONEN` / `fuehreSchrittAus()` / `migriere()` | localStorage, sessionStorage |
 | `store.ts` | `melden()`, `useLernstand()`, `beiFremdaenderung()` (Cache-Invalidierung über Tabs) | `window`, React |
 | `progress/progressStore.ts` | **der Lernstand der Sprach-App**: XP, Serie + Schutz, Einheiten, Sterne, Karten, Tage (max. 60), Edelsteine, Schlüssel, Truhen, Lernzeit, `exportiereAlles`, `ankiZeilen` | localStorage |
 | `progress/progressSelectors.ts` | `statistik()`, `faelligeKarten()`, `fertigkeiten()`, `wochenAktivitaet()`, `wochenLiga()` | indirekt |

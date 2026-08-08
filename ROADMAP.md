@@ -112,9 +112,12 @@ dass jemand Angst um seinen Lernstand haben muss.
   - [x] Elektro-Schule, Prompting-Werkstatt und Fehlerbuch (fünfte Welle) —
         `Speicherstand` führt keine `unknown`-Felder mehr. Damit ist **jede**
         gespeicherte Form aller vier Apps benannt
-- [ ] Migrations-Pipeline: jede Migration eine benannte, einzeln aufrufbare Funktion mit
-      Von- und Nach-Version; `migriere()` führt sie geordnet aus — heute ist es **eine**
-      Funktion mit nummerierten Schritten
+- [x] Migrations-Pipeline: jede Migration ist ein benannter Schritt in `MIGRATIONEN`
+      mit Bereich, Von- und Nach-Version, `noetig()` und `fuehreAus()`; `migriere()`
+      führt sie geordnet aus und berichtet je Schritt `gelaufen`/`übersprungen`/
+      `fehlgeschlagen`. `fuehreSchrittAus()` isoliert Fehler — vorher hätte ein
+      Fehler beim Lernstand auch Profil, Sitzung und Oberfläche ungehoben gelassen
+      (`test/migrationsPipeline.test.js`, 10 Tests)
   - [x] Tests für v1→v2 bei Fortschritt, Profil, Sitzung und Modus
         (`test/storage.test.js`, `test/storage-basis.test.js`)
   - [x] Tests für `migriereKarten` inklusive Kollisionsregel „höhere Stufe gewinnt"
@@ -163,7 +166,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 407 Tests grün.
+Stand: `npm test` läuft heute mit 417 Tests grün.
 
 *Sprach-App*
 

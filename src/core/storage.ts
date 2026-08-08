@@ -366,28 +366,97 @@ export interface AlteSitzung {
 
 // ===== Migration =====
 // Laeuft genau einmal beim Start. Alte Daten werden kopiert, nicht verschoben —
-// so geht beim Wechsel zurueck auf eine aeltere Version nichts verloren.
-let migriert = false
+// so geht beim Wechsel zurueck auf eine aeltere Version nichts verloren (ADR-005).
+//
+// Jeder Umzug ist ein eigener, benannter Schritt in `MIGRATIONEN`. Frueher war
+// das eine Funktion mit nummerierten Kommentaren; das hatte drei Nachteile, die
+// hier wegfallen:
+//
+//  * Kein Schritt liess sich einzeln aufrufen oder einzeln testen.
+//  * Nirgends stand, von welcher Version nach welcher ein Schritt hebt.
+//  * Ein Schritt, der wirft, nahm alle folgenden mit — ein Fehler beim
+//    Lernstand haette also auch das Profil ungehoben gelassen.
+//
+// Die Reihenfolge in `MIGRATIONEN` ist bedeutungstragend — und sie hat heute
+// eine Luecke, die hier ausdruecklich benannt sei, weil sie beim Umbau
+// sichtbar wurde (Differenztest, Gegenprobe „Reihenfolge vertauscht"):
+//
+//   `karten-umbenennung` liest den bestehenden v2-Lernstand und laeuft ZUERST.
+//   `fortschritt-v1-v2` schreibt den v2-Lernstand nur, wenn er fehlt.
+//
+// Wer also direkt von Version 1 kommt, bekommt seinen Lernstand gehoben —
+// aber die Karten darin behalten die alte Schreibweise, weil der
+// Umbenennungsschritt zu diesem Zeitpunkt noch nichts vorfand. Genau das,
+// wovor der Kommentar an `UMBENANNT` warnt.
+//
+// Diese Welle aendert daran bewusst nichts: sie strukturiert um und weist die
+// Gleichheit zum Vorstand nach. Behoben wird es getrennt, damit die Aenderung
+// fuer sich pruefbar bleibt.
 
-export function migriere(): void {
-  if (migriert || !verfuegbar()) return
-  migriert = true
+/** Was ein Schritt hebt und woher er kommt. */
+export interface Migrationsschritt {
+  /** Eindeutig; erscheint im Bericht und in Tests. */
+  name: string
+  /** Der Speicherbereich, den der Schritt schreibt. */
+  bereich: Speicherbereich
+  /** Ausgangsstand — `alt` heisst: ein Schluessel aus `ALT`. */
+  von: string
+  /** Zielstand. */
+  nach: string
+  beschreibung: string
+  /**
+   * Steht der Umzug an? Bewusst getrennt vom Ausfuehren: so kann ein Test
+   * fragen, ob ein Schritt noetig waere, ohne ihn laufen zu lassen.
+   */
+  noetig: () => boolean
+  /** Fuehrt den Umzug aus. Wird nur gerufen, wenn `noetig()` wahr war. */
+  fuehreAus: () => void
+}
 
-  // 0. Umbenannte Lernpaare: Karten auf die aktuelle Schreibweise heben.
-  const stand = lies<GespeicherterStand>(KEYS.fortschritt)
-  if (stand && stand.karten) {
-    const { karten, geaendert } = migriereKarten(stand.karten)
-    if (geaendert) schreibe(KEYS.fortschritt, { ...stand, karten })
-  }
+/** Was bei einem einzelnen Schritt herauskam. */
+export interface Schrittergebnis {
+  name: string
+  /** `uebersprungen`, wenn `noetig()` falsch war. */
+  stand: 'gelaufen' | 'uebersprungen' | 'fehlgeschlagen'
+  /** Nur bei `fehlgeschlagen` gesetzt. */
+  fehler?: string
+}
 
-  // 1. Lernfortschritt v1 -> v2
-  if (lies(KEYS.fortschritt) === null) {
-    const alt = lies<AlterLernstand>(ALT.fortschritt)
-    if (alt) {
+export const MIGRATIONEN: readonly Migrationsschritt[] = [
+  {
+    name: 'karten-umbenennung',
+    bereich: 'fortschritt',
+    von: 'v2',
+    nach: 'v2',
+    beschreibung: 'Umbenannte Lernpaare auf die aktuelle Schreibweise heben.',
+    // Kein eigener `noetig()`-Vorgriff: ob wirklich etwas umzubenennen ist,
+    // weiss erst `migriereKarten()`. Der Schritt laeuft also, sobald es
+    // ueberhaupt Karten gibt, und schreibt nur bei echter Aenderung.
+    noetig() {
+      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
+      return !!stand && !!stand.karten
+    },
+    fuehreAus() {
+      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
+      if (!stand || !stand.karten) return
+      const { karten, geaendert } = migriereKarten(stand.karten)
+      if (geaendert) schreibe(KEYS.fortschritt, { ...stand, karten })
+    },
+  },
+  {
+    name: 'fortschritt-v1-v2',
+    bereich: 'fortschritt',
+    von: 'v1',
+    nach: 'v2',
+    beschreibung: 'Lernstand aus red-kurd-fortschritt-v1 uebernehmen.',
+    noetig: () => lies(KEYS.fortschritt) === null && lies(ALT.fortschritt) !== null,
+    fuehreAus() {
+      const alt = lies<AlterLernstand>(ALT.fortschritt)
+      if (!alt) return
       // Das geschriebene Objekt ist absichtlich nicht als `Lernstand`
       // ausgezeichnet: es ist keiner. Die v1-Werte wandern in ihrer alten Form
       // in die neuen Felder, und die Felder von v2, die es damals nicht gab
-      // (Sterne, Serienschutz, Welttruhen), fehlen ganz. Beides fängt der
+      // (Sterne, Serienschutz, Welttruhen), fehlen ganz. Beides faengt der
       // `LEER`-Spread im progressStore beim Laden ab.
       schreibe(KEYS.fortschritt, {
         version: 2,
@@ -403,14 +472,19 @@ export function migriere(): void {
         truhe: alt.truhe || null,
         lernzeit: 0,
       })
-    }
-  }
-
-  // 2. Profil v1 -> v2
-  if (lies(KEYS.profil) === null) {
-    const alt = lies<AltesProfil>(ALT.profil)
-    if (alt) {
-      // Anders als beim Lernstand entsteht hier ein vollständiges `Profil` —
+    },
+  },
+  {
+    name: 'profil-v1-v2',
+    bereich: 'profil',
+    von: 'v1',
+    nach: 'v2',
+    beschreibung: 'Lernprofil aus red-kurd-profil-v1 uebernehmen.',
+    noetig: () => lies(KEYS.profil) === null && lies(ALT.profil) !== null,
+    fuehreAus() {
+      const alt = lies<AltesProfil>(ALT.profil)
+      if (!alt) return
+      // Anders als beim Lernstand entsteht hier ein vollstaendiges `Profil` —
       // jedes Feld wird gesetzt, keins bleibt in der v1-Form.
       const profil: Profil = {
         version: 2,
@@ -423,35 +497,93 @@ export function migriere(): void {
         erstellt: alt.erstellt || new Date().toISOString(),
       }
       schreibe(KEYS.profil, profil)
-    }
-  }
+    },
+  },
+  {
+    name: 'sitzung-v1-v2',
+    bereich: 'sitzung',
+    von: 'v1',
+    nach: 'v2',
+    beschreibung: 'Liegengebliebene Sitzung 1:1 uebernehmen.',
+    noetig() {
+      if (lies(KEYS.sitzung) !== null) return false
+      const alt = lies<AlteSitzung>(ALT.sitzung)
+      return !!alt && !!alt.uebungen
+    },
+    fuehreAus() {
+      const alt = lies<AlteSitzung>(ALT.sitzung)
+      if (alt && alt.uebungen) schreibe(KEYS.sitzung, alt)
+    },
+  },
+  {
+    name: 'modus-zu-ui',
+    bereich: 'ui',
+    von: 'red-kurd-modus',
+    nach: 'v1',
+    beschreibung: 'Alten App-Modus („modern"/„klassik") in die UI-Einstellungen heben.',
+    // Anders als die drei Schritte davor laeuft dieser auch OHNE Altwert: er
+    // legt die UI-Einstellungen in jedem Fall an, sobald sie fehlen. Der alte
+    // Modus entscheidet dann nur ueber das Design.
+    noetig: () => lies(KEYS.ui) === null,
+    fuehreAus() {
+      let alterModus: string | null = null
+      try {
+        alterModus = localStorage.getItem(ALT.modus)
+      } catch {
+        /* egal */
+      }
+      // `version: 1` ist Absicht und kein Vertipper: uiStore.ts:25 erkennt
+      // genau daran den Stand vor der Design-Migration. Der Typ laesst es zu,
+      // weil `UiEinstellungen.version` `number` ist.
+      const einstellungen: UiEinstellungen = {
+        version: 1,
+        mode: 'modern',
+        theme: alterModus === 'klassik' ? 'dark' : 'light',
+        soundEnabled: true,
+        animationsEnabled: true,
+        remindersEnabled: false,
+        preferredVariant: 'kurmanci-standard',
+      }
+      schreibe(KEYS.ui, einstellungen)
+    },
+  },
+]
 
-  // 3. Laufende Sitzung v1 -> v2
-  if (lies(KEYS.sitzung) === null) {
-    const alt = lies<AlteSitzung>(ALT.sitzung)
-    if (alt && alt.uebungen) schreibe(KEYS.sitzung, alt)
+/**
+ * Einen einzelnen Schritt ausfuehren. Oeffentlich, damit Tests jeden Umzug
+ * fuer sich pruefen koennen und damit sich ein Umzug im Notfall gezielt
+ * nachholen laesst.
+ *
+ * Wirft nie: ein Schritt, der stolpert, darf die anderen nicht mitreissen.
+ * Diese Absicherung ist der eigentliche Grund fuer die Pipeline — vorher
+ * haette ein Fehler beim Lernstand auch Profil, Sitzung und Oberflaeche
+ * ungehoben gelassen.
+ */
+export function fuehreSchrittAus(schritt: Migrationsschritt): Schrittergebnis {
+  try {
+    if (!schritt.noetig()) return { name: schritt.name, stand: 'uebersprungen' }
+    schritt.fuehreAus()
+    return { name: schritt.name, stand: 'gelaufen' }
+  } catch (fehler) {
+    return {
+      name: schritt.name,
+      stand: 'fehlgeschlagen',
+      fehler: fehler instanceof Error ? fehler.message : String(fehler),
+    }
   }
+}
 
-  // 4. Alter App-Modus ("modern" / "klassik") -> UI-Einstellungen
-  if (lies(KEYS.ui) === null) {
-    let alterModus: string | null = null
-    try {
-      alterModus = localStorage.getItem(ALT.modus)
-    } catch {
-      /* egal */
-    }
-    // `version: 1` ist Absicht und kein Vertipper: uiStore.js:25 erkennt genau
-    // daran den Stand vor der Design-Migration. Der Typ lässt es zu, weil
-    // `UiEinstellungen.version` `number` ist.
-    const einstellungen: UiEinstellungen = {
-      version: 1,
-      mode: 'modern',
-      theme: alterModus === 'klassik' ? 'dark' : 'light',
-      soundEnabled: true,
-      animationsEnabled: true,
-      remindersEnabled: false,
-      preferredVariant: 'kurmanci-standard',
-    }
-    schreibe(KEYS.ui, einstellungen)
-  }
+let migriert = false
+
+/**
+ * Alle Umzuege der Reihe nach. Laeuft je Modulinstanz genau einmal — beim
+ * Start der App (`App.jsx`).
+ *
+ * @returns je Schritt ein Ergebnis; leer, wenn schon migriert wurde oder es
+ *   gar keinen Speicher gibt.
+ */
+export function migriere(): Schrittergebnis[] {
+  if (migriert || !verfuegbar()) return []
+  migriert = true
+  return MIGRATIONEN.map(fuehreSchrittAus)
 }
