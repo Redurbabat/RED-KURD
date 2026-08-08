@@ -6,10 +6,20 @@ import { KEYS, lies } from '../../core/storage.ts'
 import { heute } from '../../core/progress/scheduler.ts'
 import { reiheGesamt, wochenUebersicht } from '../../core/lernbereiche/wochenUebersicht.ts'
 import { APP_MODES, APP_MODE_LABELS } from './appModes.ts'
+import type { Bereichslernstand, GespeicherterStand, Wochenquelle } from '../../types/lernstand'
 
-/** Liest die Tageswerte aller Apps direkt aus dem Speicher. */
-function sammleApps() {
-  const sprache = lies(KEYS.fortschritt) || {}
+/**
+ * Liest die Tageswerte aller Apps direkt aus dem Speicher.
+ *
+ * `Partial<…>`, weil auf der Platte ein aelterer oder von Hand veraenderter
+ * Stand liegen darf — genau wie in `bereichsLernstand.ts`. Der Typ ist die
+ * Erwartung dieser Stelle, keine Zusage von `lies()`; deshalb bleiben die
+ * Rueckfaelle auf `{}` stehen.
+ */
+function sammleApps(): Wochenquelle[] {
+  const sprache: Partial<GespeicherterStand> = lies<Partial<GespeicherterStand>>(KEYS.fortschritt) || {}
+  const bereich = (key: string): Bereichslernstand['tage'] =>
+    (lies<Partial<Bereichslernstand>>(key) || {}).tage || {}
   return [
     {
       id: APP_MODES.LANGUAGE,
@@ -22,19 +32,19 @@ function sammleApps() {
       id: APP_MODES.CODE,
       name: APP_MODE_LABELS[APP_MODES.CODE],
       einheit: 'XP',
-      tage: (lies(KEYS.codeFortschritt) || {}).tage || {},
+      tage: bereich(KEYS.codeFortschritt),
     },
     {
       id: APP_MODES.PROMPTING,
       name: APP_MODE_LABELS[APP_MODES.PROMPTING],
       einheit: 'XP',
-      tage: (lies(KEYS.promptingFortschritt) || {}).tage || {},
+      tage: bereich(KEYS.promptingFortschritt),
     },
     {
       id: APP_MODES.ELECTRO,
       name: APP_MODE_LABELS[APP_MODES.ELECTRO],
       einheit: 'XP',
-      tage: (lies(KEYS.electroFortschritt) || {}).tage || {},
+      tage: bereich(KEYS.electroFortschritt),
     },
   ]
 }

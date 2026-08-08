@@ -6,22 +6,35 @@ import Icon from '../../components/icons/Icon.tsx'
 import Modal from '../../components/common/Modal.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { XP_JE_UEBUNG } from '../../core/lernbereiche/bereichsLernstand.ts'
+import type { Bereichsbaukasten } from '../../types/lernstand'
+import type { Bereichsuebung } from '../../types/lernbereich'
 
-/**
- * @param {{uebung:Object|null, lernstand:Object, schliessen:Function}} props
- */
-export default function UebungModal({ uebung, lernstand, schliessen }) {
-  const [notiz, setNotiz] = useState(() => (uebung ? lernstand.notiz(uebung.id) : ''))
+export interface UebungModalProps {
+  /** `null`, solange keine Uebung offen ist — dann rendert nichts. */
+  uebung: Bereichsuebung | null
+  /** Der Lernstand des jeweiligen Bereichs (Code, AI-Sprache, Elektro). */
+  lernstand: Bereichsbaukasten
+  schliessen: () => void
+}
+
+export default function UebungModal({ uebung, lernstand, schliessen }: UebungModalProps) {
+  // Der Anfangswert wird nur beim ersten Rendern gelesen; `uebung` ist dabei
+  // moeglicherweise noch null, deshalb die Abfrage im Initialisierer.
+  const [notiz, setNotiz] = useState<string>(() => (uebung ? lernstand.notiz(uebung.id) : ''))
   if (!uebung) return null
   const erledigt = lernstand.istErledigt(uebung.id)
+  // Nach der Abfrage oben steht fest, dass es eine Uebung gibt. Die Konstante
+  // haelt das fuer die Rueckrufe unten fest — in ihnen waere `uebung` sonst
+  // wieder `Bereichsuebung | null`.
+  const offen: Bereichsuebung = uebung
 
-  function notizSichern() {
-    lernstand.setzeNotiz(uebung.id, notiz)
+  function notizSichern(): void {
+    lernstand.setzeNotiz(offen.id, notiz)
   }
 
-  function abschliessen() {
-    lernstand.setzeNotiz(uebung.id, notiz)
-    lernstand.schliesseAb(uebung.id, XP_JE_UEBUNG)
+  function abschliessen(): void {
+    lernstand.setzeNotiz(offen.id, notiz)
+    lernstand.schliesseAb(offen.id, XP_JE_UEBUNG)
     schliessen()
   }
 

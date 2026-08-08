@@ -5,12 +5,22 @@ import Icon from '../../components/icons/Icon.tsx'
 import Modal from '../../components/common/Modal.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.ts'
+import type { Bereichslektion } from '../../types/lernbereich'
 
-/**
- * @param {{lektion:Object|null, erledigt:boolean, schliessen:Function,
- *          abschliessen:Function}} props
- */
-export default function LektionModal({ lektion, erledigt, schliessen, abschliessen }) {
+export interface LektionModalProps {
+  /** `null`, solange keine Lektion offen ist — dann rendert nichts. */
+  lektion: Bereichslektion | null
+  erledigt: boolean
+  schliessen: () => void
+  abschliessen: () => void
+}
+
+export default function LektionModal({
+  lektion,
+  erledigt,
+  schliessen,
+  abschliessen,
+}: LektionModalProps) {
   if (!lektion) return null
   return (
     <Modal

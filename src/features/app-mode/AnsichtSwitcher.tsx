@@ -6,12 +6,22 @@ import { useRoute, navigiere } from '../../app/router.jsx'
 import { istAbenteuerPfad, istRedlingoPfad } from '../../app/AppRouter.jsx'
 import { useLernstand } from '../../core/store.ts'
 import { appModus, setzeAppModus } from '../../core/ui/uiStore.ts'
+import type { Ansicht } from '../../components/layout/AppShell.tsx'
 import './appMode.css'
 
-const ANSICHTEN = [
-  ['modern', 'Modern', '/today'],
-  ['abenteuer', 'Abenteuer', '/adventure'],
-  ['redlingo', 'Redlingo', '/redlingo'],
+interface Ansichtseintrag {
+  ansicht: Ansicht
+  name: string
+  ziel: string
+}
+
+// Frueher eine Liste aus Dreier-Feldern. Als benannte Felder muss beim Lesen
+// niemand mehr wissen, dass an Stelle 2 das Ziel steht — und ein vertauschtes
+// Paar faellt sofort auf.
+const ANSICHTEN: readonly Ansichtseintrag[] = [
+  { ansicht: 'modern', name: 'Modern', ziel: '/today' },
+  { ansicht: 'abenteuer', name: 'Abenteuer', ziel: '/adventure' },
+  { ansicht: 'redlingo', name: 'Redlingo', ziel: '/redlingo' },
 ]
 
 export default function AnsichtSwitcher() {
@@ -29,7 +39,7 @@ export default function AnsichtSwitcher() {
 
   const aktiv = istAbenteuerPfad(pfad) ? 'abenteuer' : istRedlingoPfad(pfad) ? 'redlingo' : appModus()
 
-  function wechseln(ansicht, ziel) {
+  function wechseln(ansicht: Ansicht, ziel: string): void {
     if (ansicht === aktiv) return
     setzeAppModus(ansicht)
     navigiere(ziel)
@@ -38,7 +48,7 @@ export default function AnsichtSwitcher() {
   return (
     <nav className="ansicht-umschalter" aria-label="Ansicht der Sprach-App wechseln">
       <span className="ansicht-umschalter-wort">Ansicht:</span>
-      {ANSICHTEN.map(([ansicht, name, ziel]) => (
+      {ANSICHTEN.map(({ ansicht, name, ziel }) => (
         <button
           key={ansicht}
           type="button"

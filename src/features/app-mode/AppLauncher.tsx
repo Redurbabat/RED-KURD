@@ -2,35 +2,50 @@
 // Jede Karte oeffnet genau EINE App — sichtbar ist danach nur diese App.
 // Erscheint beim allerersten Start und jederzeit ueber „Apps" im Umschalter.
 import Icon from '../../components/icons/Icon.tsx'
+import type { Iconname } from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
-import Wochenuebersicht from './Wochenuebersicht.jsx'
-import { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.ts'
+import Wochenuebersicht from './Wochenuebersicht.tsx'
+import { APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.ts'
+import type { Appbereich } from '../../types/lernstand'
 import './appMode.css'
 
-const KARTEN = {
-  [APP_MODES.LANGUAGE]: {
+interface Startkarte {
+  icon: Iconname
+  beschreibung: string
+  /** Zweite Zeile — heute nur bei der Sprach-App (Modern/Abenteuer). */
+  zusatz?: string
+}
+
+// Die Schluessel stehen ausgeschrieben da, nicht als `[APP_MODES.LANGUAGE]`:
+// `APP_MODES.LANGUAGE` hat den Typ `Appbereich`, also die ganze Union — als
+// berechneter Schluessel entstuende daraus eine Index-Signatur, und dann
+// faellt ein fehlender Bereich nicht mehr auf. Genau so haelt es
+// `APP_MODE_LABELS` in appModes.ts.
+const KARTEN: Record<Appbereich, Startkarte> = {
+  language: {
     icon: 'sprache',
     beschreibung: 'Kurmancî, Deutsch, Englisch, Türkisch, Französisch und Spanisch lernen.',
     zusatz: 'Mit Modern-Ansicht und Abenteuer-Ansicht.',
   },
-  [APP_MODES.CODE]: {
+  code: {
     icon: 'puzzle',
     beschreibung: 'HTML, CSS, JavaScript, TypeScript, GitHub und VS Code Schritt für Schritt lernen.',
   },
-  [APP_MODES.PROMPTING]: {
+  prompting: {
     icon: 'sprechblase',
     beschreibung: 'Lerne, wie du ChatGPT, Claude und Claude Code klare Aufgaben gibst.',
   },
-  [APP_MODES.ELECTRO]: {
+  electro: {
     icon: 'blitz',
     beschreibung: 'Strom, Spannung und Sicherheit verstehen — mit Rechenaufgaben.',
   },
 }
 
-/**
- * @param {{oeffnen:(mode:string)=>void}} props
- */
-export default function AppLauncher({ oeffnen }) {
+export interface AppLauncherProps {
+  oeffnen: (mode: Appbereich) => void
+}
+
+export default function AppLauncher({ oeffnen }: AppLauncherProps) {
   return (
     <div className="app-launcher">
       <header className="app-launcher-kopf">
