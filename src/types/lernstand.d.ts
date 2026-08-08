@@ -359,6 +359,15 @@ export type Uebung = Bildaufgabe | Wahlaufgabe | Tippaufgabe
  * Feld dann ganz weg, die gespeicherte Form entspricht also weiter `Uebung`.
  */
 export interface Sitzung {
+  /**
+   * Schemaversion des **Werts** — nicht zu verwechseln mit dem `-v2` im
+   * Schlüsselnamen (siehe den Hinweis zur Namensdrift in STORAGE.md §6).
+   *
+   * Wahlfrei, weil jede vor dieser Änderung gespeicherte Sitzung ohne
+   * auskommt. `sitzungLaden()` prüft sie bewusst NICHT: eine Sitzung ohne
+   * Versionsangabe ist eine gültige alte Sitzung, keine kaputte.
+   */
+  version?: 2
   titel: string
   index: number
   punkte: number

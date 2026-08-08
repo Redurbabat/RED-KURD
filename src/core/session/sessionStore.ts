@@ -11,10 +11,22 @@ import type { Sitzung } from '../../types/lernstand'
  * und waere von aussen gesetzt sofort wertlos, weil der Spread ihn ohnehin
  * ueberschreibt.
  */
-export type Sitzungsdaten = Omit<Sitzung, 'gespeichert'>
+export type Sitzungsdaten = Omit<Sitzung, 'gespeichert' | 'version'>
+
+/** Die Schemaversion, die dieser Store schreibt. */
+export const SITZUNG_VERSION = 2
 
 export function sitzungSpeichern(daten: Sitzungsdaten): void {
-  schreibe(KEYS.sitzung, { ...daten, gespeichert: new Date().toISOString() })
+  // `version` wird hier ergaenzt und kam bisher gar nicht vor — der Schluessel
+  // heisst zwar `red-kurd-session-v2`, im Wert stand aber nichts davon. Wer
+  // eine liegengebliebene Sitzung liest, konnte also nicht erkennen, nach
+  // welcher Form sie gebaut ist. Ein zusaetzliches Feld ist unbedenklich:
+  // aeltere App-Versionen lesen `uebungen` und `index` und uebersehen es.
+  schreibe(KEYS.sitzung, {
+    version: SITZUNG_VERSION,
+    ...daten,
+    gespeichert: new Date().toISOString(),
+  })
   melden()
 }
 

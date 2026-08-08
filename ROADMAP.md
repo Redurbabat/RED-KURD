@@ -160,13 +160,22 @@ dass jemand Angst um seinen Lernstand haben muss.
         dass sie **nicht** Teil der Sicherungsdatei sind und bei einem Gerätewechsel
         zurückbleiben. In den Export aufzunehmen wäre der nächste Schritt —
         heute verspricht die Einstellungsseite eine Sicherung, die sie nicht enthält
-  - [ ] Regel festhalten und prüfbar machen: eine neue App ohne Eintrag in `KEYS` fehlt
-        still in jedem Export — heute fängt das nur der Rundlauf-Test ab
+  - [x] Regel festhalten und prüfbar gemacht: `test/speicherregister.test.js` durchsucht
+        den ganzen Quelltext nach `red-kurd-*`-Literalen und verlangt, dass jedes
+        eingeordnet ist — in `KEYS`, in `TAB_KEYS` oder als Ausnahme **mit Grund**.
+        Dazu: keine Ausnahme darf veralten, genau `ohneKonto` und `sitzung` fallen aus
+        dem Export, und der Rundlauf Export → Import → Export ist deckungsgleich.
+        Beide Fehlerfälle sind per Gegenprobe belegt
 - [x] Am zentralen `storage.ts` vorbei geschriebene Stellen anbinden:
       `SettingsPage.jsx` (dupliziertes Schlüssel-Literal `red-kurd-profile-v2`),
       `rk-dauer` in `TodayPage`/`SessionPage`, `audioService`
-- [ ] Namensdrift bereinigen: `red-kurd-ui-v1` trägt intern `version: 2`;
-      `red-kurd-session-v2` hat gar kein `version`-Feld
+- [x] Namensdrift geklärt statt kosmetisch bereinigt: `red-kurd-session-v2` trägt jetzt
+      `version: 2` im Wert (Sitzungen von vorher haben keins und bleiben ausdrücklich
+      nutzbar). Der Schlüsselname `red-kurd-ui-v1` bleibt dagegen, wie er ist — das
+      `-vN` bezeichnet die Generation des *Schlüssels*, die `version` die Form der
+      *Daten*. Ein Umbenennen hieße, den alten Schlüssel dauerhaft mitzuschreiben:
+      Risiko für null Nutzen, denn den Namen sieht niemand. Die Zuordnung ist jetzt
+      getestet, damit sie niemand versehentlich aufräumt
 
 **Fertig, wenn:** Kernlogik und Stores in TypeScript vorliegen, jeder Speicher aller
 vier Apps eine benannte Form in `src/types/` hat, jede Migration einen Test hat, und ein
@@ -179,7 +188,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 436 Tests grün, dazu `npm run test:browser`
+Stand: `npm test` läuft heute mit 444 Tests grün, dazu `npm run test:browser`
 mit 62 Prüfungen im echten Bündel.
 
 *Sprach-App*

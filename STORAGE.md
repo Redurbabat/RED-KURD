@@ -198,7 +198,7 @@ Quelle: `src/core/ui/uiStore.ts:6–14`. Hier liegt ausschließlich die Darstell
 
 ### 3.4 `red-kurd-session-v2` — laufende Sitzung
 
-Geschrieben von `src/core/session/sessionStore.ts:6–9`, befüllt aus `src/features/exercise/ExercisePlayer.jsx:122`. **Ohne `version`-Feld** (§6). Steht seit der Aufnahme in `NUR_LOKAL` **nicht mehr in der Sicherungsdatei** (§3.18).
+Geschrieben von `src/core/session/sessionStore.ts`, befüllt aus `src/features/exercise/ExercisePlayer.jsx`. Trägt seit Kurzem `version: 2` im Wert; **Sitzungen, die vorher gespeichert wurden, haben keins** — `sitzungLaden()` prüft die Angabe deshalb bewusst nicht, eine Sitzung ohne Version ist eine gültige alte, keine kaputte. Steht seit der Aufnahme in `NUR_LOKAL` **nicht mehr in der Sicherungsdatei** (§3.18).
 
 | Feld | Typ | Bedeutung |
 |------|-----|-----------|
@@ -563,6 +563,8 @@ Wer einen neuen persistenten Bereich anlegt, arbeitet diese fünf Punkte ab. Sie
 
 **2. `version`-Feld von Anfang an.** Der Wert ist immer ein Objekt, nie ein roher Boolean oder String, und das erste Feld ist `version: 1`. Auch wenn es heute nichts zu migrieren gibt: Ohne Feld hat die erste Migration keinen Anknüpfungspunkt und muss am Inhalt raten. Die Version gehört in den **Wert**, nicht in den Schlüsselnamen — den Namen mitzuversionieren erzeugt beim Heben zwei Wahrheiten (siehe `red-kurd-ui-v1` mit `version: 2`).
 
+Das `-vN` in den heutigen Schlüsselnamen bleibt, wie es ist. Es bezeichnet die Generation des **Schlüssels**, die `version` im Wert die Form der **Daten**; beide anzugleichen hieße, jeden betroffenen Schlüssel umzubenennen und den alten dauerhaft mitzuschreiben — Aufwand und Risiko für null Nutzen, denn den Schlüsselnamen sieht niemand. `test/speicherregister.test.js` hält die Zuordnung fest, damit sie niemand versehentlich aufräumt: wer `red-kurd-ui-v1` in `-v2` umbenennt, ohne den alten Schlüssel weiter zu schreiben, verliert die Einstellungen jedes Nutzers, der zurückwechselt.
+
 **3. Über `storage.ts`.** Schlüssel in `KEYS` eintragen, Zugriff ausschließlich über `lies()`, `schreibe()` und `entferne()`. Das gibt drei Dinge geschenkt: den Schutz vor privatem Modus und vollem Speicher (`schreibe()` gibt `false` zurück statt zu werfen), die Aufnahme in Export und Import, und die Cross-Tab-Synchronisation über den `red-kurd-`-Präfixfilter in `store.ts:42`. Wer daran vorbeigeht, verliert alle drei — der `audioService` in §4.3 belegt das. Für tabgebundene Werte gibt es `TAB_KEYS` mit `liesTab()` / `schreibeTab()`; sie stehen bewusst außerhalb von `KEYS`.
 
 Den dritten Punkt muss ein neuer Store zusätzlich selbst abholen: `beiFremdaenderung()` aus `store.ts` abonnieren und dabei den eigenen Cache leeren. Sonst arbeitet ein zweiter Tab weiter mit alten Daten und überschreibt beim nächsten Speichern, was der erste geschrieben hat (siehe §6).
@@ -572,7 +574,7 @@ Den dritten Punkt muss ein neuer Store zusätzlich selbst abholen: `beiFremdaend
 - Ist er eine gerätelokale oder flüchtige Größe (Anmeldung, laufende Sitzung, Fensterzustand), gehört er in `NUR_LOKAL` (`storage.ts:169`) — **mit Kommentar, warum**. Dort stehen heute `ohneKonto` und `sitzung`.
 - Ist er ein Cache, der sich neu berechnen lässt, gehört er weder in den Export noch nötigenfalls in den `localStorage`.
 
-Beim Import ist zusätzlich der Modul-Cache zu leeren, sonst zeigt die App bis zum nächsten Neuladen alte Daten. Bis das gelöst ist, ist der `reload()` in `ProgressPage.jsx:488` Pflicht. Wer einen Bereich hinzufügt, erweitert `test/sicherungRundlauf.test.js` mit — dieser Test ist die einzige Stelle, die einen vergessenen Bereich im Export tatsächlich bemerkt.
+Beim Import ist zusätzlich der Modul-Cache zu leeren, sonst zeigt die App bis zum nächsten Neuladen alte Daten. Bis das gelöst ist, ist der `reload()` in `ProgressPage.jsx:488` Pflicht. Ein vergessener Schlüssel fällt jetzt von selbst auf: `test/speicherregister.test.js` durchsucht den ganzen Quelltext nach `red-kurd-*`-Literalen und verlangt, dass jedes eingeordnet ist — als Eintrag in `KEYS`, in `TAB_KEYS`, oder als ausdrückliche Ausnahme **mit Grund**. Derselbe Test prüft, dass genau `ohneKonto` und `sitzung` aus dem Export fallen und dass der Rundlauf Export → Import → Export deckungsgleich ist. Wer einen Bereich hinzufügt, erweitert zusätzlich `test/sicherungRundlauf.test.js` um den fachlichen Teil.
 
 **5. Migration als reine Funktion.** Die Umformung von altem auf neues Format ist eine Funktion `(alt) => neu` ohne Zugriff auf `localStorage`, ohne `Date.now()` in der Kernlogik und ohne Seiteneffekte. Nur so ist sie mit `node:test` prüfbar — die Testumgebung hat kein DOM und keinen `localStorage`. `migriereKarten()` (`storage.ts:213`) ist das Vorbild: sie nimmt ein Objekt, gibt ein Objekt zurück und meldet, wie viel sie geändert hat. `migriere()` ruft sie auf und kümmert sich allein um das Lesen und Schreiben.
 
