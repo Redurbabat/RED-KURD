@@ -377,21 +377,18 @@ export interface AlteSitzung {
 //  * Ein Schritt, der wirft, nahm alle folgenden mit — ein Fehler beim
 //    Lernstand haette also auch das Profil ungehoben gelassen.
 //
-// Die Reihenfolge in `MIGRATIONEN` ist bedeutungstragend — und sie hat heute
-// eine Luecke, die hier ausdruecklich benannt sei, weil sie beim Umbau
-// sichtbar wurde (Differenztest, Gegenprobe „Reihenfolge vertauscht"):
+// Die Reihenfolge in `MIGRATIONEN` ist bedeutungstragend: `karten-umbenennung`
+// steht ZULETZT, weil es den fertigen v2-Lernstand braucht.
 //
-//   `karten-umbenennung` liest den bestehenden v2-Lernstand und laeuft ZUERST.
-//   `fortschritt-v1-v2` schreibt den v2-Lernstand nur, wenn er fehlt.
+// Frueher stand der Schritt an erster Stelle. Das hatte eine stille Luecke:
+// `fortschritt-v1-v2` schreibt den v2-Lernstand erst danach, also fand die
+// Umbenennung bei einem Wechsel direkt von Version 1 noch gar nichts vor. Der
+// Lernstand wurde gehoben, aber die Karten darin behielten ihre alte
+// Schreibweise — genau das, wovor der Kommentar an `UMBENANNT` warnt: der
+// Lernstand uebt fuer immer eine Schreibweise, die der Kurs nicht mehr kennt.
 //
-// Wer also direkt von Version 1 kommt, bekommt seinen Lernstand gehoben —
-// aber die Karten darin behalten die alte Schreibweise, weil der
-// Umbenennungsschritt zu diesem Zeitpunkt noch nichts vorfand. Genau das,
-// wovor der Kommentar an `UMBENANNT` warnt.
-//
-// Diese Welle aendert daran bewusst nichts: sie strukturiert um und weist die
-// Gleichheit zum Vorstand nach. Behoben wird es getrennt, damit die Aenderung
-// fuer sich pruefbar bleibt.
+// Der Schritt ist idempotent (eine schon umbenannte Karte steht nicht mehr in
+// `UMBENANNT`), zuletzt zu laufen kostet also nichts.
 
 /** Was ein Schritt hebt und woher er kommt. */
 export interface Migrationsschritt {
@@ -423,26 +420,6 @@ export interface Schrittergebnis {
 }
 
 export const MIGRATIONEN: readonly Migrationsschritt[] = [
-  {
-    name: 'karten-umbenennung',
-    bereich: 'fortschritt',
-    von: 'v2',
-    nach: 'v2',
-    beschreibung: 'Umbenannte Lernpaare auf die aktuelle Schreibweise heben.',
-    // Kein eigener `noetig()`-Vorgriff: ob wirklich etwas umzubenennen ist,
-    // weiss erst `migriereKarten()`. Der Schritt laeuft also, sobald es
-    // ueberhaupt Karten gibt, und schreibt nur bei echter Aenderung.
-    noetig() {
-      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
-      return !!stand && !!stand.karten
-    },
-    fuehreAus() {
-      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
-      if (!stand || !stand.karten) return
-      const { karten, geaendert } = migriereKarten(stand.karten)
-      if (geaendert) schreibe(KEYS.fortschritt, { ...stand, karten })
-    },
-  },
   {
     name: 'fortschritt-v1-v2',
     bereich: 'fortschritt',
@@ -545,6 +522,27 @@ export const MIGRATIONEN: readonly Migrationsschritt[] = [
         preferredVariant: 'kurmanci-standard',
       }
       schreibe(KEYS.ui, einstellungen)
+    },
+  },
+  {
+    name: 'karten-umbenennung',
+    bereich: 'fortschritt',
+    von: 'v2',
+    nach: 'v2',
+    beschreibung: 'Umbenannte Lernpaare auf die aktuelle Schreibweise heben.',
+    // `noetig()` sagt genau dann ja, wenn wirklich ein Schluessel umzieht —
+    // nicht schon, wenn es ueberhaupt Karten gibt. Sonst meldete der Bericht
+    // „gelaufen" fuer einen Schritt, der nichts getan hat.
+    noetig() {
+      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
+      if (!stand || !stand.karten || typeof stand.karten !== 'object') return false
+      return Object.keys(stand.karten).some((s) => s.split('|').slice(0, 2).join('|') in UMBENANNT)
+    },
+    fuehreAus() {
+      const stand = lies<GespeicherterStand>(KEYS.fortschritt)
+      if (!stand || !stand.karten) return
+      const { karten, geaendert } = migriereKarten(stand.karten)
+      if (geaendert) schreibe(KEYS.fortschritt, { ...stand, karten })
     },
   },
 ]

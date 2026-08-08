@@ -58,9 +58,53 @@ test('die Reihenfolge liegt fest — sie ist bedeutungstragend', async () => {
   const { MIGRATIONEN } = await frischesModul()
   assert.deepEqual(
     MIGRATIONEN.map((s) => s.name),
-    ['karten-umbenennung', 'fortschritt-v1-v2', 'profil-v1-v2', 'sitzung-v1-v2', 'modus-zu-ui'],
-    'Die Reihenfolge entscheidet, ob ein gehobener Stand seine Kartenumbenennung bekommt.'
+    ['fortschritt-v1-v2', 'profil-v1-v2', 'sitzung-v1-v2', 'modus-zu-ui', 'karten-umbenennung'],
+    'Die Umbenennung muss ZULETZT laufen — sonst findet sie einen frisch aus v1 ' +
+      'gehobenen Lernstand noch gar nicht vor.'
   )
+})
+
+test('ein aus v1 gehobener Lernstand bekommt seine Kartenumbenennung', async () => {
+  // Der Fall, den die alte Reihenfolge verfehlte: Wechsel direkt von
+  // Version 1, mit Karten in einer Schreibweise, die der Kurs nicht mehr kennt.
+  const speicher = frischerSpeicher()
+  speicher.setItem(
+    'red-kurd-fortschritt-v1',
+    JSON.stringify({
+      xp: 200,
+      karten: {
+        'Pilz|kundir|erkennen': { stufe: 4, faellig: '2026-08-09' },
+        'Möchtest du Tee?|Tu çay dixwazî?|hoeren': { stufe: 2, faellig: '2026-08-10' },
+        'Brot|nan|erkennen': { stufe: 1 },
+      },
+    })
+  )
+  const modul = await frischesModul()
+  modul.migriere()
+
+  const karten = modul.lies(modul.KEYS.fortschritt).karten
+  assert.deepEqual(karten, {
+    'Pilz|kivark|erkennen': { stufe: 4, faellig: '2026-08-09' },
+    'Möchtest du Tee?|Tu çayê dixwazî?|hoeren': { stufe: 2, faellig: '2026-08-10' },
+    'Brot|nan|erkennen': { stufe: 1 },
+  })
+  // Der Rest des gehobenen Standes bleibt unangetastet.
+  assert.equal(modul.lies(modul.KEYS.fortschritt).xp, 200)
+})
+
+test('trifft eine gehobene Karte auf eine bestehende, gewinnt die hoehere Stufe', async () => {
+  // Zwei Wege zur selben Karte: der alte Schluessel aus v1 und der neue, der
+  // schon im v2-Stand liegt. Verloren gehen darf der weiter fortgeschrittene.
+  const speicher = frischerSpeicher()
+  speicher.setItem(
+    'red-kurd-fortschritt-v1',
+    JSON.stringify({ karten: { 'Pilz|kundir|erkennen': { stufe: 1 }, 'Pilz|kivark|erkennen': { stufe: 6 } } })
+  )
+  const modul = await frischesModul()
+  modul.migriere()
+  assert.deepEqual(modul.lies(modul.KEYS.fortschritt).karten, {
+    'Pilz|kivark|erkennen': { stufe: 6 },
+  })
 })
 
 test('migriere() berichtet je Schritt, was passiert ist', async () => {
