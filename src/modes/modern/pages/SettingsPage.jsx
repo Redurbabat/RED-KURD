@@ -17,7 +17,7 @@ import {
 import { holeUi, setzeUi, appModus, setzeAppModus } from '../../../core/ui/uiStore.ts'
 import { tagesZiel, exportiereAlles } from '../../../core/progress/progressStore.ts'
 import { holeShop } from '../../../core/shop/shopStore.ts'
-import { abmelden, kontoStatus } from '../../../core/auth/authApi.js'
+import { abmelden, kontoStatus } from '../../../core/auth/authApi.ts'
 import { KEYS, entferne, lies } from '../../../core/storage.ts'
 import Icon from '../../../components/icons/Icon.tsx'
 import Card from '../../../components/common/Card.tsx'

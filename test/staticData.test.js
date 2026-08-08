@@ -29,7 +29,7 @@ globalThis.fetch = async (pfad) => {
 }
 
 const { zufallsPaare, beispieleStatisch, statischeAnzahl, sucheStatisch } = await import(
-  '../src/core/data/staticData.js'
+  '../src/core/data/staticData.ts'
 )
 
 test('die Suche toleriert fehlende kurdische Sonderzeichen', async () => {
@@ -66,6 +66,25 @@ test('zufallsPaare liefert niemals englische Saetze als deutsche', async () => {
       )
     }
   }
+})
+
+test('zufallsPaare mischt wirklich — nicht immer dieselbe Reihenfolge', async () => {
+  // Aufgefallen bei einer Gegenprobe: `mischen()` durfte zu einem Nichtstun
+  // werden, ohne dass ein Test es merkte. Der Schaden waere unsichtbar — der
+  // Satzbau zeigte einfach jedes Mal dieselben Saetze in derselben Folge, und
+  // das sieht aus wie „wenig Inhalt", nicht wie ein Fehler.
+  //
+  // Genau deshalb steht in staticData ein Fisher-Yates statt eines
+  // `sort(Math.random)`: die Reihenfolge soll unverzerrt sein.
+  const laeufe = []
+  for (let i = 0; i < 6; i++) {
+    laeufe.push((await zufallsPaare(12)).map((p) => p.satz).join('|'))
+  }
+  const verschieden = new Set(laeufe)
+  assert.ok(
+    verschieden.size > 1,
+    `sechs Laeufe ergaben immer dieselbe Reihenfolge — mischt zufallsPaare noch?`
+  )
 })
 
 test('fehlende deutsche Paare gleichen die Kapitelsaetze aus', async () => {
