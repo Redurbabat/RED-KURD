@@ -1,5 +1,5 @@
 // Eine einzelne Lektion in einem Lernpfad: anklickbar, mit echtem Status.
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 
 const STATUS = {
   done: { icon: 'haken', text: 'Erledigt — zum Nachlesen öffnen' },

@@ -15,12 +15,12 @@ import {
   setzeAktiv,
 } from '../../../core/shop/shopStore.ts'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
-import Icon from '../../../components/icons/Icon.jsx'
-import Card from '../../../components/common/Card.jsx'
-import Badge from '../../../components/common/Badge.jsx'
-import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
-import StatChip from '../../../components/common/StatChip.jsx'
-import EmptyState from '../../../components/common/EmptyState.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import Card from '../../../components/common/Card.tsx'
+import Badge from '../../../components/common/Badge.tsx'
+import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
+import StatChip from '../../../components/common/StatChip.tsx'
+import EmptyState from '../../../components/common/EmptyState.tsx'
 import './ShopPage.css'
 
 /** Der Schatzschlüssel wird sofort eingelöst — so viel bringt die Bonustruhe. */

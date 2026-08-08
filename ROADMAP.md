@@ -95,7 +95,13 @@ dass jemand Angst um seinen Lernstand haben muss.
         und die drei dünnen Hüllen der Bereichs-Lernstände (fünfte Welle;
         Verhalten über rund 310 000 Vergleiche belegt, jede Prüfung mit
         bestandener Gegenprobe)
-  - [ ] zuletzt Komponenten und Seiten
+  - [~] zuletzt Komponenten und Seiten
+    - [x] `components/icons/` und `components/common/` (11 Dateien): Icon,
+          Badge, Card, PrimaryButton, StatChip, ProgressBar, Modal,
+          SegmentedControl, EmptyState, SpecialChars, FlagIcon. Iconnamen und
+          Flaggensprachen sind jetzt Typen statt freier Text
+    - [ ] `components/layout/`, `components/adventure/`, `components/mascot/`
+    - [ ] die Seiten unter `modes/` und die Features unter `features/`
 - [x] Zentrale Typen unter `src/types/` angelegt (`lernstand.d.ts`, reine
       Deklarationsdatei): Lernstand, Karte, Tag, Profil, UI, Sitzung, Shop,
       Sprachkurse, Sicherung — die Speicherformen der **Sprach-App**
@@ -188,7 +194,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 444 Tests grün, dazu `npm run test:browser`
+Stand: `npm test` läuft heute mit 446 Tests grün, dazu `npm run test:browser`
 mit 62 Prüfungen im echten Bündel.
 
 *Sprach-App*

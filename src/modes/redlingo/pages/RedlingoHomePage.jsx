@@ -9,8 +9,8 @@ import {
   kursFortschritt,
 } from '../../../core/courses/courseRepository.ts'
 import { sitzungLaden } from '../../../core/session/sessionStore.ts'
-import Icon from '../../../components/icons/Icon.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
 
 const SCHNELLZIELE = [
   { name: 'Alle Kurse', text: 'Kurmancî und weitere Sprachen', icon: 'sprache', pfad: '/languages' },

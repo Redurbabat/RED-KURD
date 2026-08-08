@@ -1,6 +1,6 @@
 // Feste Navigation am unteren Rand (Handy und Tablet). Beruecksichtigt die
 // Safe-Area moderner Smartphones, damit nichts unter der Systemleiste liegt.
-import Icon from '../icons/Icon.jsx'
+import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { istAktiv } from './navConfig.js'
 import { T } from '../../core/texts.js'

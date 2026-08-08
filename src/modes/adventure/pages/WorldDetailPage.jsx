@@ -13,10 +13,10 @@ import {
   weltPfad,
 } from '../../../core/courses/courseRepository.ts'
 import { oeffneWeltTruhe, weltTruheDatum } from '../../../core/progress/progressStore.ts'
-import Icon from '../../../components/icons/Icon.jsx'
-import Card from '../../../components/common/Card.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
-import EmptyState from '../../../components/common/EmptyState.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import Card from '../../../components/common/Card.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
+import EmptyState from '../../../components/common/EmptyState.tsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './WorldDetailPage.css'
 

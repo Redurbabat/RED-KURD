@@ -1,5 +1,5 @@
 // Seitenleiste am Desktop: Logo oben, Bereiche in der Mitte, Profil unten.
-import Icon from '../icons/Icon.jsx'
+import Icon from '../icons/Icon.tsx'
 import LanguageSwitch from './LanguageSwitch.jsx'
 import { navigiere } from '../../app/router.jsx'
 import { istAktiv } from './navConfig.js'

@@ -2,10 +2,10 @@
 // eintragen und löschen. Alle Rechnungen kommen aus core/elektro —
 // hier wird nur angezeigt.
 import { useState } from 'react'
-import Badge from '../../components/common/Badge.jsx'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 import {

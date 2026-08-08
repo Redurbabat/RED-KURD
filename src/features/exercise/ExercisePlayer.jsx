@@ -2,11 +2,11 @@
 // exakt diese Komponente — nur die Klasse `stil` ändert das Aussehen.
 // Ausgangssprache ist immer Deutsch, Zielsprache Kurmancî.
 import { useEffect, useRef, useState } from 'react'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import SpecialChars from '../../components/common/SpecialChars.jsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
+import SpecialChars from '../../components/common/SpecialChars.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.jsx'
-import ProgressBar from '../../components/common/ProgressBar.jsx'
+import ProgressBar from '../../components/common/ProgressBar.tsx'
 import { spieleWort } from '../../core/audio/audioService.js'
 import { istRichtigGetippt, SKILL_JE_ART } from '../../core/session/exerciseFactory.ts'
 import { gibXp, karteBewerten, zaehleAufgabe } from '../../core/progress/progressStore.ts'

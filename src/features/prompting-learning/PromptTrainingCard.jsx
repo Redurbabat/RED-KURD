@@ -1,7 +1,7 @@
 // Eine Prompting-Uebung: selbst einen Auftrag formulieren.
-import Badge from '../../components/common/Badge.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 
 /**
  * @param {{exercise:{id:string,title:string,topic:string,difficulty:string,

@@ -17,7 +17,7 @@ import SentenceBuilder from '../../../features/sentence-builder/SentenceBuilder.
 import GrammarTrainer from '../../../features/grammar/GrammarTrainer.jsx'
 import PronunciationStudio from '../../../features/speaking/PronunciationStudio.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
-import EmptyState, { ErrorState } from '../../../components/common/EmptyState.jsx'
+import EmptyState, { ErrorState } from '../../../components/common/EmptyState.tsx'
 
 const XP_JE_AUFGABE = 10
 

@@ -1,10 +1,10 @@
 // Die App „AI-Sprache" — eigener Kopf, eigene Navigation, eigene Bereiche.
 // Heute · Auftrag · Bug-Report · PR prüfen · Lernen.
 import { useState } from 'react'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import ProgressBar from '../../components/common/ProgressBar.jsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
+import ProgressBar from '../../components/common/ProgressBar.tsx'
 import { useLernstand } from '../../core/store.ts'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.ts'
 import {

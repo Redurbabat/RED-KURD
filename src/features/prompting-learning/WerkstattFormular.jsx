@@ -2,9 +2,9 @@
 // erscheint live darunter, die Prüfliste hakt ab, was schon stimmt.
 // Wird für den Claude-Code-Auftrag und den Bug-Report benutzt.
 import { useState } from 'react'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 
 /**
  * @param {{felder:Array, werte:Object, setzeFeld:Function, leeren:Function,

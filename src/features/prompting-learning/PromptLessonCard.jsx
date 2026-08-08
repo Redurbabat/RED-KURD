@@ -1,5 +1,5 @@
 // Eine Prompting-Lektion als anklickbare Karte mit echtem Status.
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 
 const STATUS = {
   done: { icon: 'haken', text: 'Erledigt — zum Nachlesen öffnen' },

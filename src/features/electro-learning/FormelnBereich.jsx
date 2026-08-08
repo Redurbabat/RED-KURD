@@ -1,8 +1,8 @@
 // Formeln & Rechner plus die fünf Sicherheitsregeln. Gerechnet wird in
 // core/elektro/formeln.js — hier stehen nur Eingabefelder und Ergebnisse.
 import { useState } from 'react'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
 import * as f from '../../core/elektro/formeln.js'
 import { gerundet } from '../../core/elektro/notenRechnung.js'
 

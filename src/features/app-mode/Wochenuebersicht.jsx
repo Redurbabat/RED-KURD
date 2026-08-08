@@ -1,7 +1,7 @@
 // Die gemeinsame Woche über alle vier Apps — steht auf der App-Auswahl.
 // Zeigt je Tag, in welchen Apps etwas los war, und je App ihre eigene
 // Zahl mit eigener Einheit (Sprache zählt Aufgaben, die anderen XP).
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 import { KEYS, lies } from '../../core/storage.ts'
 import { heute } from '../../core/progress/scheduler.ts'
 import { reiheGesamt, wochenUebersicht } from '../../core/lernbereiche/wochenUebersicht.ts'

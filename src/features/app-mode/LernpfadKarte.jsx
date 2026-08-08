@@ -4,7 +4,7 @@
 // ein Schloss — wie in einer Lern-App, aber ohne Spielerei.
 //
 // Nur Darstellung: Status und Fortschritt kommen aus dem Lernstand.
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 
 const BESCHRIFTUNG = {
   done: 'fertig',

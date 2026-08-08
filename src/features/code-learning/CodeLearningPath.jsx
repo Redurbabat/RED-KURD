@@ -1,9 +1,9 @@
 // Ein Lernpfad als Karte: Kopf, echter Fortschritt, aufklappbare Lektionen.
 // Der Status jeder Lektion kommt aus dem gespeicherten Lernstand.
 import { useState } from 'react'
-import Badge from '../../components/common/Badge.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import ProgressBar from '../../components/common/ProgressBar.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
+import ProgressBar from '../../components/common/ProgressBar.tsx'
 import LektionModal from '../app-mode/LektionModal.jsx'
 import LektionPlayer from '../app-mode/LektionPlayer.jsx'
 import CodeLessonCard from './CodeLessonCard.jsx'

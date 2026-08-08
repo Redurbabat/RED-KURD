@@ -3,7 +3,7 @@
 import { Suspense, lazy, useEffect } from 'react'
 import { useRoute, navigiere, passt, loeseUmleitung } from './router.jsx'
 import { appModus } from '../core/ui/uiStore.ts'
-import { LoadingState } from '../components/common/EmptyState.jsx'
+import { LoadingState } from '../components/common/EmptyState.tsx'
 
 // Der schnelle Lernpfad steckt im Start-Bundle: Heute, Sitzung, Kurs, Üben.
 import TodayPage from '../modes/modern/pages/TodayPage.jsx'

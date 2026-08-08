@@ -1,9 +1,24 @@
 // Fortschrittsbalken mit korrekten ARIA-Angaben (Screenreader lesen den Wert vor).
+import type { ReactNode } from 'react'
 
 /**
- * @param {{wert:number, max?:number, label:string, farbe?:string,
- *          zeigeWert?:boolean, klein?:boolean}} props
+ * Die benannten Farben aus `RING_FARBEN`. Ein beliebiger CSS-Wert geht auch —
+ * deshalb `| string` und keine reine Vereinigung: das ist keine Nachlässigkeit,
+ * sondern die tatsächliche Absicht (siehe `RING_FARBEN[farbe] || farbe`).
  */
+export type Balkenfarbe = 'primary' | 'green' | 'blue' | 'gold' | 'orange' | 'purple'
+
+export interface ProgressBarProps {
+  wert: number
+  max?: number
+  /** Pflicht: der Balken ist sonst für Screenreader namenlos. */
+  label: string
+  farbe?: Balkenfarbe | string
+  zeigeWert?: boolean
+  klein?: boolean
+  className?: string
+}
+
 export default function ProgressBar({
   wert,
   max = 100,
@@ -12,7 +27,7 @@ export default function ProgressBar({
   zeigeWert = false,
   klein = false,
   className = '',
-}) {
+}: ProgressBarProps) {
   const sicher = Math.max(0, Math.min(wert, max))
   const prozent = max ? Math.round((sicher / max) * 100) : 0
   return (
@@ -34,7 +49,7 @@ export default function ProgressBar({
 }
 
 // Dieselben Farbnamen wie bei ProgressBar — ein fertiger CSS-Wert geht auch.
-const RING_FARBEN = {
+const RING_FARBEN: Readonly<Record<Balkenfarbe, string>> = {
   primary: 'var(--rk-primary)',
   green: 'var(--rk-green-dark)',
   blue: 'var(--rk-blue)',
@@ -43,10 +58,32 @@ const RING_FARBEN = {
   purple: 'var(--rk-purple)',
 }
 
+export interface ProgressRingProps {
+  wert: number
+  label: string
+  groesse?: number
+  farbe?: Balkenfarbe | string
+  /** Was in der Mitte steht; ohne Angabe der Prozentwert. */
+  text?: ReactNode
+}
+
+function istBalkenfarbe(wert: string): wert is Balkenfarbe {
+  return wert in RING_FARBEN
+}
+
 /** Runder Fortschrittsring. */
-export function ProgressRing({ wert, label, groesse = 76, farbe = 'primary', text }) {
+export function ProgressRing({
+  wert,
+  label,
+  groesse = 76,
+  farbe = 'primary',
+  text,
+}: ProgressRingProps) {
   const prozent = Math.max(0, Math.min(wert, 100))
-  const ringFarbe = RING_FARBEN[farbe] || farbe
+  // Erst in der Tabelle nachsehen, sonst den Wert unverändert als CSS-Farbe
+  // nehmen. `istBalkenfarbe` statt eines Zugriffs mit beliebigem String: so
+  // bleibt die Tabelle vollständig geprüft.
+  const ringFarbe = istBalkenfarbe(farbe) ? RING_FARBEN[farbe] : farbe
   return (
     <div
       className="rk-ring"

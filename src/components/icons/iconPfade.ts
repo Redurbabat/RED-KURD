@@ -1,7 +1,18 @@
-// Ein einheitlicher SVG-Iconsatz (Strich-Icons, 24×24, currentColor).
-// Bewusst keine Emojis in der Navigation und in Bedienelementen.
+// Die Pfaddaten des Iconsatzes — bewusst getrennt von der Komponente.
+//
+// Der Grund ist handfest: Node laedt keine `.tsx`. `--experimental-strip-types`
+// entfernt Typen, transformiert aber kein JSX; ein Test, der `Icon.tsx`
+// importiert, bricht mit ERR_UNKNOWN_FILE_EXTENSION ab. Alles, was ein Test
+// braucht, muss deshalb in einer `.ts` liegen. Hier sind es die Namen, gegen
+// die `test/icons.test.js` jede Verwendung im Baum prueft.
+//
+// `as const` ist tragend und keine Formsache: erst dadurch entsteht aus den
+// Schluesseln der Typ `Iconname`. Ein Tippfehler wie `pfeilOben` (heisst in
+// Wahrheit `pfeilHoch`) ist damit ein Uebersetzungsfehler statt eines Icons,
+// das stillschweigend gar nicht erscheint — `Icon` gibt bei unbekanntem Namen
+// `null` zurueck, und das faellt beim Durchklicken kaum auf.
 
-const P = {
+export const ICON_PFADE = {
   // --- Navigation ---
   heute: 'M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5M9.5 20v-5.5h5V20',
   kurs: 'M4 5a2 2 0 0 1 2-2h11v18H6a2 2 0 0 1-2-2zM17 3h3v18h-3M8 8h5M8 12h5',
@@ -82,37 +93,14 @@ const P = {
   mond: 'M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z',
   muell: 'M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5',
   daumen: 'M7 11v9H4v-9zM7 11l4-7a2 2 0 0 1 3 2l-1 5h5a2 2 0 0 1 2 2.4l-1.2 5A2 2 0 0 1 17 20H7',
-}
+} as const
 
-export const ICON_NAMEN = Object.keys(P)
+/** Jeder Name, den es wirklich gibt. */
+export type Iconname = keyof typeof ICON_PFADE
 
 /**
- * @param {{name:string, groesse?:number, strich?:number, className?:string, titel?:string}} props
- * Ohne `titel` ist das Icon rein dekorativ (aria-hidden) — der Text daneben zaehlt.
+ * Alle Namen zur Laufzeit. Bewusst `string[]` und nicht `Iconname[]`:
+ * `Object.keys()` liefert in TypeScript `string[]`, und das mit einer
+ * Behauptung zu uebergehen waere die einzige im ganzen Modul.
  */
-export default function Icon({ name, groesse = 24, strich = 2, className = '', titel, ...rest }) {
-  const d = P[name]
-  if (!d) return null
-  const beschriftet = !!titel
-  return (
-    <svg
-      className={'rk-icon ' + className}
-      width={groesse}
-      height={groesse}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strich}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      role={beschriftet ? 'img' : undefined}
-      aria-hidden={beschriftet ? undefined : 'true'}
-      aria-label={beschriftet ? titel : undefined}
-      focusable="false"
-      {...rest}
-    >
-      {beschriftet && <title>{titel}</title>}
-      <path d={d} />
-    </svg>
-  )
-}
+export const ICONNAMEN: readonly string[] = Object.keys(ICON_PFADE)

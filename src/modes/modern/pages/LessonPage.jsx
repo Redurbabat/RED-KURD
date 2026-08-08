@@ -9,8 +9,8 @@ import { BESTANDEN_AB } from '../../../core/courses/courseRepository.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
-import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
-import EmptyState, { LoadingState } from '../../../components/common/EmptyState.jsx'
+import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
+import EmptyState, { LoadingState } from '../../../components/common/EmptyState.tsx'
 import './LessonPage.css'
 
 const XP_JE_AUFGABE = 10

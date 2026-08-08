@@ -1,10 +1,10 @@
 // Rechte Zusatzspalte am breiten Desktop: Tagesziel, Empfehlung, Wochenüberblick
 // und ein Hinweis von Hêlo. Auf Handy und Tablet wird sie nicht gerendert
 // (die Inhalte stehen dort im Hauptbereich).
-import Card from '../common/Card.jsx'
-import ProgressBar from '../common/ProgressBar.jsx'
-import PrimaryButton from '../common/PrimaryButton.jsx'
-import Icon from '../icons/Icon.jsx'
+import Card from '../common/Card.tsx'
+import ProgressBar from '../common/ProgressBar.tsx'
+import PrimaryButton from '../common/PrimaryButton.tsx'
+import Icon from '../icons/Icon.tsx'
 import HeloMessage from '../mascot/HeloMessage.jsx'
 import { navigiere } from '../../app/router.jsx'
 import { tagesZiel } from '../../core/progress/progressStore.ts'

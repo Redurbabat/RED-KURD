@@ -1,8 +1,8 @@
 // Die App-Auswahl: RED-KURD als Website mit mehreren Apps darin.
 // Jede Karte oeffnet genau EINE App — sichtbar ist danach nur diese App.
 // Erscheint beim allerersten Start und jederzeit ueber „Apps" im Umschalter.
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import Wochenuebersicht from './Wochenuebersicht.jsx'
 import { APP_MODES, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.ts'
 import './appMode.css'

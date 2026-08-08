@@ -2,8 +2,10 @@
 // Flagge (rot-weiß-grün mit goldener 21-Strahlen-Sonne), die es als Emoji
 // nicht gibt. Rein dekorativ: der Sprachname steht immer als Text daneben.
 
+import type { ReactNode } from 'react'
+
 /** Punkte der 21-Strahlen-Sonne von Roja Kurdistanê. */
-function sonnenStrahlen(cx, cy, innen, aussen) {
+function sonnenStrahlen(cx: number, cy: number, innen: number, aussen: number): string {
   const punkte = []
   const strahlen = 21
   for (let i = 0; i < strahlen; i += 1) {
@@ -18,7 +20,24 @@ function sonnenStrahlen(cx, cy, innen, aussen) {
   return punkte.join(' ')
 }
 
-const FLAGGEN = {
+/**
+ * Die Liste ist die Quelle, nicht die Flaggentabelle: daraus entsteht der Typ,
+ * und `FLAGGEN` wird daran gemessen. Fehlt dort eine Sprache oder steht eine
+ * zuviel darin, meldet es der Prüfer — vorher hätte man beides einzeln pflegen
+ * müssen, ohne dass ein Auseinanderlaufen aufgefallen wäre.
+ */
+export const FLAGGEN_SPRACHEN = [
+  'kurmanci',
+  'englisch',
+  'franzoesisch',
+  'spanisch',
+  'tuerkisch',
+] as const
+
+/** Jede Flagge, die es wirklich gibt. */
+export type Flaggensprache = (typeof FLAGGEN_SPRACHEN)[number]
+
+const FLAGGEN: Readonly<Record<Flaggensprache, ReactNode>> = {
   kurmanci: (
     <>
       <rect width="24" height="16" fill="#eb2224" />
@@ -63,12 +82,16 @@ const FLAGGEN = {
   ),
 }
 
-/**
- * @param {{sprache: 'kurmanci'|'englisch'|'franzoesisch'|'spanisch'|'tuerkisch',
- *          breite?: number, className?: string}} props
- */
-export default function FlagIcon({ sprache, breite = 24, className = '' }) {
-  const inhalt = FLAGGEN[sprache]
+export interface FlagIconProps {
+  sprache: Flaggensprache
+  breite?: number
+  className?: string
+}
+
+export default function FlagIcon({ sprache, breite = 24, className = '' }: FlagIconProps) {
+  const inhalt: ReactNode = FLAGGEN[sprache]
+  // Der Typ schließt einen unbekannten Namen aus; die Prüfung bleibt für
+  // Aufrufer, die noch JavaScript sind.
   if (!inhalt) return null
   return (
     <svg
@@ -84,4 +107,3 @@ export default function FlagIcon({ sprache, breite = 24, className = '' }) {
   )
 }
 
-export const FLAGGEN_SPRACHEN = Object.keys(FLAGGEN)

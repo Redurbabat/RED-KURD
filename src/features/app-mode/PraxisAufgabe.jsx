@@ -7,10 +7,10 @@
 //   'text'  → Textfeld (z. B. einen Prompt formulieren) + Pruefliste
 //   'zahl'  → Zahleneingabe (z. B. Ohm-Rechnung) + Sofort-Pruefung
 import { useRef, useState } from 'react'
-import Badge from '../../components/common/Badge.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import Modal from '../../components/common/Modal.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import Modal from '../../components/common/Modal.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import CodeTastatur from './CodeTastatur.jsx'
 
 export const XP_JE_MITMACH = 20

@@ -1,9 +1,9 @@
 // Pull Request prüfen: die Fragen, die vor jedem Merge zu beantworten
 // sind — mit ehrlicher Empfehlung am Ende.
-import Badge from '../../components/common/Badge.jsx'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
 import { PR_CHECKLISTE, pruefeMerge } from '../../core/prompting/promptBaukasten.js'
 import { holePr, leerePr, schaltePr } from '../../core/prompting/werkstattStore.ts'

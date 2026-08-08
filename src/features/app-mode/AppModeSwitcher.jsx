@@ -1,6 +1,6 @@
 // Der App-Umschalter: Sprache lernen · Code lernen · AI-Sprache.
 // Immer sichtbar am oberen Rand — genau ein Bereich ist aktiv.
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 import { APP_MODE_KURZ, APP_MODE_LABELS, APP_MODE_LISTE } from './appModes.ts'
 import './appMode.css'
 

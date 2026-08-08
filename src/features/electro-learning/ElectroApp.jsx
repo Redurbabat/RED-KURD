@@ -2,8 +2,8 @@
 // Bereiche. Sichtbar ist immer genau ein Bereich dieser App; von den
 // anderen RED-KURD-Apps ist hier nichts zu sehen.
 import { useState } from 'react'
-import Icon from '../../components/icons/Icon.jsx'
-import ProgressBar from '../../components/common/ProgressBar.jsx'
+import Icon from '../../components/icons/Icon.tsx'
+import ProgressBar from '../../components/common/ProgressBar.tsx'
 import { useLernstand } from '../../core/store.ts'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.ts'
 import { heute } from '../../core/progress/scheduler.ts'

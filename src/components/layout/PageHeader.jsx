@@ -1,6 +1,6 @@
 // Einheitlicher Seitenkopf: Titel, Untertitel, optional Hêlo und Zurueck-Knopf.
 import HeloMascot from '../mascot/HeloMascot.jsx'
-import Icon from '../icons/Icon.jsx'
+import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { T } from '../../core/texts.js'
 

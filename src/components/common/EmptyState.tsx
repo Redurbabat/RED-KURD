@@ -1,10 +1,29 @@
 // Leer-, Lade- und Fehlerzustaende — jede Liste in der App nutzt einen davon.
+import type { ReactNode } from 'react'
 import HeloMascot from '../mascot/HeloMascot.jsx'
-import PrimaryButton from './PrimaryButton.jsx'
-import Icon from '../icons/Icon.jsx'
+import PrimaryButton from './PrimaryButton.tsx'
+import Icon from '../icons/Icon.tsx'
 import { T } from '../../core/texts.js'
 
-export default function EmptyState({ titel, text, variante = 'ruhig', aktion, aktionText, className = '' }) {
+export interface EmptyStateProps {
+  titel: string
+  text?: string
+  /** Stimmung des Maskottchens; HeloMascot ist noch JavaScript. */
+  variante?: string
+  /** Nur zusammen mit `aktionText` sichtbar — ein Knopf ohne Text wäre stumm. */
+  aktion?: () => void
+  aktionText?: string
+  className?: string
+}
+
+export default function EmptyState({
+  titel,
+  text,
+  variante = 'ruhig',
+  aktion,
+  aktionText,
+  className = '',
+}: EmptyStateProps) {
   return (
     <div className={`rk-leer ${className}`}>
       <HeloMascot variante={variante} groesse={92} dekorativ />
@@ -19,7 +38,11 @@ export default function EmptyState({ titel, text, variante = 'ruhig', aktion, ak
   )
 }
 
-export function LoadingState({ text = T.allgemein.laden }) {
+export interface LoadingStateProps {
+  text?: ReactNode
+}
+
+export function LoadingState({ text = T.allgemein.laden }: LoadingStateProps) {
   return (
     <div className="rk-laden" role="status" aria-live="polite">
       <span className="rk-spinner" aria-hidden="true" />
@@ -28,7 +51,14 @@ export function LoadingState({ text = T.allgemein.laden }) {
   )
 }
 
-export function ErrorState({ titel = T.allgemein.fehler, text, nochmal }) {
+export interface ErrorStateProps {
+  titel?: ReactNode
+  text?: ReactNode
+  /** Fehlt der Rückruf, erscheint kein „Nochmal versuchen". */
+  nochmal?: () => void
+}
+
+export function ErrorState({ titel = T.allgemein.fehler, text, nochmal }: ErrorStateProps) {
   return (
     <div className="rk-fehler" role="alert">
       <Icon name="warnung" groesse={28} />

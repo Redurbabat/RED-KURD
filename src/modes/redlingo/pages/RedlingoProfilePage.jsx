@@ -5,8 +5,8 @@ import { level } from '../../../core/progress/progressStore.ts'
 import { holeProfil } from '../../../core/profile/profileStore.ts'
 import { kursFortschritt } from '../../../core/courses/courseRepository.ts'
 import { holeAuszeichnungen } from '../../../core/achievements/achievementsStore.ts'
-import Icon from '../../../components/icons/Icon.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
 
 function initiale(name) {
   const sauber = String(name || '').trim()

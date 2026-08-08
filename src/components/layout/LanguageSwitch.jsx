@@ -4,8 +4,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { navigiere, useRoute } from '../../app/router.jsx'
 import { SPRACHKURSE } from '../../data/sprachkurse.js'
-import FlagIcon from '../common/FlagIcon.jsx'
-import Icon from '../icons/Icon.jsx'
+import FlagIcon from '../common/FlagIcon.tsx'
+import Icon from '../icons/Icon.tsx'
 import './LanguageSwitch.css'
 
 const KURMANCI = { id: 'kurmanci', name: 'Kurmancî', eigenname: 'Kurmancî' }

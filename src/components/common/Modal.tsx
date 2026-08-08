@@ -1,17 +1,33 @@
 // Dialog mit Fokusfalle, Escape und Klick auf den Hintergrund.
 import { useEffect, useRef } from 'react'
-import { IconButton } from './PrimaryButton.jsx'
+import type { ReactNode } from 'react'
+import { IconButton } from './PrimaryButton.tsx'
 
 const FOKUSSIERBAR =
   'button:not([disabled]), [href], input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'
 
-/**
- * @param {{offen:boolean, titel:string, schliessen:()=>void,
- *          fussleiste?:React.ReactNode, children:React.ReactNode}} props
- */
-export default function Modal({ offen, titel, schliessen, fussleiste, children, breit = false }) {
-  const kasten = useRef(null)
-  const vorher = useRef(null)
+export interface ModalProps {
+  offen: boolean
+  /** Wird als `aria-label` des Dialogs benutzt — deshalb Pflicht. */
+  titel: string
+  schliessen: () => void
+  fussleiste?: ReactNode
+  children?: ReactNode
+  breit?: boolean
+}
+
+export default function Modal({
+  offen,
+  titel,
+  schliessen,
+  fussleiste,
+  children,
+  breit = false,
+}: ModalProps) {
+  const kasten = useRef<HTMLDivElement>(null)
+  // `document.activeElement` ist `Element`, kann also auch ein <svg> sein —
+  // nur HTML-Elemente haben `focus()`. Deshalb die Prüfung unten im Aufräumen.
+  const vorher = useRef<Element | null>(null)
   // schliessen ist bei jedem Render eine neue Funktion. Der Fokus-Effekt darf
   // deshalb NUR von `offen` abhaengen — sonst laeuft er bei jedem Tastendruck
   // neu, reisst den Fokus aus dem Eingabefeld und die Handy-Tastatur klappt
@@ -22,20 +38,21 @@ export default function Modal({ offen, titel, schliessen, fussleiste, children, 
   useEffect(() => {
     if (!offen) return undefined
     vorher.current = document.activeElement
-    const erste = kasten.current?.querySelector(FOKUSSIERBAR)
+    const erste = kasten.current?.querySelector<HTMLElement>(FOKUSSIERBAR)
     erste?.focus()
 
-    function taste(e) {
+    function taste(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         e.preventDefault()
         schliessenRef.current()
         return
       }
       if (e.key !== 'Tab' || !kasten.current) return
-      const liste = [...kasten.current.querySelectorAll(FOKUSSIERBAR)]
-      if (!liste.length) return
+      const liste = [...kasten.current.querySelectorAll<HTMLElement>(FOKUSSIERBAR)]
       const erstes = liste[0]
       const letztes = liste[liste.length - 1]
+      // Ohne fokussierbares Element gibt es nichts einzufangen.
+      if (!erstes || !letztes) return
       if (e.shiftKey && document.activeElement === erstes) {
         e.preventDefault()
         letztes.focus()
@@ -51,7 +68,9 @@ export default function Modal({ offen, titel, schliessen, fussleiste, children, 
     return () => {
       document.removeEventListener('keydown', taste)
       document.body.style.overflow = alteBreite
-      if (vorher.current && vorher.current.focus) vorher.current.focus()
+      // `instanceof HTMLElement` statt einer Prüfung auf `.focus`: nur dann
+      // weiß der Prüfer, dass die Methode wirklich existiert.
+      if (vorher.current instanceof HTMLElement) vorher.current.focus()
     }
   }, [offen])
 

@@ -1,6 +1,6 @@
 // Fortschritts-Ueberblick: jeder Lernpfad mit seinem echten Prozentwert.
-import Card from '../../components/common/Card.jsx'
-import ProgressBar from '../../components/common/ProgressBar.jsx'
+import Card from '../../components/common/Card.tsx'
+import ProgressBar from '../../components/common/ProgressBar.tsx'
 import { codeLearningPaths } from './data/codeLessons.js'
 import { codeLernstand } from './codeProgressStore.ts'
 

@@ -7,11 +7,11 @@ import {
   arabischNachLatein,
   sprich,
 } from '../../core/schrift/transliteration.ts'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import SegmentedControl from '../../components/common/SegmentedControl.jsx'
-import SpecialChars from '../../components/common/SpecialChars.jsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
+import SegmentedControl from '../../components/common/SegmentedControl.tsx'
+import SpecialChars from '../../components/common/SpecialChars.tsx'
 import './ScriptConverter.css'
 
 const RICHTUNGEN = [

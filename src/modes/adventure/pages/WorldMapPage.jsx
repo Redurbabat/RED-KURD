@@ -7,9 +7,9 @@ import { T } from '../../../core/texts.js'
 import { WELTEN, weltFortschritt, weltStatus } from '../../../core/courses/courseRepository.ts'
 import Landscape from '../../../components/adventure/Landscape.jsx'
 import PageHeader from '../../../components/layout/PageHeader.jsx'
-import Icon from '../../../components/icons/Icon.jsx'
-import Badge from '../../../components/common/Badge.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import Badge from '../../../components/common/Badge.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
 import './WorldMapPage.css'
 
 // Jede Welt trägt einen eigenen Farbton — wie im Mockup Welt 1 grün, Welt 2

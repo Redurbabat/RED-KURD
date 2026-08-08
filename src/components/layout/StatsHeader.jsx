@@ -1,6 +1,6 @@
 // Kopfbereich: Logo-Zeile mit Wortmarke und Profil, darunter eine einzelne
 // Statistik-Leiste mit senkrechten Trennern — wie in der Design-Vorlage.
-import Icon from '../icons/Icon.jsx'
+import Icon from '../icons/Icon.tsx'
 import HeloMascot from '../mascot/HeloMascot.jsx'
 import LanguageSwitch from './LanguageSwitch.jsx'
 import { navigiere } from '../../app/router.jsx'

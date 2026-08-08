@@ -7,8 +7,8 @@
 //   'bauen' → Code aus Bausteinen zusammentippen; das Ergebnis erscheint
 //             sofort in der Live-Vorschau darunter
 import { useEffect, useRef, useState } from 'react'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { XP_JE_LEKTION } from '../../core/lernbereiche/bereichsLernstand.ts'
 import CodeTastatur from './CodeTastatur.jsx'
 

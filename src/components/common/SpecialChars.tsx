@@ -1,10 +1,17 @@
 // Sonderzeichenleiste fuer Kurmancî — überall dort, wo getippt wird.
-export const SONDERZEICHEN = ['ê', 'î', 'û', 'ş', 'ç']
+export const SONDERZEICHEN = ['ê', 'î', 'û', 'ş', 'ç'] as const
 
-/**
- * @param {{einfuegen:(zeichen:string)=>void, label?:string}} props
- */
-export default function SpecialChars({ einfuegen, label = 'Kurmancî-Sonderzeichen', className = '' }) {
+export interface SpecialCharsProps {
+  einfuegen: (zeichen: string) => void
+  label?: string
+  className?: string
+}
+
+export default function SpecialChars({
+  einfuegen,
+  label = 'Kurmancî-Sonderzeichen',
+  className = '',
+}: SpecialCharsProps) {
   return (
     <div className={`rk-zeichen ${className}`} role="group" aria-label={label}>
       {SONDERZEICHEN.map((z) => (

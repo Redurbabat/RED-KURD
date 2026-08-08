@@ -12,10 +12,10 @@ import {
 } from '../../core/audio/audioService.js'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { gibXp } from '../../core/progress/progressStore.ts'
-import Card from '../../components/common/Card.jsx'
-import Badge from '../../components/common/Badge.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
-import { ErrorState } from '../../components/common/EmptyState.jsx'
+import Card from '../../components/common/Card.tsx'
+import Badge from '../../components/common/Badge.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
+import { ErrorState } from '../../components/common/EmptyState.tsx'
 import './PronunciationStudio.css'
 
 const XP_JE_AUFNAHME = 5

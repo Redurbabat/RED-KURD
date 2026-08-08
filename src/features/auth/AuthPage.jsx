@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import Icon from '../../components/icons/Icon.jsx'
+import Icon from '../../components/icons/Icon.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { anmelden, registrieren } from '../../core/auth/authApi.js'
 import './AuthPage.css'
 

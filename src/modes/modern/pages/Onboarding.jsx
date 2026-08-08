@@ -4,9 +4,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLernstand } from '../../../core/store.ts'
 import { speichereProfil, ZIELE, KENNTNISSE, TAGESZIELE } from '../../../core/profile/profileStore.ts'
-import Icon from '../../../components/icons/Icon.jsx'
-import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
 import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
 import './Onboarding.css'
 

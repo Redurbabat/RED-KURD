@@ -453,6 +453,24 @@ Unter `public/` liegen 154 Fotos (48 Kapitel + 8 Lernwelt + 98 Wörter, je mit
 (Lingua Libre, CC BY-SA). `test/audioIndex.test.js` hält Index und Dateien in beide
 Richtungen deckungsgleich.
 
+### Komponenten in TypeScript
+
+Der Bestand unter `src/components/` und `src/modes/` ist `.jsx` und wandert
+schrittweise nach `.tsx`. Zwei Dinge sind dabei zu wissen:
+
+**Node lädt keine `.tsx`.** `--experimental-strip-types` entfernt Typen,
+transformiert aber kein JSX; ein Test, der eine `.tsx` importiert, bricht mit
+`ERR_UNKNOWN_FILE_EXTENSION` ab. Alles, was ein Test braucht, gehört deshalb in
+eine `.ts`. `components/icons/iconPfade.ts` ist das Muster: die Pfaddaten
+liegen dort, `Icon.tsx` rendert sie nur.
+
+**Namen werden zu Typen.** `Iconname` und `Flaggensprache` sind keine
+Zeichenketten mehr, sondern Vereinigungen aus den vorhandenen Schlüsseln. Das
+ist kein Selbstzweck: `Icon` gibt bei unbekanntem Namen `null` zurück, ein
+Tippfehler erzeugt also kein Fehlerbild, sondern ein Icon, das einfach nicht
+erscheint. Solange der Bestand `.jsx` ist, schließt `test/icons.test.js` die
+Lücke, indem er jede Verwendung im Baum gegen die echte Liste prüft.
+
 ## Typen (`src/types`)
 
 Die Formen liegen an einer Stelle, nicht in jedem Modul neu. Zwei Dateien, klar

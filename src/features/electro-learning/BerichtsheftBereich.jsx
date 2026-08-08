@@ -1,10 +1,10 @@
 // Berichtsheft: eine Woche pro Eintrag — was gemacht, was gelernt.
 // Neueste Woche steht oben.
 import { useState } from 'react'
-import Badge from '../../components/common/Badge.jsx'
-import Card from '../../components/common/Card.jsx'
-import Icon from '../../components/icons/Icon.jsx'
-import PrimaryButton from '../../components/common/PrimaryButton.jsx'
+import Badge from '../../components/common/Badge.tsx'
+import Card from '../../components/common/Card.tsx'
+import Icon from '../../components/icons/Icon.tsx'
+import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 
