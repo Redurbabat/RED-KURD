@@ -11,7 +11,7 @@ import {
 } from '../../../core/courses/courseRepository.ts'
 import { kennstWort, merkeWort } from '../../../core/progress/progressStore.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import Card from '../../../components/common/Card.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Badge from '../../../components/common/Badge.tsx'

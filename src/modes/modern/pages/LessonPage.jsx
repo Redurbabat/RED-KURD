@@ -8,7 +8,7 @@ import { einheitAbgeschlossen, setzeSterne } from '../../../core/progress/progre
 import { BESTANDEN_AB } from '../../../core/courses/courseRepository.ts'
 import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import EmptyState, { LoadingState } from '../../../components/common/EmptyState.tsx'
 import './LessonPage.css'

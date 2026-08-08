@@ -100,7 +100,11 @@ dass jemand Angst um seinen Lernstand haben muss.
           Badge, Card, PrimaryButton, StatChip, ProgressBar, Modal,
           SegmentedControl, EmptyState, SpecialChars, FlagIcon. Iconnamen und
           Flaggensprachen sind jetzt Typen statt freier Text
-    - [ ] `components/layout/`, `components/adventure/`, `components/mascot/`
+    - [x] `components/layout/` (8 Dateien inkl. `navConfig.ts`) und
+          `components/mascot/` (2). `Navigationseintrag`, `Ansicht`,
+          `Helovariante` und `Navmarken` sind jetzt Typen; `istAktiv` hat mit
+          `test/navigation.test.js` erstmals einen Test
+    - [ ] `components/adventure/` (2 Dateien, 1382 Zeilen — fast nur SVG-Daten)
     - [ ] die Seiten unter `modes/` und die Features unter `features/`
 - [x] Zentrale Typen unter `src/types/` angelegt (`lernstand.d.ts`, reine
       Deklarationsdatei): Lernstand, Karte, Tag, Profil, UI, Sitzung, Shop,
@@ -194,7 +198,7 @@ Import ohne Vorschau und Validierung nicht mehr möglich ist.
 **Ziel:** Die Module, die in **allen vier Apps** über XP, Serie und Wiederholungen
 entscheiden, sind abgesichert — nicht nur die Kursdaten.
 
-Stand: `npm test` läuft heute mit 446 Tests grün, dazu `npm run test:browser`
+Stand: `npm test` läuft heute mit 455 Tests grün, dazu `npm run test:browser`
 mit 62 Prüfungen im echten Bündel.
 
 *Sprach-App*

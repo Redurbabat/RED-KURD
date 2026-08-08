@@ -12,7 +12,7 @@ import {
   kursFortschritt,
   weltFortschritt,
 } from '../../../core/courses/courseRepository.ts'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Badge from '../../../components/common/Badge.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'

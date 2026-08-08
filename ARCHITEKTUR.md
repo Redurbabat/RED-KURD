@@ -506,6 +506,7 @@ ohne dass der Typprüfer etwas merkt.
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | oxlint über `src test scripts server.js sites` |
 | `npm test` | `node --test` über `test/` — ohne Browser, ohne Netz |
+| `npm run importe` | zieht Importpfade nach, wenn Module von `.js`/`.jsx` nach `.ts`/`.tsx` wandern — löst jeden Pfad gegen das Dateisystem auf statt Namensmuster zu raten, und prüft danach gegen. `--pruefen` meldet nur |
 | `npm run test:browser` | die Prüfungen im echten Bündel (`scripts/browser/`): Migration von Version 1, Sicherung einspielen, Aufnahmen in der IndexedDB, alle vier Apps. Startet sich den Vorschauserver selbst. **Nicht Teil von `npm run check`** — wer keinen Browser hat, soll trotzdem entwickeln können |
 | `npm run check` | typecheck + lint + test + build in einem Lauf |
 | `npm run content:check` | nur die Kursdaten-Tests |

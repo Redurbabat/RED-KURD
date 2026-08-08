@@ -16,7 +16,7 @@ import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import SentenceBuilder from '../../../features/sentence-builder/SentenceBuilder.jsx'
 import GrammarTrainer from '../../../features/grammar/GrammarTrainer.jsx'
 import PronunciationStudio from '../../../features/speaking/PronunciationStudio.jsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.tsx'
 
 const XP_JE_AUFGABE = 10

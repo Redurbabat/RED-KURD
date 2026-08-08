@@ -24,7 +24,7 @@ import ProgressBar, { ProgressRing } from '../../../components/common/ProgressBa
 import SegmentedControl from '../../../components/common/SegmentedControl.tsx'
 import { StatTile } from '../../../components/common/StatChip.tsx'
 import { ErrorState } from '../../../components/common/EmptyState.tsx'
-import HeloMessage from '../../../components/mascot/HeloMessage.jsx'
+import HeloMessage from '../../../components/mascot/HeloMessage.tsx'
 import './TodayPage.css'
 
 

@@ -23,7 +23,7 @@ import ExerciseResult from '../../../features/exercise/ExerciseResult.jsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Badge from '../../../components/common/Badge.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import EmptyState, { LoadingState, ErrorState } from '../../../components/common/EmptyState.tsx'
 import './AdventureLessonPage.css'
 

@@ -1,7 +1,7 @@
 // Ergebnisseite nach einer Sitzung — in beiden Modi gleich, nur anders gestylt.
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
-import HeloMascot from '../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../components/mascot/HeloMascot.tsx'
 import { T } from '../../core/texts.js'
 
 /**

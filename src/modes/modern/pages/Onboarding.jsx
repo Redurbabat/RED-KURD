@@ -7,7 +7,7 @@ import { speichereProfil, ZIELE, KENNTNISSE, TAGESZIELE } from '../../../core/pr
 import Icon from '../../../components/icons/Icon.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import ProgressBar from '../../../components/common/ProgressBar.tsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import './Onboarding.css'
 
 /** Zeit pro Tag — jede Antwort schlägt ein passendes Tagesziel vor. */

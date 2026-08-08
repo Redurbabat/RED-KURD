@@ -12,7 +12,7 @@ import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import ProgressBar from '../../components/common/ProgressBar.tsx'
 import EmptyState from '../../components/common/EmptyState.tsx'
-import HeloMascot from '../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../components/mascot/HeloMascot.tsx'
 import './GrammarTrainer.css'
 
 const REGELN_JE_RUNDE = 5

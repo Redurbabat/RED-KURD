@@ -17,7 +17,7 @@ import Icon from '../../../components/icons/Icon.tsx'
 import Card from '../../../components/common/Card.tsx'
 import ProgressBar from '../../../components/common/ProgressBar.tsx'
 import EmptyState from '../../../components/common/EmptyState.tsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import './WorldDetailPage.css'
 
 const TRUHE_EDELSTEINE = 5

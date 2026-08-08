@@ -15,7 +15,8 @@
     "lint": "oxlint src test scripts server.js sites",
     "content:check": "node --experimental-strip-types --test test/course-content.test.js test/language-courses.test.js",
     "check": "npm run typecheck && npm run lint && npm test && npm run build",
-    "test:browser": "node scripts/browser-tests.mjs"
+    "test:browser": "node scripts/browser-tests.mjs",
+    "importe": "node scripts/importe-nachziehen.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.2",

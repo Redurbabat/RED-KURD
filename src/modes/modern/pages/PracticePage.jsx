@@ -12,13 +12,13 @@ import {
   schwaechsteFertigkeit,
 } from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.js'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
-import Card from '../../../components/common/Card.jsx'
-import Icon from '../../../components/icons/Icon.jsx'
-import Badge, { CountBadge } from '../../../components/common/Badge.jsx'
-import PrimaryButton from '../../../components/common/PrimaryButton.jsx'
-import ProgressBar from '../../../components/common/ProgressBar.jsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
+import Card from '../../../components/common/Card.tsx'
+import Icon from '../../../components/icons/Icon.tsx'
+import Badge, { CountBadge } from '../../../components/common/Badge.tsx'
+import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
+import ProgressBar from '../../../components/common/ProgressBar.tsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import './PracticePage.css'
 
 const TRAININGS = [

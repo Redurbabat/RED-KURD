@@ -5,7 +5,7 @@ import Card from '../common/Card.tsx'
 import ProgressBar from '../common/ProgressBar.tsx'
 import PrimaryButton from '../common/PrimaryButton.tsx'
 import Icon from '../icons/Icon.tsx'
-import HeloMessage from '../mascot/HeloMessage.jsx'
+import HeloMessage from '../mascot/HeloMessage.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { tagesZiel } from '../../core/progress/progressStore.ts'
 import { tageszielWert } from '../../core/profile/profileStore.ts'
@@ -18,22 +18,30 @@ import {
   lernzeitText,
 } from '../../core/progress/progressSelectors.ts'
 import { aktuelleEinheit, einheitProzent } from '../../core/courses/courseRepository.ts'
+import type { Einheit } from '../../types/kurs'
+import type { Fertigkeit, Kennzahlen } from '../../types/lernstand'
+import type { Ansicht } from './AppShell.tsx'
 
-const FERTIGKEIT_NAMEN = {
+const FERTIGKEIT_NAMEN: Readonly<Record<Fertigkeit, string>> = {
   erkennen: 'Erkennen',
   abrufen: 'Abrufen',
   schreiben: 'Schreiben',
   hoeren: 'Hören',
 }
 
-const FERTIGKEIT_ZIEL = {
+const FERTIGKEIT_ZIEL: Readonly<Record<Fertigkeit, string>> = {
   hoeren: '/practice/listening',
   schreiben: '/practice/writing',
   abrufen: '/practice/review',
   erkennen: '/practice/images',
 }
 
-function HeloHinweis({ s, einheit }) {
+interface HinweisProps {
+  s: Kennzahlen
+  einheit: Einheit
+}
+
+function HeloHinweis({ s, einheit }: HinweisProps) {
   if (s.faellig > 12) {
     return `Du hast ${s.faellig} Wiederholungen offen. Eine kurze Runde bringt dich wieder auf Kurs.`
   }
@@ -46,7 +54,11 @@ function HeloHinweis({ s, einheit }) {
   return `${s.serie} Tage am Stück — genau so wächst dein Kurmancî.`
 }
 
-export default function SideColumn({ modus = 'modern' }) {
+export interface SideColumnProps {
+  modus?: Ansicht
+}
+
+export default function SideColumn({ modus = 'modern' }: SideColumnProps) {
   const s = statistik()
   const ziel = tagesZiel(tageszielWert())
   const woche = wochenAktivitaet()
@@ -95,6 +107,10 @@ export default function SideColumn({ modus = 'modern' }) {
         </p>
       </Card>
 
+      {/* Ohne Einheit gibt es keinen nächsten Schritt zu zeigen. Erreichbar
+          ist das nur mit leerem Kursbaum — die Karte fällt dann weg, statt
+          dass die ganze Spalte abstürzt. */}
+      {einheit && (
       <Card titel="Nächster Schritt" icon="kompass">
         <p>
           <strong>{einheit.name}</strong> · {einheitProzent(einheit.id)} % geschafft
@@ -122,12 +138,15 @@ export default function SideColumn({ modus = 'modern' }) {
           {modus === 'abenteuer' ? 'Weitergehen' : schwach ? 'Gezielt üben' : 'Sitzung starten'}
         </PrimaryButton>
       </Card>
+      )}
 
-      <HeloMessage
-        variante={s.faellig > 12 ? 'denken' : 'daumen'}
-        text={HeloHinweis({ s, einheit })}
-        groesse={64}
-      />
+      {einheit && (
+        <HeloMessage
+          variante={s.faellig > 12 ? 'denken' : 'daumen'}
+          text={HeloHinweis({ s, einheit })}
+          groesse={64}
+        />
+      )}
     </div>
   )
 }

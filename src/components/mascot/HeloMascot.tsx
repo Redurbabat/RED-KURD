@@ -24,6 +24,11 @@ const FARBEN = {
   traene: 'var(--adv-sky)',
 }
 
+/**
+ * Alle Stimmungen. `as const` macht daraus den Typ `Helovariante` — ein
+ * Tippfehler faellt sonst nicht auf: `HeloMascot` weicht bei einem unbekannten
+ * Namen still auf `ruhig` aus.
+ */
 export const VARIANTEN = [
   'ruhig',
   'winken',
@@ -39,10 +44,17 @@ export const VARIANTEN = [
   'daumen',
   'traurig',
   'feiern',
-]
+] as const
+
+export type Helovariante = (typeof VARIANTEN)[number]
+
+/** Die inneren Teile bekommen die schon eingegrenzte Variante durchgereicht. */
+interface Teilprops {
+  variante: Helovariante
+}
 
 // Alte Namen bleiben gueltig, damit vorhandene Aufrufe weiter funktionieren.
-const ALIASE = {
+const ALIASE: Readonly<Record<string, Helovariante>> = {
   rucksack: 'wanderer',
 }
 
@@ -65,7 +77,7 @@ const BESCHREIBUNG = {
 
 /* ---------- Gesicht ---------- */
 
-function Augen({ variante }) {
+function Augen({ variante }: Teilprops) {
   if (variante === 'traurig') {
     return (
       <>
@@ -107,7 +119,7 @@ function Augen({ variante }) {
   )
 }
 
-function Schnabel({ variante }) {
+function Schnabel({ variante }: Teilprops) {
   const offen = variante === 'sprechen' || variante === 'feiern'
   return (
     <>
@@ -139,7 +151,7 @@ function Weste() {
  * Kurdischer Schal (şal û şapik): rot-goldenes Kelim-Band um den Hals, ein
  * Zipfel haengt herab. Der gekaufte Shop-Schal ersetzt das Muster durch Tuerkis.
  */
-function Schal({ tuerkis }) {
+function Schal({ tuerkis }: { tuerkis: boolean }) {
   const band = tuerkis ? FARBEN.tuerkis : FARBEN.rot
   const zipfel = tuerkis ? FARBEN.tuerkisTief : FARBEN.rotTief
   const muster = tuerkis ? FARBEN.kopf : FARBEN.gold
@@ -181,7 +193,7 @@ function TaschenGurt() {
 
 /* ---------- Requisiten vor dem Koerper ---------- */
 
-function Requisiten({ variante }) {
+function Requisiten({ variante }: Teilprops) {
   return (
     <>
       {variante === 'buch' && (
@@ -272,7 +284,7 @@ function Requisiten({ variante }) {
 
 /* ---------- Zubehoer ueber dem Kopf ---------- */
 
-function KopfZubehoer({ variante }) {
+function KopfZubehoer({ variante }: Teilprops) {
   return (
     <>
       {variante === 'hoeren' && (
@@ -312,7 +324,7 @@ function KopfZubehoer({ variante }) {
   )
 }
 
-function Fluegel({ variante }) {
+function Fluegel({ variante }: Teilprops) {
   const hochRechts =
     variante === 'winken' || variante === 'feiern' || variante === 'daumen' || variante === 'fackel'
   const hochLinks = variante === 'feiern'
@@ -336,9 +348,31 @@ function Fluegel({ variante }) {
 /**
  * @param {{variante?:string, groesse?:number, className?:string, dekorativ?:boolean}} props
  */
-export default function HeloMascot({ variante = 'ruhig', groesse = 120, className = '', dekorativ = false }) {
+export interface HeloMascotProps {
+  /**
+   * Bewusst `string` und nicht `Helovariante`: die Aufrufer sind ueberwiegend
+   * noch `.jsx` und reichen teils Werte aus dem Lernstand durch. Die Funktion
+   * faengt Unbekanntes ohnehin ab — der Typ soll das nicht verschweigen.
+   */
+  variante?: string
+  groesse?: number
+  className?: string
+  /** Rein schmueckend: dann ohne `role` und mit `aria-hidden`. */
+  dekorativ?: boolean
+}
+
+function istVariante(wert: string): wert is Helovariante {
+  return VARIANTEN.some((v) => v === wert)
+}
+
+export default function HeloMascot({
+  variante = 'ruhig',
+  groesse = 120,
+  className = '',
+  dekorativ = false,
+}: HeloMascotProps) {
   const gewuenscht = ALIASE[variante] || variante
-  const v = VARIANTEN.includes(gewuenscht) ? gewuenscht : 'ruhig'
+  const v: Helovariante = istVariante(gewuenscht) ? gewuenscht : 'ruhig'
   const tuerkiserSchal = !!aktiverArtikel('mascot')
   const beschreibung = BESCHREIBUNG[v]
 

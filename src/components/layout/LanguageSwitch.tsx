@@ -4,32 +4,56 @@
 import { useEffect, useRef, useState } from 'react'
 import { navigiere, useRoute } from '../../app/router.jsx'
 import { SPRACHKURSE } from '../../data/sprachkurse.js'
-import FlagIcon from '../common/FlagIcon.tsx'
+import FlagIcon, { FLAGGEN_SPRACHEN } from '../common/FlagIcon.tsx'
+import type { Flaggensprache } from '../common/FlagIcon.tsx'
 import Icon from '../icons/Icon.tsx'
 import './LanguageSwitch.css'
 
-const KURMANCI = { id: 'kurmanci', name: 'Kurmancî', eigenname: 'Kurmancî' }
+const KURMANCI = { id: 'kurmanci', name: 'Kurmancî', eigenname: 'Kurmancî' } as const
+
+/**
+ * Nur Sprachen, für die es auch eine Flagge gibt. Die Kurs-IDs kommen aus
+ * `data/sprachkurse.js` (noch JavaScript) und sind dort blosser Text — ohne
+ * diese Prüfung liesse sich eine Sprache anlegen, deren Flagge fehlt, und
+ * `FlagIcon` zeigte still gar nichts.
+ */
+function istFlaggensprache(wert: string): wert is Flaggensprache {
+  return FLAGGEN_SPRACHEN.some((s) => s === wert)
+}
 
 /** Welche Sprache gehört zur aktuellen Adresse? */
-function spracheAusPfad(pfad) {
+function spracheAusPfad(pfad: string): Flaggensprache {
   const m = /^\/languages\/([a-z]+)/.exec(pfad)
-  if (m && SPRACHKURSE.some((k) => k.id === m[1])) return m[1]
+  const id = m?.[1]
+  if (id && istFlaggensprache(id) && SPRACHKURSE.some((k) => k.id === id)) return id
   return 'kurmanci'
 }
 
-export default function LanguageSwitch({ className = '' }) {
+export interface LanguageSwitchProps {
+  className?: string
+}
+
+export default function LanguageSwitch({ className = '' }: LanguageSwitchProps) {
   const { pfad } = useRoute()
   const [offen, setOffen] = useState(false)
-  const wurzel = useRef(null)
+  const wurzel = useRef<HTMLDivElement>(null)
   const aktiv = spracheAusPfad(pfad)
-  const aktiverKurs = aktiv === 'kurmanci' ? KURMANCI : SPRACHKURSE.find((k) => k.id === aktiv)
+  // Der Rückfall auf KURMANCI greift auch dann, wenn ein Kurs aus den Daten
+  // verschwindet, dessen Adresse aber noch offen ist.
+  const aktiverKurs =
+    (aktiv === 'kurmanci' ? KURMANCI : SPRACHKURSE.find((k) => k.id === aktiv)) ?? KURMANCI
 
   // Klick daneben oder Escape schliesst das Menü.
   useEffect(() => {
     if (!offen) return undefined
-    function zu(ereignis) {
-      if (ereignis.type === 'keydown' && ereignis.key !== 'Escape') return
-      if (ereignis.type === 'pointerdown' && wurzel.current?.contains(ereignis.target)) return
+    function zu(ereignis: Event) {
+      if (ereignis instanceof KeyboardEvent && ereignis.key !== 'Escape') return
+      // `ereignis.target` ist `EventTarget` — nur ein Knoten lässt sich in
+      // `contains()` nachschlagen.
+      const ziel = ereignis.target
+      if (ereignis.type === 'pointerdown' && ziel instanceof Node && wurzel.current?.contains(ziel)) {
+        return
+      }
       setOffen(false)
     }
     document.addEventListener('pointerdown', zu)
@@ -40,7 +64,7 @@ export default function LanguageSwitch({ className = '' }) {
     }
   }, [offen])
 
-  function waehle(id) {
+  function waehle(id: string) {
     setOffen(false)
     navigiere(id === 'kurmanci' ? '/course' : `/languages/${id}`)
   }
@@ -86,7 +110,7 @@ export default function LanguageSwitch({ className = '' }) {
                 aria-current={aktiv === kurs.id ? 'true' : undefined}
                 onClick={() => waehle(kurs.id)}
               >
-                <FlagIcon sprache={kurs.id} breite={24} />
+                {istFlaggensprache(kurs.id) && <FlagIcon sprache={kurs.id} breite={24} />}
                 <span className="rk-sprachwahl-name">
                   <strong>{kurs.name}</strong>
                   <small lang={kurs.locale}>{kurs.eigenname}</small>

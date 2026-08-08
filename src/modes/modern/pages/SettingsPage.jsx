@@ -25,7 +25,7 @@ import Modal from '../../../components/common/Modal.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import ProgressBar from '../../../components/common/ProgressBar.tsx'
 import { ErrorState } from '../../../components/common/EmptyState.tsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import './SettingsPage.css'
 
 /** Alt-Schlüssel des v1-Profils — nur beim bewussten Onboarding-Neustart relevant. */

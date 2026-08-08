@@ -1,14 +1,23 @@
 // Einheitlicher Seitenkopf: Titel, Untertitel, optional Hêlo und Zurueck-Knopf.
-import HeloMascot from '../mascot/HeloMascot.jsx'
+import HeloMascot from '../mascot/HeloMascot.tsx'
 import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { T } from '../../core/texts.js'
 
-/**
- * @param {{titel:string, untertitel?:string, variante?:string,
- *          zurueck?:string, zurueckText?:string, aktion?:React.ReactNode,
- *          ohneMaskottchen?:boolean}} props
- */
+import type { ReactNode } from 'react'
+
+export interface PageHeaderProps {
+  titel: ReactNode
+  untertitel?: ReactNode
+  /** Stimmung des Maskottchens. */
+  variante?: string
+  /** Ziel des Zurück-Knopfs; ohne Angabe erscheint keiner. */
+  zurueck?: string
+  zurueckText?: string
+  aktion?: ReactNode
+  ohneMaskottchen?: boolean
+}
+
 export default function PageHeader({
   titel,
   untertitel,
@@ -17,7 +26,7 @@ export default function PageHeader({
   zurueckText = T.allgemein.zurueck,
   aktion,
   ohneMaskottchen = false,
-}) {
+}: PageHeaderProps) {
   return (
     <div className="rk-seitenkopf">
       {zurueck && (

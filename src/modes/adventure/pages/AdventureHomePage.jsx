@@ -26,7 +26,7 @@ import Card from '../../../components/common/Card.tsx'
 import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import { ErrorState } from '../../../components/common/EmptyState.tsx'
 import Landscape from '../../../components/adventure/Landscape.jsx'
-import HeloMascot from '../../../components/mascot/HeloMascot.jsx'
+import HeloMascot from '../../../components/mascot/HeloMascot.tsx'
 import './AdventureHomePage.css'
 
 // Statuszeichen der Pfadvorschau — der Zustand steht nie nur in der Farbe,

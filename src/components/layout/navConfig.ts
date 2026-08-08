@@ -1,7 +1,17 @@
 // Die sechs Bereiche des Modern-Modus und die fünf des Abenteuer-Modus.
 import { T } from '../../core/texts.js'
+import type { Iconname } from '../icons/iconPfade.ts'
 
-export const MODERN_NAV = [
+/** Ein Punkt in der Haupt- oder Bottom-Navigation. */
+export interface Navigationseintrag {
+  /** Eindeutig; dient auch als CSS-Klasse (`rk-nav-<id>`) und als Marken-Schlüssel. */
+  id: string
+  pfad: string
+  name: string
+  icon: Iconname
+}
+
+export const MODERN_NAV: readonly Navigationseintrag[] = [
   { id: 'heute', pfad: '/today', name: T.nav.heute, icon: 'heute' },
   { id: 'kurs', pfad: '/languages', name: T.nav.kurse, icon: 'kurs' },
   { id: 'ueben', pfad: '/practice', name: T.nav.ueben, icon: 'ueben' },
@@ -11,7 +21,7 @@ export const MODERN_NAV = [
 ]
 
 // Lernen und Kultur stehen im Vordergrund — der Shop liegt im Profil.
-export const ABENTEUER_NAV = [
+export const ABENTEUER_NAV: readonly Navigationseintrag[] = [
   { id: 'start', pfad: '/adventure', name: T.nav.start, icon: 'heute' },
   { id: 'lernpfad', pfad: '/adventure/worlds', name: T.nav.lernpfad, icon: 'welt' },
   { id: 'aufgaben', pfad: '/adventure/tasks', name: T.nav.aufgaben, icon: 'aufgaben' },
@@ -19,7 +29,7 @@ export const ABENTEUER_NAV = [
   { id: 'profil', pfad: '/adventure/profile', name: T.nav.profil, icon: 'profil' },
 ]
 
-export const REDLINGO_NAV = [
+export const REDLINGO_NAV: readonly Navigationseintrag[] = [
   { id: 'redlingo-start', pfad: '/redlingo', name: T.nav.start, icon: 'heute' },
   { id: 'kurs', pfad: '/languages', name: T.nav.kurse, icon: 'kurs' },
   { id: 'ueben', pfad: '/practice', name: T.nav.ueben, icon: 'ueben' },
@@ -27,8 +37,15 @@ export const REDLINGO_NAV = [
   { id: 'redlingo-profil', pfad: '/redlingo/profile', name: T.nav.profil, icon: 'profil' },
 ]
 
-/** Welcher Navigationspunkt ist beim aktuellen Pfad aktiv? */
-export function istAktiv(eintrag, pfad) {
+/**
+ * Welcher Navigationspunkt ist beim aktuellen Pfad aktiv?
+ *
+ * Die Sonderfälle sind kein Wildwuchs: ein Unterpfad soll seinen Oberpunkt
+ * markieren, aber `/adventure` darf nicht bei jeder Abenteuer-Seite leuchten,
+ * sonst wären zwei Punkte zugleich aktiv. Deshalb steht jede Ausnahme
+ * einzeln da — und `test/navigation.test.js` hält sie fest.
+ */
+export function istAktiv(eintrag: Navigationseintrag, pfad: string): boolean {
   if (eintrag.pfad === '/redlingo') return pfad === '/redlingo'
   if (eintrag.pfad === '/redlingo/profile') {
     return pfad.startsWith('/redlingo/profile') || pfad.startsWith('/settings')

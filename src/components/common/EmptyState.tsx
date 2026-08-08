@@ -1,6 +1,6 @@
 // Leer-, Lade- und Fehlerzustaende — jede Liste in der App nutzt einen davon.
 import type { ReactNode } from 'react'
-import HeloMascot from '../mascot/HeloMascot.jsx'
+import HeloMascot from '../mascot/HeloMascot.tsx'
 import PrimaryButton from './PrimaryButton.tsx'
 import Icon from '../icons/Icon.tsx'
 import { T } from '../../core/texts.js'

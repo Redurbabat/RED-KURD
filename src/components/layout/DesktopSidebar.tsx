@@ -1,15 +1,28 @@
 // Seitenleiste am Desktop: Logo oben, Bereiche in der Mitte, Profil unten.
 import Icon from '../icons/Icon.tsx'
-import LanguageSwitch from './LanguageSwitch.jsx'
+import LanguageSwitch from './LanguageSwitch.tsx'
 import { navigiere } from '../../app/router.jsx'
-import { istAktiv } from './navConfig.js'
+import { istAktiv } from './navConfig.ts'
 import { T } from '../../core/texts.js'
+import type { Navigationseintrag } from './navConfig.ts'
+import type { Navmarken } from './BottomNavigation.tsx'
+import type { Ansicht } from './AppShell.tsx'
 
-/**
- * @param {{eintraege:Array, pfad:string, marken?:Object, modus:string,
- *          modusWechsel:()=>void}} props
- */
-export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, modusWechsel }) {
+export interface DesktopSidebarProps {
+  eintraege: readonly Navigationseintrag[]
+  pfad: string
+  marken?: Navmarken
+  modus: Ansicht
+  modusWechsel: () => void
+}
+
+export default function DesktopSidebar({
+  eintraege,
+  pfad,
+  marken = {},
+  modus,
+  modusWechsel,
+}: DesktopSidebarProps) {
   const startPfad =
     modus === 'abenteuer' ? '/adventure' : modus === 'redlingo' ? '/redlingo' : '/today'
 
@@ -29,7 +42,7 @@ export default function DesktopSidebar({ eintraege, pfad, marken = {}, modus, mo
         <ul>
           {eintraege.map((e) => {
             const aktiv = istAktiv(e, pfad)
-            const marke = marken[e.id]
+            const marke = marken[e.id] ?? 0
             return (
               <li key={e.id}>
                 <button

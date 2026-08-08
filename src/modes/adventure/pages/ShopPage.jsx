@@ -14,7 +14,7 @@ import {
   kaufe,
   setzeAktiv,
 } from '../../../core/shop/shopStore.ts'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Card from '../../../components/common/Card.tsx'
 import Badge from '../../../components/common/Badge.tsx'

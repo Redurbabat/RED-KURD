@@ -1,10 +1,16 @@
 // Hêlo mit Sprechblase — der wiederkehrende Begleiter auf allen Seiten.
-import HeloMascot from './HeloMascot.jsx'
+import type { ReactNode } from 'react'
+import HeloMascot from './HeloMascot.tsx'
 
-/**
- * @param {{text:string, titel?:string, variante?:string, groesse?:number,
- *          seite?:'links'|'rechts', className?:string}} props
- */
+export interface HeloMessageProps {
+  text: ReactNode
+  titel?: string
+  variante?: string
+  groesse?: number
+  seite?: 'links' | 'rechts'
+  className?: string
+}
+
 export default function HeloMessage({
   text,
   titel = 'Hêlo sagt:',
@@ -12,7 +18,7 @@ export default function HeloMessage({
   groesse = 84,
   seite = 'rechts',
   className = '',
-}) {
+}: HeloMessageProps) {
   return (
     <div className={`helo-nachricht helo-${seite} ${className}`}>
       <div className="helo-blase">

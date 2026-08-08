@@ -2,19 +2,30 @@
 // Safe-Area moderner Smartphones, damit nichts unter der Systemleiste liegt.
 import Icon from '../icons/Icon.tsx'
 import { navigiere } from '../../app/router.jsx'
-import { istAktiv } from './navConfig.js'
+import { istAktiv } from './navConfig.ts'
 import { T } from '../../core/texts.js'
+import type { Navigationseintrag } from './navConfig.ts'
 
-/**
- * @param {{eintraege:Array, pfad:string, marken?:Object}} props
- */
-export default function BottomNavigation({ eintraege, pfad, marken = {} }) {
+/** Zahl offener Punkte je Navigations-ID; fehlt ein Eintrag, gibt es keine Marke. */
+export type Navmarken = Partial<Record<string, number>>
+
+export interface BottomNavigationProps {
+  eintraege: readonly Navigationseintrag[]
+  pfad: string
+  marken?: Navmarken
+}
+
+export default function BottomNavigation({
+  eintraege,
+  pfad,
+  marken = {},
+}: BottomNavigationProps) {
   return (
     <nav className="rk-untennav" aria-label={T.nav.hauptnavigation}>
       <ul>
         {eintraege.map((e) => {
           const aktiv = istAktiv(e, pfad)
-          const marke = marken[e.id]
+          const marke = marken[e.id] ?? 0
           return (
             <li key={e.id}>
               <button

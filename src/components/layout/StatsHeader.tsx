@@ -1,13 +1,25 @@
 // Kopfbereich: Logo-Zeile mit Wortmarke und Profil, darunter eine einzelne
 // Statistik-Leiste mit senkrechten Trennern — wie in der Design-Vorlage.
 import Icon from '../icons/Icon.tsx'
-import HeloMascot from '../mascot/HeloMascot.jsx'
-import LanguageSwitch from './LanguageSwitch.jsx'
+import HeloMascot from '../mascot/HeloMascot.tsx'
+import LanguageSwitch from './LanguageSwitch.tsx'
 import { navigiere } from '../../app/router.jsx'
 import { statistik } from '../../core/progress/progressSelectors.ts'
 import { T } from '../../core/texts.js'
+import type { ReactNode } from 'react'
+import type { Iconname } from '../icons/iconPfade.ts'
+import type { Ansicht } from './AppShell.tsx'
 
-function Wert({ icon, ton, wert, label, kurzLabel }) {
+interface WertProps {
+  icon: Iconname
+  ton: string
+  wert: ReactNode
+  label: string
+  /** Kurzform für schmale Geräte; die volle bleibt für Screenreader da. */
+  kurzLabel?: string
+}
+
+function Wert({ icon, ton, wert, label, kurzLabel }: WertProps) {
   return (
     <div className="rk-wert">
       <Icon name={icon} groesse={20} className={'rk-wert-icon ' + ton} />
@@ -23,10 +35,11 @@ function Wert({ icon, ton, wert, label, kurzLabel }) {
   )
 }
 
-/**
- * @param {{modus:'modern'|'abenteuer'|'redlingo'}} props
- */
-export default function StatsHeader({ modus = 'modern' }) {
+export interface StatsHeaderProps {
+  modus?: Ansicht
+}
+
+export default function StatsHeader({ modus = 'modern' }: StatsHeaderProps) {
   const s = statistik()
 
   return (

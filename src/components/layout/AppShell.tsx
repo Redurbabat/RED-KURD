@@ -1,15 +1,29 @@
 // Das Grundgeruest beider Modi: Seitenleiste am Desktop, Bottom-Navigation am
 // Handy, Inhaltsspalte in der Mitte und eine optionale Zusatzspalte rechts.
-import StatsHeader from './StatsHeader.jsx'
-import DesktopSidebar from './DesktopSidebar.jsx'
-import BottomNavigation from './BottomNavigation.jsx'
+import StatsHeader from './StatsHeader.tsx'
+import DesktopSidebar from './DesktopSidebar.tsx'
+import BottomNavigation from './BottomNavigation.tsx'
 import { T } from '../../core/texts.js'
+import type { ReactNode } from 'react'
+import type { Navigationseintrag } from './navConfig.ts'
+import type { Navmarken } from './BottomNavigation.tsx'
 
-/**
- * @param {{modus:'modern'|'abenteuer'|'redlingo', nav:Array, pfad:string, marken?:Object,
- *          modusWechsel:()=>void, aside?:React.ReactNode, ohneNav?:boolean,
- *          children:React.ReactNode}} props
- */
+/** Die drei Ansichten der Sprach-App — nicht zu verwechseln mit den vier Apps. */
+export type Ansicht = 'modern' | 'abenteuer' | 'redlingo'
+
+export interface AppShellProps {
+  modus: Ansicht
+  nav: readonly Navigationseintrag[]
+  pfad: string
+  marken?: Navmarken
+  modusWechsel: () => void
+  /** Zusatzspalte rechts; nur am Desktop sichtbar. */
+  aside?: ReactNode
+  /** Übungsseiten blenden die Navigation aus, damit nichts ablenkt. */
+  ohneNav?: boolean
+  children?: ReactNode
+}
+
 export default function AppShell({
   modus,
   nav,
@@ -19,7 +33,7 @@ export default function AppShell({
   aside,
   ohneNav = false,
   children,
-}) {
+}: AppShellProps) {
   return (
     <div
       className={`rk-shell${modus === 'abenteuer' ? ' rk-shell-abenteuer' : ''}${

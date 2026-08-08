@@ -43,7 +43,7 @@ import PrimaryButton from '../../../components/common/PrimaryButton.tsx'
 import ProgressBar, { ProgressRing } from '../../../components/common/ProgressBar.tsx'
 import { StatTile } from '../../../components/common/StatChip.tsx'
 import { LoadingState, ErrorState } from '../../../components/common/EmptyState.tsx'
-import PageHeader from '../../../components/layout/PageHeader.jsx'
+import PageHeader from '../../../components/layout/PageHeader.tsx'
 import './ProgressPage.css'
 
 /** Die vier Fertigkeiten in fester Reihenfolge — Icon und Balkenfarbe je Zeile. */
