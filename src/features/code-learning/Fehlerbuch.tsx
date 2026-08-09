@@ -1,6 +1,7 @@
 // Das Fehlerbuch: Fehler festhalten, Loesung dazu, daraus lernen.
 // Alles bleibt lokal auf dem Geraet.
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton, { IconButton } from '../../components/common/PrimaryButton.tsx'
@@ -13,7 +14,7 @@ export default function Fehlerbuch() {
   const [hinweis, setHinweis] = useState('')
   const eintraege = fehlerbuchEintraege()
 
-  function speichern(e) {
+  function speichern(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault()
     const neu = fehlerNotieren({ titel, fehler, loesung })
     if (!neu) {

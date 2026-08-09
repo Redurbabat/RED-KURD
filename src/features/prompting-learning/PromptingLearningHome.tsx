@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLernstand } from '../../core/store.ts'
 import Badge from '../../components/common/Badge.tsx'
+import type { Bereichslektion, Bereichsuebung, Praxisaufgabe } from '../../types/lernbereich'
 import Card from '../../components/common/Card.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import Icon from '../../components/icons/Icon.tsx'
@@ -25,11 +26,16 @@ import './promptingLearning.css'
  * @param {{ohneKopf?:boolean}} props — innerhalb der App-Hülle trägt
  *   PromptingApp bereits Titel und Kennzahlen.
  */
-export default function PromptingLearningHome({ ohneKopf = false }) {
+export interface PromptingLearningHomeProps {
+  /** In der eigenen App-Ansicht traegt der Rahmen schon eine Ueberschrift. */
+  ohneKopf?: boolean
+}
+
+export default function PromptingLearningHome({ ohneKopf = false }: PromptingLearningHomeProps) {
   useLernstand()
-  const [aktiveLektion, setAktiveLektion] = useState(null)
-  const [aktiveUebung, setAktiveUebung] = useState(null)
-  const [aktivePraxis, setAktivePraxis] = useState(null)
+  const [aktiveLektion, setAktiveLektion] = useState<Bereichslektion | null>(null)
+  const [aktiveUebung, setAktiveUebung] = useState<Bereichsuebung | null>(null)
+  const [aktivePraxis, setAktivePraxis] = useState<Praxisaufgabe | null>(null)
   // Zwei Darstellungen derselben Lektionen: Liste oder Wegkarte.
   const [alsKarte, setAlsKarte] = useState(false)
 

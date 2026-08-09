@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useLernstand } from '../../core/store.ts'
 import Badge from '../../components/common/Badge.tsx'
+import type { Bereichsuebung, Praxisaufgabe } from '../../types/lernbereich'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
@@ -10,9 +11,9 @@ import ProgressBar from '../../components/common/ProgressBar.tsx'
 import UebungModal from '../app-mode/UebungModal.tsx'
 import PraxisAufgabe from '../app-mode/PraxisAufgabe.tsx'
 import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.ts'
-import CodeLearningPath from './CodeLearningPath.jsx'
+import CodeLearningPath from './CodeLearningPath.tsx'
 import CodeLearningProgress from './CodeLearningProgress.tsx'
-import Fehlerbuch from './Fehlerbuch.jsx'
+import Fehlerbuch from './Fehlerbuch.tsx'
 import { codeLearningPaths } from './data/codeLessons.js'
 import { codeExercises } from './data/codeExercises.js'
 import { codeGrunduebungen, codePraxisAufgaben } from './data/codePraxis.js'
@@ -31,8 +32,14 @@ function naechsteLektionen(anzahl = 3) {
   return aus
 }
 
+interface PraxisKarteProps {
+  aufgabe: Praxisaufgabe
+  /** Bekommt die Aufgabe zurueck — die Aufrufer reichen `setAktivePraxis`. */
+  oeffnen: (aufgabe: Praxisaufgabe) => void
+}
+
 /** Eine Mitmach-Aufgabe als Karte — für Grundübungen und Aufbau gleich. */
-function PraxisKarte({ aufgabe, oeffnen }) {
+function PraxisKarte({ aufgabe, oeffnen }: PraxisKarteProps) {
   const erledigt = codeLernstand.istErledigt(aufgabe.id)
   return (
     <Card className="cl-uebung">
@@ -59,8 +66,8 @@ function PraxisKarte({ aufgabe, oeffnen }) {
 
 export default function CodeLearningHome() {
   useLernstand()
-  const [aktiveUebung, setAktiveUebung] = useState(null)
-  const [aktivePraxis, setAktivePraxis] = useState(null)
+  const [aktiveUebung, setAktiveUebung] = useState<Bereichsuebung | null>(null)
+  const [aktivePraxis, setAktivePraxis] = useState<Praxisaufgabe | null>(null)
 
   // Grundübungen zuerst, danach die größeren Aufgaben.
   const aufbauAufgaben = codePraxisAufgaben.filter((a) => a.stufe !== 'grund')

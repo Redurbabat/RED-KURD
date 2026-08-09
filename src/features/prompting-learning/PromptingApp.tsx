@@ -18,15 +18,25 @@ import {
   pruefeMerge,
 } from '../../core/prompting/promptBaukasten.ts'
 import * as werkstatt from '../../core/prompting/werkstattStore.ts'
-import WerkstattFormular from './WerkstattFormular.jsx'
-import PrCheckliste from './PrCheckliste.jsx'
-import PromptingLearningHome from './PromptingLearningHome.jsx'
+import WerkstattFormular from './WerkstattFormular.tsx'
+import PrCheckliste from './PrCheckliste.tsx'
+import PromptingLearningHome from './PromptingLearningHome.tsx'
 import { promptLessons } from './data/promptLessons.js'
 import { promptExercises } from './data/promptExercises.js'
 import { promptLernstand } from './promptProgressStore.ts'
+import type { Iconname } from '../../components/icons/Icon.tsx'
 import './promptingLearning.css'
 
-const BEREICHE = [
+/** Die fuenf Bereiche der AI-Sprache-App. */
+type Bereich = 'heute' | 'auftrag' | 'bug' | 'pr' | 'lernen'
+
+interface Bereichseintrag {
+  id: Bereich
+  name: string
+  icon: Iconname
+}
+
+const BEREICHE: readonly Bereichseintrag[] = [
   { id: 'heute', name: 'Heute', icon: 'heute' },
   { id: 'auftrag', name: 'Auftrag', icon: 'stift' },
   { id: 'bug', name: 'Bug-Report', icon: 'warnung' },
@@ -34,7 +44,12 @@ const BEREICHE = [
   { id: 'lernen', name: 'Lernen', icon: 'gehirn' },
 ]
 
-function Heute({ zumBereich }) {
+interface HeuteProps {
+  /** Springt in einen anderen Bereich — die Kacheln sind Abkuerzungen. */
+  zumBereich: (bereich: Bereich) => void
+}
+
+function Heute({ zumBereich }: HeuteProps) {
   useLernstand()
   const auftrag = werkstatt.holeAuftrag()
   const bug = werkstatt.holeBug()
@@ -103,7 +118,7 @@ function Heute({ zumBereich }) {
 
 export default function PromptingApp() {
   useLernstand()
-  const [bereich, setBereich] = useState('heute')
+  const [bereich, setBereich] = useState<Bereich>('heute')
   const xpHeute = promptLernstand.xpHeute()
 
   return (

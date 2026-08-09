@@ -22,12 +22,17 @@ const STATUS: Readonly<Record<Lektionsstatus, Statusbild>> = {
 
 export interface PromptLessonCardProps {
   lesson: Bereichslektion
-  status: Lektionsstatus
+  /**
+   * Fehlt nie wirklich — `statusFuer()` liefert jede uebergebene Id
+   * zurueck. Der Nachschlag im Aufrufer ergibt trotzdem
+   * `| undefined`, und der Rueckfall auf `open` steht seit jeher da.
+   */
+  status: Lektionsstatus | undefined
   onOeffnen: () => void
 }
 
 export default function PromptLessonCard({ lesson, status, onOeffnen }: PromptLessonCardProps) {
-  const s = STATUS[status] || STATUS.open
+  const s = (status && STATUS[status]) || STATUS.open
   const gesperrt = status === 'locked'
   return (
     <button

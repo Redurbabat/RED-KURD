@@ -11,13 +11,15 @@ import LernpfadKarte from '../app-mode/LernpfadKarte.tsx'
 import { codeLernstand } from './codeProgressStore.ts'
 import { holeSchritte } from './data/codeSchritte.js'
 
-/**
- * @param {{path:{id:string,title:string,icon:string,description:string,
- *          level:string,lessons:Array}}} props
- */
-export default function CodeLearningPath({ path }) {
+import type { Bereichslektion, Lernpfad } from '../../types/lernbereich'
+
+export interface CodeLearningPathProps {
+  path: Lernpfad
+}
+
+export default function CodeLearningPath({ path }: CodeLearningPathProps) {
   const [offen, setOffen] = useState(false)
-  const [aktiveLektion, setAktiveLektion] = useState(null)
+  const [aktiveLektion, setAktiveLektion] = useState<Bereichslektion | null>(null)
   // Zwei Darstellungen derselben Lektionen: nüchterne Liste oder Wegkarte.
   const [alsKarte, setAlsKarte] = useState(false)
 
@@ -25,10 +27,14 @@ export default function CodeLearningPath({ path }) {
   const fortschritt = codeLernstand.fortschrittProzent(path.lessons)
   const begonnen = fortschritt > 0
 
-  function abschliessen() {
+  function abschliessen(): void {
     if (aktiveLektion) codeLernstand.schliesseAb(aktiveLektion.id)
     setAktiveLektion(null)
   }
+
+  // Einmal nachschlagen statt zweimal: der Aufruf in der Bedingung engt den
+  // zweiten sonst nicht ein, und `schritte` waere weiter „vielleicht nichts".
+  const schritte = aktiveLektion ? holeSchritte(aktiveLektion.id) : undefined
 
   return (
     <section className="rk-karte cl-pfad">
@@ -102,11 +108,11 @@ export default function CodeLearningPath({ path }) {
 
       {/* Lektionen mit interaktiven Schritten oeffnen den Player (wie Mimo,
           mit Live-Vorschau) — alle anderen das bewaehrte Lese-Modal. */}
-      {aktiveLektion && holeSchritte(aktiveLektion.id) ? (
+      {aktiveLektion && schritte ? (
         <LektionPlayer
           key={aktiveLektion.id}
           lektion={aktiveLektion}
-          schritte={holeSchritte(aktiveLektion.id)}
+          schritte={schritte}
           lernstand={codeLernstand}
           schliessen={() => setAktiveLektion(null)}
         />

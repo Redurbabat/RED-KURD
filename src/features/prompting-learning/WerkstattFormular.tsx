@@ -6,10 +6,20 @@ import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 
-/**
- * @param {{felder:Array, werte:Object, setzeFeld:Function, leeren:Function,
- *          bauen:Function, pruefen:Function, titel:string, hinweis:string}} props
- */
+import type { Baukastenfeld, Baukastenwerte, Pruefpunkt } from '../../core/prompting/promptBaukasten.ts'
+
+export interface WerkstattFormularProps {
+  felder: readonly Baukastenfeld[]
+  werte: Baukastenwerte
+  setzeFeld: (feld: string, wert: string) => void
+  leeren: () => void
+  /** Baut aus den Werten den fertigen Text zum Kopieren. */
+  bauen: (werte: Baukastenwerte) => string
+  pruefen: (werte: Baukastenwerte) => Pruefpunkt[]
+  titel: string
+  hinweis: string
+}
+
 export default function WerkstattFormular({
   felder,
   werte,
@@ -19,7 +29,7 @@ export default function WerkstattFormular({
   pruefen,
   titel,
   hinweis,
-}) {
+}: WerkstattFormularProps) {
   const [kopiert, setKopiert] = useState(false)
 
   const text = bauen(werte)
