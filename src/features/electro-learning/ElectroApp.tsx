@@ -9,16 +9,26 @@ import { TAGESZIEL_XP } from '../../core/lernbereiche/bereichsLernstand.ts'
 import { heute } from '../../core/progress/scheduler.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 import { gerundet } from '../../core/elektro/notenRechnung.ts'
-import ElektroHeute from './ElektroHeute.jsx'
-import NotenBereich from './NotenBereich.jsx'
-import PruefungenBereich from './PruefungenBereich.jsx'
-import BerichtsheftBereich from './BerichtsheftBereich.jsx'
-import FormelnBereich from './FormelnBereich.jsx'
-import ElectroLearningHome from './ElectroLearningHome.jsx'
+import ElektroHeute from './ElektroHeute.tsx'
+import NotenBereich from './NotenBereich.tsx'
+import PruefungenBereich from './PruefungenBereich.tsx'
+import BerichtsheftBereich from './BerichtsheftBereich.tsx'
+import FormelnBereich from './FormelnBereich.tsx'
+import ElectroLearningHome from './ElectroLearningHome.tsx'
 import { electroLernstand } from './electroProgressStore.ts'
+import type { Iconname } from '../../components/icons/Icon.tsx'
 import './electroLearning.css'
 
-const BEREICHE = [
+/** Die sechs Bereiche der Elektro-App. */
+export type Bereich = 'heute' | 'noten' | 'pruefungen' | 'bericht' | 'formeln' | 'lernen'
+
+interface Bereichseintrag {
+  id: Bereich
+  name: string
+  icon: Iconname
+}
+
+const BEREICHE: readonly Bereichseintrag[] = [
   { id: 'heute', name: 'Heute', icon: 'heute' },
   { id: 'noten', name: 'Noten', icon: 'fortschritt' },
   { id: 'pruefungen', name: 'Prüfung', icon: 'uhr' },
@@ -29,7 +39,7 @@ const BEREICHE = [
 
 export default function ElectroApp() {
   useLernstand()
-  const [bereich, setBereich] = useState('heute')
+  const [bereich, setBereich] = useState<Bereich>('heute')
 
   const heuteWert = heute()
   const naechste = schule.naechstePruefung(heuteWert)

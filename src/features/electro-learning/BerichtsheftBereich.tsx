@@ -2,13 +2,18 @@
 // Neueste Woche steht oben.
 import { useState } from 'react'
 import Badge from '../../components/common/Badge.tsx'
+import type { Badgeton } from '../../components/common/Badge.tsx'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import { useLernstand } from '../../core/store.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 
-const TON = {
+// `Record<Berichtsstatus, Badgeton>` statt eines losen Objekts: so faellt ein
+// neuer Status auf, der hier keine Farbe hat, und ein Tippfehler im Farbnamen
+// ebenfalls. Der Rueckfall auf `neutral` bleibt trotzdem stehen — der Status
+// kommt vom Speicher und kann dort alles sein.
+const TON: Readonly<Record<string, Badgeton | undefined>> = {
   Offen: 'rot',
   Geschrieben: 'gold',
   Kontrolliert: 'lila',

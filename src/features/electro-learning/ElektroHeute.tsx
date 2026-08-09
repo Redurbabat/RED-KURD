@@ -12,16 +12,32 @@ import { gerundet, istBestanden } from '../../core/elektro/notenRechnung.ts'
 import { electroLessons } from './data/electroLessons.js'
 import { electroPraxisAufgaben } from './data/electroPraxis.js'
 import { electroLernstand } from './electroProgressStore.ts'
+// Nur der Typ — zur Laufzeit entsteht dadurch kein Kreis mit ElectroApp.
+import type { Bereich } from './ElectroApp.tsx'
+import type { Formeleintrag } from '../../core/elektro/formeln.ts'
 
-/** Eine Formel je Tag — dieselbe für alle, wechselt täglich. */
-export function formelDesTages(datum, formeln = FORMELN) {
+/**
+ * Eine Formel je Tag — dieselbe für alle, wechselt täglich.
+ *
+ * Der Rückfall auf die erste Formel ist unerreichbar, solange `FORMELN`
+ * gefüllt ist; er hält nur „vielleicht nichts" von der Anzeige fern.
+ */
+export function formelDesTages(
+  datum: string,
+  formeln: readonly Formeleintrag[] = FORMELN
+): Formeleintrag | undefined {
   const zahl = String(datum || '')
     .split('-')
     .reduce((s, t) => s + Number(t || 0), 0)
   return formeln[zahl % formeln.length]
 }
 
-export default function ElektroHeute({ zumBereich }) {
+export interface ElektroHeuteProps {
+  /** Springt in einen anderen Bereich — die Kacheln sind Abkuerzungen. */
+  zumBereich: (bereich: Bereich) => void
+}
+
+export default function ElektroHeute({ zumBereich }: ElektroHeuteProps) {
   useLernstand()
   const heuteWert = heute()
 
@@ -105,6 +121,9 @@ export default function ElektroHeute({ zumBereich }) {
         </Card>
       </div>
 
+      {/* Ohne Formelsammlung faellt die Karte weg, statt „undefined" zu zeigen.
+          Erreichbar nur mit leerem FORMELN — heute stehen dort neun Eintraege. */}
+      {formel && (
       <Card titel="Formel des Tages" icon="blitz">
         <p className="el-formel-gross">
           <code>{formel.formel}</code>
@@ -116,6 +135,7 @@ export default function ElektroHeute({ zumBereich }) {
           Zum Rechner
         </PrimaryButton>
       </Card>
+      )}
 
       <Card titel="Rechnen üben" icon="stift">
         <p className="el-gross">

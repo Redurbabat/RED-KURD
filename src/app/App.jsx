@@ -29,7 +29,7 @@ import { LoadingState } from '../components/common/EmptyState.tsx'
 // Die neuen Bereiche laden erst bei Bedarf — der Sprach-Start bleibt schlank.
 const ladeCode = () => import('../features/code-learning/CodeLearningHome.tsx')
 const ladePrompting = () => import('../features/prompting-learning/PromptingApp.tsx')
-const ladeElectro = () => import('../features/electro-learning/ElectroApp.jsx')
+const ladeElectro = () => import('../features/electro-learning/ElectroApp.tsx')
 const CodeLearningHome = lazy(ladeCode)
 const PromptingApp = lazy(ladePrompting)
 const ElectroApp = lazy(ladeElectro)

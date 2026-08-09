@@ -10,6 +10,10 @@ import { useLernstand } from '../../core/store.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 import {
   SKALEN,
+  // `holeSkala()` statt `SKALEN[id]`: der gespeicherte Wert ist blosser
+  // Text (setzeSkala schreibt jeden durch), und holeSkala faengt Unbekanntes
+  // mit dem Rueckfall auf die Schweizer Skala ab.
+  holeSkala,
   benoetigteNote,
   besteNote,
   gerundet,
@@ -29,7 +33,7 @@ const TREND_TEXT = {
 
 export default function NotenBereich() {
   useLernstand()
-  const [offenesFach, setOffenesFach] = useState(null)
+  const [offenesFach, setOffenesFach] = useState<string | null>(null)
   const [neu, setNeu] = useState({ note: '', thema: '', gewicht: '1', datum: '' })
   const [fehler, setFehler] = useState('')
   const [neuesFach, setNeuesFach] = useState('')
@@ -38,9 +42,10 @@ export default function NotenBereich() {
   const faecher = schule.faecher()
   const gesamt = schule.gesamtschnitt()
 
-  function eintragen(fachId) {
+  function eintragen(fachId: string): void {
     if (!istGueltigeNote(neu.note, aktuelleSkala)) {
-      setFehler(`Bitte eine Note zwischen ${SKALEN[aktuelleSkala].min} und ${SKALEN[aktuelleSkala].max} eintragen.`)
+      const skala = holeSkala(aktuelleSkala)
+      setFehler(`Bitte eine Note zwischen ${skala.min} und ${skala.max} eintragen.`)
       return
     }
     schule.noteHinzufuegen({ ...neu, fachId })
@@ -140,7 +145,7 @@ export default function NotenBereich() {
             {offen ? (
               <div className="el-formular">
                 <label className="rk-feld-label" htmlFor={`note-${fach.id}`}>
-                  Note ({SKALEN[aktuelleSkala].min}–{SKALEN[aktuelleSkala].max})
+                  Note ({holeSkala(aktuelleSkala).min}–{holeSkala(aktuelleSkala).max})
                 </label>
                 <input
                   id={`note-${fach.id}`}

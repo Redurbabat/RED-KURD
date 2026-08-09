@@ -1,6 +1,7 @@
 // Prüfungen: was kommt wann, wie weit bin ich beim Lernen.
 import { useState } from 'react'
 import Badge from '../../components/common/Badge.tsx'
+import type { Badgeton } from '../../components/common/Badge.tsx'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
@@ -9,7 +10,9 @@ import { heute } from '../../core/progress/scheduler.ts'
 import * as schule from '../../core/elektro/schuleStore.ts'
 import { tageBis } from '../../core/elektro/notenRechnung.ts'
 
-const TON = {
+// Wie in BerichtsheftBereich: benannte Farben, damit ein neuer Status ohne
+// Farbe auffaellt. Der Rueckfall bleibt — der Status kommt vom Speicher.
+const TON: Readonly<Record<string, Badgeton | undefined>> = {
   'Nicht begonnen': 'neutral',
   'Am Lernen': 'gold',
   Wiederholen: 'lila',
@@ -18,7 +21,7 @@ const TON = {
 }
 
 /** „in 5 Tagen", „heute", „vorbei" — Zeit in Worten statt nur als Datum. */
-export function zeitText(datum, heuteWert) {
+export function zeitText(datum: string | null | undefined, heuteWert: string): string {
   const tage = tageBis(datum, heuteWert)
   if (tage === null) return ''
   if (tage === 0) return 'heute'

@@ -6,7 +6,15 @@ import Icon from '../../components/icons/Icon.tsx'
 import * as f from '../../core/elektro/formeln.ts'
 import { gerundet } from '../../core/elektro/notenRechnung.ts'
 
-function Feld({ id, label, wert, setzen, platzhalter }) {
+interface FeldProps {
+  id: string
+  label: string
+  wert: string
+  setzen: (wert: string) => void
+  platzhalter: string
+}
+
+function Feld({ id, label, wert, setzen, platzhalter }: FeldProps) {
   return (
     <span className="el-rechner-feld">
       <label className="rk-feld-label" htmlFor={id}>
@@ -24,7 +32,14 @@ function Feld({ id, label, wert, setzen, platzhalter }) {
   )
 }
 
-function Ergebnis({ wert, einheit, stellen = 2 }) {
+interface ErgebnisProps {
+  /** `null`, solange die Eingaben nicht reichen — dann steht ein Hinweis da. */
+  wert: number | null | undefined
+  einheit: string
+  stellen?: number
+}
+
+function Ergebnis({ wert, einheit, stellen = 2 }: ErgebnisProps) {
   return (
     <p className="el-ergebnis" aria-live="polite">
       {wert === null || wert === undefined ? (
