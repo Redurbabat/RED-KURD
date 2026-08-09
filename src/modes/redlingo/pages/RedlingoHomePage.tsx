@@ -10,9 +10,19 @@ import {
 } from '../../../core/courses/courseRepository.ts'
 import { sitzungLaden } from '../../../core/session/sessionStore.ts'
 import Icon from '../../../components/icons/Icon.tsx'
+import type { Iconname } from '../../../components/icons/Icon.tsx'
+import { istIconname } from '../../../components/icons/iconPfade.ts'
 import ProgressBar from '../../../components/common/ProgressBar.tsx'
 
-const SCHNELLZIELE = [
+/** Eine Kachel im Schnellzugriff. */
+interface Schnellziel {
+  name: string
+  text: string
+  icon: Iconname
+  pfad: string
+}
+
+const SCHNELLZIELE: readonly Schnellziel[] = [
   { name: 'Alle Kurse', text: 'Kurmancî und weitere Sprachen', icon: 'sprache', pfad: '/languages' },
   { name: 'Wörter', text: 'Wortschatz sicher festigen', icon: 'buch', pfad: '/practice/meaning' },
   { name: 'Hören', text: 'Echte Aussprache trainieren', icon: 'kopfhoerer', pfad: '/practice/listening' },
@@ -31,7 +41,15 @@ export default function RedlingoHomePage() {
   const woche = wochenAktivitaet()
   const liga = wochenLiga()
   const sitzung = sitzungLaden()
-  const kapitelProzent = einheitProzent(einheit.id)
+  // Ohne Einheit gibt es keinen naechsten Schritt. Erreichbar nur mit
+  // leerem Kursbaum — dann bleibt die Seite leer statt abzustuerzen.
+  const kapitelProzent = einheit ? einheitProzent(einheit.id) : 0
+  // Ein Kapitel ohne Lektionen gibt es im Kursbaum nicht; der Rueckfall auf
+  // die Kursuebersicht haelt nur „vielleicht nichts" vom Ziel fern.
+  const ersteLektion = einheit?.lektionen[0]
+  const ersterLektionspfad = ersteLektion
+    ? `/course/${einheit?.id}/lesson/${ersteLektion.id}`
+    : '/course'
 
   return (
     <div className="rl-seite rl-startseite">
@@ -43,25 +61,30 @@ export default function RedlingoHomePage() {
           </span>
         </div>
         <h1 id="rl-hero-titel">Heute ein Stück weiter</h1>
-        <p>
-          Kapitel {einheit.nr}: <strong>{einheit.name}</strong>
-        </p>
-        <ProgressBar
-          wert={kapitelProzent}
-          label={`Fortschritt in Kapitel ${einheit.name}`}
-          zeigeWert
-        />
-        <button
-          type="button"
-          className="rl-hauptaktion rk-taktil"
-          onClick={() =>
-            navigiere(sitzung ? '/session' : `/course/${einheit.id}/lesson/${einheit.lektionen[0].id}`)
-          }
-        >
-          <Icon name={sitzung ? 'play' : 'blitz'} groesse={22} />
-          <span>{sitzung ? 'Sitzung fortsetzen' : 'Lektion starten'}</span>
-          <Icon name="pfeilRechts" groesse={20} />
-        </button>
+        {/* Ohne Kapitel gibt es keinen naechsten Schritt zu zeigen. Erreichbar
+            ist das nur mit leerem Kursbaum — dann faellt der Block weg, statt
+            dass die ganze Startseite abstuerzt (wie in SideColumn). */}
+        {einheit && (
+          <>
+            <p>
+              Kapitel {einheit.nr}: <strong>{einheit.name}</strong>
+            </p>
+            <ProgressBar
+              wert={kapitelProzent}
+              label={`Fortschritt in Kapitel ${einheit.name}`}
+              zeigeWert
+            />
+            <button
+              type="button"
+              className="rl-hauptaktion rk-taktil"
+              onClick={() => navigiere(sitzung ? '/session' : ersterLektionspfad)}
+            >
+              <Icon name={sitzung ? 'play' : 'blitz'} groesse={22} />
+              <span>{sitzung ? 'Sitzung fortsetzen' : 'Lektion starten'}</span>
+              <Icon name="pfeilRechts" groesse={20} />
+            </button>
+          </>
+        )}
       </section>
 
       <section className="rl-tagesziel" aria-labelledby="rl-ziel-titel">
@@ -116,7 +139,8 @@ export default function RedlingoHomePage() {
           <span>{kurs.fertig} von {kurs.gesamt} Kapiteln</span>
         </button>
         <button type="button" className="rl-statuskarte rk-taktil" onClick={() => navigiere('/progress')}>
-          <Icon name={liga.icon} groesse={22} />
+          {/* Der Ligen-Name kommt aus den Daten und ist dort blosser Text. */}
+          <Icon name={istIconname(liga.icon) ? liga.icon : 'stern'} groesse={22} />
           <strong>{liga.name}</strong>
           <span>{liga.aufgaben} Aufgaben diese Woche</span>
         </button>

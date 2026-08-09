@@ -14,7 +14,8 @@ import assert from 'node:assert/strict'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 
-const { ICONNAMEN } = await import('../src/components/icons/iconPfade.ts')
+const { ICONNAMEN, istIconname } = await import('../src/components/icons/iconPfade.ts')
+const { WOCHENLIGEN } = await import('../src/core/progress/gamification.ts')
 
 async function quelldateien(ordner) {
   const aus = []
@@ -59,4 +60,28 @@ test('jeder verwendete Iconname existiert', async () => {
     'Diese Iconnamen gibt es nicht — sie erscheinen zur Laufzeit als nichts:\n  ' +
       [...new Set(fehlend)].join('\n  ')
   )
+})
+
+test('istIconname erkennt echte und erfundene Namen', () => {
+  assert.ok(istIconname('stern'), 'stern ist ein echter Iconname')
+  assert.ok(istIconname(ICONNAMEN[0]), 'der erste Name der Liste muss durchgehen')
+  assert.ok(!istIconname('gibt-es-nicht'), 'ein erfundener Name darf nicht durchgehen')
+  assert.ok(!istIconname(''), 'der leere Name darf nicht durchgehen')
+  // Nur eigene Schluessel zaehlen — sonst waeren „toString" oder
+  // „constructor" ploetzlich gueltige Iconnamen.
+  assert.ok(!istIconname('toString'), 'geerbte Eigenschaften sind keine Iconnamen')
+  assert.ok(!istIconname('constructor'), 'geerbte Eigenschaften sind keine Iconnamen')
+})
+
+test('die Wochenligen tragen echte Iconnamen', () => {
+  // Genau dafuer gibt es istIconname(): `Wochenliga.icon` ist blosser Text,
+  // und ein Tippfehler darin waere in der Oberflaeche nur eine leere Flaeche
+  // neben dem Ligennamen. Der Rueckfall auf „stern" in RedlingoHomePage faengt
+  // ihn ab — bemerken wuerde es niemand.
+  for (const liga of WOCHENLIGEN) {
+    assert.ok(
+      istIconname(liga.icon),
+      `Liga „${liga.name}": „${liga.icon}" ist kein bekannter Iconname`
+    )
+  }
 })

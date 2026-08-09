@@ -8,7 +8,7 @@ import { holeAuszeichnungen } from '../../../core/achievements/achievementsStore
 import Icon from '../../../components/icons/Icon.tsx'
 import ProgressBar from '../../../components/common/ProgressBar.tsx'
 
-function initiale(name) {
+function initiale(name: unknown): string {
   const sauber = String(name || '').trim()
   return sauber ? sauber.slice(0, 1).toUpperCase() : 'R'
 }
@@ -16,8 +16,11 @@ function initiale(name) {
 export default function RedlingoProfilePage() {
   useLernstand()
 
-  const profil = holeProfil() || {}
-  const name = profil.name?.trim() || 'Redlingo-Lernende/r'
+  // `|| {}` faellt weg: `holeProfil()` gibt entweder ein volles Profil oder
+  // `null` zurueck, und das leere Objekt liess jeden Feldzugriff darunter
+  // ungeprueft durch.
+  const profil = holeProfil()
+  const name = profil?.name?.trim() || 'Redlingo-Lernende/r'
   const s = statistik()
   const stufe = level()
   const kurs = kursFortschritt()

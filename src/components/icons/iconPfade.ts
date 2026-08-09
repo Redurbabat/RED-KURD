@@ -104,3 +104,15 @@ export type Iconname = keyof typeof ICON_PFADE
  * Behauptung zu uebergehen waere die einzige im ganzen Modul.
  */
 export const ICONNAMEN: readonly string[] = Object.keys(ICON_PFADE)
+
+/**
+ * Ist dieser Text ein bekannter Iconname?
+ *
+ * Gebraucht ueberall dort, wo der Name aus Daten kommt statt aus dem Code —
+ * die Wochenligen etwa fuehren ihn als blossen Text (`Wochenliga.icon`).
+ * Ohne Pruefung waere entweder eine Typzusicherung noetig oder ein leeres
+ * Feld dort, wo ein Symbol stehen soll.
+ */
+export function istIconname(wert: string): wert is Iconname {
+  return Object.prototype.hasOwnProperty.call(ICON_PFADE, wert)
+}

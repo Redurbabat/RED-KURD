@@ -31,8 +31,8 @@ const ExplorePage = spaeter(() => import('../modes/modern/pages/ExplorePage.jsx'
 const ProgressPage = spaeter(() => import('../modes/modern/pages/ProgressPage.jsx'))
 const SettingsPage = spaeter(() => import('../modes/modern/pages/SettingsPage.jsx'))
 
-const RedlingoHomePage = spaeter(() => import('../modes/redlingo/pages/RedlingoHomePage.jsx'))
-const RedlingoProfilePage = spaeter(() => import('../modes/redlingo/pages/RedlingoProfilePage.jsx'))
+const RedlingoHomePage = spaeter(() => import('../modes/redlingo/pages/RedlingoHomePage.tsx'))
+const RedlingoProfilePage = spaeter(() => import('../modes/redlingo/pages/RedlingoProfilePage.tsx'))
 
 const AdventureHomePage = spaeter(() => import('../modes/adventure/pages/AdventureHomePage.jsx'))
 const WorldMapPage = spaeter(() => import('../modes/adventure/pages/WorldMapPage.jsx'))
