@@ -18,7 +18,7 @@ import {
 } from '../../../core/progress/progressStore.ts'
 import { statistik } from '../../../core/progress/progressSelectors.ts'
 import { spieleWort } from '../../../core/audio/audioService.ts'
-import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
+import ExercisePlayer from '../../../features/exercise/ExercisePlayer.tsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import Icon from '../../../components/icons/Icon.tsx'
 import Badge from '../../../components/common/Badge.tsx'

@@ -6,11 +6,14 @@ import { gibXp, merkeWort, holeFortschritt } from '../../core/progress/progressS
 import { spieleWort } from '../../core/audio/audioService.ts'
 import { sprich } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, zufallsPaare } from '../../core/data/staticData.ts'
+import type { Satzpaar, Suchergebnis } from '../../core/data/staticData.ts'
 import { ALLE_WOERTER } from '../../core/courses/courseRepository.ts'
 import { woerter as grundwortschatz } from '../../data/woerter.js'
 import { texte } from '../../data/texte.js'
+import type { Lesetext } from '../../data/texte'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
+import type { Iconname } from '../../components/icons/Icon.tsx'
 import Badge from '../../components/common/Badge.tsx'
 import PrimaryButton, { IconButton } from '../../components/common/PrimaryButton.tsx'
 import { LoadingState, ErrorState } from '../../components/common/EmptyState.tsx'
@@ -28,8 +31,23 @@ for (const w of [...ALLE_WOERTER, ...grundwortschatz]) {
   if (k && !WORTBUCH.has(k)) WORTBUCH.set(k, { de: w.de, ku: w.ku })
 }
 
+/** Ein Nachschlage-Treffer zu einem angetippten Wort. */
+interface Worttreffer {
+  de: string
+  /** Woher die Bedeutung kommt: „Kurswortschatz“ oder „Wörterbuch“. */
+  quelle: string
+}
+
+/** Was das Panel unter dem Text zeigt. */
+interface Wortzustand {
+  wort: string
+  treffer: Worttreffer[]
+  erklaerungen: string[]
+  laedt?: boolean
+}
+
 /** Text in gut lesbare Absätze zu je drei Sätzen teilen. */
-function absaetze(text) {
+function absaetze(text: string): string[] {
   const saetze = text.match(/[^.!?]+[.!?]*/g) || [text]
   const gruppen = []
   for (let i = 0; i < saetze.length; i += 3) {
@@ -39,7 +57,7 @@ function absaetze(text) {
   return gruppen.length > 0 ? gruppen : [text]
 }
 
-function wortzahl(text) {
+function wortzahl(text: string): number {
   return text.trim().split(/\s+/).length
 }
 
@@ -50,13 +68,13 @@ function gemerkteWoerter() {
 }
 
 /** Ein Wort nachschlagen: Server, statische Daten, sonst das lokale Wortbuch. */
-async function nachschlagen(wort) {
+async function nachschlagen(wort: string): Promise<{ treffer: Worttreffer[]; erklaerungen: string[] }> {
   const s = wort.toLowerCase()
-  const treffer = []
+  const treffer: Worttreffer[] = []
   const lokal = WORTBUCH.get(s)
   if (lokal) treffer.push({ de: lokal.de, quelle: 'Kurswortschatz' })
 
-  let daten = null
+  let daten: Suchergebnis | null = null
   try {
     const r = await fetch('/api/suche?q=' + encodeURIComponent(wort))
     if (r.ok) {
@@ -105,7 +123,15 @@ async function nachschlagen(wort) {
 }
 
 /** Kurmancî-Text, bei dem jedes Wort ein Knopf ist. */
-function KlickText({ text, gemerkte, waehle, className = '' }) {
+interface KlickTextProps {
+  text: string
+  /** Alle schon gemerkten Wörter, klein geschrieben. */
+  gemerkte: ReadonlySet<string>
+  waehle: (wort: string) => void
+  className?: string
+}
+
+function KlickText({ text, gemerkte, waehle, className = '' }: KlickTextProps) {
   return (
     <p className={`les-text ${className}`} lang="ku">
       {text.split(WORT_MUSTER).map((teil, i) => {
@@ -131,9 +157,15 @@ function KlickText({ text, gemerkte, waehle, className = '' }) {
 }
 
 /** Panel unter dem Text: Übersetzung, Anhören und Merken. */
-function WortPanel({ zustand, gemerkte, schliessen }) {
+interface WortPanelProps {
+  zustand: Wortzustand
+  gemerkte: ReadonlySet<string>
+  schliessen: () => void
+}
+
+function WortPanel({ zustand, gemerkte, schliessen }: WortPanelProps) {
   const gemerkt = gemerkte.has(zustand.wort.toLowerCase())
-  const bedeutung = zustand.treffer.length > 0 ? zustand.treffer[0].de : ''
+  const bedeutung = zustand.treffer[0]?.de ?? ''
 
   return (
     <div className="les-panel">
@@ -199,11 +231,18 @@ function WortPanel({ zustand, gemerkte, schliessen }) {
   )
 }
 
-/** Gemeinsame Logik: ein Wort auswählen und nachschlagen. */
-function useWortwahl() {
-  const [wort, setWort] = useState(null)
+/**
+ * Was `useWortwahl()` herausgibt. Als Tupel geschrieben, sonst macht der
+ * Pruefer aus den drei verschiedenen Werten eine Vereinigung, und keiner
+ * der drei laesst sich mehr benutzen.
+ */
+type Wortwahl = readonly [Wortzustand | null, (wort: string) => void, () => void]
 
-  async function waehle(w) {
+/** Gemeinsame Logik: ein Wort auswählen und nachschlagen. */
+function useWortwahl(): Wortwahl {
+  const [wort, setWort] = useState<Wortzustand | null>(null)
+
+  async function waehle(w: string): Promise<void> {
     setWort({ wort: w, laedt: true, treffer: [], erklaerungen: [] })
     const d = await nachschlagen(w)
     setWort((v) => (v && v.wort === w ? { wort: w, laedt: false, ...d } : v))
@@ -212,13 +251,20 @@ function useWortwahl() {
   return [wort, waehle, () => setWort(null)]
 }
 
-function LeseText({ text, gemerkte, zurueck }) {
+interface LeseTextProps {
+  text: Lesetext
+  gemerkte: ReadonlySet<string>
+  zurueck: () => void
+}
+
+function LeseText({ text, gemerkte, zurueck }: LeseTextProps) {
   const [zeigeUeb, setZeigeUeb] = useState(false)
-  const [antworten, setAntworten] = useState({})
+  // Frage-Nummer -> der angetippte Optionstext (nicht seine Stelle).
+  const [antworten, setAntworten] = useState<Readonly<Record<number, string | undefined>>>({})
   const [meldung, setMeldung] = useState('')
   const [wort, waehle, schliesse] = useWortwahl()
 
-  function antworte(index, option, richtig) {
+  function antworte(index: number, option: string, richtig: boolean): void {
     if (antworten[index] !== undefined) return
     setAntworten((a) => ({ ...a, [index]: option }))
     if (richtig) gibXp(10)
@@ -370,7 +416,12 @@ function LeseText({ text, gemerkte, zurueck }) {
   )
 }
 
-function SatzKarte({ paar, gemerkte }) {
+interface SatzKarteProps {
+  paar: Satzpaar
+  gemerkte: ReadonlySet<string>
+}
+
+function SatzKarte({ paar, gemerkte }: SatzKarteProps) {
   const [zeigeUeb, setZeigeUeb] = useState(false)
   const [wort, waehle, schliesse] = useWortwahl()
 
@@ -409,8 +460,12 @@ function SatzKarte({ paar, gemerkte }) {
   )
 }
 
-function Satzliste({ gemerkte }) {
-  const [paare, setPaare] = useState([])
+interface SatzlisteProps {
+  gemerkte: ReadonlySet<string>
+}
+
+function Satzliste({ gemerkte }: SatzlisteProps) {
+  const [paare, setPaare] = useState<Satzpaar[]>([])
   const [laedt, setLaedt] = useState(true)
   const [fehler, setFehler] = useState(false)
 
@@ -476,7 +531,10 @@ function Satzliste({ gemerkte }) {
   )
 }
 
-const BEREICHE = [
+/** Die zwei Bereiche der Leseansicht. */
+type Lesebereich = 'texte' | 'saetze'
+
+const BEREICHE: readonly { id: Lesebereich; name: string; icon: Iconname }[] = [
   { id: 'texte', name: 'Kurze Texte', icon: 'buch' },
   { id: 'saetze', name: 'Tatoeba-Sätze', icon: 'sprechblase' },
 ]
@@ -484,8 +542,8 @@ const BEREICHE = [
 export default function ReadingView() {
   const stand = useLernstand()
 
-  const [bereich, setBereich] = useState('texte')
-  const [textId, setTextId] = useState(null)
+  const [bereich, setBereich] = useState<Lesebereich>('texte')
+  const [textId, setTextId] = useState<string | null>(null)
   const gemerkte = useMemo(() => gemerkteWoerter(), [stand])
 
   const text = texte.find((t) => t.id === textId) || null

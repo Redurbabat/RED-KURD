@@ -11,7 +11,7 @@ import {
 } from '../../../core/session/sessionPlanner.ts'
 import { standardDauer } from '../../../core/profile/profileStore.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
-import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
+import ExercisePlayer from '../../../features/exercise/ExercisePlayer.tsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import SentenceBuilder from '../../../features/sentence-builder/SentenceBuilder.tsx'
 import GrammarTrainer from '../../../features/grammar/GrammarTrainer.tsx'

@@ -8,7 +8,7 @@ import { DAUERN, planeSitzung } from '../../../core/session/sessionPlanner.ts'
 import { sitzungLaden } from '../../../core/session/sessionStore.ts'
 import { baueUebungen } from '../../../core/session/exerciseFactory.ts'
 import { standardDauer } from '../../../core/profile/profileStore.ts'
-import ExercisePlayer from '../../../features/exercise/ExercisePlayer.jsx'
+import ExercisePlayer from '../../../features/exercise/ExercisePlayer.tsx'
 import ExerciseResult from '../../../features/exercise/ExerciseResult.tsx'
 import EmptyState, { ErrorState } from '../../../components/common/EmptyState.tsx'
 

@@ -2,6 +2,7 @@
 // und zuletzt im mitgelieferten Grundwortschatz. Treffer erscheinen als Karten
 // mit Anhören, Merken und Beispielsätzen.
 import { useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import { useLernstand } from '../../core/store.ts'
 import { merkeWort, kennstWort } from '../../core/progress/progressStore.ts'
 import { spieleWort } from '../../core/audio/audioService.ts'
@@ -9,6 +10,7 @@ import { arabischNachLatein } from '../../core/schrift/transliteration.ts'
 import { sucheStatisch, beispieleStatisch } from '../../core/data/staticData.ts'
 import { woerter as grundwortschatz } from '../../data/woerter.js'
 import { T } from '../../core/texts.ts'
+import type { Satzpaar, Suchergebnis, Wortfund } from '../../core/data/staticData.ts'
 import Card from '../../components/common/Card.tsx'
 import Icon from '../../components/icons/Icon.tsx'
 import Badge from '../../components/common/Badge.tsx'
@@ -17,7 +19,7 @@ import SpecialChars from '../../components/common/SpecialChars.tsx'
 import EmptyState, { LoadingState, ErrorState } from '../../components/common/EmptyState.tsx'
 import './DictionaryView.css'
 
-const SPRACHNAMEN = {
+const SPRACHNAMEN: Readonly<Record<string, string | undefined>> = {
   deu: 'Deutsch',
   kur: 'Kurdisch',
   kmr: 'Kurmancî',
@@ -31,19 +33,43 @@ const SCHRITT = 20
 /** Diese Sprachen zeigt RED-KURD bewusst nicht an. */
 const AUSGESCHLOSSEN = new Set(['tur', 'tr', 'ota', 'azj'])
 
-function ohneFremdsprache(w) {
-  return !AUSGESCHLOSSEN.has(w.lang) && !AUSGESCHLOSSEN.has(w.ziel_lang)
+/**
+ * Nimmt beide Trefferarten: Wiki-Funde haben kein `ziel_lang`, und ohne das
+ * Feld war der zweite Vergleich schon vorher immer falsch.
+ */
+function ohneFremdsprache(w: { lang: string; ziel_lang?: string }): boolean {
+  return !AUSGESCHLOSSEN.has(w.lang) && !AUSGESCHLOSSEN.has(w.ziel_lang ?? '')
 }
 
-function spracheName(code) {
+function spracheName(code: string): string {
   return SPRACHNAMEN[code] || code || 'unbekannt'
 }
 
 /** Sprachkennzeichen fuer das lang-Attribut. */
-function htmlLang(code) {
+function htmlLang(code: string): string {
   if (code === 'deu') return 'de'
   if (code === 'eng') return 'en'
   return 'ku'
+}
+
+/**
+ * Der Stand der aufgeklappten Beispielsaetze zu einem Treffer. Steht kein
+ * Eintrag da, ist der Bereich zugeklappt.
+ */
+interface Beispielstand {
+  laedt: boolean
+  saetze: Satzpaar[]
+  /** Weder Server noch statische Daten hatten etwas — anders als „nichts gefunden“. */
+  fehler?: boolean
+}
+
+/** Ein Wortpaar auf dem Weg ins Wiederholsystem. */
+interface Merkpaar {
+  de: string
+  ku: string
+  /** Ist wirklich eine kurdische Sprache beteiligt? */
+  kurdisch: boolean
+  deutsch: boolean
 }
 
 /**
@@ -51,18 +77,22 @@ function htmlLang(code) {
  * Gemerkt wird nur, wenn wirklich Deutsch auf Kurdisch trifft — Paare aus
  * anderen Sprachen gehoeren nicht in den Kurs.
  */
-function paarVon(w) {
+function paarVon(w: Wortfund): Merkpaar {
   const kurdischLinks = KURDISCH.has(w.lang)
-  const paar = kurdischLinks
+  const seiten = kurdischLinks
     ? { ku: w.wort || '', de: w.uebersetzung || '' }
     : { de: w.wort || '', ku: w.uebersetzung || '' }
-  paar.kurdisch = kurdischLinks || KURDISCH.has(w.ziel_lang)
-  paar.deutsch = w.lang === 'deu' || w.ziel_lang === 'deu'
-  return paar
+  // Alle vier Felder auf einmal, statt zwei nachtraeglich anzuhaengen: so
+  // steht die Form des Ergebnisses an einer Stelle statt an dreien.
+  return {
+    ...seiten,
+    kurdisch: kurdischLinks || KURDISCH.has(w.ziel_lang),
+    deutsch: w.lang === 'deu' || w.ziel_lang === 'deu',
+  }
 }
 
 /** Sprachpaar fuer die Beispielsatz-Abfrage (die Datenbank kennt nur kmr/deu). */
-function satzSprachen(lang) {
+function satzSprachen(lang: string): { quelle: string; ziel: string } {
   if (lang === 'deu') return { quelle: 'deu', ziel: 'kmr' }
   if (lang === 'kur') return { quelle: 'kmr', ziel: 'deu' }
   return { quelle: lang || 'kmr', ziel: 'deu' }
@@ -73,21 +103,22 @@ export default function DictionaryView() {
 
   const [suche, setSuche] = useState('')
   const [frage, setFrage] = useState('')
-  const [ergebnis, setErgebnis] = useState(null)
+  const [ergebnis, setErgebnis] = useState<Suchergebnis | null>(null)
   const [laedt, setLaedt] = useState(false)
   const [fehler, setFehler] = useState(false)
   const [ausGrundwortschatz, setAusGrundwortschatz] = useState(false)
-  const [vorschlaege, setVorschlaege] = useState([])
-  const [beispiele, setBeispiele] = useState({})
+  // Reine Suchwoerter fuer die Zeile „Meintest du …?“, keine Treffer.
+  const [vorschlaege, setVorschlaege] = useState<string[]>([])
+  const [beispiele, setBeispiele] = useState<Readonly<Record<string, Beispielstand | undefined>>>({})
   const [anzahl, setAnzahl] = useState(SCHRITT)
   const lauf = useRef(0)
 
   /** Letzte Rettung, wenn weder Server noch statische Daten erreichbar sind. */
-  function ausStartwoertern(q) {
+  function ausStartwoertern(q: string): Wortfund[] {
     const s = q.toLowerCase()
     return grundwortschatz
       .filter((w) => w.de.toLowerCase().includes(s) || w.ku.toLowerCase().includes(s))
-      .map((w) => ({
+      .map((w): Wortfund => ({
         lang: 'deu',
         wort: w.de,
         ziel_lang: 'kmr',
@@ -96,7 +127,7 @@ export default function DictionaryView() {
       }))
   }
 
-  async function suchen(e, direkt) {
+  async function suchen(e: FormEvent<HTMLFormElement> | null, direkt?: string): Promise<void> {
     if (e) e.preventDefault()
     let q = (direkt !== undefined ? direkt : suche).trim()
     if (!q) return
@@ -141,7 +172,7 @@ export default function DictionaryView() {
     if (!daten) {
       const treffer = ausStartwoertern(q)
       if (treffer.length > 0) {
-        setErgebnis({ woerter: treffer, wiki: [] })
+        setErgebnis({ woerter: treffer, wiki: [], formen: [] })
         setAusGrundwortschatz(true)
       } else {
         setErgebnis(null)
@@ -151,9 +182,10 @@ export default function DictionaryView() {
       return
     }
 
-    const sauber = {
+    const sauber: Suchergebnis = {
       woerter: (daten.woerter || []).filter(ohneFremdsprache),
       wiki: (daten.wiki || []).filter(ohneFremdsprache),
+      formen: [],
     }
     setErgebnis(sauber)
 
@@ -171,7 +203,7 @@ export default function DictionaryView() {
     if (nr === lauf.current) setLaedt(false)
   }
 
-  async function zeigeBeispiele(schluessel, w) {
+  async function zeigeBeispiele(schluessel: string, w: Wortfund): Promise<void> {
     if (beispiele[schluessel]) {
       setBeispiele((b) => {
         const neu = { ...b }
@@ -182,7 +214,7 @@ export default function DictionaryView() {
     }
     setBeispiele((b) => ({ ...b, [schluessel]: { laedt: true, saetze: [] } }))
     const { quelle, ziel } = satzSprachen(w.lang)
-    let saetze = null
+    let saetze: Satzpaar[] | null = null
     try {
       const r = await fetch(
         `/api/beispiele?q=${encodeURIComponent(w.wort)}&lang=${quelle}&ziel=${ziel}`

@@ -18,13 +18,20 @@ interface Statischerbestand {
   beispiele: Beispielzeile[]
 }
 
+/**
+ * Woher ein Treffer stammt. `'online'` kommt aus den statischen Daten hier,
+ * `'grundwortschatz'` legt `DictionaryView` an, wenn weder Server noch
+ * statische Daten erreichbar sind.
+ */
+export type Fundquelle = 'online' | 'grundwortschatz'
+
 /** Ein Treffer im Wortteil der Suche. */
 export interface Wortfund {
   lang: string
   wort: string
   ziel_lang: string
   uebersetzung: string
-  quelle: 'online'
+  quelle: Fundquelle
 }
 
 /** Ein Treffer im Wiktionary-Teil — auch die Kurdish-Tech-Funde kommen so. */

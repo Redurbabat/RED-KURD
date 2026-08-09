@@ -2,7 +2,10 @@
 // exakt diese Komponente — nur die Klasse `stil` ändert das Aussehen.
 // Ausgangssprache ist immer Deutsch, Zielsprache Kurmancî.
 import { useEffect, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
 import Icon from '../../components/icons/Icon.tsx'
+import type { Aufgabenart, Rundenergebnis, Rundenfehler, Uebung } from '../../types/lernstand'
+import type { Ergebnisstil } from './ExerciseResult.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
 import SpecialChars from '../../components/common/SpecialChars.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.tsx'
@@ -31,7 +34,7 @@ const AUSSPRACHE = [
 ]
 
 /** Erster passender Aussprachehinweis zu einem Kurmancî-Wort, sonst leer. */
-function ausspracheHinweis(wort) {
+function ausspracheHinweis(wort: string): string {
   const klein = String(wort || '').toLowerCase()
   const treffer = AUSSPRACHE.find((a) => klein.includes(a.zeichen))
   return treffer ? `Das „${treffer.zeichen}“ ${treffer.vergleich}.` : ''
@@ -43,21 +46,24 @@ function ausspracheHinweis(wort) {
  * auf Kurmancî die Zwei — ohne Richtung stünde unter dem deutschen „du" die
  * Übersetzung „zwei".
  */
-function untertitel(option, optionenSindKurmanci) {
+function untertitel(option: string, optionenSindKurmanci: boolean): string {
   const treffer = optionenSindKurmanci ? deutschVon(option) : kurmanciVon(option)
   return treffer && treffer !== option ? treffer : ''
 }
 
 /** Ist die richtige Antwort dieser Aufgabenart auf Kurmancî? */
-function antwortIstKurmanci(art) {
+function antwortIstKurmanci(art: Aufgabenart): boolean {
   return art === 'wahl-ku' || art === 'tippen'
 }
 
-/**
- * Die Bedeutung der richtigen Antwort in der jeweils anderen Sprache.
- * @returns {{text:string, sprache:'de'|'ku'}|null}
- */
-function bedeutungZurAntwort(u) {
+/** Die Bedeutung der richtigen Antwort, samt der Sprache, in der sie steht. */
+interface Bedeutung {
+  text: string
+  sprache: 'de' | 'ku'
+}
+
+/** Die Bedeutung der richtigen Antwort in der jeweils anderen Sprache. */
+function bedeutungZurAntwort(u: Uebung): Bedeutung | null {
   // Beim Bild ist die Antwort ein Wort-Bild — dazu passt die deutsche Bedeutung.
   if (u.art === 'bild') return u.w.de ? { text: u.w.de, sprache: 'de' } : null
   const nachDeutsch = antwortIstKurmanci(u.art)
@@ -66,23 +72,36 @@ function bedeutungZurAntwort(u) {
   return { text: treffer, sprache: nachDeutsch ? 'de' : 'ku' }
 }
 
-/** Nur die Daten sichern, die zum Fortsetzen nötig sind. */
-function schlank(uebungen) {
+/**
+ * Nur die Daten sichern, die zum Fortsetzen nötig sind.
+ *
+ * `optionen` gibt es nur bei Wahl- und Bildaufgaben; bei einer Tippaufgabe
+ * faellt das Feld ganz weg. Genau so beschreibt es `Sitzung` in
+ * lernstand.d.ts — die gespeicherte Form entspricht weiter `Uebung`.
+ */
+function schlank(uebungen: readonly Uebung[]): Uebung[] {
   return uebungen.map((u) => ({
-    art: u.art,
-    frage: u.frage,
-    antwort: u.antwort,
-    optionen: u.optionen,
+    ...u,
     w: { de: u.w.de, ku: u.w.ku, bild: u.w.bild },
   }))
 }
 
-/**
- * @param {{uebungen:Array, titel:string, stil?:'modern'|'abenteuer',
- *          startIndex?:number, startPunkte?:number, mitLeben?:boolean,
- *          fertig:(ergebnis:{prozent:number, richtig:number, gesamt:number, fehler:Array})=>void,
- *          abbrechen?:()=>void, speichern?:boolean}} props
- */
+export interface ExercisePlayerProps {
+  uebungen: readonly Uebung[]
+  titel: string
+  stil?: Ergebnisstil
+  /** Fortsetzen nach einem Neuladen: Stelle und Punktestand von vorher. */
+  startIndex?: number
+  startPunkte?: number
+  /** Abenteuer-Modus: drei Herzen, danach ist Schluss. */
+  mitLeben?: boolean
+  fertig: (ergebnis: Rundenergebnis) => void
+  /** Fehlt, wenn die Runde nicht abbrechbar ist. */
+  abbrechen?: () => void
+  /** `false` in Runden, die nicht wiederaufnehmbar sein sollen. */
+  speichern?: boolean
+}
+
 export default function ExercisePlayer({
   uebungen,
   titel,
@@ -93,15 +112,17 @@ export default function ExercisePlayer({
   fertig,
   abbrechen,
   speichern = true,
-}) {
+}: ExercisePlayerProps) {
   const [index, setIndex] = useState(startIndex)
   const [punkte, setPunkte] = useState(startPunkte)
-  const [antwort, setAntwort] = useState(null)
+  // Der gewaehlte Text, nicht seine Stelle: bei einer Tippaufgabe steht hier
+  // die richtige Antwort oder das, was getippt wurde („(leer)", wenn nichts).
+  const [antwort, setAntwort] = useState<string | null>(null)
   const [eingabe, setEingabe] = useState('')
   const [leben, setLeben] = useState(3)
-  const [fehler, setFehler] = useState([])
-  const feldRef = useRef(null)
-  const weiterRef = useRef(null)
+  const [fehler, setFehler] = useState<Rundenfehler[]>([])
+  const feldRef = useRef<HTMLInputElement>(null)
+  const weiterRef = useRef<HTMLButtonElement>(null)
   const startZeit = useRef(Date.now())
   const gemeldet = useRef(false)
 
@@ -166,14 +187,20 @@ export default function ExercisePlayer({
     )
   }
 
+  // Nach der Abfrage oben steht die Aufgabe fest. Die Konstante haelt das fuer
+  // die drei Rueckrufe darunter fest: Funktionsdeklarationen werden
+  // hochgezogen, deshalb traegt der Pruefer die Einengung dort nicht hinein.
+  const aufgabe: Uebung = u
+
   const richtigGewaehlt = antwort !== null && antwort === u.antwort
   const skill = SKILL_JE_ART[u.art] || 'erkennen'
   // Nur bei 'wahl-ku' stehen Kurmancî-Wörter zur Auswahl, sonst deutsche.
   const optionenKu = u.art === 'wahl-ku'
   const bedeutung = bedeutungZurAntwort(u)
   const hinweis = ausspracheHinweis(u.w.ku)
+  const foto = fotoVon(u.w.ku)
 
-  function bewerten(richtig) {
+  function bewerten(richtig: boolean): void {
     const sekunden = Math.min(120, Math.round((Date.now() - startZeit.current) / 1000))
     startZeit.current = Date.now()
     if (richtig) {
@@ -181,23 +208,23 @@ export default function ExercisePlayer({
       gibXp(XP_JE_AUFGABE)
     } else {
       setLeben((l) => Math.max(0, l - 1))
-      setFehler((f) => [...f, { de: u.w.de, ku: u.w.ku, bild: u.w.bild }])
+      setFehler((f) => [...f, { de: aufgabe.w.de, ku: aufgabe.w.ku, bild: aufgabe.w.bild }])
     }
-    karteBewerten(u.w.de, u.w.ku, skill, richtig)
+    karteBewerten(aufgabe.w.de, aufgabe.w.ku, skill, richtig)
     zaehleAufgabe(richtig, sekunden, skill)
   }
 
-  function waehle(option) {
+  function waehle(option: string): void {
     if (antwort !== null) return
     setAntwort(option)
-    bewerten(option === u.antwort)
+    bewerten(option === aufgabe.antwort)
   }
 
-  function pruefeTipp(e) {
+  function pruefeTipp(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault()
     if (antwort !== null) return
-    const ok = istRichtigGetippt(eingabe, u.antwort)
-    setAntwort(ok ? u.antwort : eingabe || '(leer)')
+    const ok = istRichtigGetippt(eingabe, aufgabe.antwort)
+    setAntwort(ok ? aufgabe.antwort : eingabe || '(leer)')
     bewerten(ok)
   }
 
@@ -293,8 +320,10 @@ export default function ExercisePlayer({
                     würde sie verraten. */}
                 {u.w.bild && u.art === 'wahl-ku' && (
                   <span className="rk-frage-bild" aria-hidden="true">
-                    {fotoVon(u.w.ku) ? (
-                      <img src={fotoVon(u.w.ku).src} alt="" loading="lazy" />
+                    {/* Einmal nachschlagen statt zweimal — der Aufruf in der
+                        Bedingung engt den zweiten sonst nicht ein. */}
+                    {foto ? (
+                      <img src={foto.src} alt="" loading="lazy" />
                     ) : (
                       u.w.bild
                     )}
@@ -445,14 +474,20 @@ export default function ExercisePlayer({
   )
 }
 
-function zustand(option, antwort, richtig) {
+/** Die Zustandsklasse einer Antwortkarte, sobald geantwortet wurde. */
+function zustand(option: string, antwort: string | null, richtig: string): string {
   if (antwort === null) return ''
   if (option === richtig) return ' richtig'
   if (option === antwort) return ' falsch'
   return ' blass'
 }
 
-function HoerKnopf({ wort, gross = false }) {
+interface HoerKnopfProps {
+  wort: string
+  gross?: boolean
+}
+
+function HoerKnopf({ wort, gross = false }: HoerKnopfProps) {
   return (
     <button
       type="button"
