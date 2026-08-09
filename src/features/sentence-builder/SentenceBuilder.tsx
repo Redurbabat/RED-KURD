@@ -3,6 +3,7 @@
 // Die Sätze kommen aus den statischen Beispieldaten, nicht aus dem Wiederholsystem.
 import { useEffect, useMemo, useState } from 'react'
 import { zufallsPaare } from '../../core/data/staticData.ts'
+import type { Satzpaar } from '../../core/data/staticData.ts'
 import { mische } from '../../core/session/exerciseFactory.ts'
 import { gibXp } from '../../core/progress/progressStore.ts'
 import Card from '../../components/common/Card.tsx'
@@ -16,20 +17,29 @@ import './SentenceBuilder.css'
 const RUNDEN = 8
 const XP_JE_SATZ = 15
 
+/** Ein Wortblock: das Wort und seine Stelle im Zielsatz. */
+interface Block {
+  w: string
+  i: number
+}
+
+/** Wie weit die Runde ist. */
+type Zustand = 'laden' | 'bereit' | 'fehler'
+
 /** Nur Sätze mit 3 bis 8 Wörtern lassen sich sinnvoll als Blöcke bauen. */
-function passendeLaenge(paar) {
+function passendeLaenge(paar: Satzpaar | null | undefined): boolean {
   if (!paar || typeof paar.satz !== 'string' || !paar.uebersetzung) return false
   const anzahl = paar.satz.trim().split(/\s+/).length
   return anzahl >= 3 && anzahl <= 8
 }
 
 export default function SentenceBuilder() {
-  const [zustand, setZustand] = useState('laden')
-  const [saetze, setSaetze] = useState([])
+  const [zustand, setZustand] = useState<Zustand>('laden')
+  const [saetze, setSaetze] = useState<Satzpaar[]>([])
   const [runde, setRunde] = useState(0)
   const [punkte, setPunkte] = useState(0)
-  const [gewaehlt, setGewaehlt] = useState([])
-  const [ergebnis, setErgebnis] = useState(null)
+  const [gewaehlt, setGewaehlt] = useState<Block[]>([])
+  const [ergebnis, setErgebnis] = useState<boolean | null>(null)
   const [versuch, setVersuch] = useState(0)
 
   useEffect(() => {
@@ -59,17 +69,17 @@ export default function SentenceBuilder() {
   const zielWoerter = useMemo(() => (paar ? paar.satz.trim().split(/\s+/) : []), [paar])
   const bloecke = useMemo(() => mische(zielWoerter.map((w, i) => ({ w, i }))), [zielWoerter])
 
-  function anfuegen(block) {
+  function anfuegen(block: Block): void {
     if (ergebnis !== null) return
     setGewaehlt((g) => (g.some((x) => x.i === block.i) ? g : [...g, block]))
   }
 
-  function entfernen(pos) {
+  function entfernen(pos: number): void {
     if (ergebnis !== null) return
     setGewaehlt((g) => g.filter((_, j) => j !== pos))
   }
 
-  function pruefen() {
+  function pruefen(): void {
     const richtig = gewaehlt.map((b) => b.w).join(' ') === zielWoerter.join(' ')
     setErgebnis(richtig)
     if (richtig) {

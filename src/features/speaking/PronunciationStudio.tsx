@@ -34,7 +34,10 @@ const AUSSPRACHE = [
   { zeichen: 'x', vergleich: 'klingt wie das „ch“ in „Bach“' },
 ]
 
-const FEHLERTEXTE = {
+/** Welche Fehler beim Aufnehmen vorkommen koennen. */
+type Aufnahmefehler = 'kein-mikrofon' | 'keine-erlaubnis' | 'speichern'
+
+const FEHLERTEXTE: Readonly<Record<Aufnahmefehler, { titel: string; text: string }>> = {
   'kein-mikrofon': {
     titel: 'Aufnehmen ist auf diesem Gerät nicht möglich.',
     text: 'Dein Browser bietet keinen Zugriff auf ein Mikrofon an. Anhören und Nachsprechen funktionieren trotzdem.',
@@ -50,18 +53,22 @@ const FEHLERTEXTE = {
 }
 
 export default function PronunciationStudio() {
-  const [einheitId, setEinheitId] = useState(EINHEITEN[0].id)
-  const [aufnahmeWort, setAufnahmeWort] = useState(null)
-  const [hatAufnahme, setHatAufnahme] = useState({})
-  const [fehler, setFehler] = useState(null)
-  const rekorder = useRef(null)
-  const stuecke = useRef([])
-  const timer = useRef(null)
+  // Die Kursliste ist nie leer; der Rueckfall haelt nur „vielleicht nichts"
+  // von der Anfangsauswahl fern.
+  const [einheitId, setEinheitId] = useState<string>(EINHEITEN[0]?.id ?? '')
+  const [aufnahmeWort, setAufnahmeWort] = useState<string | null>(null)
+  const [hatAufnahme, setHatAufnahme] = useState<Readonly<Record<string, boolean>>>({})
+  const [fehler, setFehler] = useState<Aufnahmefehler | null>(null)
+  const rekorder = useRef<MediaRecorder | null>(null)
+  const stuecke = useRef<Blob[]>([])
+  const timer = useRef<number | null>(null)
   const lebt = useRef(true)
   /** Der aktive Mikrofon-Strom — nur so laesst er sich zuverlaessig schliessen. */
-  const strom = useRef(null)
+  const strom = useRef<MediaStream | null>(null)
 
-  const einheit = EINHEITEN.find((e) => e.id === einheitId) || EINHEITEN[0]
+  // Nur mit leerem Kursbaum gaebe es hier nichts — dann faellt die ganze
+  // Seite weg, statt dass jede Zeile darunter einzeln nachfragt.
+  const einheit = EINHEITEN.find((e) => e.id === einheitId) ?? EINHEITEN[0]
 
   // Beim Verlassen laufende Aufnahme und Vergleich beenden.
   useEffect(() => {
@@ -71,7 +78,7 @@ export default function PronunciationStudio() {
       if (timer.current) clearTimeout(timer.current)
       if (rekorder.current && rekorder.current.state === 'recording') rekorder.current.stop()
       if (strom.current) {
-        strom.current.getTracks().forEach((t) => t.stop())
+        strom.current.getTracks().forEach((t: MediaStreamTrack) => t.stop())
         strom.current = null
       }
     }
@@ -82,8 +89,8 @@ export default function PronunciationStudio() {
     let abgebrochen = false
     setHatAufnahme({})
     ;(async () => {
-      const gefunden = {}
-      for (const w of einheit.woerter) {
+      const gefunden: Record<string, boolean> = {}
+      for (const w of einheit?.woerter ?? []) {
         if (abgebrochen) return
         try {
           if (await holeAufnahme(w.ku)) gefunden[w.ku] = true
@@ -113,7 +120,7 @@ export default function PronunciationStudio() {
     }
   }
 
-  async function starteAufnahme(wort) {
+  async function starteAufnahme(wort: string): Promise<void> {
     setFehler(null)
     // Eine noch laufende Aufnahme zuerst sauber beenden — sonst bleibt ihr
     // Mikrofon-Zugriff für immer offen.
@@ -162,7 +169,7 @@ export default function PronunciationStudio() {
     if (rekorder.current && rekorder.current.state === 'recording') rekorder.current.stop()
   }
 
-  async function spieleMeine(wort) {
+  async function spieleMeine(wort: string): Promise<void> {
     let blob = null
     try {
       blob = await holeAufnahme(wort)
@@ -177,7 +184,7 @@ export default function PronunciationStudio() {
     if (lauf && lauf.catch) lauf.catch(() => URL.revokeObjectURL(adresse))
   }
 
-  async function entferneAufnahme(wort) {
+  async function entferneAufnahme(wort: string): Promise<void> {
     await loescheAufnahme(wort)
     if (!lebt.current) return
     setHatAufnahme((h) => {
@@ -188,10 +195,21 @@ export default function PronunciationStudio() {
   }
 
   /** Erst die Vorlage, kurz danach die eigene Aufnahme. */
-  function vergleiche(wort) {
+  function vergleiche(wort: string): void {
     sprich(wort)
     if (timer.current) clearTimeout(timer.current)
     timer.current = setTimeout(() => spieleMeine(wort), VERGLEICH_PAUSE)
+  }
+
+  // Ohne Einheit gibt es nichts zum Nachsprechen. Erreichbar ist das nur mit
+  // leerem Kursbaum — dann bleibt die Seite leer, statt abzustuerzen.
+  if (!einheit) {
+    return (
+      <ErrorState
+        titel="Keine Kapitel geladen."
+        text="Ohne Kapitel gibt es keine Wörter zum Nachsprechen."
+      />
+    )
   }
 
   return (

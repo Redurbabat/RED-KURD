@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import type { FormEvent } from 'react'
+import type { Konto } from '../../core/auth/authApi.ts'
+
+/** Anmelden oder neu registrieren — dieselbe Maske, andere Felder. */
+type Anmeldemodus = 'anmelden' | 'registrieren'
 import Icon from '../../components/icons/Icon.tsx'
 import HeloMascot from '../../components/mascot/HeloMascot.tsx'
 import PrimaryButton from '../../components/common/PrimaryButton.tsx'
@@ -14,28 +19,42 @@ export function AuthLoading() {
   )
 }
 
-export default function AuthPage({ onErfolg, anfangsFehler = '', onErneut, onOhneKonto }) {
-  const [modus, setModus] = useState('anmelden')
+export interface AuthPageProps {
+  onErfolg: (konto: Konto) => void
+  /** Fehler aus dem Kontocheck davor — steht schon beim Oeffnen da. */
+  anfangsFehler?: string
+  /** Kontocheck wiederholen (nach einem Netzaussetzer). */
+  onErneut: () => void
+  onOhneKonto: () => void
+}
+
+export default function AuthPage({
+  onErfolg,
+  anfangsFehler = '',
+  onErneut,
+  onOhneKonto,
+}: AuthPageProps) {
+  const [modus, setModus] = useState<Anmeldemodus>('anmelden')
   const [email, setEmail] = useState('')
   const [passwort, setPasswort] = useState('')
   const [bestaetigung, setBestaetigung] = useState('')
   const [anzeigen, setAnzeigen] = useState(false)
   const [laedt, setLaedt] = useState(false)
   const [fehler, setFehler] = useState(anfangsFehler)
-  const emailRef = useRef(null)
+  const emailRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     emailRef.current?.focus()
   }, [modus])
 
-  function modusSetzen(neu) {
+  function modusSetzen(neu: Anmeldemodus): void {
     setModus(neu)
     setFehler('')
     setPasswort('')
     setBestaetigung('')
   }
 
-  async function senden(ereignis) {
+  async function senden(ereignis: FormEvent<HTMLFormElement>): Promise<void> {
     ereignis.preventDefault()
     setFehler('')
     if (modus === 'registrieren' && passwort !== bestaetigung) {
