@@ -18,7 +18,7 @@ Gerät. Eine vollständige Sicherung geht jederzeit über Export und Import unte
 
 | App | Worum es geht | Fortschritt |
 |---|---|---|
-| **Sprache lernen** | Kurmancî als Hauptkurs, dazu Englisch, Französisch, Türkisch und Spanisch | `red-kurd-progress-v2` (+ eigener Stand für die Nebensprachen) |
+| **Sprache lernen** | Kurmancî als Hauptkurs, dazu Englisch, Französisch und Spanisch | `red-kurd-progress-v2` (+ eigener Stand für die Nebensprachen) |
 | **Code lernen** | HTML, CSS, JavaScript, TypeScript, GitHub, VS Code, Mini-Projekte | `red-kurd-code-progress-v1` |
 | **AI-Sprache** | Prompts schreiben, Aufträge für Claude Code, Bug-Reports, PRs prüfen | `red-kurd-prompting-progress-v1` |
 | **Elektro-Lehre** | Strom, Sicherheit, Messen — dazu Noten, Prüfungen und Berichtsheft | `red-kurd-electro-progress-v1` |
@@ -33,7 +33,7 @@ Tage.
 
 ## Sprache lernen
 
-Deutsch → Kurmancî als Hauptkurs, dazu vier kleine Nebensprachkurse.
+Deutsch → Kurmancî als Hauptkurs, dazu drei kleine Nebensprachkurse.
 
 | | |
 |---|---|
@@ -41,7 +41,7 @@ Deutsch → Kurmancî als Hauptkurs, dazu vier kleine Nebensprachkurse.
 | Lernpaare (Kurmancî) | **596** |
 | Aussprache-Aufnahmen | **321** von Muttersprachlern (Lingua Libre, CC BY-SA) |
 | Fotos | **154** (48 Kapitel-, 8 Weltbilder, 98 Wortfotos), alle mit Urheber und Lizenz |
-| Nebensprachkurse | **4** × 10 Kapitel × 8 Wörter = 320 Paare |
+| Nebensprachkurse | **3** × 10 Kapitel × 8 Wörter = 240 Paare |
 | Trainings (`/practice/:trainingId`) | **11** Kennungen, davon 9 als Karte unter „Üben" |
 | Übungsarten | Auswahl in beide Richtungen, Eintippen, Bild, Hören, Satzbau, Aussprache, Grammatik |
 
