@@ -61,7 +61,7 @@ Herkunft: die Liste stammt aus der Auswertung von 23 offenen Lern- und Sprachpro
 - [x] **Nutzerkonten** — umgesetzt über Cloudflare Worker + D1 (`sites/auth.js`),
       nicht über einen Fremdanbieter. Optional: ohne Backend läuft die App unverändert
       weiter (ADR-001).
-- [x] **Weitere Sprachen** — Englisch, Französisch, Türkisch und Spanisch als kleine
+- [x] **Weitere Sprachen** — Englisch, Französisch und Spanisch als kleine
       Nebenkurse mit eigenem Fortschritt (ADR-007).
 
 ---

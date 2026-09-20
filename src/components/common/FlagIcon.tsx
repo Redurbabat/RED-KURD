@@ -31,7 +31,6 @@ export const FLAGGEN_SPRACHEN = [
   'englisch',
   'franzoesisch',
   'spanisch',
-  'tuerkisch',
 ] as const
 
 /** Jede Flagge, die es wirklich gibt. */
@@ -67,17 +66,6 @@ const FLAGGEN: Readonly<Record<Flaggensprache, ReactNode>> = {
     <>
       <rect width="24" height="16" fill="#aa151b" />
       <rect y="4" width="24" height="8" fill="#f1bf00" />
-    </>
-  ),
-  tuerkisch: (
-    <>
-      <rect width="24" height="16" fill="#e30a17" />
-      <circle cx="9.5" cy="8" r="4" fill="#fff" />
-      <circle cx="10.5" cy="8" r="3.2" fill="#e30a17" />
-      <polygon
-        points="14.2,8 16.9,8.9 15.2,6.6 15.2,9.4 16.9,7.1"
-        fill="#fff"
-      />
     </>
   ),
 }

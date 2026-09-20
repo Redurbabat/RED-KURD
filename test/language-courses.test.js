@@ -5,7 +5,7 @@ import { resolve } from 'node:path'
 import { SPRACHKURSE, holeSprachkapitel, holeSprachkurs } from '../src/data/sprachkurse.js'
 
 test('alle Sprachkurse haben gleich viele Kapitel und vollstaendige Wortlisten', () => {
-  assert.equal(SPRACHKURSE.length, 4)
+  assert.equal(SPRACHKURSE.length, 3)
   const kapitelZahl = SPRACHKURSE[0].kapitel.length
   assert.ok(kapitelZahl >= 10, `nur ${kapitelZahl} Kapitel`)
   for (const kurs of SPRACHKURSE) {

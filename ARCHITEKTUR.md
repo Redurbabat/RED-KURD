@@ -437,7 +437,7 @@ Die Sprach-App:
 | `kapitelExtras.js` | Beispielsätze und Grammatiknotiz je Kapitel |
 | `kapitelFotos.js` | 56 Kapitel- und Weltbilder mit Urheber und Lizenz |
 | `wortFotos.js` | 98 Wortfotos |
-| `sprachkurse.js` | 4 Nebensprachen × 10 Kapitel × 8 Wörter = 320 Paare |
+| `sprachkurse.js` | 3 Nebensprachen × 10 Kapitel × 8 Wörter = 240 Paare |
 | `grammatikUebungen.js` | Regeln und Fragen für das Grammatik-Training |
 | `kultur.js` | Redewendungen und Kulturkarten |
 | `texte.js` | Lesetexte mit Verständnisfragen |
