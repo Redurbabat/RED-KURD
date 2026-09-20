@@ -74,17 +74,6 @@ export const SPRACHEN: readonly Sprache[] = [
     kursId: 'franzoesisch',
   },
   {
-    id: 'tr',
-    name: 'Türkçe',
-    nameDeutsch: 'Türkisch',
-    ausgang: 'de',
-    ziel: 'tr',
-    schrift: 'latin',
-    rtl: false,
-    locale: 'tr-TR',
-    kursId: 'tuerkisch',
-  },
-  {
     id: 'es',
     name: 'Español',
     nameDeutsch: 'Spanisch',
