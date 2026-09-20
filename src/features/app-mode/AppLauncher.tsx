@@ -24,7 +24,7 @@ interface Startkarte {
 const KARTEN: Record<Appbereich, Startkarte> = {
   language: {
     icon: 'sprache',
-    beschreibung: 'Kurmancî, Deutsch, Englisch, Türkisch, Französisch und Spanisch lernen.',
+    beschreibung: 'Kurmancî, Deutsch, Englisch, Französisch und Spanisch lernen.',
     zusatz: 'Mit Modern-Ansicht und Abenteuer-Ansicht.',
   },
   code: {
