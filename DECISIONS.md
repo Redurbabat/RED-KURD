@@ -73,7 +73,7 @@ Einstellungen, Fortschritt, Onboarding und 404.
 - Eine Ansicht kann keine eigene Fortschrittsmechanik einführen, ohne diese
   Entscheidung aufzukündigen.
 - **Diese Entscheidung gilt nur innerhalb der Sprach-App.** Über die vier Apps hinweg
-  gibt es keinen gemeinsamen Lernstand (ADR-008); die vier Nebensprachkurse innerhalb
+  gibt es keinen gemeinsamen Lernstand (ADR-008); die drei Nebensprachkurse innerhalb
   der Sprach-App haben ebenfalls einen eigenen Stand (ADR-007).
 
 ---
@@ -304,7 +304,7 @@ beim Laden zu „Sprache lernen + Abenteuer-Ansicht" migriert.
   Das wird bewusst hingenommen, solange sie die größte App bleibt.
 
 *Innerhalb der Sprach-App bleibt es beim Bisherigen*
-- Die vier Nebensprachkurse (Englisch, Französisch, Türkisch, Spanisch; je 10 Kapitel,
+- Die drei Nebensprachkurse (Englisch, Französisch, Spanisch; je 10 Kapitel,
   je 80 Wörter, `src/data/sprachkurse.js`) bleiben klein und behalten ihren eigenen
   Fortschritt in `red-kurd-language-courses-v1`: kein Wiederholsystem, keine Serie,
   keine Sterne, keine Aufnahme in Statistik oder Fertigkeiten.
