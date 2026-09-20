@@ -631,7 +631,7 @@ export interface Kapitelstand {
 /**
  * `red-kurd-language-courses-v1` — getrennter Fortschritt der Nebensprachen
  * (`languageCourseStore.ts:6`). Bewusst getrennt vom Kurmancî-Lernstand:
- * Englisch, Französisch, Türkisch und Spanisch sind Nebenkurse und erzeugen
+ * Englisch, Französisch und Spanisch sind Nebenkurse und erzeugen
  * keine Wiederholkarten.
  */
 export interface Sprachkursstand {
