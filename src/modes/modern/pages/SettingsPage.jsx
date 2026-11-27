@@ -1,3 +1,4 @@
+import RedHomeIdentity from "../../../components/red-id/RedHomeIdentity.tsx";
 // Einstellungen des Modern-Modus: Profil, Sprache, Tagesziel, Ton, Erinnerungen,
 // App-Modus, Design, Datenschutz und Datenverwaltung.
 // Die Seite rechnet nichts selbst — sie liest die Stores und schreibt in sie zurück.
@@ -116,6 +117,7 @@ export default function SettingsPage() {
       <section className="rk-abschnitt" id="set-konto">
         <h2 className="rk-abschnitt-titel">Mein Konto</h2>
         <KontoKarte />
+        <Card titel="RED Home Server" icon="profil"><RedHomeIdentity /></Card>
       </section>
 
       {/* Der Moduswechsel steht bewusst ganz oben — er ist die Einstellung,
